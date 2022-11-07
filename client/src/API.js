@@ -1,0 +1,1 @@
+const APIURL = new URL('http://localhost:3001/api/');
