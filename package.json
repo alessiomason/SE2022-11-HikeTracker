@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "gpxparser": "^3.0.8"
+  }
+}
