@@ -16,7 +16,7 @@ passport.use(new LocalStrategy(
     function (username, password, done) {
         userDao.getUser(username, password).then((user) => {
             if (!user)
-                return done(null, false, { message: 'Username e/o password non corrette.' });
+                return done(null, false, { message: 'Wrong username and/or password.' });
 
             return done(null, user);
         })
@@ -56,7 +56,7 @@ const isLoggedIn = (req, res, next) => {
     if (req.isAuthenticated())
         return next();
 
-    return res.status(401).json({ error: 'Non autenticato' });
+    return res.status(401).json({ error: 'Not authenticated!' });
 }
 
 // set up the session
@@ -77,7 +77,6 @@ APIs.useAPIs(app, isLoggedIn);
 // SESSION APIs
 
 // POST /sessions
-
 // login
 app.post('/api/sessions', function (req, res, next) {
     passport.authenticate('local', (err, user, info) => {
@@ -100,7 +99,6 @@ app.post('/api/sessions', function (req, res, next) {
 });
 
 // DELETE /sessions/current 
-
 // logout
 app.delete('/api/sessions/current', (req, res) => {
     req.logout(() => { res.end(); });
@@ -113,7 +111,7 @@ app.get('/api/sessions/current', (req, res) => {
         res.status(200).json(req.user);
     }
     else
-        res.status(401).json({ error: 'Utente non autenticato!' });
+        res.status(401).json({ error: 'User not authenticated!' });
 });
 
 
