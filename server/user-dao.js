@@ -22,7 +22,7 @@ exports.getUserById = (id) => {
 			}
 
 			if (row == undefined) {
-				resolve({ error: 'Utente non trovato.' });
+				resolve({ error: 'User not found.' });
 			} else {
 				const user = {
 					id: row.id,
