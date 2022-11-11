@@ -92,3 +92,57 @@ exports.getEndPointOfHike = (hikeID) => {
 		});
 	});
 }
+
+
+exports.getHikes = () => {
+	return new Promise((resolve, reject) => {
+	  const sql = 'SELECT * FROM HIKES';
+	  db.all(sql, [], (err, rows) => {
+		if (err) {
+		  reject(err);
+		  return;
+		}
+		const hikes = rows.map((h) => ({ id: h.HikeID, label: h.Label, length: h.Length,expTime: h.ExpTime,ascent: h.Ascent,difficulty: h.Difficulty, description: h.Description  }));
+		resolve(hikes);
+	  });
+	});
+}	
+
+exports.deleteHike = (hikeID) => {
+	return new Promise((resolve, reject) => {
+		db.run("DELETE FROM HIKES WHERE HikeID	=?", [hikeID], (err) => {
+			if (err) {
+				reject(err);
+			} else {
+				resolve(null);
+			}
+		});
+	});
+};
+
+exports.newHike = (label,length,expTime,ascent,difficulty,description) => {
+	return new Promise((resolve, reject) => {
+		const sql = 'INSERT INTO HIKES(label,length,expTime,ascent,difficulty,description) VALUES(?, ?,?,?,?,?)'
+		db.run(sql, [label,length,expTime,ascent,difficulty,description], function (err) {  
+		  if (err) {
+			console.log(err);
+			reject(err);
+			return;
+		  }
+		  resolve();
+		});
+	  });
+}
+
+exports.updateHike = (label,length,expTime,ascent,difficulty,description,hikeId) => {
+	return new Promise((resolve, reject) => {
+		const sql = 'UPDATE HIKES SET label=?, length=?,expTime=?,ascent=?,difficulty=?,description=?   WHERE HikeId=?'
+		db.run(sql, [label,length,expTime,ascent,difficulty,description,hikeId], function (err) {  
+		  if (err) {
+			reject(err);
+			return;
+		  }
+		  resolve();
+		});
+	  });
+}

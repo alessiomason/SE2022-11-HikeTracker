@@ -42,4 +42,88 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
 
     });
 
+
+
+
+app.get('/api/hikes', async (req, res) => {
+    try {
+        const hikes = await dao.getHikes();
+        res.status(200).json(hikes);
+    }
+    catch (err) {
+        res.status(500).end();
+    }
+});
+
+app.delete('/api/hikes', async (req, res) => {
+    console.log("hikes"+req.body.id)
+    const hikeID = req.body.id;
+    try {
+        await dao.deleteHike(hikeID);
+        res.status(200).end();
+    }
+    catch (err) {
+        res.status(500).json({error : 'The hike could not be deleted'});
+    }
+});
+
+app.post('/api/newHike',  async (req, res) => {
+
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(422).json({ errors: errors.array() });
+    }
+
+    // check if the desription of the hike is empty 
+    if (req.body.label === ''){
+        return res.status(422).json({ error: `Label of the hike can not be empty.`});
+    }
+    label = req.body.label;
+    length = req.body.length;
+    expTime = req.body.expTime;
+    ascent = req.body.ascent;
+    difficulty = req.body.difficulty;
+    description = req.body.description;
+            
+    try {
+        const hike = await dao.newHike(label,length,expTime,ascent,difficulty,description);
+        res.status(201).json(hike).end();
+    } catch (err) {
+        
+        res.status(500).json({ error: `Database error during creation of a new hike.`});
+    }
+    
+});
+
+// update hike
+app.put('/api/updateHike',  async (req, res) => {
+
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(422).json({ errors: errors.array() });
+    }
+
+    // check if the new desription of the hike is empty 
+    if (req.body.label === ''){
+        return res.status(422).json({ error: `New name of the hike can not be empty.`});
+    }
+    hikeId = req.body.id
+    label = req.body.label;
+    length = req.body.length;
+    expTime = req.body.expTime;
+    ascent = req.body.ascent;
+    difficulty = req.body.difficulty;
+    description = req.body.description;
+            
+            
+    try {
+        const hikes = await dao.updateHike(label,length,expTime,ascent,difficulty,description,hikeId);
+        res.status(201).json(hikes).end();
+    } catch (err) {
+    
+        res.status(500).json({ error: `Database error during update of the service name.`});
+    }
+    
+});
+
 }
