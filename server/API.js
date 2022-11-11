@@ -21,19 +21,14 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
             label = element.properties.name;
             pointsArray = element.geometry.coordinates;
             ascent = pointsArray[pointsArray.length - 1][2] - pointsArray[0][2];
-            console.log(label)
-            console.log(ascent);
 
 
             const hike = await dao.addHike(label, null,null,ascent,null,"");
             const hikeID = await dao.getLastHikeID();
             console.log(hikeID);
             for (let i=0;i<pointsArray.length;i++){
-                 console.log(pointsArray[i]);
                 await dao.addPoint(hikeID,pointsArray[i][1], pointsArray[i][0]); //lat and lon in the json representation are swapped
             }
-               
-            
             res.status(201).json(hike).end();
         } catch (err) {
 

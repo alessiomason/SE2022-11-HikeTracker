@@ -54,3 +54,41 @@ exports.getLastHikeID = () => {
 		});
 	});
 }
+exports.getStartPointOfHike = (hikeID) => {
+	return new Promise((resolve, reject) => {
+		const sql = 'SELECT * FROM Points ORDER BY PointID WHERE HikeID=? ASC LIMIT 1';
+		db.get(sql, [hikeID], (err, row) => {
+			if (err) {
+				reject(err);
+				return;
+			}
+			let point;
+			if (row === undefined) {
+				 point = { id: 0}
+			} else {
+				 point = { id: row.PointID}
+			}
+			
+			resolve(point.id);
+		});
+	});
+}
+exports.getEndPointOfHike = (hikeID) => {
+	return new Promise((resolve, reject) => {
+		const sql = 'SELECT * FROM Points ORDER BY PointID WHERE HikeID=? DESC LIMIT 1';
+		db.get(sql, [hikeID], (err, row) => {
+			if (err) {
+				reject(err);
+				return;
+			}
+			let point;
+			if (row === undefined) {
+				 point = { id: 0}
+			} else {
+				 point = { id: row.PointID}
+			}
+			
+			resolve(point.id);
+		});
+	});
+}
