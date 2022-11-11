@@ -56,7 +56,7 @@ exports.getLastHikeID = () => {
 }
 exports.getStartPointOfHike = (hikeID) => {
 	return new Promise((resolve, reject) => {
-		const sql = 'SELECT * FROM Points ORDER BY PointID WHERE HikeID=? ASC LIMIT 1';
+		const sql = 'SELECT * FROM Points  WHERE HikeID=? ORDER BY PointID ASC LIMIT 1';
 		db.get(sql, [hikeID], (err, row) => {
 			if (err) {
 				reject(err);
@@ -75,7 +75,7 @@ exports.getStartPointOfHike = (hikeID) => {
 }
 exports.getEndPointOfHike = (hikeID) => {
 	return new Promise((resolve, reject) => {
-		const sql = 'SELECT * FROM Points ORDER BY PointID WHERE HikeID=? DESC LIMIT 1';
+		const sql = 'SELECT * FROM Points  WHERE HikeID=? ORDER BY PointID DESC LIMIT 1';
 		db.get(sql, [hikeID], (err, row) => {
 			if (err) {
 				reject(err);
