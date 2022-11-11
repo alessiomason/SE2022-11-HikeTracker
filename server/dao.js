@@ -10,7 +10,7 @@ const db = new sqlite.Database('hike_tracker.db', (err) => {
 });
 exports.addPoint = (hikeID,lat,lon) => {
 	return new Promise((resolve, reject) => {
-		const sql = 'INSERT INTO Points(HikeID,Lat, Lon) VALUES(?, ?, ?)'
+		const sql = 'INSERT INTO Points(HikeID,Lat,Lon) VALUES(?, ?, ?)'
 		db.run(sql, [hikeID,lat, lon], function (err) {  
 		  if (err) {
 			reject(err);

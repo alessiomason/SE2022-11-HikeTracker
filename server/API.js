@@ -25,16 +25,19 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
             console.log(ascent);
 
 
-            const service = await dao.addHike(label, null,null,ascent,null,"");
+            const hike = await dao.addHike(label, null,null,ascent,null,"");
             const hikeID = await dao.getLastHikeID();
             console.log(hikeID);
-            for (point in pointsArray) {
-                await dao.addPoint(hikeID,point[1], point[0]); //lat and lon in the json representation are swapped
+            for (let i=0;i<pointsArray.length;i++){
+                 console.log(pointsArray[i]);
+                await dao.addPoint(hikeID,pointsArray[i][1], pointsArray[i][0]); //lat and lon in the json representation are swapped
             }
-            res.status(201).json(service).end();
+               
+            
+            res.status(201).json(hike).end();
         } catch (err) {
 
-            res.status(500).json({ error: `Database error during insertion of a new track.` });
+            res.status(500).json({ error: err });
         }
 
 
