@@ -12,8 +12,9 @@ function App() {
 
 function App2() {
 
-  function addGPXTrack(GPXFile) {
-    API.addGPXTrack(GPXFile)
+  function addGPXTrack(gpx) {
+    
+    API.addGPXTrack(gpx)
     .then(() => { })
     .catch( err => handleError(err));
   }
