@@ -106,6 +106,27 @@ exports.getHikes = () => {
 		resolve(hikes);
 	  });
 	});
+}
+
+exports.getHike = (hikeID) => {
+	return new Promise((resolve, reject) => {
+	  const sql = 'SELECT * FROM HIKES WHERE HikeID	=?';
+	  db.all(sql,  [hikeID], (err, rows) => {
+		if (err) {
+		  reject(err);
+		  return;
+		}
+		else{
+			if (rows.length === 0){
+                resolve(undefined);
+			}
+			else {
+				const hike = rows.map((h) => ({ id: h.HikeID, label: h.Label, length: h.Length,expTime: h.ExpTime,ascent: h.Ascent,difficulty: h.Difficulty, description: h.Description  }));
+				resolve(hike);
+			}
+		}
+	  });
+	});
 }	
 
 exports.deleteHike = (hikeID) => {
