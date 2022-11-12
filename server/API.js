@@ -55,6 +55,22 @@ app.get('/api/hikes', async (req, res) => {
     }
 });
 
+
+app.get('/api/hike/:id', async (req, res) => {
+    const hikeID = req.params.id;
+    try {
+        const hike = await dao.getHike(hikeID);
+        if(hike == undefined){
+            return 404
+        }
+        res.status(200).json(hike[0]);
+    }
+    catch (err) {
+        res.status(500).end();
+    }
+});
+
+
 app.delete('/api/hikes', async (req, res) => {
     console.log("hikes"+req.body.id)
     const hikeID = req.body.id;
