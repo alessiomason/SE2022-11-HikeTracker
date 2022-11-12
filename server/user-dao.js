@@ -40,7 +40,7 @@ exports.getUser = (email, password) => {
 			else {
 				const user = { id: row.UserId, email: row.Email, access_right: row.AccessRight, verified: row.Verified };
 
-				const salt = row.salt;
+				const salt = row.Salt;
 				crypto.scrypt(password, salt, 32, (err, hashedPassword) => {
 					if (err) reject(err);
 					const passwordHex = Buffer.from(row.PasswordHash, 'hex');

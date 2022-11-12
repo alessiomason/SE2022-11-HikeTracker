@@ -13,7 +13,10 @@ require('dotenv').config();
 /*** Set up Passport ***/
 // set up the "username and password" login strategy
 // by setting a function to verify email and password
-passport.use(new LocalStrategy(
+passport.use(new LocalStrategy({
+        usernameField: 'email',
+        passwordField: 'password'
+    },
     function (email, password, done) {
         userDao.getUser(email, password).then((user) => {
             if (!user)

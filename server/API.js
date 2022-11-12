@@ -5,6 +5,7 @@ const dayjs = require('dayjs');
 const duration = require('dayjs/plugin/duration');
 dayjs.extend(duration);
 const nodemailer = require('nodemailer');
+require('dotenv').config();
 
 module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
 
@@ -22,9 +23,9 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
                 if (element.properties.name === '') {
                     return res.status(422).json({ error: `Description name of track can not be empty.` });
                 }
-                label = element.properties.name;
-                pointsArray = element.geometry.coordinates;
-                ascent = pointsArray[pointsArray.length - 1][2] - pointsArray[0][2];
+                let label = element.properties.name;
+                let pointsArray = element.geometry.coordinates;
+                let ascent = pointsArray[pointsArray.length - 1][2] - pointsArray[0][2];
 
 
                 hikes.concat( await dao.addHike(label, null, null, ascent, null, ""));
@@ -78,15 +79,24 @@ app.post('/api/newHike',  async (req, res) => {
     if (req.body.label === ''){
         return res.status(422).json({ error: `Label of the hike can not be empty.`});
     }
-    label = req.body.label;
-    length = req.body.length;
-    expTime = req.body.expTime;
-    ascent = req.body.ascent;
-    difficulty = req.body.difficulty;
-    description = req.body.description;
+    let label = req.body.label;
+    let length = req.body.length;
+    let expTime = req.body.expTime;
+    let ascent = req.body.ascent;
+    let difficulty = req.body.difficulty;
+    let difficulty_level = null;
+    
+    if (difficulty == "Tourist") {
+        difficulty_level = 1;
+    } else if (difficulty == "Hiker"){
+        difficulty_level = 2;
+    } else if (difficulty == "Professional hiker"){
+        difficulty_level = 3;
+    }
+    let description = req.body.description;
             
     try {
-        const hike = await dao.newHike(label,length,expTime,ascent,difficulty,description);
+        const hike = await dao.newHike(label,length,expTime,ascent,difficulty_level,description);
         res.status(201).json(hike).end();
     } catch (err) {
         
@@ -107,17 +117,27 @@ app.put('/api/updateHike',  async (req, res) => {
     if (req.body.label === ''){
         return res.status(422).json({ error: `New name of the hike can not be empty.`});
     }
-    hikeId = req.body.id
-    label = req.body.label;
-    length = req.body.length;
-    expTime = req.body.expTime;
-    ascent = req.body.ascent;
-    difficulty = req.body.difficulty;
-    description = req.body.description;
+    let hikeId = req.body.id
+    let label = req.body.label;
+    let length = req.body.length;
+    let expTime = req.body.expTime;
+    let ascent = req.body.ascent;
+    let difficulty = req.body.difficulty;
+    let difficulty_level = 0;
+    
+    if (difficulty == "Tourist") {
+        difficulty_level = 1;
+    } else if (difficulty == "Hiker"){
+        difficulty_level = 2;
+    } else if (difficulty == "Professional hiker"){
+        difficulty_level = 3;
+    }
+
+    let description = req.body.description;
             
             
     try {
-        const hikes = await dao.updateHike(label,length,expTime,ascent,difficulty,description,hikeId);
+        const hikes = await dao.updateHike(label,length,expTime,ascent,difficulty_level,description,hikeId);
         res.status(201).json(hikes).end();
     } catch (err) {
     
@@ -127,6 +147,7 @@ app.put('/api/updateHike',  async (req, res) => {
 });
 
     // POST /signup
+
     // signup
     app.post('/api/signup', async function (req, res, next) {
         // save user

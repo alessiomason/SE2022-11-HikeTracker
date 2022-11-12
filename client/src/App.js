@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route,useNavigate} from 'react-router-
 import MyGPXLayout from './GPXLayout';
 import API from './API';
 import { useState,useEffect } from 'react';
+import LoginForm from './components/LoginForm';
 import HikeForm from './components/Hikeform';
 import Editform from './components/EditForm';
 import MySignUpForm from './components/SignUpForm';
@@ -43,12 +44,7 @@ function App2() {
         setLoggedIn(true);
         setUser(user);
         setMessage('');
-        if (user.access_right == 'manager')
-          navigate('/manager');
-        else if (user.access_right == 'officer')
-          navigate('/officer');
-        else
-          navigate('/');
+        navigate('/');
       })
       .catch(err => {
         if (err.indexOf('not verified') != -1)
@@ -110,6 +106,7 @@ useEffect(() => {
 
     <Routes>
       <Route path="/">
+        <Route path='login' element={<LoginForm loggedIn={loggedIn} user={user} doLogin={doLogin} message={message} setMessage={setMessage} />}> </Route>
         <Route path='signup' element={<MySignUpForm doSignUp={doSignUp} setMessage={setMessage} />} />
         <Route path='verify-email' element={<VerifyEmailPage />} />
         <Route path="gpx/" element={<MyGPXLayout addGPXTrack={addGPXTrack}/>} ></Route>
