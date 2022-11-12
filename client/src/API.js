@@ -6,9 +6,6 @@ const APIURL = new URL('http://localhost:3001/api/');
 function addGPXTrack(gpxJSON) {
     // call: POST /api/addGPXTrack
 
-
-
-
     return new Promise((resolve, reject) => {
         fetch(new URL('addGPXTrack', APIURL), {
             method: 'POST',
@@ -77,7 +74,6 @@ function updateHike(hike) {
 	});
 }
 
-
 async function getHikes() {
 	// call /api/gethikes
 	const response = await fetch(new URL('hikes', APIURL));
@@ -113,7 +109,73 @@ function deleteHike(id) {
 	});
 }
 
+async function signup(credentials) {
+	let response = await fetch(new URL('signup', APIURL), {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json',
+		},
+		body: JSON.stringify(credentials),
+	});
+	if (response.ok) {
+		const user = await response.json();
+		return user;
+	} else {
+		const errDetail = await response.json();
+		throw errDetail.message;
+	}
+}
 
-const API={addGPXTrack,deleteHike,getHikes,addHike,updateHike};
+async function verifyEmail(emailConfirmationToken) {
+	return new Promise(async (resolve, reject) => {
+		let response = await fetch(new URL('verify-email', APIURL), {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({ emailConfirmationToken: emailConfirmationToken }),
+		});
+		if (response.ok)
+			resolve(null);
+		else {
+			const errDetail = await response.json();
+			reject(errDetail.message);
+		}
+	})
+}
+
+async function login(credentials) {
+	let response = await fetch(new URL('sessions', APIURL), {
+		method: 'POST',
+		credentials: 'include',
+		headers: {
+			'Content-Type': 'application/json',
+		},
+		body: JSON.stringify(credentials),
+	});
+	if (response.ok) {
+		const user = await response.json();
+		return user;
+	} else {
+		const errDetail = await response.json();
+		throw errDetail.message;
+	}
+}
+
+async function logout() {
+	await fetch(new URL('sessions/current', APIURL), { method: 'DELETE', credentials: 'include' });
+}
+
+async function getUserInfo() {
+	const response = await fetch(new URL('sessions/current', APIURL), { credentials: 'include' });
+	const userInfo = await response.json();
+	if (response.ok) {
+		return userInfo;
+	} else {
+		throw userInfo;  // an object with the error coming from the server
+	}
+}
+
+const API = { addGPXTrack, deleteHike, getHikes, addHike, updateHike, signup, verifyEmail, login, logout, getUserInfo };
 export default API;
 

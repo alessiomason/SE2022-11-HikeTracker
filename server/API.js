@@ -1,9 +1,12 @@
 const dao = require('./dao'); // module for accessing the DB
 const user_dao = require('./user-dao'); // module for accessing the users in the DB
 const { check, validationResult } = require('express-validator'); // validation middleware
+const dayjs = require('dayjs');
+const duration = require('dayjs/plugin/duration');
+dayjs.extend(duration);
+const nodemailer = require('nodemailer');
 
 module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
-
 
     // add new service type
     app.post('/api/addGPXTrack', async (req, res) => {
@@ -41,9 +44,6 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
 
 
     });
-
-
-
 
 app.get('/api/hikes', async (req, res) => {
     try {
@@ -125,5 +125,63 @@ app.put('/api/updateHike',  async (req, res) => {
     }
     
 });
+
+    // POST /signup
+    // signup
+    app.post('/api/signup', async function (req, res, next) {
+        // save user
+        const user = await user_dao.newUser(req.body.email, req.body.password);
+        if (!user)
+            return res.status(401).json({ error: 'Error in signing up' });
+
+        const mailText = "Thanks for registering to Hike Tracker! Please verify your email by clicking on the following link: http://localhost:3000/verify-email?token=" + user.emailConfirmationToken;
+        const mailHTML = `<h3>Thanks for registering to Hike Tracker!</h3>
+                          <p>Please verify your email by <a href='http://localhost:3000/verify-email?token=${user.emailConfirmationToken}'>clicking here</a>.</p>`;
+
+        // send verification email
+        let transporter = nodemailer.createTransport({
+            host: "smtp.studenti.polito.it",
+            port: 465,
+            secure: true,
+            auth: {
+                user: process.env.MAIL_USERNAME,
+                pass: process.env.MAIL_PASSWORD
+            }
+        });
+
+        let mailOptions = {
+            from: 'Hike Tracker <' + process.env.MAIL_USERNAME + '>',
+            to: user.email,
+            subject: 'Verify your email',
+            text: mailText,
+            html: mailHTML
+        };
+
+        transporter.sendMail(mailOptions, function (err) {
+            if (err)
+                console.log("Error " + err);
+            else
+                console.log("Email sent successfully");
+        });
+
+        const userForRes = { id: user.id, email: user.email, access_right: user.access_right, verified: false };
+        return res.json(userForRes);
+    });
+
+    // POST /verify-email
+    // verify email
+    app.post('/api/verify-email', async function (req, res, next) {
+        const dateOfRegistration = await user_dao.getDateOfRegistration(req.body.emailConfirmationToken);
+        // tempo rimanente = 24 ore - (adesso - dateOfRegistration) = 24 ore - tempo trascorso dalla registrazione
+        const remainingTime = Math.round(dayjs.duration({ hours: 24 }).subtract(dayjs.duration(dayjs() - dayjs(dateOfRegistration))).asSeconds());
+        if (remainingTime < 0)
+            return res.status(403).json({ error: 'Token expired' });
+            console.log(1)
+        const verified = await user_dao.verifyEmail(req.body.emailConfirmationToken);
+        if (!verified)
+            return res.status(401).json({ error: 'Error in verifying email' });
+
+        return res.status(200).end();
+    });
 
 }
