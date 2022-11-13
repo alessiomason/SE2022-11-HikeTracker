@@ -1,7 +1,7 @@
 import React from 'react';
 import '../styles/Cards.css';
 import { Col, Row, Card, Container, Button } from "react-bootstrap";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { default as Img1 } from "../images/img1.jpg";
 import { default as Img2 } from "../images/img2.jpg";
 import { default as Img3 } from "../images/img3.jpg";
@@ -10,6 +10,8 @@ import { useState, useEffect } from 'react';
 import API from '../API.js';
 
 function Cards(props) {
+  const navigate = useNavigate();
+
   const [hikes, setHikes] = useState([]);
   const [dirty, setDirty] = useState(true);
 
@@ -25,15 +27,15 @@ function Cards(props) {
   return (
 
     <Container fluid className="cards p-5">
-      <Row className='mb-3'>
-        {hikes.map(h => <SingleCard hike={h} />)}
-      </Row>
-
-      <Row className="show_more">
-        <Button variant="success" className="btn_show_more">
-          Show more
+      <Row className="add-new-hike">
+        <Button variant="danger" className="btn-add-new-hike" onClick={() => { navigate("/newHike"); }}>
+          Add new hike
           <img className="ms-2 " src={Arrow} alt="arrow_image" />
         </Button>
+      </Row>
+
+      <Row className='mb-3'>
+        {hikes.map(h => <SingleCard hike={h} />)}
       </Row>
     </Container>
 

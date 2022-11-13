@@ -36,14 +36,15 @@
   color: black;
 }
 
-.show_more{
+.add-new-hike{
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
 }
 
-.btn_show_more{
+.btn-add-new-hike{
   width: fit-content;
   max-width: fit-content;
+  margin-bottom: 30px;
 }
