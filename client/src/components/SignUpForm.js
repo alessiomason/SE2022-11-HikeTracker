@@ -17,12 +17,13 @@ function MySignUpForm(props) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [passwordReenter, setPasswordReenter] = useState('');
+  const [accessRight, setAccessRight] = useState('');
 
   const handleSubmit = (event) => {
     event.preventDefault();
     let valid = true;
     props.setMessage('');
-    const credentials = { email, password };
+    const credentials = { email, password, accessRight };
 
     if (email.trim() === '') {
       valid = false;
@@ -44,9 +45,8 @@ function MySignUpForm(props) {
       props.setMessage('Invalid email.');
     }
 
-    if (valid) {
+    if (valid)
       props.doSignUp(credentials);
-    }
   };
 
   return (
@@ -92,6 +92,21 @@ function MySignUpForm(props) {
                         <Form.Group className="mb-3" controlId="formBasicPassword">
                           <Form.Control type="password" placeholder="Reenter password" value={passwordReenter} onChange={ev => setPasswordReenter(ev.target.value)} />
                         </Form.Group>
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col md={1}>
+                        <img src={UserLogin} alt="access-right" className='me-2 svg login' />
+                      </Col>
+                      <Col md={11}>
+                        <select value={accessRight} onChange={ev => setAccessRight(ev.target.value)}>
+                        <option value="hiker">Hiker</option>
+                          <option value="friend">Friend</option>
+                          <option value="local-guide">Local guide</option>
+                          <option value="platform-manager">Platform manager</option>
+                          <option value="hut-worker">Hut worker</option>
+                          <option value="emergency-operator">Emergency operator</option>
+                        </select>
                       </Col>
                     </Row>
                     <Row className="mt-2">
