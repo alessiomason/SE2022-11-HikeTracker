@@ -53,7 +53,7 @@ exports.getUser = (email, password) => {
 	});
 };
 
-exports.newUser = (email, password) => {
+exports.newUser = (email, password, accessRight) => {
 	return new Promise(async (resolve, reject) => {
 		const salt = crypto.randomBytes(16);
 		const dateOfRegistration = dayjs().format();
@@ -62,15 +62,15 @@ exports.newUser = (email, password) => {
 		crypto.scrypt(password, salt, 32, (err, hashedPassword) => {
 			if (err) reject(err);
 			else {
-				const sql = "INSERT INTO Users (Email, PasswordHash, Salt, AccessRight, DateOfRegistration, EmailConfirmationToken) VALUES (?, ?, ?, 'manager', ?, ?)";
-				db.run(sql, [email, hashedPassword, salt, dateOfRegistration, emailConfirmationToken], (err) => {
+				const sql = "INSERT INTO Users (Email, PasswordHash, Salt, AccessRight, DateOfRegistration, EmailConfirmationToken) VALUES (?, ?, ?, ?, ?, ?)";
+				db.run(sql, [email, hashedPassword, salt, accessRight, dateOfRegistration, emailConfirmationToken], (err) => {
 					if (err) reject(err);
 					else {
 						db.get('SELECT last_insert_rowid() AS ID', (err, row) => {
 							if (err) reject(err);
-							else if (row === undefined) { resolve(false); }
+							else if (row === undefined) resolve(false);
 							else
-								resolve({ id: row.ID, email: email, access_right: 'manager', verified: false, dateOfRegistration: dateOfRegistration, emailConfirmationToken: emailConfirmationToken });
+								resolve({ id: row.ID, email: email, access_right: accessRight, verified: false, dateOfRegistration: dateOfRegistration, emailConfirmationToken: emailConfirmationToken });
 						})
 					}
 				});

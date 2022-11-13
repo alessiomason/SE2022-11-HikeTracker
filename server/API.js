@@ -165,9 +165,9 @@ app.put('/api/updateHike',  async (req, res) => {
     // POST /signup
 
     // signup
-    app.post('/api/signup', async function (req, res, next) {
+    app.post('/api/signup', async function (req, res) {
         // save user
-        const user = await user_dao.newUser(req.body.email, req.body.password);
+        const user = await user_dao.newUser(req.body.email, req.body.password, req.body.accessRight);
         if (!user)
             return res.status(401).json({ error: 'Error in signing up' });
 
@@ -207,13 +207,12 @@ app.put('/api/updateHike',  async (req, res) => {
 
     // POST /verify-email
     // verify email
-    app.post('/api/verify-email', async function (req, res, next) {
+    app.post('/api/verify-email', async function (req, res) {
         const dateOfRegistration = await user_dao.getDateOfRegistration(req.body.emailConfirmationToken);
         // tempo rimanente = 24 ore - (adesso - dateOfRegistration) = 24 ore - tempo trascorso dalla registrazione
         const remainingTime = Math.round(dayjs.duration({ hours: 24 }).subtract(dayjs.duration(dayjs() - dayjs(dateOfRegistration))).asSeconds());
         if (remainingTime < 0)
             return res.status(403).json({ error: 'Token expired' });
-            console.log(1)
         const verified = await user_dao.verifyEmail(req.body.emailConfirmationToken);
         if (!verified)
             return res.status(401).json({ error: 'Error in verifying email' });
