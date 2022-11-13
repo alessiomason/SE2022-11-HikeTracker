@@ -6,16 +6,40 @@ chai.should();
 const app = require('../server');
 let agent = chai.request.agent(app);
 
-describe('test hike APIs', () => {
+describe('test UPDATE hike APIs', () => {
     deleteAllHikes();
     getHikes(200, 0);
-    createHike(201, "Untitled", null, null, 22.9999980926514, "Tourist", "Description 1");
+    createHike(201, "Gran Paradiso", 205000, 100, 230, "Professional hiker", "Alpine challenge 0");
+    updateHike(422, 1, "", 20500, 10, 23, "Professional hiker", "Alpine challenge");
     getHikes(200, 1);
-    createHike(422, "", null, null, 1353.053467, "Hiker");
+    updateHike(201, 1, "Gran Paradiso", 20500, 10, 23, "Professional hiker", "Alpine challenge");
     getHikes(200, 1);
-    createHike(201, "rocciamelone vero", null, null, 1353.053467, "Hiker");
-    createHike(201, "rocciamelone vero", null, null, 1353.053467, "Hiker");
-    createHike(201, "rocciamelone vero", null, null, 1353.053467, "Hiker");
+})
+
+describe('test DELETE hike APIs', () => {
+    deleteAllHikes();
+    getHikes(200, 0);
+    createHike(201, "Gran Paradiso", 205000, 100, 230, "Professional hiker", "Alpine challenge 0");
+    getHikes(200, 1);
+    deleteHike(200, 1);
+    getHikes(200, 0);
+})
+
+describe('test CREATION and READ hike APIs', () => {
+    deleteAllHikes();
+    getHikes(200, 0);
+    createHike(201, "Gran Paradiso", 20500, 10, 23, "Professional hiker", "Alpine challenge");
+    getHikes(200, 1);
+    createHike(422, "", 9500, 4, 6, "Hiker", "Best hike in the Dolomites");
+    getHikes(200, 1);
+    createHike(201, "Tre Cime di LavaredoTre Cime di Lavaredo", 9500, 4, 6, "Hiker", "Best hike in the Dolomites");
+    createHike(201, "Sentiero degli Dei", 8000, 5, 13, "Tourist", "Best hike for a sun-kissed stroll");
+    getHikes(200, 3);
+    createHike(422, "", 11400, 7, 1353.053467, "Hiker", "Considered the highest of the Alps for centuries");
+    getHikes(200, 3);
+    createHike(201, "Rocciamelone", 11400, 7, 1353.053467, "Hiker", "Considered the highest of the Alps for centuries");
+    createHike(201, "Corno Grande", 9000, 7, 665, "Hiker", "Best hike for climbing a mountain");
+    getHikes(200, 5);
 })
 
 function deleteAllHikes() {
@@ -42,7 +66,7 @@ function getHikes(expectedHTTPStatus, length) {
 
 function createHike(expectedHTTPStatus, label, length, expTime, ascent, difficulty, description) {
     it('creating a hike in the system', function (done) {
-        let ticket = {
+        let hike = {
             label : label,
             length : length,
             expTime : expTime,
@@ -51,7 +75,7 @@ function createHike(expectedHTTPStatus, label, length, expTime, ascent, difficul
             description: description
         };
         agent.post('/api/newHike')
-            .send(ticket)
+            .send(hike)
             .then(function (r1) {
                 r1.should.have.status(expectedHTTPStatus);
                 agent.get('/api/hikes')
@@ -64,6 +88,40 @@ function createHike(expectedHTTPStatus, label, length, expTime, ascent, difficul
                         r2.should.have.status(200);
                         done();
                     }).catch(done);
+            }).catch(done);
+    });
+}
+
+function updateHike(expectedHTTPStatus, id, newLabel, newLength, newExpTime, newAscent, newDifficulty, newDescription) {
+    it('update an hike in the system', function (done) {
+        let hike = {
+            id: id,
+            label : newLabel,
+            length : newLength,
+            expTime : newExpTime,
+            ascent : newAscent,
+            difficulty : newDifficulty,
+            description: newDescription
+        };
+        agent.put('/api/updateHike/')
+            .send(hike)
+            .then(function (res) {
+                res.should.have.status(expectedHTTPStatus);
+                done();
+            }).catch(done);
+    });
+}
+
+function deleteHike(expectedHTTPStatus, id) {
+    it('delete an hike from the system', function (done) {
+        let hike = {
+            id: id
+        }
+        agent.delete('/api/hikes/')
+            .send(hike)
+            .then(function (res) {
+                res.should.have.status(expectedHTTPStatus);
+                done();
             }).catch(done);
     });
 }
