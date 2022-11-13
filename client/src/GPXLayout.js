@@ -19,9 +19,11 @@ function MyGPXLayout(props) {
         reader.readAsText(file);
 
         reader.onload = function () {
+            
             gpx.parse(reader.result); 
             let geoJSON = gpx.toGeoJSON();
-            //console.log(reader.result);
+            console.log(reader.result);
+            console.log(geoJSON);
             props.addGPXTrack(geoJSON);
         };
 

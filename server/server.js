@@ -8,16 +8,21 @@ const passport = require('passport');   // authentication middleware
 const LocalStrategy = require('passport-local').Strategy;   // username and password for login
 const session = require('express-session');    // enable sessions
 const APIs = require('./API');
+require('dotenv').config();
 
 /*** Set up Passport ***/
 // set up the "username and password" login strategy
-// by setting a function to verify username and password
-passport.use(new LocalStrategy(
-    function (username, password, done) {
-        userDao.getUser(username, password).then((user) => {
+// by setting a function to verify email and password
+passport.use(new LocalStrategy({
+        usernameField: 'email',
+        passwordField: 'password'
+    },
+    function (email, password, done) {
+        userDao.getUser(email, password).then((user) => {
             if (!user)
-                return done(null, false, { message: 'Wrong username and/or password.' });
-
+                return done(null, false, { message: 'Wrong email and/or password.' });
+            else if (!user.verified)
+                return done(null, false, { message: 'User not verified.' })
             return done(null, user);
         })
     }
