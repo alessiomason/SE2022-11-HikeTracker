@@ -3,6 +3,7 @@ import { Button, Col, Form, Row, Container, Alert } from "react-bootstrap";
 import { default as UserLogin } from "../icons/user-login.svg";
 import { default as Password } from "../icons/password.svg";
 import '../App.css';
+import '../styles/SignUpForm.css';
 
 function MySignUpForm(props) {
 
@@ -57,7 +58,7 @@ function MySignUpForm(props) {
             <Container className="login-border">
               <Row className="mb-5">
                 <Col md={{ span: 10, offset: 2 }}>
-                  <h2 className="login-title">Sign Up</h2>
+                  <h2 className="signup-title">Sign Up</h2>
                 </Col>
               </Row>
               <Row>

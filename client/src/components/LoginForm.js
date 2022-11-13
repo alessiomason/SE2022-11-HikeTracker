@@ -3,6 +3,7 @@ import { Button, Col, Form, Row, Container, Alert } from "react-bootstrap";
 import { default as UserLogin } from "../icons/user-login.svg";
 import { default as Password } from "../icons/password.svg";
 import '../App.css';
+import '../styles/LoginForm.css';
 
 function MyLoginForm(props) {
 
@@ -14,8 +15,8 @@ function MyLoginForm(props) {
             );
     };
 
-    const [email, setEmail] = useState('u2@p.it');
-    const [password, setPassword] = useState('password');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
 
     const handleSubmit = (event) => {
         event.preventDefault();
