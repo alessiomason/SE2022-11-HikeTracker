@@ -17,7 +17,7 @@ function Editform(props) {
     const [difficulty, setDifficulty] = useState ('' );
     const [description, setDescription] = useState ('');
    
-    console.log(props.hike);
+    //console.log(props.hike);
 
     if(hike === null) {
       if(Array.isArray(props.hike)) {
@@ -59,6 +59,7 @@ function Editform(props) {
       // add
       const updatedHike = {id:hike.id, label: label, length: length, expTime: expTime, ascent: ascent, difficulty: difficulty, description: description }
       props.updateHike(updatedHike);
+      props.setDirty(true);
       navigate('/');
     }
   }
@@ -82,17 +83,17 @@ function Editform(props) {
                 </Form.Group>
 
                 <Form.Group>
-                    <Form.Label>Length</Form.Label>
+                    <Form.Label>Length [m]</Form.Label>
                     <Form.Control type='number' min={0} value={length} onChange={ev => setLength(ev.target.value)} />
                 </Form.Group>
 
                 <Form.Group>
-                    <Form.Label>Expected time</Form.Label>
+                    <Form.Label>Expected time [h]</Form.Label>
                     <Form.Control type='number' min={0} value={expTime} onChange={ev => setExpTime(ev.target.value)}></Form.Control>
                 </Form.Group>
 
                 <Form.Group>
-                    <Form.Label>Ascent</Form.Label>
+                    <Form.Label>Ascent [m]</Form.Label>
                     <Form.Control type='number' min={0} value={ascent} onChange={ev => setAscent(ev.target.value)} />
                 </Form.Group>
                 

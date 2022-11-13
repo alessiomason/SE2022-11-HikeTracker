@@ -102,7 +102,7 @@ function App2() {
       .then((h) => { setHike(h); setDirty(false) })
       .catch(err => handleError(err));
 
-  }, []);
+  }, [dirty]);
 
   function Layout() {
     return (
@@ -123,9 +123,9 @@ function App2() {
         <Route path='signup' element={<MySignUpForm doSignUp={doSignUp} setMessage={setMessage} />} />
         <Route path='verify-email' element={<VerifyEmailPage />} />
         <Route path="gpx/" element={<MyGPXLayout addGPXTrack={addGPXTrack} />} ></Route>
-        <Route path="newHike/" element={<HikeForm hike={hike}  addHike={addHike} addGPXTrack={addGPXTrack} />} ></Route>
+        <Route path="newHike/" element={<HikeForm hike={hike}  addHike={addHike} addGPXTrack={addGPXTrack} setDirty={setDirty}/>} ></Route>
         <Route path="updateHike/:hikeId/" element={<Editform hike={hike}
-          updateHike={updateHike} deleteHike={deleteHike} />} ></Route>
+          updateHike={updateHike} deleteHike={deleteHike} setDirty={setDirty} />} ></Route>
       </Route>
     </Routes>
 

@@ -34,6 +34,7 @@ function Hikeform(props) {
       console.log(reader.result);
       console.log(geoJSON);
       props.addGPXTrack(geoJSON);
+      props.setDirty(true);
     };
 
     reader.onerror = function () {
