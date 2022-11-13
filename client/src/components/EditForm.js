@@ -84,17 +84,17 @@ function Editform(props) {
 
                 <Form.Group>
                     <Form.Label>Length [m]</Form.Label>
-                    <Form.Control type='number' min={0} value={length} onChange={ev => setLength(ev.target.value)} />
+                    <Form.Control type='number' step="any" min={0} value={length} onChange={ev => setLength(ev.target.value)} />
                 </Form.Group>
 
                 <Form.Group>
                     <Form.Label>Expected time [h]</Form.Label>
-                    <Form.Control type='number' min={0} value={expTime} onChange={ev => setExpTime(ev.target.value)}></Form.Control>
+                    <Form.Control type='number' step="any" min={0} value={expTime} onChange={ev => setExpTime(ev.target.value)}></Form.Control>
                 </Form.Group>
 
                 <Form.Group>
                     <Form.Label>Ascent [m]</Form.Label>
-                    <Form.Control type='number' min={0} value={ascent} onChange={ev => setAscent(ev.target.value)} />
+                    <Form.Control type='number' step="any" value={ascent} onChange={ev => setAscent(ev.target.value)} />
                 </Form.Group>
                 
                 <Form.Group>
