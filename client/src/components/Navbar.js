@@ -35,7 +35,7 @@ function MyNavbar(props) {
                 <Button variant="primary" className="mx-2 my-1" onClick={() => navigate("/signup")}> Sign Up </Button>
               </Nav> :
               <Nav>
-                <Button variant="outline-success" className="mx-2 my-1 btn--outline" onClick={() => props.doLogout}>
+                <Button variant="outline-success" className="mx-2 my-1 btn--outline" onClick={props.doLogout}>
                   <img src={User} alt="user_image" /> Logout
                 </Button>
               </Nav>
