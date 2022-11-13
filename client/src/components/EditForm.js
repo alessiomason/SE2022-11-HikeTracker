@@ -1,9 +1,7 @@
 import { Alert, Form } from 'react-bootstrap';
-import { Container, Row, Col } from 'react-bootstrap';
+import { Container, Row, Col, Button } from 'react-bootstrap';
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Button} from "rsuite";
-import "rsuite/dist/rsuite.min.css";
 
 
 function Editform(props) {
