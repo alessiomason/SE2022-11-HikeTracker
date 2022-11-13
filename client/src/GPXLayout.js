@@ -1,4 +1,4 @@
-import { Col, Form, Nav, Row, ListGroup, Navbar, Container, NavDropdown, Table, Button, Alert, } from "react-bootstrap";
+import { Col, Form, ButtonGroup, ButtonToolbar, Nav, Row, ListGroup, Navbar, Container, NavDropdown, Table, Button, Alert, } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { useState } from 'react';
 let gpxParser = require('gpxparser');
@@ -50,6 +50,8 @@ function MyGPXLayout(props) {
                         </Form>
                     </Col>
                 </Row>
+         
+                
             </Container>
         </>
     );
