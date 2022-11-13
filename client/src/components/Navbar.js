@@ -8,7 +8,6 @@ import { useNavigate } from "react-router-dom";
 function MyNavbar(props) {
 
   const navigate = useNavigate();
-  const [loggedIn, setSetLoggedIn] = useState(false);
 
   return (
 
@@ -30,14 +29,14 @@ function MyNavbar(props) {
             <Nav.Link href="#f2" className="nav-links">Function2</Nav.Link>
             <Nav.Link href="#f3" className="nav-links">Function3</Nav.Link>
             */}
-            {(!loggedIn) ?
+            {(!props.loggedIn) ?
               <Nav>
-                <Button variant="light" className="mx-2 my-1" onClick={() => { navigate("/login"); }}> Sign In </Button>
-                <Button variant="primary" className="mx-2 my-1" onClick={() => { navigate("/signup"); }}> Sign Up </Button>
+                <Button variant="light" className="mx-2 my-1" onClick={() => navigate("/login")}> Sign In </Button>
+                <Button variant="primary" className="mx-2 my-1" onClick={() => navigate("/signup")}> Sign Up </Button>
               </Nav> :
               <Nav>
-                <Button variant="outline-success" className="mx-2 my-1 btn--outline">
-                  <img src={User} alt="user_image" /> Profile
+                <Button variant="outline-success" className="mx-2 my-1 btn--outline" onClick={() => props.doLogout}>
+                  <img src={User} alt="user_image" /> Logout
                 </Button>
               </Nav>
             }

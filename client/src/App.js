@@ -61,6 +61,7 @@ function App2() {
     await API.logout();
     setLoggedIn(false);
     setUser({});
+    setDirty(true);
     navigate('/');
   }
 
@@ -103,10 +104,10 @@ function App2() {
 
   }, []);
 
-  function Layout(props) {
+  function Layout() {
     return (
       <>
-        <MyNavbar />
+        <MyNavbar loggedIn={loggedIn} doLogout={doLogout} />
         <Outlet />
         <Footer />
       </>
@@ -117,7 +118,7 @@ function App2() {
 
     <Routes>
       <Route path="/" element={<Layout />}>
-        <Route index element={<Home />} />
+        <Route index element={<Home user={user} />} />
         <Route path='login' element={<LoginForm loggedIn={loggedIn} user={user} doLogin={doLogin} message={message} setMessage={setMessage} />}> </Route>
         <Route path='signup' element={<MySignUpForm doSignUp={doSignUp} setMessage={setMessage} />} />
         <Route path='verify-email' element={<VerifyEmailPage />} />

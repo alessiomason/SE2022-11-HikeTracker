@@ -3,12 +3,12 @@ import Cards from '../Cards';
 import MyTopHome from '../TopHome';
 import MyFilterSection from '../FilterSection';
 
-function Home() {
+function Home(props) {
   return (
     <>
       <MyTopHome />
       <MyFilterSection />
-      <Cards />
+      <Cards user={props.user} />
     </>
   );
 }
