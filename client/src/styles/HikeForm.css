@@ -1,0 +1,20 @@
+.hike_form-title {
+	margin-top: 100px;
+}
+
+.save-button {
+    margin-top: 10px;
+    background-color: green;
+}
+
+.back-button {
+    margin-top: 10px;
+    margin-left: 20px;
+    background-color: gray;
+}
+
+.delete-button {
+    margin-top: 10px;
+    margin-left: 1070px;
+    background-color: red;
+}

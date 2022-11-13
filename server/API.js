@@ -84,6 +84,17 @@ app.delete('/api/hikes', async (req, res) => {
     }
 });
 
+// delete all tickets
+app.delete('/api/deleteAllHikes', async (req, res) => {
+    try {
+        await dao.deleteAllHikes();
+        res.status(204).end();
+
+    } catch (e) {
+        res.status(500).end();
+    }
+});
+
 app.post('/api/newHike',  async (req, res) => {
 
     const errors = validationResult(req);

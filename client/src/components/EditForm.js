@@ -2,6 +2,7 @@ import { Alert, Form } from 'react-bootstrap';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import '../styles/HikeForm.css';
 
 
 function Editform(props) {
@@ -67,7 +68,7 @@ function Editform(props) {
       <Container>
         <Row>
           <Col>
-             <h1>Edit hike</h1> :
+             <h1 className="hike_form-title">Edit hike</h1>
           </Col>
         </Row>
 
@@ -111,9 +112,9 @@ function Editform(props) {
                     <Form.Control required={true}  value={description} onChange={ev => setDescription(ev.target.value)} />
                 </Form.Group>
 
-                <Button className= 'm-3' type='submit' >Save</Button>
-                <Button className= 'm-3' color='red' appearance="primary" onClick={ ()=> navigate('/')} variant='secondary' >Cancel</Button>
-                <Button className= 'm-3' color='red' appearance="primary" onClick={()=>props.deleteHike(hike.id)} variant='secondary' >Delete</Button>
+                <Button className= 'save-button' type='submit' >Save</Button>
+                <Button className= 'back-button' onClick={ ()=> navigate('/')} variant='secondary' >Back</Button>
+                <Button className= 'delete-button' onClick={()=>props.deleteHike(hike.id)} variant='secondary' >Delete</Button>
                 </Form>
             </Col>
         </Row>

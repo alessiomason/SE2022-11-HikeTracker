@@ -141,6 +141,19 @@ exports.deleteHike = (hikeID) => {
 	});
 };
 
+exports.deleteAllHikes = () => {
+	return new Promise((resolve, reject) => {
+		const sql = 'DELETE FROM Hikes';
+		db.all(sql, [], (err, rows) => {
+		  if (err) {
+			reject(err);
+			return;
+		  }
+		  resolve();
+		});
+	  });
+}
+
 exports.newHike = (label,length,expTime,ascent,difficulty,description) => {
 	return new Promise((resolve, reject) => {
 		const sql = 'INSERT INTO HIKES(label,length,expTime,ascent,difficulty,description) VALUES(?, ?,?,?,?,?)'
