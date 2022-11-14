@@ -1,5 +1,7 @@
+import './App.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, useNavigate, Outlet } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useNavigate, Navigate, Outlet } from 'react-router-dom';
 import API from './API';
 import LoginForm from './components/LoginForm';
 import HikeForm from './components/HikeForm';
@@ -9,8 +11,6 @@ import VerifyEmailPage from './components/VerifyEmail';
 import MyNavbar from './components/Navbar';
 import Home from './components/pages/Home';
 import Footer from './components/Footer';
-import './App.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
     return (
@@ -125,8 +125,8 @@ function App2() {
                 <Route path='login' element={<LoginForm loggedIn={loggedIn} user={user} doLogin={doLogin} message={message} setMessage={setMessage} />}> </Route>
                 <Route path='signup' element={<MySignUpForm doSignUp={doSignUp} setMessage={setMessage} />} />
                 <Route path='verify-email' element={<VerifyEmailPage />} />
-                <Route path="newHike/" element={<HikeForm hike={hike} addHike={addHike} addGPXTrack={addGPXTrack} setDirty={setDirty} />} ></Route>
-                <Route path="updateHike/:hikeId/" element={<EditForm hike={hike} updateHike={updateHike} deleteHike={deleteHike} setDirty={setDirty} />} ></Route>
+                <Route path="newHike/" element={loggedIn && user.access_right === 'local-guide' ? <HikeForm hike={hike} addHike={addHike} addGPXTrack={addGPXTrack} setDirty={setDirty} /> : <Navigate to='/' />} ></Route>
+                <Route path="updateHike/:hikeId/" element={loggedIn && user.access_right === 'local-guide' ? <EditForm hike={hike} updateHike={updateHike} deleteHike={deleteHike} setDirty={setDirty} /> : <Navigate to='/' />} ></Route>
             </Route>
         </Routes>
     );
