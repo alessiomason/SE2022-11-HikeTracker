@@ -15,8 +15,8 @@ function MyLoginForm(props) {
             );
     };
 
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+    const [email, setEmail] = useState('u3@p.it');
+    const [password, setPassword] = useState('password');
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -39,64 +39,58 @@ function MyLoginForm(props) {
             props.setMessage('Email not valid.');
         }
 
-        if (valid) {
+        if (valid)
             props.doLogin(credentials);
-        }
     };
 
     return (
-        <>
-            <Container>
-                <Row>
-                    <Col md={{ span: 4, offset: 4 }}>
-                        <Container className="login-border">
-                            <Row className="mb-5">
-                                <Col md={{ span: 10, offset: 2 }}>
-                                    <h2 className="login-title">Login</h2>
-                                </Col>
-                            </Row>
-                            <Row>
-                                <Col >
-                                    <Form onSubmit={handleSubmit}>
-                                        {props.message && <Alert variant='danger' onClose={() => props.setMessage('')} dismissible>{props.message}</Alert>}
-                                        <Row>
-                                            <Col md={1}>
-                                                <img src={UserLogin} alt="user" />
-                                            </Col>
-                                            <Col md={11}>
-                                                <Form.Group className="mb-3" controlId="formBasicEmail">
-                                                    <Form.Control type="email" placeholder="Enter email address" value={email} onChange={ev => setEmail(ev.target.value)} />
-                                                </Form.Group>
-                                            </Col>
-                                        </Row>
-                                        <Row>
-                                            <Col md={1}>
-                                                <img src={Password} alt="password" className='me-2 svg login' />
-                                            </Col>
-                                            <Col md={11}>
-                                                <Form.Group className="mb-3" controlId="formBasicPassword">
-                                                    <Form.Control type="password" placeholder="Enter password" value={password} onChange={ev => setPassword(ev.target.value)} />
-                                                </Form.Group>
-                                            </Col>
-                                        </Row>
-                                        <Row className="mt-2">
-                                            <Col md={{ span: 4, offset: 4 }}>
-                                                <Button variant="primary" type="submit" > Login </Button>
-                                            </Col>
-                                        </Row>
+        <Container>
+            <Row>
+                <Col md={{ span: 4, offset: 4 }}>
+                    <Container className="login-border">
+                        <Row className="mb-5">
+                            <Col md={{ span: 10, offset: 2 }}>
+                                <h2 className="login-title">Login</h2>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col >
+                                <Form onSubmit={handleSubmit}>
+                                    {props.message && <Alert variant='danger' onClose={() => props.setMessage('')} dismissible>{props.message}</Alert>}
+                                    <Row>
+                                        <Col md={1}>
+                                            <img src={UserLogin} alt="user" />
+                                        </Col>
+                                        <Col md={11}>
+                                            <Form.Group className="mb-3" controlId="formBasicEmail">
+                                                <Form.Control type="email" placeholder="Enter email address" value={email} onChange={ev => setEmail(ev.target.value)} />
+                                            </Form.Group>
+                                        </Col>
+                                    </Row>
+                                    <Row>
+                                        <Col md={1}>
+                                            <img src={Password} alt="password" className='me-2 svg login' />
+                                        </Col>
+                                        <Col md={11}>
+                                            <Form.Group className="mb-3" controlId="formBasicPassword">
+                                                <Form.Control type="password" placeholder="Enter password" value={password} onChange={ev => setPassword(ev.target.value)} />
+                                            </Form.Group>
+                                        </Col>
+                                    </Row>
+                                    <Row className="mt-2">
+                                        <Col md={{ span: 4, offset: 4 }}>
+                                            <Button variant="primary" type="submit" > Login </Button>
+                                        </Col>
+                                    </Row>
 
-                                    </Form>
-                                </Col>
-                            </Row>
-                        </Container>
-                    </Col>
-                </Row>
-            </Container>
-
-        </>
+                                </Form>
+                            </Col>
+                        </Row>
+                    </Container>
+                </Col>
+            </Row>
+        </Container>
     );
-
-
 }
 
 export default MyLoginForm;

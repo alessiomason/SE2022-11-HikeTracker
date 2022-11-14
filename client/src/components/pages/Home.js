@@ -1,16 +1,16 @@
-import '../../App.css';
-import Cards from '../Cards';
+import HikesCards from '../HikesCards';
 import MyTopHome from '../TopHome';
 import MyFilterSection from '../FilterSection';
+import '../../App.css';
 
 function Home(props) {
-  return (
-    <>
-      <MyTopHome />
-      <MyFilterSection />
-      <Cards user={props.user} />
-    </>
-  );
+    return (
+        <>
+            <MyTopHome />
+            <MyFilterSection />
+            <HikesCards user={props.user} />
+        </>
+    );
 }
 
 export default Home;

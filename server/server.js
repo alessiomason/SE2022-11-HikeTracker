@@ -14,9 +14,9 @@ require('dotenv').config();
 // set up the "username and password" login strategy
 // by setting a function to verify email and password
 passport.use(new LocalStrategy({
-        usernameField: 'email',
-        passwordField: 'password'
-    },
+    usernameField: 'email',
+    passwordField: 'password'
+},
     function (email, password, done) {
         userDao.getUser(email, password).then((user) => {
             if (!user)
@@ -93,8 +93,7 @@ app.post('/api/sessions', function (req, res, next) {
         }
         // success, perform the login
         req.login(user, (err) => {
-            if (err)
-                return next(err);
+            if (err) return next(err);
 
             // req.user contains the authenticated user, we send all the user info back
             // this is coming from userDao.getUser()
@@ -106,15 +105,14 @@ app.post('/api/sessions', function (req, res, next) {
 // DELETE /sessions/current 
 // logout
 app.delete('/api/sessions/current', (req, res) => {
-    req.logout(() => { res.end(); });
+    req.logout(() => res.end());
 });
 
 // GET /sessions/current
 // check whether the user is logged in or not
 app.get('/api/sessions/current', (req, res) => {
-    if (req.isAuthenticated()) {
+    if (req.isAuthenticated())
         res.status(200).json(req.user);
-    }
     else
         res.status(401).json({ error: 'User not authenticated!' });
 });

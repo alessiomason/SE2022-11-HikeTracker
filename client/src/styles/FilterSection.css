@@ -6,16 +6,16 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-  }
-  
+}
+
 h1 {
     text-align: center;
 }
 
-.modal_label{
-  align-items: center;
+.modal_label {
+    align-items: center;
 }
 
-.btn_filter{
-  border-radius: 0px !important;
+.btn_filter {
+    border-radius: 0px !important;
 }
