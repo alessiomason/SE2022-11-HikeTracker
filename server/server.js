@@ -117,6 +117,18 @@ app.get('/api/sessions/current', (req, res) => {
         res.status(401).json({ error: 'User not authenticated!' });
 });
 
+// GET /sessions/current/access-right
+// check whether the user is logged in or not
+app.get('/api/sessions/current/access-right', async (req, res) => {
+    try {
+        const accessRight = await userDao.getUserAccessRight(req.user.id);
+        res.status(200).json(accessRight);
+    }
+    catch (err) {
+        res.status(500).end();
+    }
+});
+
 
 // activate the server
 app.listen(port, () => {

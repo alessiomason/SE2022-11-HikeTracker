@@ -91,6 +91,17 @@ exports.getDateOfRegistration = (emailConfirmationToken) => {
     });
 }
 
+exports.getUserAccessRight = (userId) => {
+    return new Promise((resolve, reject) => {
+        const sql = "SELECT AccessRight FROM Users WHERE UserID = ?";
+        db.get(sql, [userId], (err, row) => {
+            if (err) reject(err);
+            else if (row === undefined) resolve(false);
+            else resolve(row.AccessRight);
+        })
+    });
+}
+
 exports.verifyEmail = (emailConfirmationToken) => {
     return new Promise(async (resolve, reject) => {
         const sql = "UPDATE Users SET Verified = 1 WHERE EmailConfirmationToken = ?";

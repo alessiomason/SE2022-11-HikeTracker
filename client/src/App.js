@@ -30,20 +30,19 @@ function App2() {
     const [hike, setHike] = useState('');
     const [dirty, setDirty] = useState(false);
 
-    /* 
     useEffect(() => {
-      const checkAuth = async () => {
-        try {
-          const user = await API.getUserInfo();
-          setLoggedIn(true);
-          setUser(user);
-        } catch (err) {
-          handleError(err);
-        }
-      };
-      checkAuth();
+        const checkAuth = async () => {
+            try {
+                let user = await API.getUserInfo();
+                user.access_right = await API.getUserAccessRight();
+                setLoggedIn(true);
+                setUser(user);
+            } catch (err) {
+                handleError(err);
+            }
+        };
+        checkAuth();
     }, []);
-    */
 
     const doSignUp = (credentials) => {
         API.signup(credentials)

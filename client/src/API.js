@@ -169,6 +169,14 @@ async function getUserInfo() {
     else throw userInfo;  // an object with the error coming from the server
 }
 
-const API = { addGPXTrack, deleteHike, getHikes, addHike, updateHike, signup, verifyEmail, login, logout, getUserInfo };
+async function getUserAccessRight() {
+    const response = await fetch(new URL('sessions/current/access-right', APIURL), { credentials: 'include' });
+    const accessRight = await response.json();
+    if (response.ok)
+        return accessRight;
+    else throw accessRight;  // an object with the error coming from the server
+}
+
+const API = { addGPXTrack, deleteHike, getHikes, addHike, updateHike, signup, verifyEmail, login, logout, getUserInfo, getUserAccessRight };
 export default API;
 
