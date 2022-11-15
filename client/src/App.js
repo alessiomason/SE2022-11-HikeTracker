@@ -4,13 +4,17 @@ import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useNavigate, Navigate, Outlet } from 'react-router-dom';
 import API from './API';
 import LoginForm from './components/LoginForm';
-import HikeForm from './components/HikeForm';
+import HikeForm from './components/Hikeform';
 import EditForm from './components/EditForm';
 import MySignUpForm from './components/SignUpForm';
 import VerifyEmailPage from './components/VerifyEmail';
 import MyNavbar from './components/Navbar';
+import MyHikeManager from './components/pages/HikeManager';
+import MyHutManager from './components/pages/HutManager';
+import MyParkingManager from './components/pages/ParkingManager';
 import Home from './components/pages/Home';
 import Footer from './components/Footer';
+import MyManageGuide from './components/pages/HikeManager';
 
 function App() {
     return (
@@ -121,6 +125,9 @@ function App2() {
         <Routes>
             <Route path="/" element={<Layout />}>
                 <Route index element={<Home user={user} />} />
+                <Route path="hikeManager" element={<MyHikeManager/>}/>
+                <Route path="hutManager" element={<MyHutManager/>}/>
+                <Route path="parkingManager" element={<MyParkingManager/>}/>
                 <Route path='login' element={<LoginForm loggedIn={loggedIn} user={user} doLogin={doLogin} message={message} setMessage={setMessage} />}> </Route>
                 <Route path='signup' element={<MySignUpForm doSignUp={doSignUp} setMessage={setMessage} />} />
                 <Route path='verify-email' element={<VerifyEmailPage />} />
