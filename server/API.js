@@ -31,13 +31,20 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
                 const hikeID = await dao.getLastHikeID();
                 console.log(hikeID);
                 for (let i = 0; i < pointsArray.length; i++) {
-                    await dao.addPoint(hikeID, pointsArray[i][1], pointsArray[i][0]); //lat and lon in the json representation are swapped
+                    if (i == 0) {
+                        await dao.addPoint(hikeID, pointsArray[i][1], pointsArray[i][0], 1, 0,0);
+                    } else if (i == pointsArray.length - 1) {
+                        await dao.addPoint(hikeID, pointsArray[i][1], pointsArray[i][0], 0, 1,0);
+                    } else {
+                        await dao.addPoint(hikeID, pointsArray[i][1], pointsArray[i][0], 0, 0,0); //lat and lon in the json representation are swapped
+                    }
                 }
 
             }
 
             res.status(201).json(hikes).end();
         } catch (err) {
+            console.log(err)
             res.status(500).json({ error: err });
         }
 

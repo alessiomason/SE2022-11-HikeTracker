@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useNavigate, Navigate, Outlet } from 'react-router-dom';
 import API from './API';
 import LoginForm from './components/LoginForm';
-import HikeForm from './components/Hikeform';
+import HikeForm from './components/HikeForm';
 import EditForm from './components/EditForm';
 import MySignUpForm from './components/SignUpForm';
 import VerifyEmailPage from './components/VerifyEmail';
