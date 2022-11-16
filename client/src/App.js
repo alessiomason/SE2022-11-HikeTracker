@@ -5,7 +5,7 @@ import { BrowserRouter as Router, Routes, Route, useNavigate, Navigate, Outlet }
 import API from './API';
 import LoginForm from './components/LoginForm';
 import HikeForm from './components/HikeForm';
-import EditForm from './components/EditForm';
+import EditForm from './components/EditForm(to delete)';
 import MySignUpForm from './components/SignUpForm';
 import VerifyEmailPage from './components/VerifyEmail';
 import MyNavbar from './components/Navbar';

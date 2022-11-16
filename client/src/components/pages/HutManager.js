@@ -1,4 +1,4 @@
-import HikesCards from '../HikesCards';
+import HikesCards from '../HikesCards(to delete)';
 import MyTopHome from '../TopHome';
 import MyFilterSection from '../FilterSection';
 import '../../styles/HikeManager.css';

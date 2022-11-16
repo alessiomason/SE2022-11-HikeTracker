@@ -1,4 +1,4 @@
-import HikesCards from '../HikesCards';
+import HikesCards from '../HikeCards';
 import MyTopHome from '../TopHome';
 import MyFilterSection from '../FilterSection';
 import '../../App.css';
