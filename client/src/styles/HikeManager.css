@@ -37,6 +37,12 @@
   width: 100%;
 }
 
+.search_row{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .title{
   font-size: 70px;
   color: white;
@@ -82,7 +88,11 @@
 
 .box_btn{
   display: flex;
-  justify-content: end;
-  align-items: center;
-  
+  justify-content: center;
+  align-items: center; 
+}
+
+.btn_ref{
+  border-radius: 0px !important;
+  max-width: fit-content;
 }
