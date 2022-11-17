@@ -7,7 +7,7 @@ import LoginForm from './components/ModalLogin';
 import MySignUpForm from './components/ModalSignup';
 import HikeForm from './components/HikeForm';
 import EditForm from './components/EditForm(to delete)';
-import VerifyEmailPage from './components/VerifyEmail';
+import VerifyEmailPage from './components/VerifyEmail(to modify/delete)';
 import MyNavbar from './components/Navbar';
 import MyHikeManager from './components/pages/HikeManager';
 import MyHutManager from './components/pages/HutManager';
@@ -148,8 +148,6 @@ function App2() {
                 <Route path="hikeManager" element={<MyHikeManager/>}/>
                 <Route path="hutManager" element={<MyHutManager/>}/>
                 <Route path="parkingManager" element={<MyParkingManager/>}/>
-                <Route path='login' element={<LoginForm loggedIn={loggedIn} user={user} doLogin={doLogin} message={message} setMessage={setMessage} />}> </Route>
-                <Route path='signup' element={<MySignUpForm doSignUp={doSignUp} setMessage={setMessage} />} />
                 <Route path='verify-email' element={<VerifyEmailPage />} />
                 <Route path="newHike/" element={loggedIn && user.access_right === 'local-guide' ? <HikeForm hike={hike} addHike={addHike} addGPXTrack={addGPXTrack} setDirty={setDirty} /> : <Navigate to='/' />} ></Route>
                 <Route path="updateHike/:hikeId/" element={loggedIn && user.access_right === 'local-guide' ? <EditForm hike={hike} updateHike={updateHike} deleteHike={deleteHike} setDirty={setDirty} /> : <Navigate to='/' />} ></Route>
