@@ -3,7 +3,6 @@ import { Button, Col, Modal, Form, Row, Container, Alert } from "react-bootstrap
 import { default as UserLogin } from "../icons/user-login.svg";
 import { default as Password } from "../icons/password.svg";
 import '../App.css';
-import '../styles/LoginForm.css';
 
 function MyModalLogin(props) {
 
@@ -44,6 +43,7 @@ function MyModalLogin(props) {
   };
 
   return (
+
     <Modal className="mt-3 me-5" show={props.showLogin} onHide={() => props.setShowLogin(false)}>
       <Container fluid className="me-5">
         <Row>
@@ -58,14 +58,14 @@ function MyModalLogin(props) {
                   <img src={UserLogin} alt="user" />
                 </Col>
                 <Col md="auto" sm="auto" xs="auto">
-                  <Form.Group  controlId="formBasicEmail"  autoFocus>
+                  <Form.Group controlId="formBasicEmail" autoFocus>
                     <Form.Control type="email" placeholder="Enter email address" value={email} onChange={ev => setEmail(ev.target.value)} />
                   </Form.Group>
                 </Col>
               </Row>
               <Row className='my-4 box_center'>
                 <Col md="auto" sm="auto" xs="auto" className='box_center'>
-                  <img src={Password} alt="password"  />
+                  <img src={Password} alt="password" />
                 </Col>
                 <Col md="auto" sm="auto" xs="auto">
                   <Form.Group controlId="formBasicPassword">
@@ -73,7 +73,7 @@ function MyModalLogin(props) {
                   </Form.Group>
                 </Col>
               </Row>
-              <Row className="my-5 box_center"> 
+              <Row className="my-5 box_center">
                 <Button variant="primary login_btn" type="submit" > Login </Button>
               </Row>
             </Form>

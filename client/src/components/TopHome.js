@@ -1,13 +1,19 @@
 import '../styles/TopHome.css';
 import MyCarousel from './Carousel';
-import { Row, Button, Form, Container, InputGroup } from "react-bootstrap";
+import { Row, Button, Alert, Form, Container, InputGroup } from "react-bootstrap";
 
-function MyTopHome() {
+function MyTopHome(props) {
 
     return (
 
         <Container fluid className='top-container'>
             <MyCarousel className="carousel" />
+            {(props.showEmailAlert) ?
+                <Alert className="mx-5" variant="success" onClose={() => props.setShowEmailAlert(false)} dismissible>
+                    <Alert.Heading>Verify email</Alert.Heading>
+                    <p> Please click on the link in the email you received to verify your account. </p>
+                </Alert> : false
+            }
             <h1>HIKE TRACKER</h1>
             <p>Start a new adventure</p>
             {/*

@@ -4,9 +4,9 @@ import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useNavigate, Navigate, Outlet } from 'react-router-dom';
 import API from './API';
 import LoginForm from './components/ModalLogin';
+import MySignUpForm from './components/ModalSignup';
 import HikeForm from './components/HikeForm';
 import EditForm from './components/EditForm(to delete)';
-import MySignUpForm from './components/SignUpForm';
 import VerifyEmailPage from './components/VerifyEmail';
 import MyNavbar from './components/Navbar';
 import MyHikeManager from './components/pages/HikeManager';
@@ -14,7 +14,6 @@ import MyHutManager from './components/pages/HutManager';
 import MyParkingManager from './components/pages/ParkingManager';
 import Home from './components/pages/Home';
 import Footer from './components/Footer';
-import MyManageGuide from './components/pages/HikeManager';
 
 function App() {
     return (
@@ -34,6 +33,8 @@ function App2() {
     const [hike, setHike] = useState('');
     const [dirty, setDirty] = useState(false);
     const [showLogin, setShowLogin] = useState(false);
+    const [showSignup, setShowSignup] = useState(false);
+    const [showEmailAlert, setShowEmailAlert] = useState(true);
 
     useEffect(() => {
         const checkAuth = async () => {
@@ -42,6 +43,7 @@ function App2() {
                 user.access_right = await API.getUserAccessRight();
                 setLoggedIn(true);
                 setShowLogin(false);
+                setShowSignup(false);
                 setUser(user);
             } catch (err) {
                 handleError(err);
@@ -52,7 +54,11 @@ function App2() {
 
     const doSignUp = (credentials) => {
         API.signup(credentials)
-            .then(() => navigate('/verify-email'))
+            .then(() => {
+                {/*navigate('/verify-email');*/}
+                setShowSignup(false);
+                setShowEmailAlert(true);
+            })
             .catch(err => setMessage(err))
     }
 
@@ -79,6 +85,17 @@ function App2() {
         setDirty(true);
         navigate('/');
     }
+
+    useEffect(() => {
+        if (showEmailAlert) {
+          const timeId = setTimeout(() => {
+            setShowEmailAlert(() => false);
+          }, 5000)
+          return () => {
+            clearTimeout(timeId)
+          }
+        }
+      }, [showEmailAlert]);
 
     function addGPXTrack(gpx) {
         API.addGPXTrack(gpx)
@@ -117,7 +134,7 @@ function App2() {
     function Layout() {
         return (
             <>
-                <MyNavbar setShowLogin={setShowLogin} loggedIn={loggedIn} doLogout={doLogout} />
+                <MyNavbar setShowLogin={setShowLogin} setShowSignup={setShowSignup} loggedIn={loggedIn} doLogout={doLogout} />
                 <Outlet />
                 <Footer />
             </>
@@ -127,7 +144,7 @@ function App2() {
     return (
         <Routes>
             <Route path="/" element={<Layout />}>
-                <Route index element={<Home user={user} setShowLogin={setShowLogin} showLogin={showLogin} loggedIn={loggedIn} doLogin={doLogin} message={message} setMessage={setMessage}/>} />
+                <Route index element={<Home showEmailAlert={showEmailAlert} setShowEmailAlert={setShowEmailAlert} user={user} setShowLogin={setShowLogin} showLogin={showLogin} loggedIn={loggedIn} doLogin={doLogin} message={message} setMessage={setMessage} showSignup={showSignup} setShowSignup={setShowSignup} doSignUp={doSignUp}/>} />
                 <Route path="hikeManager" element={<MyHikeManager/>}/>
                 <Route path="hutManager" element={<MyHutManager/>}/>
                 <Route path="parkingManager" element={<MyParkingManager/>}/>
