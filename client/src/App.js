@@ -7,7 +7,7 @@ import LoginForm from './components/ModalLogin';
 import MySignUpForm from './components/ModalSignup';
 import HikeForm from './components/HikeForm';
 import EditForm from './components/EditForm(to delete)';
-import VerifyEmailPage from './components/VerifyEmail(to modify/delete)';
+import VerifyEmailPage from './components/VerifyEmail(to delete)';
 import MyNavbar from './components/Navbar';
 import MyHikeManager from './components/pages/HikeManager';
 import MyHutManager from './components/pages/HutManager';

@@ -1,7 +1,7 @@
 import { Container, Button } from "react-bootstrap";
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import API from "../../API";
+import API from "../API";
 import "./../styles/VerifyEmail.css";
 
 function VerifyEmailPage() {
