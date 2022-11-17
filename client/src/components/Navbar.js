@@ -30,7 +30,7 @@ function MyNavbar(props) {
             */}
             {(!props.loggedIn) ?
               <Nav>
-                <Button variant="light" className="mx-2 my-1" onClick={() => navigate("/login")}>Sign In</Button>
+                <Button variant="light" className="mx-2 my-1" onClick={() => props.setShowLogin(true)}>Sign In</Button>
                 <Button variant="primary" className="mx-2 my-1" onClick={() => navigate("/signup")}>Sign Up</Button>
               </Nav> :
               <Nav>

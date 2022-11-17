@@ -3,7 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useNavigate, Navigate, Outlet } from 'react-router-dom';
 import API from './API';
-import LoginForm from './components/LoginForm';
+import LoginForm from './components/ModalLogin';
 import HikeForm from './components/HikeForm';
 import EditForm from './components/EditForm(to delete)';
 import MySignUpForm from './components/SignUpForm';
@@ -33,6 +33,7 @@ function App2() {
     const [message, setMessage] = useState('');
     const [hike, setHike] = useState('');
     const [dirty, setDirty] = useState(false);
+    const [showLogin, setShowLogin] = useState(false);
 
     useEffect(() => {
         const checkAuth = async () => {
@@ -40,6 +41,7 @@ function App2() {
                 let user = await API.getUserInfo();
                 user.access_right = await API.getUserAccessRight();
                 setLoggedIn(true);
+                setShowLogin(false);
                 setUser(user);
             } catch (err) {
                 handleError(err);
@@ -58,6 +60,7 @@ function App2() {
         API.login(credentials)
             .then(user => {
                 setLoggedIn(true);
+                setShowLogin(false);
                 setUser(user);
                 setMessage('');
                 navigate('/');
@@ -114,7 +117,7 @@ function App2() {
     function Layout() {
         return (
             <>
-                <MyNavbar loggedIn={loggedIn} doLogout={doLogout} />
+                <MyNavbar setShowLogin={setShowLogin} loggedIn={loggedIn} doLogout={doLogout} />
                 <Outlet />
                 <Footer />
             </>
@@ -124,7 +127,7 @@ function App2() {
     return (
         <Routes>
             <Route path="/" element={<Layout />}>
-                <Route index element={<Home user={user} />} />
+                <Route index element={<Home user={user} setShowLogin={setShowLogin} showLogin={showLogin} loggedIn={loggedIn} doLogin={doLogin} message={message} setMessage={setMessage}/>} />
                 <Route path="hikeManager" element={<MyHikeManager/>}/>
                 <Route path="hutManager" element={<MyHutManager/>}/>
                 <Route path="parkingManager" element={<MyParkingManager/>}/>

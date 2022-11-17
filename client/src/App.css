@@ -5,3 +5,15 @@
   justify-content: center;
   font-size: 3rem;
 }
+
+.box_center{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+}
+
+.login_btn{
+    border-radius: 0px !important;
+    width: 160px !important;
+}

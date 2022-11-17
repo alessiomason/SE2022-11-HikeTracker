@@ -24,10 +24,10 @@ function HikesCards(props) {
   return (
 
     <Container fluid className="cards p-5">
-      <Row className='mb-3'>
+      <Row className='mb-3 box_centered'>
         {hikes.map(h => <SingleHikeCard key={h.id} hike={h} user={props.user} />)}
       </Row>
-      <Row className="box_btn_show">
+      <Row className="box_centered">
         <Button variant="primary" className="btn_show my-3" >
           Show more <img className="ms-2 " src={Arrow} alt="arrow_image" />
         </Button>
