@@ -19,3 +19,7 @@ h1 {
 .btn_filter {
     border-radius: 0px !important;
 }
+
+.btn_info {
+    border-radius: 20px;
+}
