@@ -61,6 +61,16 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
         }
     });
 
+    app.get('/api/hikesrefpoints', async (req, res) => {
+        try {
+            const refpoints = await dao.getHikesRefPoints();
+            res.status(200).json(refpoints);
+        }
+        catch (err) {
+            res.status(500).end();
+        }
+    });
+
 
     app.get('/api/hike/:id', async (req, res) => {
         const hikeID = req.params.id;
