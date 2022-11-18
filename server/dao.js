@@ -80,6 +80,17 @@ exports.getHikes = () => {
         });
     });
 }
+exports.getHikesRefPoints = () => {
+    return new Promise((resolve, reject) => {
+        const sql = 'SELECT * FROM Points WHERE RF=?';
+        db.all(sql, [1], (err, rows) => {
+            if (err) reject(err);
+            const refpoints = rows.map((r) => ({
+                 id: r.PointID, hikeId: r.HikeID,label: r.Label, lat: r.Lat, lon: r.Lon }));
+            resolve(refpoints);
+        });
+    });
+}
 
 exports.getHike = (hikeID) => {
     return new Promise((resolve, reject) => {
