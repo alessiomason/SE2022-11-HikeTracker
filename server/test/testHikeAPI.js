@@ -103,7 +103,7 @@ function updateHike(expectedHTTPStatus, id, newLabel, newLength, newExpTime, new
             difficulty : newDifficulty,
             description: newDescription
         };
-        agent.put('/api/updateHike/')
+        agent.put('/api/updateHike/' + hike.id)
             .send(hike)
             .then(function (res) {
                 res.should.have.status(expectedHTTPStatus);
@@ -117,7 +117,7 @@ function deleteHike(expectedHTTPStatus, id) {
         let hike = {
             id: id
         }
-        agent.delete('/api/hikes/')
+        agent.delete('/api/hikes/' + id)
             .send(hike)
             .then(function (res) {
                 res.should.have.status(expectedHTTPStatus);

@@ -32,11 +32,11 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
                 console.log(hikeID);
                 for (let i = 0; i < pointsArray.length; i++) {
                     if (i == 0) {
-                        await dao.addPoint(hikeID, pointsArray[i][1], pointsArray[i][0], 1, 0,0);
+                        await dao.addPoint(hikeID, pointsArray[i][1], pointsArray[i][0], 1, 0, 0);
                     } else if (i == pointsArray.length - 1) {
-                        await dao.addPoint(hikeID, pointsArray[i][1], pointsArray[i][0], 0, 1,0);
+                        await dao.addPoint(hikeID, pointsArray[i][1], pointsArray[i][0], 0, 1, 0);
                     } else {
-                        await dao.addPoint(hikeID, pointsArray[i][1], pointsArray[i][0], 0, 0,0); //lat and lon in the json representation are swapped
+                        await dao.addPoint(hikeID, pointsArray[i][1], pointsArray[i][0], 0, 0, 0); //lat and lon in the json representation are swapped
                     }
                 }
 
@@ -87,9 +87,8 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
     });
 
 
-    app.delete('/api/hikes', async (req, res) => {
-        console.log("hikes" + req.body.id)
-        const hikeID = req.body.id;
+    app.delete('/api/hikes/:id', async (req, res) => {
+        const hikeID = req.params.id;
         try {
             await dao.deleteHike(hikeID);
             res.status(200).end();
@@ -144,7 +143,7 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
     });
 
     // update hike
-    app.put('/api/updateHike', async (req, res) => {
+    app.put('/api/updateHike/:id', async (req, res) => {
         const errors = validationResult(req);
         if (!errors.isEmpty())
             return res.status(422).json({ errors: errors.array() });
@@ -153,26 +152,33 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
         if (req.body.label === '')
             return res.status(422).json({ error: `New name of the hike can not be empty.` });
 
-        let hikeId = req.body.id
-        let label = req.body.label;
-        let length = req.body.length;
-        let expTime = req.body.expTime;
-        let ascent = req.body.ascent;
-        let difficulty = req.body.difficulty;
-        let difficulty_level = 0;
-
-        if (difficulty == "Tourist")
-            difficulty_level = 1;
-        else if (difficulty == "Hiker")
-            difficulty_level = 2;
-        else if (difficulty == "Professional hiker")
-            difficulty_level = 3;
-
-        let description = req.body.description;
+        // let hikeId = req.body.id
+        const hikeId = req.params.id;
 
         try {
-            const hikes = await dao.updateHike(label, length, expTime, ascent, difficulty_level, description, hikeId);
-            res.status(201).json(hikes).end();
+            let result = await dao.getHike(hikeId);
+            if (result.error)
+                res.status(404).json(result);
+            else {
+                let label = req.body.label;
+                let length = req.body.length;
+                let expTime = req.body.expTime;
+                let ascent = req.body.ascent;
+                let difficulty = req.body.difficulty;
+                let difficulty_level = 0;
+
+                if (difficulty == "Tourist")
+                    difficulty_level = 1;
+                else if (difficulty == "Hiker")
+                    difficulty_level = 2;
+                else if (difficulty == "Professional hiker")
+                    difficulty_level = 3;
+
+                let description = req.body.description;
+
+                const hikes = await dao.updateHike(label, length, expTime, ascent, difficulty_level, description, hikeId);
+                res.status(201).json(hikes).end();
+            }
         } catch (err) {
             res.status(500).json({ error: `Database error during update of the service name.` });
         }

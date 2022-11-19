@@ -3,18 +3,20 @@ const dao = require('../dao'); // module for accessing the DB
 
 
 describe("test Hikes functions", () => {
-
+  deleteAllHikesTest();
+  newHikeTest();
   test("Test for get given hike id", async () => {
-    // With given id (2), get specific hikeID and matches it
-    const hikeID = 2
+    // With given id (1), get specific hikeID and matches it
+    const hikeID = 1
     const hike = await dao.getHike(hikeID);
     expect(hike[0].id).toStrictEqual(hikeID);
   });
-
+  deleteAllHikesTest();
+  newHikeTest();
   test("Test for get list of hikes", async () => {
     // insert new hike to hikes db and checks the list of hikes can we get or not
     const hikes = await dao.getHikes();
-    const hike = await dao.newHike("26-GIU-13", null, null, 667.751708984375, 1, null)
+    const hike = await dao.newHike("Sentiero degli Dei", 8000.0, 5, 13.0, 1, "Best hike for a sun-kissed stroll");
     const hikesList = await dao.getHikes();
     expect(hikes.length + 1).toStrictEqual(hikesList.length);
   });

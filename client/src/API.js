@@ -49,9 +49,9 @@ function addHike(hike) {
 }
 
 function updateHike(hike) {
-    // call: PUT /api/updateHike
+    // call: PUT /api/updateHike/:id
     return new Promise((resolve, reject) => {
-        fetch(new URL('updateHike', APIURL), {
+        fetch(new URL('updateHike/' + hike.id, APIURL), {
             method: 'PUT',
             credentials: 'include',
             headers: {
@@ -91,16 +91,11 @@ async function getHikesRefPoints() {
 
 
 function deleteHike(id) {
-    // call: DELETE /api/hikes
-    console.log(id);
+    // call: DELETE /api/hikes/:id
     return new Promise((resolve, reject) => {
-        fetch(new URL(`hikes`, APIURL), {
+        fetch(new URL('hikes/' + id, APIURL), {
             method: 'DELETE',
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ id: id }),
+            credentials: 'include'
         }).then((response) => {
             if (response.ok)
                 resolve(null);
