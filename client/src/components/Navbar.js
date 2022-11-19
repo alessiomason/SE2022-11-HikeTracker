@@ -34,9 +34,9 @@ function MyNavbar(props) {
                 <Button variant="primary" className="mx-2 my-1" onClick={() => props.setShowSignup(true)}>Sign Up</Button>
               </Nav> :
               <Nav>
-                <Button variant="outline-warning"  className="mx-2 my-2  btn--outline" onClick={() => navigate("/hikeManager")}> Manage Hike</Button>
-                <Button variant="outline-warning"  className="mx-2 my-2 btn--outline" onClick={() => navigate("/hutManager")}> Manage Hut</Button>
-                <Button variant="outline-warning"  className="mx-2 my-2  btn--outline" onClick={() => navigate("/parkingManager")}> Manage Parking</Button>
+                {props.user.access_right === 'local-guide' ? <Button variant="outline-warning"  className="mx-2 my-2  btn--outline" onClick={() => navigate("/hikeManager")}> Manage Hike</Button> : false}
+                {props.user.access_right === 'local-guide' ? <Button variant="outline-warning"  className="mx-2 my-2 btn--outline" onClick={() => navigate("/hutManager")}> Manage Hut</Button> : false}
+                {props.user.access_right === 'local-guide' ? <Button variant="outline-warning"  className="mx-2 my-2  btn--outline" onClick={() => navigate("/parkingManager")}> Manage Parking</Button> : false}
                 <Button variant="outline-success" className="mx-2 my-1 btn--outline" onClick={props.doLogout}><img src={User} alt="user_image" /> Logout</Button>
               </Nav>
             }

@@ -1,5 +1,5 @@
 import '../../styles/HikeManager.css';
-import { Container, Row, Col, InputGroup, Form, Button } from 'react-bootstrap';
+import { Container, Row, Col, InputGroup, Form, Button, Alert } from 'react-bootstrap';
 import { useState, useEffect } from 'react';
 import { default as Img1 } from "../../images/img1.jpg";
 import { useNavigate, useParams } from 'react-router-dom';
@@ -11,6 +11,8 @@ function MyHikeManager(props) {
 
   const [hikes, setHikes] = useState([]);
   const [dirty, setDirty] = useState(true);
+  const [showUpdateBanner, setShowUpdateBanner] = useState(false);
+  const [message, setMessage] = useState('');
 
   useEffect(() => {
     if (dirty) {
@@ -20,7 +22,6 @@ function MyHikeManager(props) {
       setDirty(false);
     }
   }, [dirty]);
-
 
   return (
 
@@ -39,7 +40,10 @@ function MyHikeManager(props) {
           <Button variant='primary' size="lg" className='mx-5 my-3' onClick={() => navigate("/newHike")}>Add new Hike</Button>
         </Col>
       </Row>
-      {hikes.map(h => <SingleUpdateHikeCard key={h.id} hike={h} user={props.user} />)}
+      {showUpdateBanner && <Alert variant='success' onClose={() => {setShowUpdateBanner(false); setMessage('')}} dismissible>{message}</Alert>}
+      {hikes.map(h => <SingleUpdateHikeCard key={h.id} hike={h} user={props.user}
+        updateHike={props.updateHike} deleteHike={props.deleteHike} setDirty={setDirty}
+        setShowUpdateBanner={setShowUpdateBanner} setMessage={setMessage} />)}
     </Container>
 
   );
@@ -48,43 +52,42 @@ function MyHikeManager(props) {
 function SingleUpdateHikeCard(props) {
 
   const navigate = useNavigate();
-  const { hikeId } = useParams();
 
-  const [hike, setHike] = useState(null);
-  const [label, setLabel] = useState('');
-  const [length, setLength] = useState(1);
-  const [expTime, setExpTime] = useState(1);
-  const [ascent, setAscent] = useState(1);
-  const [difficulty, setDifficulty] = useState('');
-  const [description, setDescription] = useState('');
+  let hikeId = props.hike.id;
+  const hikeToEdit = props.hike;
+  let difficulty_text;
+  
+  if (props.hike.difficulty == 1) {
+    difficulty_text = "Tourist";
+  } else if (props.hike.difficulty == 2) {
+    difficulty_text = "Hiker";
+  } else if (props.hike.difficulty == 3) {
+    difficulty_text = "Professional hiker";
+  }
+  
+
+  const [label, setLabel] = useState(hikeToEdit ? hikeToEdit.label : '');
+  const [length, setLength] = useState(hikeToEdit ? hikeToEdit.length : 0);
+  const [expTime, setExpTime] = useState(hikeToEdit ? hikeToEdit.expTime : 0);
+  const [ascent, setAscent] = useState(hikeToEdit ? hikeToEdit.ascent : 0);
+  const [difficulty, setDifficulty] = useState(hikeToEdit ? hikeToEdit.text : '');
+  const [difficultyText, setDifficultyText] = useState(difficulty_text);
+  const [description, setDescription] = useState(hikeToEdit ? hikeToEdit.description : '');
   const [errorMsg, setErrorMsg] = useState('');
 
-  if (hike === null) {
-    if (Array.isArray(props.hike)) {
-      const hikeToEdit = props.hike.find((h) => h.id == hikeId);
-
-      if (hikeToEdit !== undefined) {
-        setHike(hikeToEdit);
-        setLabel(hikeToEdit.label);
-        setLength(hikeToEdit.length);
-        setExpTime(hikeToEdit.expTime);
-        setAscent(hikeToEdit.ascent);
-        setDifficulty(hikeToEdit.difficulty);
-        setDescription(hikeToEdit.description);
-      }
-    }
-  }
-
+  
   const handleSubmit = (event) => {
     event.preventDefault();
+
     if (label.trim().length === 0)
       setErrorMsg('The label of the hike cannot be consisted of only empty spaces');
     else {
-      // add
-      const updatedHike = { id: hike.id, label: label, length: length, expTime: expTime, ascent: ascent, difficulty: difficulty, description: description }
+      const updatedHike = { id: hikeId, label: label, length: length, expTime: expTime, ascent: ascent, difficulty: difficultyText, description: description }
       props.updateHike(updatedHike);
       props.setDirty(true);
-      navigate('/');
+      props.setShowUpdateBanner(true);
+      props.setMessage(`Hike #${hikeId} ${label} has been updated successfully!`);
+      // navigate('/');
     }
   }
 
@@ -101,8 +104,8 @@ function SingleUpdateHikeCard(props) {
           <Row>
             <Col md={4} >
               <Form.Group>
-                <Form.Label>Title</Form.Label>
-                <Form.Control required={true} value={props.hike.label} onChange={ev => setLabel(ev.target.value)}></Form.Control>
+                <Form.Label>Label</Form.Label>
+                <Form.Control required={true} value={label} onChange={ev => setLabel(ev.target.value)}></Form.Control>
               </Form.Group>
             </Col>
             <Col md={4}>
@@ -123,19 +126,19 @@ function SingleUpdateHikeCard(props) {
             <Col md={4} >
               <Form.Group>
                 <Form.Label>Length [m]</Form.Label>
-                <Form.Control type='number' step="any" min={0} value={props.hike.length} onChange={ev => setLength(ev.target.value)} />
+                <Form.Control type='number' step="any" min={0} value={length} onChange={ev => setLength(ev.target.value)} />
               </Form.Group>
             </Col>
             <Col md={4}>
               <Form.Group>
                 <Form.Label>Expected time [h]</Form.Label>
-                <Form.Control type='number' step="any" min={0} value={props.hike.expTime} onChange={ev => setExpTime(ev.target.value)}></Form.Control>
+                <Form.Control type='number' step="any" min={0} value={expTime} onChange={ev => setExpTime(ev.target.value)}></Form.Control>
               </Form.Group>
             </Col>
             <Col md={4} >
               <Form.Group>
                 <Form.Label>Ascent [m]</Form.Label>
-                <Form.Control type='number' step="any" value={props.hike.ascent} onChange={ev => setAscent(ev.target.value)} />
+                <Form.Control type='number' step="any" value={ascent} onChange={ev => setAscent(ev.target.value)} />
               </Form.Group>
             </Col>
           </Row>
@@ -144,8 +147,8 @@ function SingleUpdateHikeCard(props) {
             <Col md={4}>
               <Form.Group>
                 <Form.Label>Difficulty</Form.Label>
-                <Form.Select value={props.hike.difficulty} onChange={ev => setDifficulty(ev.target.value)}>
-                  <option></option>
+                <Form.Select value={difficultyText} onChange={ ev => setDifficultyText(ev.target.value) }>
+                  <option selected disabled value="">Choose...</option>
                   <option>Tourist</option>
                   <option>Hiker</option>
                   <option>Professional hiker</option>
@@ -153,9 +156,9 @@ function SingleUpdateHikeCard(props) {
               </Form.Group>
             </Col>
             <Col md={4}>
-              <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
+              <Form.Group>
                 <Form.Label>Description</Form.Label>
-                <Form.Control required={true} value={props.hike.description} onChange={ev => setDescription(ev.target.value)} as="textarea" rows={2} />
+                <Form.Control required={true} value={description} onChange={ev => setDescription(ev.target.value)} />
               </Form.Group>
             </Col>
             <Col md={4} >
@@ -163,7 +166,7 @@ function SingleUpdateHikeCard(props) {
                 <Button variant="primary" className="btn_ref" >Add a reference point </Button>
               </Row>
               <Row className='box_btn my-2'>
-                <Button variant="danger" onClick={() => props.deleteHike(hike.id)} className="btn_box2 mx-2" >Delete</Button>
+                <Button variant="danger" onClick={() => props.deleteHike(hikeId)} className="btn_box2 mx-2" >Delete</Button>
                 <Button variant="success" type='submit' className="btn_box2 mx-2">Save</Button>
               </Row>
             </Col>

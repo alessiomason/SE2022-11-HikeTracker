@@ -8,40 +8,27 @@ import '../styles/HikeForm.css';
 function EditForm(props) {
 
     const navigate = useNavigate();
-    const { hikeId } = useParams();
-
-    const [hike, setHike] = useState(null);
-    const [label, setLabel] = useState('');
-    const [length, setLength] = useState(1);
-    const [expTime, setExpTime] = useState(1);
-    const [ascent, setAscent] = useState(1);
-    const [difficulty, setDifficulty] = useState('');
-    const [description, setDescription] = useState('');
+    let { hikeId } = useParams();
+    hikeId = parseInt(hikeId);
+    const hikeToEdit = hikeId ? props.hike.find((hike) => hike.id == hikeId) : undefined;
+    
+    const [label, setLabel] = useState(hikeToEdit ? hikeToEdit.label : '');
+    const [length, setLength] = useState(hikeToEdit ? hikeToEdit.length : 0);
+    const [expTime, setExpTime] = useState(hikeToEdit ? hikeToEdit.expTime : 0);    
+    const [ascent, setAscent] = useState(hikeToEdit ? hikeToEdit.ascent : 0);    
+    const [difficulty, setDifficulty] = useState(hikeToEdit ? hikeToEdit.difficulty : '');
+    const [description, setDescription] = useState(hikeToEdit ? hikeToEdit.description : '');
     const [errorMsg, setErrorMsg] = useState('');
-
-    if (hike === null) {
-        if (Array.isArray(props.hike)) {
-            const hikeToEdit = props.hike.find((h) => h.id == hikeId);
-
-            if (hikeToEdit !== undefined) {
-                setHike(hikeToEdit);
-                setLabel(hikeToEdit.label);
-                setLength(hikeToEdit.length);
-                setExpTime(hikeToEdit.expTime);
-                setAscent(hikeToEdit.ascent);
-                setDifficulty(hikeToEdit.difficulty);
-                setDescription(hikeToEdit.description);
-            }
-        }
-    }
 
     const handleSubmit = (event) => {
         event.preventDefault();
+
         if (label.trim().length === 0)
             setErrorMsg('The label of the hike cannot be consisted of only empty spaces');
         else {
             // add
-            const updatedHike = { id: hike.id, label: label, length: length, expTime: expTime, ascent: ascent, difficulty: difficulty, description: description }
+
+            const updatedHike = { label: label, length: length, expTime: expTime, ascent: ascent, difficulty: difficulty, description: description }
             props.updateHike(updatedHike);
             props.setDirty(true);
             navigate('/');
@@ -98,7 +85,7 @@ function EditForm(props) {
 
                         <Button className='save-button' type='submit' >Save</Button>
                         <Button className='back-button' onClick={() => navigate('/')} variant='secondary' >Back</Button>
-                        <Button className='delete-button' onClick={() => props.deleteHike(hike.id)} variant='secondary' >Delete</Button>
+                        <Button className='delete-button' onClick={() => props.deleteHike(hikeId)} variant='secondary' >Delete</Button>
                     </Form>
                 </Col>
             </Row>

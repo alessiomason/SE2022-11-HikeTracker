@@ -35,7 +35,7 @@ function App2() {
     const [showLogin, setShowLogin] = useState(false);
     const [showSignup, setShowSignup] = useState(false);
     const [showEmailAlert, setShowEmailAlert] = useState(true);
-
+    
     useEffect(() => {
         const checkAuth = async () => {
             try {
@@ -105,7 +105,7 @@ function App2() {
 
     function deleteHike(id) {
         API.deleteHike(id)
-            .then(() => { setDirty(true); navigate("/") })
+            .then(() => { setDirty(true); })
             .catch(err => handleError(err));
     }
 
@@ -134,7 +134,7 @@ function App2() {
     function Layout() {
         return (
             <>
-                <MyNavbar setShowLogin={setShowLogin} setShowSignup={setShowSignup} loggedIn={loggedIn} doLogout={doLogout} />
+                <MyNavbar setShowLogin={setShowLogin} setShowSignup={setShowSignup} loggedIn={loggedIn} doLogout={doLogout} user={user}/>
                 <Outlet />
                 <Footer />
             </>
@@ -145,7 +145,7 @@ function App2() {
         <Routes>
             <Route path="/" element={<Layout />}>
                 <Route index element={<Home showEmailAlert={showEmailAlert} setShowEmailAlert={setShowEmailAlert} user={user} setShowLogin={setShowLogin} showLogin={showLogin} loggedIn={loggedIn} doLogin={doLogin} message={message} setMessage={setMessage} showSignup={showSignup} setShowSignup={setShowSignup} doSignUp={doSignUp}/>} />
-                <Route path="hikeManager" element={<MyHikeManager/>}/>
+                <Route path="hikeManager" element={<MyHikeManager updateHike={updateHike} deleteHike={deleteHike} user={user} />}/>
                 <Route path="hutManager" element={<MyHutManager/>}/>
                 <Route path="parkingManager" element={<MyParkingManager/>}/>
                 <Route path='verify-email' element={<VerifyEmailPage />} />
