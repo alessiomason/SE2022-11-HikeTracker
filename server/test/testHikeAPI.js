@@ -32,7 +32,7 @@ describe('test CREATION and READ hike APIs', () => {
     getHikes(200, 1);
     createHike(422, "", 9500, 4, 6, "Hiker", "Best hike in the Dolomites");
     getHikes(200, 1);
-    createHike(201, "Tre Cime di LavaredoTre Cime di Lavaredo", 9500, 4, 6, "Hiker", "Best hike in the Dolomites");
+    createHike(201, "Tre Cime di Lavaredo", 9500, 4, 6, "Hiker", "Best hike in the Dolomites");
     createHike(201, "Sentiero degli Dei", 8000, 5, 13, "Tourist", "Best hike for a sun-kissed stroll");
     getHikes(200, 3);
     createHike(422, "", 11400, 7, 1353.053467, "Hiker", "Considered the highest of the Alps for centuries");
