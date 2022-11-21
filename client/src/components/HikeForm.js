@@ -70,7 +70,7 @@ function HikeForm(props) {
                                 onChange={(e) => setFile(e.target.files[0])} />
                         </Form.Group>
                         <Button className='save-button' type='submit'>Send</Button>
-                        <Button className='back-button' onClick={() => navigate('/')} variant='secondary'>Back</Button>
+                        <Button className='back-button' onClick={() => navigate('/hikeManager')} variant='secondary'>Back</Button>
                     </Form>
                 </Col>
             </Row>

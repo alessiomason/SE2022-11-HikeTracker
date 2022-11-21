@@ -1,3 +1,7 @@
+.logo-name {
+    cursor: pointer;
+}
+
 .nav-links {
     color: #fff;
     display: flex;

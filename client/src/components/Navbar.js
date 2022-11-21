@@ -16,18 +16,13 @@ function MyNavbar(props) {
           <img src={Logo} alt="logo" />
         </Navbar.Brand>
         <Navbar.Brand >
-          <h3 onClick={() => navigate("/")}>HikeTracker</h3>
+          <h3 onClick={() => navigate("/")} className="logo-name">HikeTracker</h3>
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="me-auto">
           </Nav>
           <Nav>
-            {/*
-            <Nav.Link href="#f1" className="nav-links">Function1</Nav.Link>
-            <Nav.Link href="#f2" className="nav-links">Function2</Nav.Link>
-            <Nav.Link href="#f3" className="nav-links">Function3</Nav.Link>
-            */}
             {(!props.loggedIn) ?
               <Nav>
                 <Button variant="light" className="mx-2 my-1" onClick={() => props.setShowLogin(true)}>Sign In</Button>
