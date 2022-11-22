@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Row, Container, Button } from "react-bootstrap";
+import { Row, Col, Container, Button } from "react-bootstrap";
 import SingleHikeCard from './SingleHikeCard';
 import { default as Arrow } from "../icons/arrow.svg";
 import API from '../API.js';
 import '../styles/Cards.css';
 
 function HikesCards(props) {
-
+  
   const [hikes, setHikes] = useState([]);
   const [dirty, setDirty] = useState(true);
 
@@ -23,7 +23,13 @@ function HikesCards(props) {
 
     <Container fluid className="cards p-5">
       <Row className='mb-3 box_centered'>
-        {hikes.map(h => <SingleHikeCard key={h.id} hike={h} user={props.user} />)}
+        {hikes.map(h => {
+          return (
+            <Col xl={4} lg="auto" md="auto" sm="auto" xs="auto" key={h.id} >
+              <SingleHikeCard fromHikeCards key={h.id} hike={h} user={props.user} />
+            </Col>
+          );
+        })}
       </Row>
       <Row className="box_centered">
         <Button variant="primary" className="btn_show my-3" >

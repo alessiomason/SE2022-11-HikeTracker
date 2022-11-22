@@ -21,7 +21,9 @@ function HikePage(props) {
     }, [dirty]);
 
     return (
-        <SingleHikeCard key={hike.id} hike={hike} user={props.user} />
+        <div className=' d-flex justify-content-center'>
+            <SingleHikeCard key={hike.id} hike={hike} user={props.user} />
+        </div>
     );
 }
 
