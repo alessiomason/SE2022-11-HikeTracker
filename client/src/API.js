@@ -72,13 +72,14 @@ function updateHike(hike) {
 }
 
 async function getHikes() {
-    // call /api/gethikes
+    // call /api/hikes
     const response = await fetch(new URL('hikes', APIURL));
     const hikes = await response.json();
     if (response.ok)
         return hikes.map((u) => ({ id: u.id, label: u.label, length: u.length, expTime: u.expTime, ascent: u.ascent, difficulty: u.difficulty, description: u.description }))
     else throw hikes;
 }
+
 async function getHikesRefPoints() { 
     //this api can be used for the hikes filtering, as the ref points are taken from the points table, so all of them are associated with an hike
     // call:  GET /api/hikesrefpoints
@@ -87,6 +88,15 @@ async function getHikesRefPoints() {
     if (response.ok)
         return refpoints.map((u) => ({ id: u.id, hikeId: u.hikeId,label: u.label, lat: u.lat, lon: u.lon }))
     else throw refpoints;
+}
+
+async function getHike(id) {
+    // call /api/hike
+    const response = await fetch(new URL('hike/' + id, APIURL));
+    const hike = await response.json();
+    if (response.ok)
+        return hike;//.map((u) => ({ id: u.id, label: u.label, length: u.length, expTime: u.expTime, ascent: u.ascent, difficulty: u.difficulty, description: u.description }))
+    else throw hike;
 }
 
 
@@ -182,6 +192,6 @@ async function getUserAccessRight() {
     else throw accessRight;  // an object with the error coming from the server
 }
 
-const API = { addGPXTrack, deleteHike, getHikes, addHike, updateHike, signup, verifyEmail, login, logout, getUserInfo, getUserAccessRight,getHikesRefPoints };
+const API = { addGPXTrack, deleteHike, getHikes, getHike, addHike, updateHike, signup, verifyEmail, login, logout, getUserInfo, getUserAccessRight,getHikesRefPoints };
 export default API;
 
