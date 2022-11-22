@@ -3,15 +3,14 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useNavigate, Navigate, Outlet } from 'react-router-dom';
 import API from './API';
-import LoginForm from './components/ModalLogin';
-import MySignUpForm from './components/ModalSignup';
 import HikeForm from './components/HikeForm';
-import EditForm from './components/EditForm(to delete)';
+import EditForm from './components/EditForm';
 import VerifyEmailPage from './components/VerifyEmail(to delete)';
 import MyNavbar from './components/Navbar';
 import MyHikeManager from './components/pages/HikeManager';
 import MyHutManager from './components/pages/HutManager';
 import MyParkingManager from './components/pages/ParkingManager';
+import HikePage from './components/pages/Hike';
 import Home from './components/pages/Home';
 import Footer from './components/Footer';
 
@@ -145,6 +144,7 @@ function App2() {
         <Routes>
             <Route path="/" element={<Layout />}>
                 <Route index element={<Home showEmailAlert={showEmailAlert} setShowEmailAlert={setShowEmailAlert} user={user} setShowLogin={setShowLogin} showLogin={showLogin} loggedIn={loggedIn} doLogin={doLogin} message={message} setMessage={setMessage} showSignup={showSignup} setShowSignup={setShowSignup} doSignUp={doSignUp}/>} />
+                <Route path="hike/:hikeId" element={<HikePage user={user} />}/>
                 <Route path="hikeManager" element={<MyHikeManager updateHike={updateHike} deleteHike={deleteHike} user={user} />}/>
                 <Route path="hutManager" element={<MyHutManager/>}/>
                 <Route path="parkingManager" element={<MyParkingManager/>}/>
