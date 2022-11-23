@@ -32,7 +32,7 @@ function MyHikeManager(props) {
       <Row className='input-group my-5 mx-auto search_row'>
         <Col md={{ span: 4, offset: 4 }} sm={{ span: 6, offset: 3 }} xs={12} >
           <InputGroup >
-            <Form.Control placeholder="Insert an hike title" />
+            <Form.Control placeholder="Insert an hike label" />
             <Button variant="success">Search</Button>
           </InputGroup>
         </Col>
@@ -93,7 +93,7 @@ function SingleUpdateHikeCard(props) {
 
   return (
 
-    <Row className="hut_box mx-5 py-5 px-5 mb-4">
+    <Row className="hike_box mx-5 py-5 px-5 mb-4">
       <Col md={2} className="box_img_box" >
         <img className=" img_box mb-3" src={Img1} alt="First slide" />
         <Button variant="primary" size="sm" className="btn_box"> Update Image </Button>
@@ -163,7 +163,7 @@ function SingleUpdateHikeCard(props) {
             </Col>
             <Col md={4} >
               <Row className='my-3 box_btn'>
-                <Button variant="primary" className="btn_ref" >Add a reference point </Button>
+                <Button variant="primary" className="btn_ref" >Manage reference points </Button>
               </Row>
               <Row className='box_btn my-2'>
                 <Button variant="danger" onClick={() => props.deleteHike(hikeId)} className="btn_box2 mx-2" >Delete</Button>
