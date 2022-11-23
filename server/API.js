@@ -16,7 +16,8 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
             return res.status(422).json({ errors: errors.array() });
 
         try {
-            let hikes = [];
+
+
             let element = req.body.features[0];
             if (element.properties.name === '') {
                 return res.status(422).json({ error: `Description name of track can not be empty.` });
@@ -25,38 +26,46 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
             let label = element.properties.name;
             let desc = element.properties.desc;
             const hikeID = await dao.getLastHikeID() + 1;
-            console.log(hikeID);
-            let startPointElev= null;
-            let endPointElev=null;
+            let startPointElev = null;
+            let endPointElev = null;
+
 
             for (let j = 0; j < req.body.features.length; j++) {
+                
                 let pointsArray = req.body.features[j].geometry.coordinates;
-                for (let i = 0; i < pointsArray.length; i++) {
-                    if (i == 0 & j == 0) { ///primo punto
-                        await dao.addPoint(hikeID, pointsArray[i][1], pointsArray[i][0], 1, 0, 0);
-                        startPointElev= pointsArray[i][2];
-                 
-                    } else if (i == (pointsArray.length - 1) & j == (req.body.features.length - 1)) { ///ultimo punto
-                        await dao.addPoint(hikeID, pointsArray[i][1], pointsArray[i][0], 0, 1, 0);
-                        endPointElev= pointsArray[i][2];
-                  
-                    } else {
-                        await dao.addPoint(hikeID, pointsArray[i][1], pointsArray[i][0], 0, 0, 0); //lat and lon in the json representation are swapped
+                
+                if (req.body.features[j].geometry.type == 'Point') { //aggiunta ref points
+                    let rp_desc=req.body.features[j].properties.desc;
+                    await dao.addPoint(hikeID, pointsArray[1], pointsArray[0], 0, 0, 1,rp_desc);
+                } else {
+                    for (let i = 0; i < pointsArray.length; i++) {
+                        if (i == 0 & j == 0) { ///primo punto
+                            await dao.addPoint(hikeID, pointsArray[i][1], pointsArray[i][0], 1, 0, 0, "");
+                            startPointElev = pointsArray[i][2];
+
+                        } else if (i == (pointsArray.length - 1) & j == (req.body.features.length - 1)) { ///ultimo punto
+                            await dao.addPoint(hikeID, pointsArray[i][1], pointsArray[i][0], 0, 1, 0, "");
+                            endPointElev = pointsArray[i][2];
+
+                        } else {
+                            await dao.addPoint(hikeID, pointsArray[i][1], pointsArray[i][0], 0, 0, 0, ""); //lat and lon in the json representation are swapped
+                        }
                     }
+
                 }
+
+
 
             }
 
-            let startPoint= await dao.getStartPointOfHike(hikeID);
+            let startPoint = await dao.getStartPointOfHike(hikeID);
             let endPoint = await dao.getEndPointOfHike(hikeID);
-
-            console.log(endPoint)
             let ascent = endPointElev - startPointElev;
-            
-            let length= Math.sqrt( Math.pow((startPoint.lat-endPoint.lat), 2) + Math.pow((startPoint.lon-endPoint.lon), 2) );
 
-            
-            await dao.addHike(label, length, null, ascent,null, desc,null,null);
+            let length = Math.sqrt(Math.pow((startPoint.lat - endPoint.lat), 2) + Math.pow((startPoint.lon - endPoint.lon), 2));
+
+
+            await dao.addHike(label, length, null, ascent, null, desc, null, null);
             let hike = dao.getHike(hikeID)
             res.status(201).json(hike).end();
         } catch (err) {
@@ -106,7 +115,7 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
             res.status(500).json({ error: 'The hut could not be deleted' });
         }
     });
-    
+
 
     app.put('/api/updateHut/:id', async (req, res) => {
         const errors = validationResult(req);

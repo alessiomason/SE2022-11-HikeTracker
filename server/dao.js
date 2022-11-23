@@ -8,10 +8,10 @@ const sqlite = require('sqlite3');
 const db = new sqlite.Database('hike_tracker.db', (err) => {
     if (err) throw err;
 });
-exports.addPoint = (hikeID, lat, lon,SP,EP,RP) => {
+exports.addPoint = (hikeID, lat, lon,SP,EP,RP,label) => {
     return new Promise((resolve, reject) => {
-        const sql = 'INSERT INTO Points(HikeID,Lat,Lon,SP,EP,RP) VALUES(?, ?, ?,?,?,?)'
-        db.run(sql, [hikeID, lat, lon,SP,EP,RP], function (err) {
+        const sql = 'INSERT INTO Points(HikeID,Lat,Lon,SP,EP,RP,Label) VALUES(?, ?, ?,?,?,?,?)'
+        db.run(sql, [hikeID, lat, lon,SP,EP,RP,label], function (err) {
             if (err) reject(err);
             resolve();
         });

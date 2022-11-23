@@ -50,7 +50,9 @@ const port = 3001;
 
 // set-up the middlewares
 app.use(morgan('dev'));
-app.use(express.json());
+
+
+app.use(express.json({limit: '50mb'}));
 const corsOptions = {
     origin: 'http://localhost:3000',
     credentials: true,
