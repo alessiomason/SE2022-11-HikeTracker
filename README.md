@@ -44,3 +44,6 @@ Pull:
         
     It will runs over the 3001 port
 
+# Run both services
+
+- https://hub.docker.com/repository/docker/erengul/se2022-11-hiketracker
