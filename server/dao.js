@@ -18,6 +18,66 @@ exports.addPoint = (hikeID, lat, lon,SP,EP,RP) => {
     });
 }
 
+exports.addHut = (hutName, PointID, hutDescription) => {
+    return new Promise((resolve, reject) => {
+        const sql = 'INSERT INTO Huts(Name, PointID, Description) VALUES(?, ?, ?)'
+        db.run(sql, [hutName, PointID, hutDescription], function (err) {
+            if (err) reject(err);
+            resolve();
+        });
+    });
+
+}
+
+exports.getHuts = () => {
+    return new Promise((resolve, reject) => {
+        const sql = 'SELECT * FROM Huts';
+        db.all(sql, [], (err, rows) => {
+            if (err) reject(err);
+            const huts = rows.map((h) => ({ id: h.HutID, hutName: h.Name, point: h.PointID, hutDescription: h.Description }));
+            resolve(huts);
+        });
+    });
+}
+
+
+exports.deleteHut = (hutID) => {
+    return new Promise((resolve, reject) => {
+        db.run("DELETE FROM Huts WHERE HutID = ?", [hutID], (err) => {
+            if (err) reject(err);
+            else resolve(null);
+        });
+    });
+};
+
+
+exports.getHut = (hutID) => {
+    return new Promise((resolve, reject) => {
+        const sql = 'SELECT * FROM Huts WHERE HutID = ?';
+        db.all(sql, [hutID], (err, rows) => {
+            if (err) reject(err);
+            else {
+                if (rows.length === 0) resolve(undefined);
+                else {
+                    const hike = rows.map((h) => ({ id: h.HutID, hutName: h.Name, point: h.PointID, hutDescription: h.Description}));
+                    resolve(hike);
+                }
+            }
+        });
+    });
+}
+
+exports.updateHut = (hutID, hutName, pointID, hutDescription) => {
+    return new Promise((resolve, reject) => {
+        const sql = 'UPDATE Huts SET Name=?, PointID=?, Description=? WHERE HutID=?'
+        db.run(sql, [hutName, pointID, hutDescription, hutID], function (err) {
+            if (err) reject(err);
+            resolve();
+        });
+    });
+}
+
+
 exports.addHike = (trackName, len, time, ascent, diff, description) => {
     return new Promise((resolve, reject) => {
         const sql = 'INSERT INTO Hikes(Label, Length, ExpTime,Ascent,Difficulty,Description) VALUES(?, ?, ?, ?, ?,?)'
