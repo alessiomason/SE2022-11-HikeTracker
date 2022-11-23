@@ -28,35 +28,46 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
             const hikeID = await dao.getLastHikeID() + 1;
             let startPointElev = null;
             let endPointElev = null;
-
+            let coordinatesArray = [];
+            let refPointsArray = [];
 
             for (let j = 0; j < req.body.features.length; j++) {
-                
-                let pointsArray = req.body.features[j].geometry.coordinates;
-                
-                if (req.body.features[j].geometry.type == 'Point') { //aggiunta ref points
-                    let rp_desc=req.body.features[j].properties.desc;
-                    await dao.addPoint(hikeID, pointsArray[1], pointsArray[0], 0, 0, 1,rp_desc);
+                if (req.body.features[j].geometry.type == 'Point') {
+                    refPointsArray.push(req.body.features[j]);
                 } else {
-                    for (let i = 0; i < pointsArray.length; i++) {
-                        if (i == 0 & j == 0) { ///primo punto
-                            await dao.addPoint(hikeID, pointsArray[i][1], pointsArray[i][0], 1, 0, 0, "");
-                            startPointElev = pointsArray[i][2];
-
-                        } else if (i == (pointsArray.length - 1) & j == (req.body.features.length - 1)) { ///ultimo punto
-                            await dao.addPoint(hikeID, pointsArray[i][1], pointsArray[i][0], 0, 1, 0, "");
-                            endPointElev = pointsArray[i][2];
-
-                        } else {
-                            await dao.addPoint(hikeID, pointsArray[i][1], pointsArray[i][0], 0, 0, 0, ""); //lat and lon in the json representation are swapped
-                        }
-                    }
-
+                    coordinatesArray.push(req.body.features[j]);
                 }
 
-
-
             }
+
+            for (let k = 0; k < coordinatesArray.length; k++) {
+                let pointsArray = coordinatesArray[k].geometry.coordinates;
+                for (let i = 0; i < pointsArray.length; i++) {
+                    if (i == 0 & k==0) { ///primo punto
+                        await dao.addPoint(hikeID, pointsArray[i][1], pointsArray[i][0], 1, 0, 0, "");
+                        startPointElev = pointsArray[i][2];
+
+                    } else if (i == (pointsArray.length - 1) & k == ( coordinatesArray.length - 1)) { ///ultimo punto
+                        await dao.addPoint(hikeID, pointsArray[i][1], pointsArray[i][0], 0, 1, 0, "");
+                        endPointElev = pointsArray[i][2];
+
+                    } else {
+                        await dao.addPoint(hikeID, pointsArray[i][1], pointsArray[i][0], 0, 0, 0, ""); //lat and lon in the json representation are swapped
+                    }
+                }
+            }
+
+            for (let i = 0; i < refPointsArray.length; i++) { //aggiunta ref points
+                let pointsArray = refPointsArray[i].geometry.coordinates;
+                let rp_desc = refPointsArray[i].properties.desc;
+                await dao.addPoint(hikeID, pointsArray[1], pointsArray[0], 0, 0, 1, rp_desc);
+            }
+
+
+
+
+
+
 
             let startPoint = await dao.getStartPointOfHike(hikeID);
             let endPoint = await dao.getEndPointOfHike(hikeID);
