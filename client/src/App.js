@@ -24,7 +24,6 @@ function App() {
 }
 
 function App2() {
-
     const navigate = useNavigate();
 
     const [loggedIn, setLoggedIn] = useState(false);
@@ -35,16 +34,14 @@ function App2() {
     const [showLogin, setShowLogin] = useState(false);
     const [showSignup, setShowSignup] = useState(false);
     const [initialLoading, setInitialLoading] = useState(false);
-    const [showEmailAlert, setShowEmailAlert] = useState(true);
-    
+    const [showEmailAlert, setShowEmailAlert] = useState(false);
+   
     useEffect(() => {
         const checkAuth = async () => {
             try {
                 let user = await API.getUserInfo();
                 user.access_right = await API.getUserAccessRight();
                 setLoggedIn(true);
-                setShowLogin(false);
-                setShowSignup(false);
                 setUser(user);
             } catch (err) {
                 handleError(err);
@@ -56,7 +53,7 @@ function App2() {
     const doSignUp = (credentials) => {
         API.signup(credentials)
             .then(() => {
-                {/*navigate('/verify-email');*/}
+                navigate('/verify-email');
                 setShowSignup(false);
                 setShowEmailAlert(true);
             })
@@ -86,7 +83,7 @@ function App2() {
         setDirty(true);
         navigate('/');
     }
-
+/*
     useEffect(() => {
         if (showEmailAlert) {
           const timeId = setTimeout(() => {
@@ -96,9 +93,9 @@ function App2() {
             clearTimeout(timeId)
           }
         }
-      }, [showEmailAlert]);
+      }, [showEmailAlert]);*/
 
-    const  addGPXTrack= async (gpx)=>{
+    const addGPXTrack = async (gpx)=>{
        await  API.addGPXTrack(gpx)
             .then(() => { 
             setInitialLoading(false);
@@ -153,7 +150,6 @@ function App2() {
                 <Route index element={ initialLoading ? <Loading/> :  <Home showEmailAlert={showEmailAlert} setShowEmailAlert={setShowEmailAlert} user={user}
                 setShowLogin={setShowLogin} showLogin={showLogin} loggedIn={loggedIn} doLogin={doLogin} message={message} setMessage={setMessage} 
                 showSignup={showSignup} setShowSignup={setShowSignup} doSignUp={doSignUp}/>} />
-                
                 
                 <Route path="hike/:hikeId" element={<HikePage user={user} />}/>
                 <Route path="hikeManager" element={<MyHikeManager updateHike={updateHike} deleteHike={deleteHike} user={user} />}/>

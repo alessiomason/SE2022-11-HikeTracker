@@ -8,9 +8,11 @@ import 'leaflet/dist/leaflet.css';
 function Map(props) {
     const startPoint = props.points?.filter(p => p.startPoint).map(p => [p.latitude, p.longitude]).pop();
     const endPoint = props.points?.filter(p => p.endPoint).map(p => [p.latitude, p.longitude]).pop();
-    let center = [45.177786, 7.083372];
+
+    let center = [45.177786, 7.083372];     // default point
     if (startPoint && endPoint)
         center = [(startPoint[0] + endPoint[0]) / 2, (startPoint[1] + endPoint[1]) / 2];
+    
     const positions = props.points?.map(p => [p.latitude, p.longitude]);
 
     return (
