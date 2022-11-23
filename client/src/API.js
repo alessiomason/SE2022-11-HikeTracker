@@ -13,7 +13,7 @@ function addGPXTrack(gpxJSON) {
             body: JSON.stringify(gpxJSON),
         }).then((response) => {
             if (response.ok)
-                resolve(null);
+                resolve(response.json());
             else {
                 // analyze the cause of error
                 response.json()

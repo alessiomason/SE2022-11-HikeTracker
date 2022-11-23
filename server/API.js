@@ -71,7 +71,7 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
 
             let ascent = endPointElev - startPointElev;
             await dao.addHike(label, null, null, ascent, null, desc, null, null);
-            let hike = dao.getHike(hikeID)
+            let hike = await dao.getHike(hikeID)
             res.status(201).json(hike).end();
         } catch (err) {
             console.log(err)

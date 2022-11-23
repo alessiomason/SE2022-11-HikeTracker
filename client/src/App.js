@@ -35,7 +35,7 @@ function App2() {
     const [showSignup, setShowSignup] = useState(false);
     const [initialLoading, setInitialLoading] = useState(false);
     const [showEmailAlert, setShowEmailAlert] = useState(false);
-   
+
     useEffect(() => {
         const checkAuth = async () => {
             try {
@@ -95,15 +95,15 @@ function App2() {
         }
       }, [showEmailAlert]);*/
 
-    const addGPXTrack = async (gpx)=>{
-       await  API.addGPXTrack(gpx)
-            .then(() => { 
-            setInitialLoading(false);
+    const addGPXTrack = async (gpx) => {
+        try {
+            const new_hike = await API.addGPXTrack(gpx);
             setDirty(true);
-            })
-            .catch(err => {
-                setInitialLoading(false);
-                handleError(err)});
+            setInitialLoading(false);
+            navigate('/updateHike/' + new_hike[0].id);
+        } catch (err) {
+            handleError(err);
+        }
     }
 
     function deleteHike(id) {
