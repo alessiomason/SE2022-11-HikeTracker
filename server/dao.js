@@ -5,7 +5,7 @@
 const sqlite = require('sqlite3');
 
 // open the database
-const db = new sqlite.Database('hike_tracker.db', (err) => {
+const db = new sqlite.Database('/db/hike_tracker.db', (err) => {
     if (err) throw err;
 });
 exports.addPoint = (hikeID, lat, lon,SP,EP,RP) => {
