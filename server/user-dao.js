@@ -7,7 +7,7 @@ const crypto = require('crypto');
 const dayjs = require('dayjs');
 
 // open the database
-const db = new sqlite.Database('hike_tracker.db', (err) => {
+const db = new sqlite.Database('db/hike_tracker.db', (err) => {
     if (err) throw err;
 });
 

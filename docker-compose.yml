@@ -1,0 +1,23 @@
+version: '3'
+services:
+  server:
+    container_name: server
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    image: erengul/se2022-11-hiketracker-server:latest
+    ports:
+      - "3001:3001"
+    volumes:
+      - $PWD/server/db:/db
+
+  client:
+    container_name: client
+    depends_on:
+      - server
+    build:
+        context: ./client
+        dockerfile: Dockerfile
+    image: erengul/se2022-11-hiketracker-client:latest
+    ports:
+      - "3000:3000"

@@ -5,23 +5,84 @@
 const sqlite = require('sqlite3');
 
 // open the database
-const db = new sqlite.Database('hike_tracker.db', (err) => {
+const db = new sqlite.Database('db/hike_tracker.db', (err) => {
     if (err) throw err;
 });
-exports.addPoint = (hikeID, lat, lon,SP,EP,RP) => {
+
+exports.addPoint = (hikeID, lat, lon,SP,EP,RP,label) => {
     return new Promise((resolve, reject) => {
-        const sql = 'INSERT INTO Points(HikeID,Lat,Lon,SP,EP,RP) VALUES(?, ?, ?,?,?,?)'
-        db.run(sql, [hikeID, lat, lon,SP,EP,RP], function (err) {
+        const sql = 'INSERT INTO Points(HikeID,Lat,Lon,SP,EP,RP,Label) VALUES(?, ?, ?,?,?,?,?)'
+        db.run(sql, [hikeID, lat, lon,SP,EP,RP,label], function (err) {
             if (err) reject(err);
             resolve();
         });
     });
 }
 
-exports.addHike = (trackName, len, time, ascent, diff, description) => {
+exports.addHut = (hutName, PointID, hutDescription) => {
     return new Promise((resolve, reject) => {
-        const sql = 'INSERT INTO Hikes(Label, Length, ExpTime,Ascent,Difficulty,Description) VALUES(?, ?, ?, ?, ?,?)'
-        db.run(sql, [trackName, len, time, ascent, diff, description], function (err) {
+        const sql = 'INSERT INTO Huts(Name, PointID, Description) VALUES(?, ?, ?)'
+        db.run(sql, [hutName, PointID, hutDescription], function (err) {
+            if (err) reject(err);
+            resolve();
+        });
+    });
+
+}
+
+exports.getHuts = () => {
+    return new Promise((resolve, reject) => {
+        const sql = 'SELECT * FROM Huts';
+        db.all(sql, [], (err, rows) => {
+            if (err) reject(err);
+            const huts = rows.map((h) => ({ id: h.HutID, hutName: h.Name, point: h.PointID, hutDescription: h.Description }));
+            resolve(huts);
+        });
+    });
+}
+
+
+exports.deleteHut = (hutID) => {
+    return new Promise((resolve, reject) => {
+        db.run("DELETE FROM Huts WHERE HutID = ?", [hutID], (err) => {
+            if (err) reject(err);
+            else resolve(null);
+        });
+    });
+};
+
+
+exports.getHut = (hutID) => {
+    return new Promise((resolve, reject) => {
+        const sql = 'SELECT * FROM Huts WHERE HutID = ?';
+        db.all(sql, [hutID], (err, rows) => {
+            if (err) reject(err);
+            else {
+                if (rows.length === 0) resolve(undefined);
+                else {
+                    const hike = rows.map((h) => ({ id: h.HutID, hutName: h.Name, point: h.PointID, hutDescription: h.Description}));
+                    resolve(hike);
+                }
+            }
+        });
+    });
+}
+
+exports.updateHut = (hutID, hutName, pointID, hutDescription) => {
+    return new Promise((resolve, reject) => {
+        const sql = 'UPDATE Huts SET Name=?, PointID=?, Description=? WHERE HutID=?'
+        db.run(sql, [hutName, pointID, hutDescription, hutID], function (err) {
+            if (err) reject(err);
+            resolve();
+        });
+    });
+}
+
+
+exports.addHike = (trackName, len, time, ascent, diff, description,province,municipality) => {
+    return new Promise((resolve, reject) => {
+        const sql = 'INSERT INTO Hikes(Label, Length, ExpTime,Ascent,Difficulty,Description,Province,Municipality) VALUES(?,?,?,?,?,?,?,?)'
+        db.run(sql, [trackName, len, time, ascent, diff, description,province,municipality], function (err) {
             if (err) reject(err);
             resolve();
         });
@@ -48,10 +109,10 @@ exports.getStartPointOfHike = (hikeID) => {
         db.get(sql, [hikeID,1], (err, row) => {
             if (err) reject(err);
             let point;
-            if (row === undefined) point = { id: 0 }
-            else point = { id: row.PointID }
+            if (row === undefined) point = { lat: null, lon: null }
+            else point = { lat: row.Lat, lon: row.Lon }
 
-            resolve(point.id);
+            resolve(point);
         });
     });
 }
@@ -61,10 +122,10 @@ exports.getEndPointOfHike = (hikeID) => {
         db.get(sql, [hikeID,1], (err, row) => {
             if (err) reject(err);
             let point;
-            if (row === undefined) point = { id: 0 }
-            else point = { id: row.PointID }
+            if (row === undefined) point = { lat: null, lon: null }
+            else point = { lat: row.Lat, lon: row.Lon }
 
-            resolve(point.id);
+            resolve(point);
         });
     });
 }
@@ -75,11 +136,12 @@ exports.getHikes = () => {
         const sql = 'SELECT * FROM HIKES';
         db.all(sql, [], (err, rows) => {
             if (err) reject(err);
-            const hikes = rows.map((h) => ({ id: h.HikeID, label: h.Label, length: h.Length, expTime: h.ExpTime, ascent: h.Ascent, difficulty: h.Difficulty, description: h.Description }));
+            const hikes = rows.map((h) => ({ id: h.HikeID, label: h.Label, length: h.Length, expTime: h.ExpTime, ascent: h.Ascent, difficulty: h.Difficulty, description: h.Description, province: h.Province, municipality: h.Municipality }));
             resolve(hikes);
         });
     });
 }
+
 exports.getHikesRefPoints = () => {
     return new Promise((resolve, reject) => {
         const sql = 'SELECT * FROM Points WHERE RF=?';
@@ -100,10 +162,21 @@ exports.getHike = (hikeID) => {
             else {
                 if (rows.length === 0) resolve(undefined);
                 else {
-                    const hike = rows.map((h) => ({ id: h.HikeID, label: h.Label, length: h.Length, expTime: h.ExpTime, ascent: h.Ascent, difficulty: h.Difficulty, description: h.Description }));
+                    const hike = rows.map((h) => ({ id: h.HikeID, label: h.Label, length: h.Length, expTime: h.ExpTime, ascent: h.Ascent, difficulty: h.Difficulty, description: h.Description, province: h.Province, municipality: h.Municipality }));
                     resolve(hike);
                 }
             }
+        });
+    });
+}
+
+exports.getHikePoints = (hikeID) => {
+    return new Promise((resolve, reject) => {
+        const sql = 'SELECT * FROM POINTS WHERE HikeID = ?';
+        db.all(sql, [hikeID], (err, rows) => {
+            if (err) reject(err);
+            const points = rows.map((p) => ({ pointID: p.PointID, label: p.Label, latitude: p.Lat, longitude: p.Lon, startPoint: p.SP, endPoint: p.EP, referencePoint: p.RP }));
+            resolve(points);
         });
     });
 }
@@ -127,20 +200,20 @@ exports.deleteAllHikes = () => {
     });
 }
 
-exports.newHike = (label, length, expTime, ascent, difficulty, description) => {
+exports.newHike = (label, length, expTime, ascent, difficulty, description, province, municipality) => {
     return new Promise((resolve, reject) => {
-        const sql = 'INSERT INTO HIKES(label,length,expTime,ascent,difficulty,description) VALUES(?, ?, ?, ?, ?, ?)'
-        db.run(sql, [label, length, expTime, ascent, difficulty, description], function (err) {
+        const sql = 'INSERT INTO Hikes(Label, Length, ExpTime,Ascent,Difficulty,Description,Province,Municipality) VALUES(?,?,?,?,?,?,?,?)'
+        db.run(sql, [label, length, expTime, ascent, difficulty, description, province, municipality], function (err) {
             if (err) reject(err);
             resolve();
         });
     });
 }
 
-exports.updateHike = (label, length, expTime, ascent, difficulty, description, hikeId) => {
+exports.updateHike = (label, length, expTime, ascent, difficulty, description, province, municipality, hikeId) => {
     return new Promise((resolve, reject) => {
-        const sql = 'UPDATE HIKES SET label=?, length=?,expTime=?,ascent=?,difficulty=?,description=? WHERE HikeId=?'
-        db.run(sql, [label, length, expTime, ascent, difficulty, description, hikeId], function (err) {
+        const sql = 'UPDATE HIKES SET label=?,length=?,expTime=?,ascent=?,difficulty=?,description=?,province=?,municipality=? WHERE HikeId=?'
+        db.run(sql, [label, length, expTime, ascent, difficulty, description, province, municipality, hikeId], function (err) {
             if (err) reject(err);
             resolve();
         });

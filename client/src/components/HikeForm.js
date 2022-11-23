@@ -22,6 +22,7 @@ function HikeForm(props) {
 
     const handleSubmit = (event) => {
         event.preventDefault();
+        props.setInitialLoading(true);
 
         var gpx = new gpxParser(); //Create gpxParser Object
         const reader = new FileReader();
@@ -31,10 +32,8 @@ function HikeForm(props) {
 
             gpx.parse(reader.result);
             let geoJSON = gpx.toGeoJSON();
-            console.log(reader.result);
             console.log(geoJSON);
             props.addGPXTrack(geoJSON);
-            props.setDirty(true);
         };
 
         reader.onerror = function () {
@@ -42,17 +41,6 @@ function HikeForm(props) {
         };
 
         navigate("/");
-
-        /*
-        if (label.trim().length === 0) {
-          setErrorMsg('The label of the hike cannot be consisted of only empty spaces');
-        } else {
-          // add
-          const newHike = { label: label, length: length, expTime: expTime, ascent: ascent, difficulty: difficulty, description: description }
-          props.addHike(newHike);
-          navigate('/');
-        }
-        */
     }
 
     return (

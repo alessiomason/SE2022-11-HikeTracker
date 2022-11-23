@@ -20,6 +20,8 @@ function SingleHikeCard(props) {
                 {props.hike.ascent && <Card.Text>Ascent: {Math.round(props.hike.ascent)} m</Card.Text>}
                 {props.hike.difficulty && <Card.Text>Difficulty level: {props.hike.difficulty}</Card.Text>}
                 {props.hike.description && <Card.Text>Description: {props.hike.description}</Card.Text>}
+                {props.hike.province && <Card.Text>Province: {props.hike.province}</Card.Text>}
+                {props.hike.municipality && <Card.Text>Municipality: {props.hike.municipality}</Card.Text>}
             </Card.Body>
         </Card>
     );
