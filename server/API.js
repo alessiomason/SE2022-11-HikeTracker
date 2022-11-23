@@ -67,6 +67,73 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
 
     });
 
+    app.post('/api/addHut', async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty())
+            return res.status(422).json({ errors: errors.array() });
+
+        try {
+            const hutName = req.body.hutName;
+            const pointID = req.body.pointID;
+            const hutDescription = req.body.hutDescription;
+            const hut = await dao.addHut(hutName, pointID, hutDescription);
+            res.status(201).json(hut).end();
+        } catch (err) {
+            console.log(err)
+            res.status(500).json({ error: err });
+        }
+
+    });
+
+    app.get('/api/huts', async (req, res) => {
+        try {
+            const huts = await dao.getHuts();
+            res.status(200).json(huts);
+        }
+        catch (err) {
+            console.log(err)
+            res.status(500).end();
+        }
+    });
+
+    app.delete('/api/huts/:id', async (req, res) => {
+        const hutID = req.params.id;
+        try {
+            await dao.deleteHut(hutID);
+            res.status(200).end();
+        }
+        catch (err) {
+            res.status(500).json({ error: 'The hut could not be deleted' });
+        }
+    });
+    
+
+    app.put('/api/updateHut/:id', async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty())
+            return res.status(422).json({ errors: errors.array() });
+
+        // let hikeId = req.body.id
+        const hutId = req.params.id;
+        try {
+            let huts = await dao.getHut(hutId);
+            if (huts == undefined)
+                res.status(404).json(result);
+            else {
+                let hut = huts[0];
+                let hutName = req.body.hutName;
+                let hutDescription = req.body.hutDescription;
+                let pointID = req.body.pointID;
+
+                const hikes = await dao.updateHut(hut.id, hutName, pointID, hutDescription);
+                res.status(201).json(hikes).end();
+            }
+        } catch (err) {
+            res.status(500).json({ error: `Database error during update of the hut` });
+        }
+
+    });
+
 
     app.get('/api/hikes', async (req, res) => {
         try {
