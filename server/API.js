@@ -169,9 +169,8 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
         const hikeID = req.params.id;
         try {
             const hike = await dao.getHike(hikeID);
-            if (hike == undefined) {
-                return 404
-            }
+            if (hike == undefined) res.status(404).end();
+            hike[0].points = await dao.getHikePoints(hikeID);
             res.status(200).json(hike[0]);
         }
         catch (err) {

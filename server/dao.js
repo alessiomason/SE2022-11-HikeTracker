@@ -140,6 +140,7 @@ exports.getHikes = () => {
         });
     });
 }
+
 exports.getHikesRefPoints = () => {
     return new Promise((resolve, reject) => {
         const sql = 'SELECT * FROM Points WHERE RF=?';
@@ -164,6 +165,17 @@ exports.getHike = (hikeID) => {
                     resolve(hike);
                 }
             }
+        });
+    });
+}
+
+exports.getHikePoints = (hikeID) => {
+    return new Promise((resolve, reject) => {
+        const sql = 'SELECT * FROM POINTS WHERE HikeID = ?';
+        db.all(sql, [hikeID], (err, rows) => {
+            if (err) reject(err);
+            const points = rows.map((p) => ({ pointID: p.PointID, label: p.Label, latitude: p.Lat, longitude: p.Lon, startPoint: p.SP, endPoint: p.EP, referencePoint: p.RP }));
+            resolve(points);
         });
     });
 }

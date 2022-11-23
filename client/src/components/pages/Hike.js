@@ -31,7 +31,7 @@ function HikePage(props) {
             </Row>
             <Row>
                 <div className=' d-flex justify-content-center'>
-                    <Map />
+                <Map points={hike.points} />
                 </div>
             </Row>
         </>
