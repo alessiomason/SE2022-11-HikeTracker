@@ -33,7 +33,7 @@ function addHike(hike) {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ label: hike.label, length: hike.length, expTime: hike.expTime, ascent: hike.ascent, difficulty: hike.difficulty, description: hike.description }),
+            body: JSON.stringify({ label: hike.label, length: hike.length, expTime: hike.expTime, ascent: hike.ascent, difficulty: hike.difficulty, description: hike.description, province: hike.province, municipality: hike.municipality }),
 
         }).then((response) => {
             if (response.ok)
@@ -76,7 +76,7 @@ async function getHikes() {
     const response = await fetch(new URL('hikes', APIURL));
     const hikes = await response.json();
     if (response.ok)
-        return hikes.map((h) => ({ id: h.id, label: h.label, length: h.length, expTime: h.expTime, ascent: h.ascent, difficulty: h.difficulty, description: h.description, points: h.points }))
+        return hikes.map((h) => ({ id: h.id, label: h.label, length: h.length, expTime: h.expTime, ascent: h.ascent, difficulty: h.difficulty, description: h.description, province: h.province, municipality: h.municipality }))
     else throw hikes;
 }
 
@@ -103,6 +103,8 @@ async function getHike(id) {
             ascent: hike.ascent,
             difficulty: hike.difficulty,
             description: hike.description,
+            province: hike.province,
+            municipality: hike.municipality,
             points: hike.points
         });
     else throw hike;

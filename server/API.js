@@ -43,11 +43,11 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
             for (let k = 0; k < coordinatesArray.length; k++) {
                 let pointsArray = coordinatesArray[k].geometry.coordinates;
                 for (let i = 0; i < pointsArray.length; i++) {
-                    if (i == 0 & k==0) { ///primo punto
+                    if (i == 0 & k == 0) { ///primo punto
                         await dao.addPoint(hikeID, pointsArray[i][1], pointsArray[i][0], 1, 0, 0, "");
                         startPointElev = pointsArray[i][2];
 
-                    } else if (i == (pointsArray.length - 1) & k == ( coordinatesArray.length - 1)) { ///ultimo punto
+                    } else if (i == (pointsArray.length - 1) & k == (coordinatesArray.length - 1)) { ///ultimo punto
                         await dao.addPoint(hikeID, pointsArray[i][1], pointsArray[i][0], 0, 1, 0, "");
                         endPointElev = pointsArray[i][2];
 
@@ -229,9 +229,11 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
         else if (difficulty == "Professional hiker")
             difficulty_level = 3;
         let description = req.body.description;
+        let province = req.body.province;
+        let municipality = req.body.municipality;
 
         try {
-            const hike = await dao.newHike(label, length, expTime, ascent, difficulty_level, description);
+            const hike = await dao.newHike(label, length, expTime, ascent, difficulty_level, description, province, municipality);
             res.status(201).json(hike).end();
         } catch (err) {
             res.status(500).json({ error: `Database error during creation of a new hike.` });
@@ -272,8 +274,10 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
                     difficulty_level = 3;
 
                 let description = req.body.description;
+                let province = req.body.province;
+                let municipality = req.body.municipality;
 
-                const hikes = await dao.updateHike(label, length, expTime, ascent, difficulty_level, description, hikeId);
+                const hikes = await dao.updateHike(label, length, expTime, ascent, difficulty_level, description, province, municipality, hikeId);
                 res.status(201).json(hikes).end();
             }
         } catch (err) {

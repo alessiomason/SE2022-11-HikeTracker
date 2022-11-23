@@ -30,6 +30,8 @@ function EditForm(props) {
     const [difficulty, setDifficulty] = useState(hikeToEdit ? hikeToEdit.text : '');
     const [difficultyText, setDifficultyText] = useState(difficulty_text);
     const [description, setDescription] = useState(hikeToEdit ? hikeToEdit.description : '');
+    const [province, setProvince] = useState(hikeToEdit ? hikeToEdit.province : '');
+    const [municipality, setMunicipality] = useState(hikeToEdit ? hikeToEdit.municipality : '');
     const [errorMsg, setErrorMsg] = useState('');
 
     const handleSubmit = (event) => {
@@ -38,7 +40,17 @@ function EditForm(props) {
         if (label.trim().length === 0)
             setErrorMsg('The label of the hike cannot be consisted of only empty spaces');
         else {
-            const updatedHike = { id: hikeId, label: label, length: length, expTime: expTime, ascent: ascent, difficulty: difficultyText, description: description }
+            const updatedHike = { 
+                id: hikeId, 
+                label: label, 
+                length: length,
+                expTime: expTime, 
+                ascent: ascent, 
+                difficulty: difficultyText, 
+                description: description,
+                province: province,
+                municipality: municipality
+            }
             props.updateHike(updatedHike);
             props.setDirty(true);
             navigate('/hikeManager');
@@ -70,32 +82,32 @@ function EditForm(props) {
 
                             <Form.Group>
                                 <Form.Label>Municipality</Form.Label>
-                                <Form.Control></Form.Control>
+                                <Form.Control required={true} value={municipality} onChange={ev => setMunicipality(ev.target.value)} />
                             </Form.Group>
 
                             <Form.Group>
                                 <Form.Label>Province</Form.Label>
-                                <Form.Control></Form.Control>
+                                <Form.Control required={true} value={province} onChange={ev => setProvince(ev.target.value)} />
                             </Form.Group>
 
                             <Form.Group>
                                 <Form.Label>Length [m]</Form.Label>
-                                <Form.Control type='number' step="any" min={0} value={length} onChange={ev => setLength(ev.target.value)} />
+                                <Form.Control required={true} type='number' step="any" min={0} value={length} onChange={ev => setLength(ev.target.value)} />
                             </Form.Group>
 
                             <Form.Group>
                                 <Form.Label>Expected time [h]</Form.Label>
-                                <Form.Control type='number' step="any" min={0} value={expTime} onChange={ev => setExpTime(ev.target.value)}></Form.Control>
+                                <Form.Control required={true} type='number' step="any" min={0} value={expTime} onChange={ev => setExpTime(ev.target.value)}></Form.Control>
                             </Form.Group>
 
                             <Form.Group>
                                 <Form.Label>Ascent [m]</Form.Label>
-                                <Form.Control type='number' step="any" value={ascent} onChange={ev => setAscent(ev.target.value)} />
+                                <Form.Control required={true} type='number' step="any" value={ascent} onChange={ev => setAscent(ev.target.value)} />
                             </Form.Group>
 
                             <Form.Group>
                                 <Form.Label>Difficulty</Form.Label>
-                                <Form.Select value={difficultyText} onChange={ev => setDifficultyText(ev.target.value)}>
+                                <Form.Select required={true} value={difficultyText} onChange={ev => setDifficultyText(ev.target.value)}>
                                     <option selected disabled value="">Choose...</option>
                                     <option>Tourist</option>
                                     <option>Hiker</option>

@@ -81,7 +81,7 @@ exports.updateHut = (hutID, hutName, pointID, hutDescription) => {
 
 exports.addHike = (trackName, len, time, ascent, diff, description,province,municipality) => {
     return new Promise((resolve, reject) => {
-        const sql = 'INSERT INTO Hikes(Label, Length, ExpTime,Ascent,Difficulty,Description,Province,Municipality) VALUES(?, ?, ?, ?, ?,?,?,?)'
+        const sql = 'INSERT INTO Hikes(Label, Length, ExpTime,Ascent,Difficulty,Description,Province,Municipality) VALUES(?,?,?,?,?,?,?,?)'
         db.run(sql, [trackName, len, time, ascent, diff, description,province,municipality], function (err) {
             if (err) reject(err);
             resolve();
@@ -136,7 +136,7 @@ exports.getHikes = () => {
         const sql = 'SELECT * FROM HIKES';
         db.all(sql, [], (err, rows) => {
             if (err) reject(err);
-            const hikes = rows.map((h) => ({ id: h.HikeID, label: h.Label, length: h.Length, expTime: h.ExpTime, ascent: h.Ascent, difficulty: h.Difficulty, description: h.Description }));
+            const hikes = rows.map((h) => ({ id: h.HikeID, label: h.Label, length: h.Length, expTime: h.ExpTime, ascent: h.Ascent, difficulty: h.Difficulty, description: h.Description, province: h.Province, municipality: h.Municipality }));
             resolve(hikes);
         });
     });
@@ -162,7 +162,7 @@ exports.getHike = (hikeID) => {
             else {
                 if (rows.length === 0) resolve(undefined);
                 else {
-                    const hike = rows.map((h) => ({ id: h.HikeID, label: h.Label, length: h.Length, expTime: h.ExpTime, ascent: h.Ascent, difficulty: h.Difficulty, description: h.Description }));
+                    const hike = rows.map((h) => ({ id: h.HikeID, label: h.Label, length: h.Length, expTime: h.ExpTime, ascent: h.Ascent, difficulty: h.Difficulty, description: h.Description, province: h.Province, municipality: h.Municipality }));
                     resolve(hike);
                 }
             }
@@ -200,20 +200,20 @@ exports.deleteAllHikes = () => {
     });
 }
 
-exports.newHike = (label, length, expTime, ascent, difficulty, description) => {
+exports.newHike = (label, length, expTime, ascent, difficulty, description, province, municipality) => {
     return new Promise((resolve, reject) => {
-        const sql = 'INSERT INTO HIKES(label,length,expTime,ascent,difficulty,description) VALUES(?, ?, ?, ?, ?, ?)'
-        db.run(sql, [label, length, expTime, ascent, difficulty, description], function (err) {
+        const sql = 'INSERT INTO Hikes(Label, Length, ExpTime,Ascent,Difficulty,Description,Province,Municipality) VALUES(?,?,?,?,?,?,?,?)'
+        db.run(sql, [label, length, expTime, ascent, difficulty, description, province, municipality], function (err) {
             if (err) reject(err);
             resolve();
         });
     });
 }
 
-exports.updateHike = (label, length, expTime, ascent, difficulty, description, hikeId) => {
+exports.updateHike = (label, length, expTime, ascent, difficulty, description, province, municipality, hikeId) => {
     return new Promise((resolve, reject) => {
-        const sql = 'UPDATE HIKES SET label=?, length=?,expTime=?,ascent=?,difficulty=?,description=? WHERE HikeId=?'
-        db.run(sql, [label, length, expTime, ascent, difficulty, description, hikeId], function (err) {
+        const sql = 'UPDATE HIKES SET label=?,length=?,expTime=?,ascent=?,difficulty=?,description=?,province=?,municipality=? WHERE HikeId=?'
+        db.run(sql, [label, length, expTime, ascent, difficulty, description, province, municipality, hikeId], function (err) {
             if (err) reject(err);
             resolve();
         });
