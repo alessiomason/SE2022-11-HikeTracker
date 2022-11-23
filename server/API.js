@@ -17,24 +17,29 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
 
         try {
             let hikes = [];
+            let element = req.body.features[0];
+            if (element.properties.name === '') {
+                return res.status(422).json({ error: `Description name of track can not be empty.` });
+            }
+
+            let label = element.properties.name;
+            let desc = element.properties.desc;
+            const hikeID = await dao.getLastHikeID() + 1;
+            console.log(hikeID);
+            let startPointElev= null;
+            let endPointElev=null;
+
             for (let j = 0; j < req.body.features.length; j++) {
-                let element = req.body.features[j];
-                if (element.properties.name === '') {
-                    return res.status(422).json({ error: `Description name of track can not be empty.` });
-                }
-                let label = element.properties.name;
-                let pointsArray = element.geometry.coordinates;
-                let ascent = pointsArray[pointsArray.length - 1][2] - pointsArray[0][2];
-
-
-                hikes.concat(await dao.addHike(label, null, null, ascent, null, ""));
-                const hikeID = await dao.getLastHikeID();
-                console.log(hikeID);
+                let pointsArray = req.body.features[j].geometry.coordinates;
                 for (let i = 0; i < pointsArray.length; i++) {
-                    if (i == 0) {
+                    if (i == 0 & j == 0) { ///primo punto
                         await dao.addPoint(hikeID, pointsArray[i][1], pointsArray[i][0], 1, 0, 0);
-                    } else if (i == pointsArray.length - 1) {
+                        startPointElev= pointsArray[i][2];
+                 
+                    } else if (i == (pointsArray.length - 1) & j == (req.body.features.length - 1)) { ///ultimo punto
                         await dao.addPoint(hikeID, pointsArray[i][1], pointsArray[i][0], 0, 1, 0);
+                        endPointElev= pointsArray[i][2];
+                  
                     } else {
                         await dao.addPoint(hikeID, pointsArray[i][1], pointsArray[i][0], 0, 0, 0); //lat and lon in the json representation are swapped
                     }
@@ -42,7 +47,18 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
 
             }
 
-            res.status(201).json(hikes).end();
+            let startPoint= await dao.getStartPointOfHike(hikeID);
+            let endPoint = await dao.getEndPointOfHike(hikeID);
+
+            console.log(endPoint)
+            let ascent = endPointElev - startPointElev;
+            
+            let length= Math.sqrt( Math.pow((startPoint.lat-endPoint.lat), 2) + Math.pow((startPoint.lon-endPoint.lon), 2) );
+
+            
+            await dao.addHike(label, length, null, ascent,null, desc,null,null);
+            let hike = dao.getHike(hikeID)
+            res.status(201).json(hike).end();
         } catch (err) {
             console.log(err)
             res.status(500).json({ error: err });
@@ -50,6 +66,7 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
 
 
     });
+
 
     app.get('/api/hikes', async (req, res) => {
         try {

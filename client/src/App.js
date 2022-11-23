@@ -12,6 +12,7 @@ import MyHutManager from './components/pages/HutManager';
 import MyParkingManager from './components/pages/ParkingManager';
 import HikePage from './components/pages/Hike';
 import Home from './components/pages/Home';
+import Loading from './components/Loading';
 import Footer from './components/Footer';
 
 function App() {
@@ -33,6 +34,7 @@ function App2() {
     const [dirty, setDirty] = useState(false);
     const [showLogin, setShowLogin] = useState(false);
     const [showSignup, setShowSignup] = useState(false);
+    const [initialLoading, setInitialLoading] = useState(false);
     const [showEmailAlert, setShowEmailAlert] = useState(true);
     
     useEffect(() => {
@@ -96,10 +98,15 @@ function App2() {
         }
       }, [showEmailAlert]);
 
-    function addGPXTrack(gpx) {
-        API.addGPXTrack(gpx)
-            .then(() => { })
-            .catch(err => handleError(err));
+    const  addGPXTrack= async (gpx)=>{
+       await  API.addGPXTrack(gpx)
+            .then(() => { 
+            setInitialLoading(false);
+            setDirty(true);
+            })
+            .catch(err => {
+                setInitialLoading(false);
+                handleError(err)});
     }
 
     function deleteHike(id) {
@@ -143,14 +150,21 @@ function App2() {
     return (
         <Routes>
             <Route path="/" element={<Layout />}>
-                <Route index element={<Home showEmailAlert={showEmailAlert} setShowEmailAlert={setShowEmailAlert} user={user} setShowLogin={setShowLogin} showLogin={showLogin} loggedIn={loggedIn} doLogin={doLogin} message={message} setMessage={setMessage} showSignup={showSignup} setShowSignup={setShowSignup} doSignUp={doSignUp}/>} />
+                <Route index element={ initialLoading ? <Loading/> :  <Home showEmailAlert={showEmailAlert} setShowEmailAlert={setShowEmailAlert} user={user}
+                setShowLogin={setShowLogin} showLogin={showLogin} loggedIn={loggedIn} doLogin={doLogin} message={message} setMessage={setMessage} 
+                showSignup={showSignup} setShowSignup={setShowSignup} doSignUp={doSignUp}/>} />
+                
+                
                 <Route path="hike/:hikeId" element={<HikePage user={user} />}/>
                 <Route path="hikeManager" element={<MyHikeManager updateHike={updateHike} deleteHike={deleteHike} user={user} />}/>
                 <Route path="hutManager" element={<MyHutManager/>}/>
                 <Route path="parkingManager" element={<MyParkingManager/>}/>
                 <Route path='verify-email' element={<VerifyEmailPage />} />
-                <Route path="newHike/" element={loggedIn && user.access_right === 'local-guide' ? <HikeForm hike={hike} addHike={addHike} addGPXTrack={addGPXTrack} setDirty={setDirty} /> : <Navigate to='/' />} ></Route>
-                <Route path="updateHike/:hikeId/" element={loggedIn && user.access_right === 'local-guide' ? <EditForm hike={hike} updateHike={updateHike} deleteHike={deleteHike} setDirty={setDirty} /> : <Navigate to='/' />} ></Route>
+                <Route path="newHike/" element={loggedIn && user.access_right === 'local-guide' ?  <HikeForm hike={hike} addHike={addHike} 
+                addGPXTrack={addGPXTrack} setDirty={setDirty} setInitialLoading={setInitialLoading}/>  : <Navigate to='/' />} ></Route>
+                
+                <Route path="updateHike/:hikeId/" element={loggedIn && user.access_right === 'local-guide' ? <EditForm hike={hike} updateHike={updateHike}
+                 deleteHike={deleteHike} setDirty={setDirty} /> : <Navigate to='/' />} ></Route>
             </Route>
         </Routes>
     );
