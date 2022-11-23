@@ -8,10 +8,10 @@ const sqlite = require('sqlite3');
 const db = new sqlite.Database('/db/hike_tracker.db', (err) => {
     if (err) throw err;
 });
-exports.addPoint = (hikeID, lat, lon,SP,EP,RP) => {
+exports.addPoint = (hikeID, lat, lon,SP,EP,RP,label) => {
     return new Promise((resolve, reject) => {
-        const sql = 'INSERT INTO Points(HikeID,Lat,Lon,SP,EP,RP) VALUES(?, ?, ?,?,?,?)'
-        db.run(sql, [hikeID, lat, lon,SP,EP,RP], function (err) {
+        const sql = 'INSERT INTO Points(HikeID,Lat,Lon,SP,EP,RP,Label) VALUES(?, ?, ?,?,?,?,?)'
+        db.run(sql, [hikeID, lat, lon,SP,EP,RP,label], function (err) {
             if (err) reject(err);
             resolve();
         });
@@ -78,10 +78,10 @@ exports.updateHut = (hutID, hutName, pointID, hutDescription) => {
 }
 
 
-exports.addHike = (trackName, len, time, ascent, diff, description) => {
+exports.addHike = (trackName, len, time, ascent, diff, description,province,municipality) => {
     return new Promise((resolve, reject) => {
-        const sql = 'INSERT INTO Hikes(Label, Length, ExpTime,Ascent,Difficulty,Description) VALUES(?, ?, ?, ?, ?,?)'
-        db.run(sql, [trackName, len, time, ascent, diff, description], function (err) {
+        const sql = 'INSERT INTO Hikes(Label, Length, ExpTime,Ascent,Difficulty,Description,Province,Municipality) VALUES(?, ?, ?, ?, ?,?,?,?)'
+        db.run(sql, [trackName, len, time, ascent, diff, description,province,municipality], function (err) {
             if (err) reject(err);
             resolve();
         });
@@ -108,10 +108,10 @@ exports.getStartPointOfHike = (hikeID) => {
         db.get(sql, [hikeID,1], (err, row) => {
             if (err) reject(err);
             let point;
-            if (row === undefined) point = { id: 0 }
-            else point = { id: row.PointID }
+            if (row === undefined) point = { lat: null, lon: null }
+            else point = { lat: row.Lat, lon: row.Lon }
 
-            resolve(point.id);
+            resolve(point);
         });
     });
 }
@@ -121,10 +121,10 @@ exports.getEndPointOfHike = (hikeID) => {
         db.get(sql, [hikeID,1], (err, row) => {
             if (err) reject(err);
             let point;
-            if (row === undefined) point = { id: 0 }
-            else point = { id: row.PointID }
+            if (row === undefined) point = { lat: null, lon: null }
+            else point = { lat: row.Lat, lon: row.Lon }
 
-            resolve(point.id);
+            resolve(point);
         });
     });
 }
@@ -140,6 +140,7 @@ exports.getHikes = () => {
         });
     });
 }
+
 exports.getHikesRefPoints = () => {
     return new Promise((resolve, reject) => {
         const sql = 'SELECT * FROM Points WHERE RF=?';
@@ -164,6 +165,17 @@ exports.getHike = (hikeID) => {
                     resolve(hike);
                 }
             }
+        });
+    });
+}
+
+exports.getHikePoints = (hikeID) => {
+    return new Promise((resolve, reject) => {
+        const sql = 'SELECT * FROM POINTS WHERE HikeID = ?';
+        db.all(sql, [hikeID], (err, rows) => {
+            if (err) reject(err);
+            const points = rows.map((p) => ({ pointID: p.PointID, label: p.Label, latitude: p.Lat, longitude: p.Lon, startPoint: p.SP, endPoint: p.EP, referencePoint: p.RP }));
+            resolve(points);
         });
     });
 }

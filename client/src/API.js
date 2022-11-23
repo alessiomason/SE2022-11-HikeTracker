@@ -13,7 +13,7 @@ function addGPXTrack(gpxJSON) {
             body: JSON.stringify(gpxJSON),
         }).then((response) => {
             if (response.ok)
-                resolve(null);
+                resolve(response.json());
             else {
                 // analyze the cause of error
                 response.json()
@@ -76,17 +76,17 @@ async function getHikes() {
     const response = await fetch(new URL('hikes', APIURL));
     const hikes = await response.json();
     if (response.ok)
-        return hikes.map((u) => ({ id: u.id, label: u.label, length: u.length, expTime: u.expTime, ascent: u.ascent, difficulty: u.difficulty, description: u.description }))
+        return hikes.map((h) => ({ id: h.id, label: h.label, length: h.length, expTime: h.expTime, ascent: h.ascent, difficulty: h.difficulty, description: h.description, points: h.points }))
     else throw hikes;
 }
 
-async function getHikesRefPoints() { 
+async function getHikesRefPoints() {
     //this api can be used for the hikes filtering, as the ref points are taken from the points table, so all of them are associated with an hike
     // call:  GET /api/hikesrefpoints
     const response = await fetch(new URL('hikesrefpoints', APIURL));
     const refpoints = await response.json();
     if (response.ok)
-        return refpoints.map((u) => ({ id: u.id, hikeId: u.hikeId,label: u.label, lat: u.lat, lon: u.lon }))
+        return refpoints.map((u) => ({ id: u.id, hikeId: u.hikeId, label: u.label, lat: u.lat, lon: u.lon }))
     else throw refpoints;
 }
 
@@ -95,7 +95,16 @@ async function getHike(id) {
     const response = await fetch(new URL('hike/' + id, APIURL));
     const hike = await response.json();
     if (response.ok)
-        return hike;//.map((u) => ({ id: u.id, label: u.label, length: u.length, expTime: u.expTime, ascent: u.ascent, difficulty: u.difficulty, description: u.description }))
+        return ({
+            id: hike.id,
+            label: hike.label,
+            length: hike.length,
+            expTime: hike.expTime,
+            ascent: hike.ascent,
+            difficulty: hike.difficulty,
+            description: hike.description,
+            points: hike.points
+        });
     else throw hike;
 }
 
@@ -192,6 +201,6 @@ async function getUserAccessRight() {
     else throw accessRight;  // an object with the error coming from the server
 }
 
-const API = { addGPXTrack, deleteHike, getHikes, getHike, addHike, updateHike, signup, verifyEmail, login, logout, getUserInfo, getUserAccessRight,getHikesRefPoints };
+const API = { addGPXTrack, deleteHike, getHikes, getHike, addHike, updateHike, signup, verifyEmail, login, logout, getUserInfo, getUserAccessRight, getHikesRefPoints };
 export default API;
 

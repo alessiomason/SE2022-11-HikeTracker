@@ -20,7 +20,7 @@ function HikePage(props) {
                 .catch(err => console.log(err))
             setDirty(false);
         }
-    }, [dirty]);
+    }, [dirty, hikeId]);
 
     return (
         <>
@@ -31,7 +31,8 @@ function HikePage(props) {
             </Row>
             <Row>
                 <div className=' d-flex justify-content-center'>
-                    <Map />
+                    {/* Map is rendered only when hike is loaded */}
+                    {hike.id && <Map points={hike.points} />}
                 </div>
             </Row>
         </>

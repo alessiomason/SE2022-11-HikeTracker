@@ -16,33 +16,63 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
             return res.status(422).json({ errors: errors.array() });
 
         try {
-            let hikes = [];
+
+
+            let element = req.body.features[0];
+            if (element.properties.name === '') {
+                return res.status(422).json({ error: `Description name of track can not be empty.` });
+            }
+
+            let label = element.properties.name;
+            let desc = element.properties.desc;
+            const hikeID = await dao.getLastHikeID() + 1;
+            let startPointElev = null;
+            let endPointElev = null;
+            let coordinatesArray = [];
+            let refPointsArray = [];
+
             for (let j = 0; j < req.body.features.length; j++) {
-                let element = req.body.features[j];
-                if (element.properties.name === '') {
-                    return res.status(422).json({ error: `Description name of track can not be empty.` });
-                }
-                let label = element.properties.name;
-                let pointsArray = element.geometry.coordinates;
-                let ascent = pointsArray[pointsArray.length - 1][2] - pointsArray[0][2];
-
-
-                hikes.concat(await dao.addHike(label, null, null, ascent, null, ""));
-                const hikeID = await dao.getLastHikeID();
-                console.log(hikeID);
-                for (let i = 0; i < pointsArray.length; i++) {
-                    if (i == 0) {
-                        await dao.addPoint(hikeID, pointsArray[i][1], pointsArray[i][0], 1, 0, 0);
-                    } else if (i == pointsArray.length - 1) {
-                        await dao.addPoint(hikeID, pointsArray[i][1], pointsArray[i][0], 0, 1, 0);
-                    } else {
-                        await dao.addPoint(hikeID, pointsArray[i][1], pointsArray[i][0], 0, 0, 0); //lat and lon in the json representation are swapped
-                    }
+                if (req.body.features[j].geometry.type == 'Point') {
+                    refPointsArray.push(req.body.features[j]);
+                } else {
+                    coordinatesArray.push(req.body.features[j]);
                 }
 
             }
 
-            res.status(201).json(hikes).end();
+            for (let k = 0; k < coordinatesArray.length; k++) {
+                let pointsArray = coordinatesArray[k].geometry.coordinates;
+                for (let i = 0; i < pointsArray.length; i++) {
+                    if (i == 0 & k==0) { ///primo punto
+                        await dao.addPoint(hikeID, pointsArray[i][1], pointsArray[i][0], 1, 0, 0, "");
+                        startPointElev = pointsArray[i][2];
+
+                    } else if (i == (pointsArray.length - 1) & k == ( coordinatesArray.length - 1)) { ///ultimo punto
+                        await dao.addPoint(hikeID, pointsArray[i][1], pointsArray[i][0], 0, 1, 0, "");
+                        endPointElev = pointsArray[i][2];
+
+                    } else {
+                        await dao.addPoint(hikeID, pointsArray[i][1], pointsArray[i][0], 0, 0, 0, ""); //lat and lon in the json representation are swapped
+                    }
+                }
+            }
+
+            for (let i = 0; i < refPointsArray.length; i++) { //aggiunta ref points
+                let pointsArray = refPointsArray[i].geometry.coordinates;
+                let rp_desc = refPointsArray[i].properties.desc;
+                await dao.addPoint(hikeID, pointsArray[1], pointsArray[0], 0, 0, 1, rp_desc);
+            }
+
+
+
+
+
+
+
+            let ascent = endPointElev - startPointElev;
+            await dao.addHike(label, null, null, ascent, null, desc, null, null);
+            let hike = await dao.getHike(hikeID)
+            res.status(201).json(hike).end();
         } catch (err) {
             console.log(err)
             res.status(500).json({ error: err });
@@ -90,7 +120,7 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
             res.status(500).json({ error: 'The hut could not be deleted' });
         }
     });
-    
+
 
     app.put('/api/updateHut/:id', async (req, res) => {
         const errors = validationResult(req);
@@ -144,9 +174,8 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
         const hikeID = req.params.id;
         try {
             const hike = await dao.getHike(hikeID);
-            if (hike == undefined) {
-                return 404
-            }
+            if (hike == undefined) res.status(404).end();
+            hike[0].points = await dao.getHikePoints(hikeID);
             res.status(200).json(hike[0]);
         }
         catch (err) {
