@@ -47,6 +47,33 @@ function addHike(hike) {
         }).catch(() => { reject({ error: "Cannot communicate with the server." }) }); // connection errors
     });
 }
+function addParkingLot(pl) {
+    // call: POST /api/newParkingLot
+    return new Promise((resolve, reject) => {
+        fetch(new URL('newParkingLot', APIURL), {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            
+            
+            body: JSON.stringify({ label: pl.label,  description: pl.description, province: pl.province, 
+                municipality: pl.municipality,lat: pl.lat, lon: pl.lon,altitude: pl.altitude}),
+
+        }).then((response) => {
+            if (response.ok)
+                resolve(null);
+            else {
+                // analyze the cause of error
+                response.json()
+                    .then((message) => { reject(message); }) // error message in the response body
+                    .catch(() => { reject({ error: "Cannot parse server response." }) }); // something else
+            }
+        }).catch(() => { reject({ error: "Cannot communicate with the server." }) }); // connection errors
+    });
+}
+
 
 function updateHike(hike) {
     // call: PUT /api/updateHike/:id
@@ -203,6 +230,6 @@ async function getUserAccessRight() {
     else throw accessRight;  // an object with the error coming from the server
 }
 
-const API = { addGPXTrack, deleteHike, getHikes, getHike, addHike, updateHike, signup, verifyEmail, login, logout, getUserInfo, getUserAccessRight, getHikesRefPoints };
+const API = { addGPXTrack, addParkingLot,deleteHike, getHikes, getHike, addHike, updateHike, signup, verifyEmail, login, logout, getUserInfo, getUserAccessRight, getHikesRefPoints };
 export default API;
 

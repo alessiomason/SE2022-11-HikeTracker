@@ -66,7 +66,7 @@ function MyParkingManager(props) {
           </InputGroup>
         </Col>
         <Col className='search_row'>
-          <Button variant='primary' size="lg" className='mx-5 my-3' onClick={() => navigate("/newHike")}>Add new Parking</Button>
+          <Button variant='primary' size="lg" className='mx-5 my-3' onClick={() => navigate("/newParking")}>Add new Parking</Button>
         </Col>
       </Row>
 

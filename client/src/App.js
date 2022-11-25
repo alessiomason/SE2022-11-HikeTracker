@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useNavigate, Navigate, Outlet } from 'react-router-dom';
 import API from './API';
 import HikeForm from './components/HikeForm';
+import ParkingForm from './components/ParkingForm';
 import EditForm from './components/EditForm';
 import VerifyEmailPage from './components/VerifyEmail(to delete)';
 import MyNavbar from './components/Navbar';
@@ -105,6 +106,16 @@ function App2() {
             handleError(err);
         }
     }
+    const addParkingLot = async (parkingLot) => {
+        try {
+            const new_pl = await API.addParkingLot(parkingLot);
+            setDirty(true);
+            setInitialLoading(false);
+        } catch (err) {
+            handleError(err);
+        }
+    }
+
 
     function deleteHike(id) {
         API.deleteHike(id)
@@ -158,7 +169,8 @@ function App2() {
                 <Route path='verify-email' element={<VerifyEmailPage />} />
                 <Route path="newHike/" element={loggedIn && user.access_right === 'local-guide' ?  <HikeForm hike={hike} addHike={addHike} 
                 addGPXTrack={addGPXTrack} setDirty={setDirty} setInitialLoading={setInitialLoading}/>  : <Navigate to='/' />} ></Route>
-                
+                <Route path="newParking/" element={loggedIn && user.access_right === 'local-guide' ? 
+                 <ParkingForm  addParkingLot={addParkingLot} setDirty={setDirty}/>  : <Navigate to='/' />} ></Route>
                 <Route path="updateHike/:hikeId/" element={loggedIn && user.access_right === 'local-guide' ? <EditForm hike={hike} updateHike={updateHike}
                  deleteHike={deleteHike} setDirty={setDirty} /> : <Navigate to='/' />} ></Route>
             </Route>
