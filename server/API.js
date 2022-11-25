@@ -204,6 +204,7 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
         const hikeID = req.params.id;
         try {
             await dao.deleteHike(hikeID);
+            await dao.deletePointsByHikeID(hikeID);
             res.status(200).end();
         }
         catch (err) {
@@ -215,6 +216,7 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
     app.delete('/api/deleteAllHikes', async (req, res) => {
         try {
             await dao.deleteAllHikes();
+            await dao.deleteAllPoints();
             res.status(204).end();
 
         } catch (e) {
