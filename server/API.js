@@ -44,15 +44,15 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
                 let pointsArray = coordinatesArray[k].geometry.coordinates;
                 for (let i = 0; i < pointsArray.length; i++) {
                     if (i == 0 & k == 0) { ///primo punto
-                        await dao.addPoint(hikeID, pointsArray[i][1], pointsArray[i][0], 1, 0, 0, "");
+                        await dao.addPoint(hikeID, pointsArray[i][1], pointsArray[i][0],pointsArray[i][2], 1, 0, 0, "");
                         startPointElev = pointsArray[i][2];
 
                     } else if (i == (pointsArray.length - 1) & k == (coordinatesArray.length - 1)) { ///ultimo punto
-                        await dao.addPoint(hikeID, pointsArray[i][1], pointsArray[i][0], 0, 1, 0, "");
+                        await dao.addPoint(hikeID, pointsArray[i][1], pointsArray[i][0],pointsArray[i][2], 0, 1, 0, "");
                         endPointElev = pointsArray[i][2];
 
                     } else {
-                        await dao.addPoint(hikeID, pointsArray[i][1], pointsArray[i][0], 0, 0, 0, ""); //lat and lon in the json representation are swapped
+                        await dao.addPoint(hikeID, pointsArray[i][1], pointsArray[i][0],pointsArray[i][2], 0, 0, 0, ""); //lat and lon in the json representation are swapped
                     }
                 }
             }
@@ -60,15 +60,8 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
             for (let i = 0; i < refPointsArray.length; i++) { //aggiunta ref points
                 let pointsArray = refPointsArray[i].geometry.coordinates;
                 let rp_desc = refPointsArray[i].properties.desc;
-                await dao.addPoint(hikeID, pointsArray[1], pointsArray[0], 0, 0, 1, rp_desc);
+                await dao.addPoint(hikeID, pointsArray[1], pointsArray[0],pointsArray[2], 0, 0, 1, rp_desc);
             }
-
-
-
-
-
-
-
             let ascent = endPointElev - startPointElev;
             await dao.addHike(label, null, null, ascent, null, desc, null, null);
             let hike = await dao.getHike(hikeID)

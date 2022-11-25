@@ -9,10 +9,10 @@ const db = new sqlite.Database('db/hike_tracker.db', (err) => {
     if (err) throw err;
 });
 
-exports.addPoint = (hikeID, lat, lon,SP,EP,RP,label) => {
+exports.addPoint = (hikeID, lat, lon,alt,SP,EP,RP,label) => {
     return new Promise((resolve, reject) => {
-        const sql = 'INSERT INTO Points(HikeID,Lat,Lon,SP,EP,RP,Label) VALUES(?, ?, ?,?,?,?,?)'
-        db.run(sql, [hikeID, lat, lon,SP,EP,RP,label], function (err) {
+        const sql = 'INSERT INTO Points(HikeID,Lat,Lon,Altitude,SP,EP,RP,Label) VALUES(?, ?,?, ?,?,?,?,?)'
+        db.run(sql, [hikeID, lat, lon,alt,SP,EP,RP,label], function (err) {
             if (err) reject(err);
             resolve();
         });
@@ -109,8 +109,8 @@ exports.getStartPointOfHike = (hikeID) => {
         db.get(sql, [hikeID,1], (err, row) => {
             if (err) reject(err);
             let point;
-            if (row === undefined) point = { lat: null, lon: null }
-            else point = { lat: row.Lat, lon: row.Lon }
+            if (row === undefined) point = { lat: null, lon: null ,alt: null}
+            else point = { lat: row.Lat, lon: row.Lon,alt: row.Altitude }
 
             resolve(point);
         });
@@ -122,8 +122,8 @@ exports.getEndPointOfHike = (hikeID) => {
         db.get(sql, [hikeID,1], (err, row) => {
             if (err) reject(err);
             let point;
-            if (row === undefined) point = { lat: null, lon: null }
-            else point = { lat: row.Lat, lon: row.Lon }
+            if (row === undefined) point = { lat: null, lon: null ,alt: null}
+            else point = { lat: row.Lat, lon: row.Lon,alt: row.Altitude }
 
             resolve(point);
         });
