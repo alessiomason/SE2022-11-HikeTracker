@@ -152,6 +152,16 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
         }
     });
 
+    app.get('/api/parkingLots', async (req, res) => {
+        try {
+            const pls = await dao.getParkingLots();
+            res.status(200).json(pls);
+        }
+        catch (err) {
+            res.status(500).end();
+        }
+    });
+
     app.get('/api/hikesrefpoints', async (req, res) => {
         try {
             const refpoints = await dao.getHikesRefPoints();

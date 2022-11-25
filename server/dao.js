@@ -142,6 +142,20 @@ exports.getHikes = () => {
     });
 }
 
+exports.getParkingLots = () => {
+    return new Promise((resolve, reject) => {
+        const sql = 'SELECT * FROM ParkingLots';
+        db.all(sql, [], (err, rows) => {
+            if (err) reject(err);
+            const pls = rows.map((pl) => ({ id: pl.ParkingID, label: pl.Label, 
+                description: pl.Description, province: pl.Province, municipality: pl.Municipality,
+            lat: pl.Lat, lon: pl.Lon, altitude: pl.Altitude}));
+            resolve(pls);
+        });
+    });
+}
+
+
 exports.getHikesRefPoints = () => {
     return new Promise((resolve, reject) => {
         const sql = 'SELECT * FROM Points WHERE RF=?';
