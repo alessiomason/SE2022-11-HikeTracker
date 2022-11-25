@@ -32,7 +32,7 @@ function HikePage(props) {
             <Row>
                 <div className=' d-flex justify-content-center'>
                     {/* Map is rendered only when hike is loaded */}
-                    {hike.id && <Map points={hike.points} />}
+                    {hike.id && <Map length={hike.length} points={hike.points} />}
                 </div>
             </Row>
         </>
