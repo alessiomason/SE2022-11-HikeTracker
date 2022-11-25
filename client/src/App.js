@@ -173,7 +173,8 @@ function App2() {
                 <Route path="hike/:hikeId" element={<HikePage user={user} />}/>
                 <Route path="hikeManager" element={<MyHikeManager updateHike={updateHike} deleteHike={deleteHike} user={user} />}/>
                 <Route path="hutManager" element={<MyHutManager/>}/>
-                <Route path="parkingManager" element={<MyParkingManager/>}/>
+                <Route path="parkingManager" element={<MyParkingManager
+                updateParkingLot={updateParkingLot} deleteParkingLot={deleteParkingLot} user={user}/>}/>
                 <Route path='verify-email' element={<VerifyEmailPage />} />
                 <Route path="newHike/" element={loggedIn && user.access_right === 'local-guide' ?  <HikeForm hike={hike} addHike={addHike} 
                 addGPXTrack={addGPXTrack} setDirty={setDirty} setInitialLoading={setInitialLoading}/>  : <Navigate to='/' />} ></Route>
