@@ -13,11 +13,11 @@ Main project for the Software Engineering II course (group 11)
 | u3@p.it | password | local-guide |
 
 ## Commands for Testing
-_cd ./server_ 
+`cd ./server`
 
-_npm run test_ (Unit Test) 
+`npm run test` (Unit Test) 
 
-_npm run apiTest_ (Integration Test)
+`npm run apiTest` (Integration Test)
 
 
 # Docker commands for client
@@ -26,9 +26,9 @@ To use the docker service for client;
 
 
 Pull:
-- git pull origin main 
-- docker pull erengul/se2022-11-hiketracker-client:latest
-- docker run -it -p 3000:3000 erengul/se2022-11-hiketracker-client:latest
+- `git pull origin main` 
+- `docker pull erengul/se2022-11-hiketracker-client:latest`
+- `docker run -it -p 3000:3000 erengul/se2022-11-hiketracker-client:latest`
     
     It will runs over the 3000 port
 
@@ -37,13 +37,15 @@ Pull:
 To use the docker for server;
 
 Pull:
-- git pull origin main # Do not forget !!
-- docker pull erengul/se2022-11-hiketracker-server:latest
-- cd /server/
-- sudo docker run -v $PWD/db:/db -p 3001:3001 erengul/se2022-11-hiketracker-server:latest   
+- `git pull origin main`
+- `docker pull erengul/se2022-11-hiketracker-server:latest`
+- `cd /server/`
+- `sudo docker run -v $PWD/db:/db -p 3001:3001 erengul/se2022-11-hiketracker-server:latest`   
         
     It will runs over the 3001 port
 
 # Run both services
+
+In the root folder, run `docker-compose build && docker-compose up`
 
 - https://hub.docker.com/repository/docker/erengul/se2022-11-hiketracker
