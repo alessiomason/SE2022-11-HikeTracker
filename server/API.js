@@ -216,7 +216,6 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
     app.delete('/api/deleteAllHikes', async (req, res) => {
         try {
             await dao.deleteAllHikes();
-            await dao.deleteAllPoints();
             res.status(204).end();
 
         } catch (e) {

@@ -4,7 +4,20 @@ chai.use(chaiHttp);
 chai.should();
 
 const app = require('../server');
+const gpx = require('./lombardo.json');
 let agent = chai.request.agent(app);
+
+
+describe('test creation of hikes by GPX file', () => {
+    deleteAllHikes();
+    getHikes(200, 0);
+    createHikeByGPX(201, gpx);
+    getHikes(200, 1);
+    getHikeByID(200, 1, 223)
+    deleteHike(200, 1);
+    getHikes(200, 0);
+    
+})
 
 describe('test UPDATE hike APIs', () => {
     deleteAllHikes();
@@ -21,7 +34,7 @@ describe('test DELETE hike APIs', () => {
     getHikes(200, 0);
     createHike(201, "Gran Paradiso", 205000, 100, 230, "Professional hiker", "Alpine challenge 0", "Piemonte", "Cogne");
     getHikes(200, 1);
-    deleteHike(200, 1);
+    deleteAllHikes();
     getHikes(200, 0);
 })
 
@@ -59,6 +72,17 @@ function getHikes(expectedHTTPStatus, length) {
             .then(function (r) {
                 r.should.have.status(expectedHTTPStatus);
                 r.body.length.should.have.equal(length);
+                done();
+            }).catch(done);
+    });
+}
+
+function getHikeByID(expectedHTTPStatus, hikeID, expectedNumberOfPoints) {
+    it('getting an hike from the system by hikeID', function (done) {
+        agent.get('/api/hike/' + hikeID)
+            .then(function (r) {
+                r.should.have.status(expectedHTTPStatus);
+                r.body.points.length.should.have.equal(expectedNumberOfPoints);
                 done();
             }).catch(done);
     });
@@ -126,6 +150,26 @@ function deleteHike(expectedHTTPStatus, id) {
             .then(function (res) {
                 res.should.have.status(expectedHTTPStatus);
                 done();
+            }).catch(done);
+    });
+}
+
+function createHikeByGPX(expectedHTTPStatus, jsonGPX) {
+    it('create an hike by gpx', function (done ) {
+        agent.post('/api/addGPXTrack')
+            .send(jsonGPX)
+            .then(function (r1) {
+                r1.should.have.status(expectedHTTPStatus);
+                agent.get('/api/hikes')
+                    .then(function (r2) {
+                        if (r1.status != 422) {
+                            if (r2.body.length == 0) {
+                                r2.should.have.status(500);
+                            }
+                        }
+                        r2.should.have.status(200);
+                        done();
+                    }).catch(done);
             }).catch(done);
     });
 }
