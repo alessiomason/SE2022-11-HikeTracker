@@ -2,7 +2,7 @@ import '../styles/HutManager.css';
 import { Container, Row, Col, InputGroup, Form, Button, Carousel } from 'react-bootstrap';
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { default as Close } from '../icons/close.svg';
+import { default as Close2 } from '../icons/close2.svg';
 
 function MyHutImages(props) {
   
@@ -25,7 +25,7 @@ function MyHutImages(props) {
     <Container fluid>
       <Row className="box_img">
         <img className=" main_img mb-3" src={mainImg.value} alt="main_image" />
-        <Button variant="danger" className="close_btn"><img src={Close} alt="user_image" /> </Button>
+        <Button variant="danger" className="close_btn"><img src={Close2} alt="user_image" /> </Button>
       </Row>
         <Row className="thumb_row">
         {imgs.map((item, index) => (

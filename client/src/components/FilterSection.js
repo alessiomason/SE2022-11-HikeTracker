@@ -39,10 +39,10 @@ function FilterSection() {
         <MyModal show={modalShow} onHide={() => setModalShow(false)} title={title} desc={desc} />
         <Row className='mt-3'>
           <ButtonToolbar aria-label="Toolbar with button groups" >
-            <Button variant="info" disabled size="sm" className='mx-2 my-1 btn_info px-2'>Lenght: 10km <img src={Close} alt="close" className='ms-1 mb-1' /></Button>
-            <Button variant="info" disabled size="sm" className='mx-2 my-1 btn_info px-2'>Time: 1h <img src={Close} alt="close" className='ms-1 mb-1' /></Button>
-            <Button variant="info" disabled size="sm" className='mx-2 my-1 btn_info px-2'>Location: Torino <img src={Close} alt="close" className='ms-1 mb-1' /></Button>
-            <Button variant="info" disabled size="sm" className='mx-2 my-1 btn_info px-2'>Start point: Poli <img src={Close} alt="close" className='ms-1 mb-1' /></Button>
+            <Button variant="info" disabled size="sm" className='mx-2 my-1 btn_info px-2'>Lenght: 10km <img src={Close} alt="close" className='ms-1 my-1' /></Button>
+            <Button variant="info" disabled size="sm" className='mx-2 my-1 btn_info px-2'>Time: 1h <img src={Close} alt="close" className='ms-1 my-1' /></Button>
+            <Button variant="info" disabled size="sm" className='mx-2 my-1 btn_info px-2'>Location: Torino <img src={Close} alt="close" className='ms-1 my-1' /></Button>
+            <Button variant="info" disabled size="sm" className='mx-2 my-1 btn_info px-2'>Start point: Poli <img src={Close} alt="close" className='ms-1 my-1' /></Button>
           </ButtonToolbar>
         </Row>
       </Container>
