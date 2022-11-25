@@ -106,16 +106,24 @@ function App2() {
             handleError(err);
         }
     }
-    const addParkingLot = async (parkingLot) => {
-        try {
-            const new_pl = await API.addParkingLot(parkingLot);
-            setDirty(true);
-            setInitialLoading(false);
-        } catch (err) {
-            handleError(err);
-        }
+    
+    function deleteParkingLot(id) {
+        API.deleteParkingLot(id)
+            .then(() => { setDirty(true); })
+            .catch(err => handleError(err));
     }
 
+    function addParkingLot(pl) {
+        API.addParkingLot(pl)
+            .then(() => { })
+            .catch(err => handleError(err));
+    }
+
+    function updateParkingLot(pl) {
+        API.updateParkingLot(pl)
+            .then(() => { })
+            .catch(err => handleError(err));
+    }
 
     function deleteHike(id) {
         API.deleteHike(id)
