@@ -19,6 +19,25 @@ exports.addPoint = (hikeID, lat, lon,alt,SP,EP,RP,label) => {
     });
 }
 
+exports.deletePointsByHikeID = (hikeID) => {
+    return new Promise((resolve, reject) => {
+        db.run("DELETE FROM Points WHERE HikeID = ?", [hikeID], (err) => {
+            if (err) reject(err);
+            else resolve(null);
+        });
+    });
+};
+
+exports.deleteAllPoints = () => {
+    return new Promise((resolve, reject) => {
+        const sql = 'DELETE FROM Points';
+        db.all(sql, (err) => {
+            if (err) reject(err);
+            resolve();
+        });
+    });
+}
+
 exports.addHut = (hutName, PointID, hutDescription) => {
     return new Promise((resolve, reject) => {
         const sql = 'INSERT INTO Huts(Name, PointID, Description) VALUES(?, ?, ?)'

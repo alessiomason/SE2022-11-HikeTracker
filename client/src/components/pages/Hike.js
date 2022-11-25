@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Row } from 'react-bootstrap';
 import { useNavigate, useParams } from 'react-router-dom';
 import SingleHikeCard from '../SingleHikeCard';
-import Map from '../Map';
+import HikeMap from '../HikeMap';
 import API from '../../API';
 import '../../App.css';
 
@@ -32,7 +32,7 @@ function HikePage(props) {
             <Row>
                 <div className=' d-flex justify-content-center'>
                     {/* Map is rendered only when hike is loaded */}
-                    {hike.id && <Map points={hike.points} />}
+                    {hike.id && <HikeMap length={hike.length} points={hike.points} />}
                 </div>
             </Row>
         </>
