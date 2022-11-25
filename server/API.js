@@ -7,11 +7,26 @@ dayjs.extend(duration);
 const nodemailer = require('nodemailer');
 require('dotenv').config();
 
+function coordinatesDistanceInMeter(lat1, lon1, lat2, lon2) {  // generally used geo measurement function
+    const R = 6378.137; // Radius of earth in KM
+    const dLat = lat2 * Math.PI / 180 - lat1 * Math.PI / 180;
+    const dLon = lon2 * Math.PI / 180 - lon1 * Math.PI / 180;
+    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+        Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const d = R * c;
+    return d * 1000; // meters
+}
+
 module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
 
     // add new service type
     app.post('/api/addGPXTrack', async (req, res) => {
         const errors = validationResult(req);
+        let length = 0;
+        let lat_prev = 0.0;
+        let lon_prev = 0.0;
         if (!errors.isEmpty())
             return res.status(422).json({ errors: errors.array() });
 
@@ -44,15 +59,20 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
                 let pointsArray = coordinatesArray[k].geometry.coordinates;
                 for (let i = 0; i < pointsArray.length; i++) {
                     if (i == 0 & k == 0) { ///primo punto
-                        await dao.addPoint(hikeID, pointsArray[i][1], pointsArray[i][0],pointsArray[i][2], 1, 0, 0, "");
+                        await dao.addPoint(hikeID, pointsArray[i][1], pointsArray[i][0], pointsArray[i][2], 1, 0, 0, "");
                         startPointElev = pointsArray[i][2];
-
+                        length = 0;
+                        lat_prev = pointsArray[i][1];
+                        lon_prev = pointsArray[i][0];
                     } else if (i == (pointsArray.length - 1) & k == (coordinatesArray.length - 1)) { ///ultimo punto
-                        await dao.addPoint(hikeID, pointsArray[i][1], pointsArray[i][0],pointsArray[i][2], 0, 1, 0, "");
+                        await dao.addPoint(hikeID, pointsArray[i][1], pointsArray[i][0], pointsArray[i][2], 0, 1, 0, "");
                         endPointElev = pointsArray[i][2];
-
+                        length += coordinatesDistanceInMeter(lat_prev, lon_prev, pointsArray[i][1], pointsArray[i][0]);
                     } else {
-                        await dao.addPoint(hikeID, pointsArray[i][1], pointsArray[i][0],pointsArray[i][2], 0, 0, 0, ""); //lat and lon in the json representation are swapped
+                        await dao.addPoint(hikeID, pointsArray[i][1], pointsArray[i][0], pointsArray[i][2], 0, 0, 0, ""); //lat and lon in the json representation are swapped
+                        lat_prev = pointsArray[i-1][1];
+                        lon_prev = pointsArray[i-1][0];
+                        length += coordinatesDistanceInMeter(lat_prev, lon_prev, pointsArray[i][1], pointsArray[i][0]);
                     }
                 }
             }
@@ -60,10 +80,13 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
             for (let i = 0; i < refPointsArray.length; i++) { //aggiunta ref points
                 let pointsArray = refPointsArray[i].geometry.coordinates;
                 let rp_desc = refPointsArray[i].properties.desc;
-                await dao.addPoint(hikeID, pointsArray[1], pointsArray[0],pointsArray[2], 0, 0, 1, rp_desc);
+                await dao.addPoint(hikeID, pointsArray[1], pointsArray[0], pointsArray[2], 0, 0, 1, rp_desc);
             }
+            // let startPoint = await dao.getStartPointOfHike(hikeID);
+            // let endPoint = await dao.getEndPointOfHike(hikeID);
             let ascent = endPointElev - startPointElev;
-            await dao.addHike(label, null, null, ascent, null, desc, null, null);
+            // const length = measure(startPoint.lat, startPoint.lon, endPoint.lat, endPoint.lon);
+            await dao.addHike(label, length, null, ascent, null, desc, null, null);
             let hike = await dao.getHike(hikeID)
             res.status(201).json(hike).end();
         } catch (err) {
