@@ -103,10 +103,17 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
             return res.status(422).json({ errors: errors.array() });
 
         try {
-            const hutName = req.body.hutName;
-            const pointID = req.body.pointID;
-            const hutDescription = req.body.hutDescription;
-            const hut = await dao.addHut(hutName, pointID, hutDescription);
+
+            const name = req.body.name;
+            const description = req.body.description;
+            const lat = req.body.lat;
+            const lon = req.body.lon;
+            const altitude = req.body.altitude;
+            const beds = req.body.beds;
+            const province = req.body.province;
+            const municipality = req.body.municipality;
+
+            const hut = await dao.addHut(name, description, lat, lon, altitude, beds, province, municipality);
             res.status(201).json(hut).end();
         } catch (err) {
             console.log(err)
@@ -143,20 +150,24 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
         if (!errors.isEmpty())
             return res.status(422).json({ errors: errors.array() });
 
-        // let hikeId = req.body.id
         const hutId = req.params.id;
+
         try {
-            let huts = await dao.getHut(hutId);
-            if (huts == undefined)
+            let result = await dao.getHut(hutId);
+            if (result.error)
                 res.status(404).json(result);
             else {
-                let hut = huts[0];
-                let hutName = req.body.hutName;
-                let hutDescription = req.body.hutDescription;
-                let pointID = req.body.pointID;
+                let name = req.body.name;
+                let description = req.body.description;
+                let lat = req.body.lat;
+                let lon = req.body.lon;
+                let altitude = req.body.altitude;
+                let beds = req.body.beds;
+                let province = req.body.province;
+                let municipality = req.body.municipality;
 
-                const hikes = await dao.updateHut(hut.id, hutName, pointID, hutDescription);
-                res.status(201).json(hikes).end();
+                const huts = await dao.updateHut(name, description, lat, lon, altitude, beds, province, municipality, hutId);
+                res.status(201).json(huts).end();
             }
         } catch (err) {
             res.status(500).json({ error: `Database error during update of the hut` });

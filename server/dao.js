@@ -38,10 +38,10 @@ exports.deleteAllPoints = () => {
     });
 }
 
-exports.addHut = (hutName, PointID, hutDescription) => {
+exports.addHut = (hutName, hutDescription, lat, lon, altitude, beds, province, municipality) => {
     return new Promise((resolve, reject) => {
-        const sql = 'INSERT INTO Huts(Name, PointID, Description) VALUES(?, ?, ?)'
-        db.run(sql, [hutName, PointID, hutDescription], function (err) {
+        const sql = 'INSERT INTO Huts(Name, Description, Lat, Lon, Altitude, Beds, Province, Municipality) VALUES(?, ?, ?, ?, ?, ?, ?, ?)'
+        db.run(sql, [hutName, hutDescription, lat, lon, altitude, beds, province, municipality], function (err) {
             if (err) reject(err);
             resolve();
         });
@@ -54,7 +54,17 @@ exports.getHuts = () => {
         const sql = 'SELECT * FROM Huts';
         db.all(sql, [], (err, rows) => {
             if (err) reject(err);
-            const huts = rows.map((h) => ({ id: h.HutID, hutName: h.Name, point: h.PointID, hutDescription: h.Description }));
+            const huts = rows.map((h) => ({ 
+                id: h.HutID, 
+                hutName: h.Name,
+                hutDescription: h.Description,
+                lat: h.Lat,
+                lon: h.Lon,
+                altitude: h.Altitude,
+                beds: h.Beds,
+                province: h.Province,
+                municipality: h.Municipality
+            }));
             resolve(huts);
         });
     });
@@ -87,10 +97,10 @@ exports.getHut = (hutID) => {
     });
 }
 
-exports.updateHut = (hutID, hutName, pointID, hutDescription) => {
+exports.updateHut = (name, description, lat, lon, altitude, beds, province, municipality, id) => {
     return new Promise((resolve, reject) => {
-        const sql = 'UPDATE Huts SET Name=?, PointID=?, Description=? WHERE HutID=?'
-        db.run(sql, [hutName, pointID, hutDescription, hutID], function (err) {
+        const sql = 'UPDATE Huts SET Name=?, Description=?, Lat=?, Lon=?, Altitude= ?, Beds=?, Province=?, Municipality=? WHERE HutID=?'
+        db.run(sql, [name, description, lat, lon, altitude, beds, province, municipality, id], function (err) {
             if (err) reject(err);
             resolve();
         });

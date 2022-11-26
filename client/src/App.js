@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Routes, Route, useNavigate, Navigate, Outlet }
 import API from './API';
 import HikeForm from './components/HikeForm';
 import ParkingForm from './components/ParkingForm';
+import HutForm from './components/HutForm';
 import EditForm from './components/EditForm';
 import VerifyEmailPage from './components/VerifyEmail(to delete)';
 import MyNavbar from './components/Navbar';
@@ -143,6 +144,24 @@ function App2() {
             .catch(err => handleError(err));
     }
 
+    function deleteHut(id) {
+        API.deletHut(id)
+            .then(() => { setDirty(true); })
+            .catch(err => handleError(err));
+    }
+
+    function addHut(hut) {
+        API.addHut(hut)
+            .then(() => { })
+            .catch(err => handleError(err));
+    }
+
+    function updateHut(hut) {
+        API.updateHut(hut)
+            .then(() => { })
+            .catch(err => handleError(err));
+    }
+
     function handleError(err) {
         console.log(err);
     }
@@ -172,12 +191,14 @@ function App2() {
                 
                 <Route path="hike/:hikeId" element={<HikePage user={user} />}/>
                 <Route path="hikeManager" element={<MyHikeManager updateHike={updateHike} deleteHike={deleteHike} user={user} />}/>
-                <Route path="hutManager" element={<MyHutManager/>}/>
+                <Route path="hutManager" element={<MyHutManager updateHut={updateHut} deleteHut={deleteHut} user={user}/>}/>
                 <Route path="parkingManager" element={<MyParkingManager
                 updateParkingLot={updateParkingLot} deleteParkingLot={deleteParkingLot} user={user}/>}/>
                 <Route path='verify-email' element={<VerifyEmailPage />} />
                 <Route path="newHike/" element={loggedIn && user.access_right === 'local-guide' ?  <HikeForm hike={hike} addHike={addHike} 
                 addGPXTrack={addGPXTrack} setDirty={setDirty} setInitialLoading={setInitialLoading}/>  : <Navigate to='/' />} ></Route>
+                <Route path="newHut/" element={loggedIn && user.access_right === 'local-guide' ? 
+                 <HutForm addHut={addHut} setDirty={setDirty}/>  : <Navigate to='/' />} ></Route>
                 <Route path="newParking/" element={loggedIn && user.access_right === 'local-guide' ? 
                  <ParkingForm  addParkingLot={addParkingLot} setDirty={setDirty}/>  : <Navigate to='/' />} ></Route>
                 <Route path="updateHike/:hikeId/" element={loggedIn && user.access_right === 'local-guide' ? <EditForm hike={hike} updateHike={updateHike}

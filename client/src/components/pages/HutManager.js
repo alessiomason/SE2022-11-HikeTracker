@@ -1,57 +1,162 @@
 
 import '../../styles/HutManager.css';
-import { Container, Row, Col, InputGroup, Form, Button, Carousel } from 'react-bootstrap';
+import { Container, Row, Col, InputGroup, Form, Button, Carousel, Alert } from 'react-bootstrap';
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import MyHutImages from "../HutImages";
-
+import API from '../../API.js';
 
 function MyHutManager(props) {
 
 
   const navigate = useNavigate();
-  const { hikeId } = useParams();
 
-  const [hike, setHike] = useState(null);
-  const [label, setLabel] = useState('');
-  const [length, setLength] = useState(1);
-  const [expTime, setExpTime] = useState(1);
-  const [ascent, setAscent] = useState(1);
-  const [difficulty, setDifficulty] = useState('');
-  const [description, setDescription] = useState('');
+  const [huts, setHuts] = useState([]);
+  const [dirty, setDirty] = useState(true);
+  const [showUpdateBanner, setShowUpdateBanner] = useState(false);
+  const [message, setMessage] = useState('');
+
+  useEffect(() => {
+    if (dirty) {
+      API.getHuts()
+        .then((h) => setHuts(h))
+        .catch(err => console.log(err))
+      setDirty(false);
+    }
+  }, [dirty]);
+
+  return (
+
+    <Container fluid className='back'>
+      <Row className='title_box'>
+        <h1 className='title'> HUT MANAGER </h1>
+      </Row>
+      <Row className='input-group my-5 mx-auto search_row'>
+        <Col md={{ span: 4, offset: 4 }} sm={{ span: 6, offset: 3 }} xs={12} >
+          <InputGroup >
+            <Form.Control placeholder="Insert an hut name" />
+            <Button variant="success">Search</Button>
+          </InputGroup>
+        </Col>
+        <Col className='search_row'>
+          <Button variant='primary' size="lg" className='mx-5 my-3' onClick={() => navigate("/newHut")}>Add new Hut</Button>
+        </Col>
+      </Row>
+      {showUpdateBanner && <Alert variant='success' onClose={() => {setShowUpdateBanner(false); setMessage('')}} dismissible>{message}</Alert>}
+      {huts.map(h => <SingleUpdateHutCard key={h.id} hut={h} user={props.user}
+        updateHut={props.updateHut} deleteHut={props.deleteHut} setDirty={setDirty}
+        setShowUpdateBanner={setShowUpdateBanner} setMessage={setMessage} />)}
+    </Container>
+
+  );
+}
+
+function SingleUpdateHutCard(props) {
+
+  const navigate = useNavigate();
+
+  let hutID = props.hut.id;
+  const hutToEdit = props.hut;
+
+  const [name, setName] = useState(hutToEdit ? hutToEdit.name : '');
+  const [description, setDescription] = useState(hutToEdit ? hutToEdit.description : '');
+  const [lat, setLat] = useState(hutToEdit ? hutToEdit.lat : 0);
+  const [lon, setLon] = useState(hutToEdit ? hutToEdit.lon : 0);
+  const [altitude, setAltitude] = useState(hutToEdit ? hutToEdit.altitude : 0);
+  const [beds, setBeds] = useState(hutToEdit ? hutToEdit.beds : 0);
+  const [province, setProvince] = useState(hutToEdit ? hutToEdit.province : '');
+  const [municipality, setMunicipality] = useState(hutToEdit ? hutToEdit.municipality : '');
   const [errorMsg, setErrorMsg] = useState('');
 
-  if (hike === null) {
-    if (Array.isArray(props.hike)) {
-      const hikeToEdit = props.hike.find((h) => h.id == hikeId);
-
-      if (hikeToEdit !== undefined) {
-        setHike(hikeToEdit);
-        setLabel(hikeToEdit.label);
-        setLength(hikeToEdit.length);
-        setExpTime(hikeToEdit.expTime);
-        setAscent(hikeToEdit.ascent);
-        setDifficulty(hikeToEdit.difficulty);
-        setDescription(hikeToEdit.description);
-      }
-    }
-  }
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    if (label.trim().length === 0)
-      setErrorMsg('The label of the hike cannot be consisted of only empty spaces');
+
+    if (name.trim().length === 0)
+      setErrorMsg('The name of the hut cannot be consisted of only empty spaces');
     else {
-      // add
-      const updatedHike = { id: hike.id, label: label, length: length, expTime: expTime, ascent: ascent, difficulty: difficulty, description: description }
-      props.updateHike(updatedHike);
+      const updatedHut = { 
+        id: hutID, 
+        name: name, 
+        description: description, 
+        lat: lat, 
+        lon: lon, 
+        altitude: altitude, 
+        beds: beds,
+        province: province,
+        municipality: municipality
+      }
+      props.updateHut(updatedHut);
       props.setDirty(true);
-      navigate('/');
+      props.setShowUpdateBanner(true);
+      props.setMessage(`Hut #${hutID} ${name} has been updated successfully!`);
+      // navigate('/');
     }
   }
 
+  return (
+      <Row className="hut_box mx-5 py-5 px-5 mb-4">
+        <Col md={6}>
+        <MyHutImages/>
+        </Col>
+        <Col md={6}>
+          <Form onSubmit={handleSubmit}>
+          <Row>
+            <Col md={6} >
+              <Form.Group className="mb-3" >
+                <Form.Label>Name</Form.Label>
+                <Form.Control required={true} value={name} onChange={ev => setName(ev.target.value)}></Form.Control>
+              </Form.Group>
+            </Col>
+            <Col md={6} >
+              <Form.Group className="mb-3" >
+                <Form.Label>Number of Beds</Form.Label>
+                <Form.Control required={true} type='number' step="any" min={0} value={beds} onChange={ev => setBeds(ev.target.value)} />
+              </Form.Group>
+            </Col>
+          </Row>
+          <Row>
+            <Col md={6} >
+              <Form.Group className="mb-3" >
+                <Form.Label>Province</Form.Label>
+                <Form.Control required={true} value={province} disabled readOnly></Form.Control>
+              </Form.Group>
+            </Col>
+            <Col md={6} >
+              <Form.Group className="mb-3" >
+                <Form.Label>Municipality</Form.Label>
+                <Form.Control required={true} value={municipality} disabled readOnly></Form.Control>
+              </Form.Group>
+            </Col>
+          </Row>
+          <Row>
+            <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
+              <Form.Label>Description</Form.Label>
+              <Form.Control required={true} value={description} onChange={ev => setDescription(ev.target.value)} as="textarea" rows={3} />
+            </Form.Group>
+          </Row>
+          {/*<Row>
+            <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
+              <Form.Label>Hike condition</Form.Label>
+              <Form.Control required={true} value={description} onChange={ev => setDescription(ev.target.value)} as="textarea" rows={3} />
+            </Form.Group>
+          </Row>
+          */}
+          <Row className='btn_box mt-3'>
+            <Button variant="info" className="btn_ref mx-2 mb-2" >Add Image</Button>
+            { /* <Button variant="primary" className="btn_box2 mx-2 mb-2" >Ref Point</Button> */ }
+            <Button variant="danger" onClick={() => props.deleteHut(hutID)} className="btn_box2 mx-2 mb-2" >Delete</Button>
+            <Button variant="success" type='submit' className="btn_box2 mx-2 mb-2">Save</Button>
+          </Row>
+        </Form>
+      </Col>
+    </Row>
+  );
+
+}
 
 
+/*
   return (
 
     <Container fluid className='back2'>
@@ -114,5 +219,5 @@ function MyHutManager(props) {
 
   );
 }
-
+*/
 export default MyHutManager;

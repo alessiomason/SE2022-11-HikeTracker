@@ -47,6 +47,7 @@ function addHike(hike) {
         }).catch(() => { reject({ error: "Cannot communicate with the server." }) }); // connection errors
     });
 }
+
 function addParkingLot(pl) {
     // call: POST /api/newParkingLot
     return new Promise((resolve, reject) => {
@@ -77,6 +78,40 @@ function addParkingLot(pl) {
     });
 }
 
+function addHut(hut) {
+    // call: POST /api/addHut
+    return new Promise((resolve, reject) => {
+        fetch(new URL('addHut', APIURL), {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            
+            
+            body: JSON.stringify({ 
+                name: hut.name, 
+                description: hut.description, 
+                lat: hut.lat, 
+                lon: hut.lon,
+                altitude: hut.altitude,
+                beds: hut.beds,
+                province: hut.province,
+                municipality: hut.municipality    
+            }),
+
+        }).then((response) => {
+            if (response.ok)
+                resolve(null);
+            else {
+                // analyze the cause of error
+                response.json()
+                    .then((message) => { reject(message); }) // error message in the response body
+                    .catch(() => { reject({ error: "Cannot parse server response." }) }); // something else
+            }
+        }).catch(() => { reject({ error: "Cannot communicate with the server." }) }); // connection errors
+    });
+}
 
 function updateHike(hike) {
     // call: PUT /api/updateHike/:id
@@ -124,6 +159,28 @@ function updateParkingLot(pl) {
     });
 }
 
+function updateHut(hut) {
+    // call: PUT /api/updateHut/:id
+    return new Promise((resolve, reject) => {
+        fetch(new URL('updateHut/' + hut.id, APIURL), {
+            method: 'PUT',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(hut),
+        }).then((response) => {
+            if (response.ok)
+                resolve(null);
+            else {
+                // analyze the cause of error
+                response.json()
+                    .then((obj) => { reject(obj); }) // error message in the response body
+                    .catch(() => { reject({ error: "Cannot parse server response." }) }); // something else
+            }
+        }).catch(() => { reject({ error: "Cannot communicate with the server." }) }); // connection errors
+    });
+}
 
 async function getHikes() {
     // call /api/hikes
@@ -147,6 +204,23 @@ async function getParkingLots() {
     else throw pls;
 }
 
+async function getHuts() {
+    // call /api/huts
+    const response = await fetch(new URL('huts', APIURL));
+    const huts = await response.json();
+    if (response.ok)
+        return huts.map((h) => ({ 
+            id: h.id, 
+            name: h.hutName, 
+            description: h.hutDescription, 
+            lat: h.lat, 
+            lon: h.lon,
+            altitude: h.altitude,
+            beds: h.beds,
+            province: h.province,
+            municipality: h.municipality  }))
+    else throw huts;
+}
 
 async function getHikesRefPoints() {
     //this api can be used for the hikes filtering, as the ref points are taken from the points table, so all of them are associated with an hike
@@ -197,6 +271,7 @@ function deleteHike(id) {
         }).catch(() => { reject({ error: "Cannot communicate with the server." }) }); // connection errors
     });
 }
+
 function deleteParkingLot(id) {
     // call: DELETE /api/parkingLots/:id
     return new Promise((resolve, reject) => {
@@ -216,6 +291,24 @@ function deleteParkingLot(id) {
     });
 }
 
+function deletHut(id) {
+    // call: DELETE /api/huts/:id
+    return new Promise((resolve, reject) => {
+        fetch(new URL('huts/' + id, APIURL), {
+            method: 'DELETE',
+            credentials: 'include'
+        }).then((response) => {
+            if (response.ok)
+                resolve(null);
+            else {
+                // analyze the cause of error
+                response.json()
+                    .then((message) => { reject(message); }) // error message in the response body
+                    .catch(() => { reject({ error: "Cannot parse server response." }) }); // something else
+            }
+        }).catch(() => { reject({ error: "Cannot communicate with the server." }) }); // connection errors
+    });
+}
 
 async function signup(credentials) {
     let response = await fetch(new URL('signup', APIURL), {
@@ -290,6 +383,6 @@ async function getUserAccessRight() {
     else throw accessRight;  // an object with the error coming from the server
 }
 
-const API = { addGPXTrack, addParkingLot, deleteParkingLot, updateParkingLot, deleteHike, getHikes, getParkingLots, getHike, addHike, updateHike, signup, verifyEmail, login, logout, getUserInfo, getUserAccessRight, getHikesRefPoints };
+const API = { addGPXTrack, addParkingLot, deleteParkingLot, updateParkingLot, deleteHike, getHikes, getParkingLots, addHut, updateHut, getHuts, deletHut, getHike, addHike, updateHike, signup, verifyEmail, login, logout, getUserInfo, getUserAccessRight, getHikesRefPoints };
 export default API;
 
