@@ -11,6 +11,18 @@ const db = new sqlite.Database('db/hike_tracker.db', (err) => {
     if (err) throw err;
 });
 
+// get all users
+exports.getUsers = () => {
+    return new Promise((resolve, reject) => {
+        const sql = 'SELECT * FROM Users';
+        db.all(sql, [], (err, rows) => {
+            if (err) reject(err);
+            const users = rows.map((u) => ({ id: u.UserId, email: u.Email, access_right: u.AccessRight, verified: u.Verified }));
+            resolve(users);
+        });
+    });
+}
+
 // get the user identified by {id}
 exports.getUserById = (id) => {
     return new Promise((resolve, reject) => {
@@ -20,10 +32,7 @@ exports.getUserById = (id) => {
             if (err) reject(err);
             else if (row == undefined) resolve({ error: 'User not found.' });
             else {
-                const user = {
-                    id: row.UserId,
-                    email: row.Email
-                };
+                const user = { id: row.UserId, email: row.Email, access_right: row.AccessRight, verified: row.Verified };
 
                 resolve(user);
             }
@@ -111,3 +120,13 @@ exports.verifyEmail = (emailConfirmationToken) => {
         })
     });
 };
+
+exports.deleteAllUsers = () => {
+    return new Promise((resolve, reject) => {
+        const sql = 'DELETE FROM Users';
+        db.all(sql, (err) => {
+            if (err) reject(err);
+            resolve();
+        });
+    });
+}
