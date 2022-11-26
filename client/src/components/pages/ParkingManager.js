@@ -63,6 +63,8 @@ function SingleUpdateParkingCard(props) {
   const [description, setDescription] = useState(plToEdit ? plToEdit.description : '');
   const [province, setProvince] = useState(plToEdit ? plToEdit.province : '');
   const [municipality, setMunicipality] = useState(plToEdit ? plToEdit.municipality : '');
+  const [occupied, setOccupied] = useState(plToEdit ? plToEdit.occupied : '');
+  const [total, setTotal] = useState(plToEdit ? plToEdit.total : '');
   const [errorMsg, setErrorMsg] = useState('');
 
   
@@ -77,7 +79,9 @@ function SingleUpdateParkingCard(props) {
         label: label,
         description: description,
         province: province,
-        municipality: municipality
+        municipality: municipality,
+        total: total,
+        occupied: occupied
       }
       props.updateParkingLot(updatedParkingLot);
       props.setDirty(true);
@@ -125,9 +129,22 @@ function SingleUpdateParkingCard(props) {
                 <Form.Control required={true} value={description} onChange={ev => setDescription(ev.target.value)} />
               </Form.Group>
             </Col> 
-
-            <Col md={4} className="pt-4">
-              <Row className='box_btn my-2'> 
+            <Col>
+              <Form.Group>
+                <Form.Label>Total Slots</Form.Label>
+                <Form.Control required={true} value={total} onChange={ev => setTotal(ev.target.value)} />
+              </Form.Group>
+            </Col> 
+            <Col>
+              <Form.Group>
+                <Form.Label>Occupied Slots</Form.Label>
+                <Form.Control required={true} value={occupied} onChange={ev => setOccupied(ev.target.value)} />
+              </Form.Group>
+            </Col> 
+            </Row>
+            <Row>
+            <Col className="pt-4">
+              <Row> 
               <Button variant="success" type='submit' className="btn_box2 mx-2">Save</Button>
                 <Button variant="danger" onClick={() => props.deleteParkingLot(plId)} className="btn_box2 mx-2" >Delete</Button>
                

@@ -56,10 +56,13 @@ function addParkingLot(pl) {
             headers: {
                 'Content-Type': 'application/json',
             },
-            
-            
-            body: JSON.stringify({ label: pl.label,  description: pl.description, province: pl.province, 
-                municipality: pl.municipality,lat: pl.lat, lon: pl.lon,altitude: pl.altitude}),
+
+
+            body: JSON.stringify({
+                label: pl.label, description: pl.description, province: pl.province,
+                municipality: pl.municipality, lat: pl.lat, lon: pl.lon, altitude: pl.altitude,
+                total: pl.total, occupied: pl.occupied
+            }),
 
         }).then((response) => {
             if (response.ok)
@@ -135,9 +138,12 @@ async function getParkingLots() {
     const response = await fetch(new URL('parkingLots', APIURL));
     const pls = await response.json();
     if (response.ok)
-        return pls.map((pl) => ({ id: pl.id, label: pl.label, 
+        return pls.map((pl) => ({
+            id: pl.id, label: pl.label,
             description: pl.description, province: pl.province, municipality: pl.municipality,
-        lat: pl.lat, lon: pl.lon, altitude: pl.altitude }))
+            lat: pl.lat, lon: pl.lon, altitude: pl.altitude,
+            total: pl.total, occupied: pl.occupied
+        }))
     else throw pls;
 }
 
@@ -284,6 +290,6 @@ async function getUserAccessRight() {
     else throw accessRight;  // an object with the error coming from the server
 }
 
-const API = { addGPXTrack, addParkingLot,deleteParkingLot,updateParkingLot,deleteHike, getHikes,getParkingLots, getHike, addHike, updateHike, signup, verifyEmail, login, logout, getUserInfo, getUserAccessRight, getHikesRefPoints };
+const API = { addGPXTrack, addParkingLot, deleteParkingLot, updateParkingLot, deleteHike, getHikes, getParkingLots, getHike, addHike, updateHike, signup, verifyEmail, login, logout, getUserInfo, getUserAccessRight, getHikesRefPoints };
 export default API;
 

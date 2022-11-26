@@ -20,6 +20,8 @@ function ParkingForm(props) {
     const [latitude, setLatitude] = useState(0.0);
     const [longitude, setLongitude] = useState(0.0);
     const [altitude, setAltitude] = useState(0);
+    const [occupied, setOccupied] = useState(0);
+    const [total, setTotal] = useState(0);
     const [errorMsg, setErrorMsg] = useState('');
 
     const handleSubmit = (event) => {
@@ -35,7 +37,9 @@ function ParkingForm(props) {
                 municipality: municipality,
                 lat: latitude,
                 lon: longitude,
-                altitude: 2.0
+                altitude: 2.0,
+                total: total,
+                occupied: occupied
             }
             props.addParkingLot(newParkingLot);
             props.setDirty(true);
@@ -80,6 +84,16 @@ function ParkingForm(props) {
                                 <Form.Label>Altitude [m]</Form.Label>
                                 <Form.Control required={true} type='number' step="any" value={altitude} onChange={ev => setAltitude(ev.target.value)} />
                             </Form.Group>
+                            <Form.Group>
+                                <Form.Label>Total Slots</Form.Label>
+                                <Form.Control required={true} type='number' step="any" value={total} onChange={ev => setTotal(ev.target.value)} />
+                            </Form.Group>
+
+                            <Form.Group>
+                                <Form.Label>Occupied Slots</Form.Label>
+                                <Form.Control required={true} type='number' step="any" value={occupied} onChange={ev => setOccupied(ev.target.value)} />
+                            </Form.Group>
+
 
                             <Form.Group>
                                 <Form.Label>Description</Form.Label>
