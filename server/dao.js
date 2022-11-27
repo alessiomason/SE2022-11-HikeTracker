@@ -81,6 +81,16 @@ exports.deleteHut = (hutID) => {
 };
 
 
+exports.deleteAllHuts = () => {
+    return new Promise((resolve, reject) => {
+        const sql = 'DELETE FROM Huts';
+        db.all(sql, (err) => {
+            if (err) reject(err);
+            resolve();
+        });
+    });
+}
+
 exports.getHut = (hutID) => {
     return new Promise((resolve, reject) => {
         const sql = 'SELECT * FROM Huts WHERE HutID = ?';
@@ -89,8 +99,16 @@ exports.getHut = (hutID) => {
             else {
                 if (rows.length === 0) resolve(undefined);
                 else {
-                    const hike = rows.map((h) => ({ id: h.HutID, hutName: h.Name, point: h.PointID, hutDescription: h.Description}));
-                    resolve(hike);
+                    const hut = rows.map((h) => ({id: h.HutID,
+                                                  hutName: h.Name,
+                                                  hutDescription: h.Description,
+                                                  lat: h.Lat,
+                                                  lon: h.Lon,
+                                                  altitude: h.Altitude,
+                                                  beds: h.Beds,
+                                                  province: h.Province,
+                                                  municipality: h.Municipality}));
+                    resolve(hut);
                 }
             }
         });
