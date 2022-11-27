@@ -30,6 +30,12 @@
     transform: scale(1.2);
 }
 
+@media screen and (min-width: 768px) {
+	.overflow {
+        max-height: 50vh;
+    }
+}
+
 .card_text {
     text-decoration: none;
     color: black;
