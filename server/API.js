@@ -133,6 +133,19 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
         }
     });
 
+    app.get('/api/hut/:id', async (req, res) => {
+        const hutID = req.params.id;
+
+        try {
+            const huts = await dao.getHut(hutID);
+            res.status(200).json(huts);
+        }
+        catch (err) {
+            console.log(err)
+            res.status(500).end();
+        }
+    });
+
     app.delete('/api/huts/:id', async (req, res) => {
         const hutID = req.params.id;
         try {
@@ -175,6 +188,26 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
 
     });
 
+    app.get('/api/huts', async (req, res) => {
+        try {
+            const hikes = await dao.getHuts();
+            res.status(200).json(hikes);
+        }
+        catch (err) {
+            res.status(500).end();
+        }
+    });
+
+
+    app.delete('/api/deleteAllHuts', async (req, res) => {
+        try {
+            await dao.deleteAllHuts();
+            res.status(204).end();
+
+        } catch (e) {
+            res.status(500).end();
+        }
+    });
 
     app.get('/api/hikes', async (req, res) => {
         try {
