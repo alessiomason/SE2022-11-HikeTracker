@@ -23,3 +23,7 @@ h1 {
 .btn_info {
     border-radius: 20px;
 }
+
+.close-filter-label {
+    cursor: pointer;
+}
