@@ -43,12 +43,12 @@ function FilterSection(props) {
                  difficulty={props.difficulty} setDifficulty={props.setDifficulty} municipality={props.municipality} setMunicipality={props.setMunicipality} province={props.province} setProvince={props.setProvince} startPoint={props.startPoint} setStartPoint={props.setStartPoint} refPoint={props.refPoint} setRefPoint={props.setRefPoint} endPoint={props.endPoint} setEndPoint={props.setEndPoint}/>
         <Row className='mt-3'>
           <ButtonToolbar aria-label="Toolbar with button groups" >
-            <Button variant="info" disabled size="sm" className='mx-2 my-1 btn_info px-2'>Length: {props.minLength} - {props.maxLength} meters  <img src={Close} alt="close" className='ms-1 my-1' /></Button>
-            <Button variant="info" disabled size="sm" className='mx-2 my-1 btn_info px-2'>Time: {props.minTime} - {props.maxTime}h <img src={Close} alt="close" className='ms-1 my-1' /></Button>
-            <Button variant="info" disabled size="sm" className='mx-2 my-1 btn_info px-2'>Ascent: {props.minAscent} - {props.maxAscent} meters  <img src={Close} alt="close" className='ms-1 my-1' /></Button>
-            <Button variant="info" disabled size="sm" className='mx-2 my-1 btn_info px-2'>Difficulty: {(props.difficulty)?props.difficulty:"all"} <img src={Close} alt="close" className='ms-1 my-1' /></Button>
-            <Button variant="info" disabled size="sm" className='mx-2 my-1 btn_info px-2'>Province: {(props.province)?props.province:"all"} <img src={Close} alt="close" className='ms-1 my-1' /></Button>
-            <Button variant="info" disabled size="sm" className='mx-2 my-1 btn_info px-2'>Municipality: {(props.municipality)?props.municipality:"all"} <img src={Close} alt="close" className='ms-1 my-1' /></Button>
+            <Button variant="info" disabled size="sm" className='mx-2 my-1 btn_info px-2'>Length: {props.minLength} - {props.maxLength} meters  {/*<img src={Close} alt="close" className='ms-1 my-1' />*/}</Button>
+            <Button variant="info" disabled size="sm" className='mx-2 my-1 btn_info px-2'>Time: {props.minTime} - {props.maxTime}h {/*<img src={Close} alt="close" className='ms-1 my-1' />*/}</Button>
+            <Button variant="info" disabled size="sm" className='mx-2 my-1 btn_info px-2'>Ascent: {props.minAscent} - {props.maxAscent} meters  {/*<img src={Close} alt="close" className='ms-1 my-1' />*/}</Button>
+            <Button variant="info" disabled size="sm" className='mx-2 my-1 btn_info px-2'>Difficulty: {(props.difficulty)?props.difficulty:"all"} {/*<img src={Close} alt="close" className='ms-1 my-1' />*/}</Button>
+            <Button variant="info" disabled size="sm" className='mx-2 my-1 btn_info px-2'>Province: {(props.province)?props.province:"all"} {/*<img src={Close} alt="close" className='ms-1 my-1' />*/}</Button>
+            <Button variant="info" disabled size="sm" className='mx-2 my-1 btn_info px-2'>Municipality: {(props.municipality)?props.municipality:"all"} {/*<img src={Close} alt="close" className='ms-1 my-1' />*/}</Button>
             
             
           </ButtonToolbar>

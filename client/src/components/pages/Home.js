@@ -10,7 +10,7 @@ import API from '../../API.js';
 function Home(props) {
 
   const [minLength,setMinLength] = useState(0);
-  const [maxLength,setMaxLength] = useState(100000);
+  const [maxLength,setMaxLength] = useState(1000000);
   const [minTime,setMinTime] = useState(0);
   const [maxTime,setMaxTime] = useState(24);
   const [minAscent,setMinAscent] = useState(0);
