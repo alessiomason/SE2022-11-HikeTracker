@@ -229,6 +229,91 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
         }
     });
 
+    
+    // GET a specific parking lot
+    app.get('/api/parkingLots/:id', async (req, res) => {
+        try {
+            id = req.params.id;
+            const parking = await dao.getParkingById(id);
+            res.status(200).json(parking);
+        }
+        catch (err) {
+            res.status(500).end();
+        }
+    });
+
+    //Add a parking lot
+    app.post('/api/newParkingLot', async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty())
+            return res.status(422).json({ errors: errors.array() });
+
+        try {
+            const Label = req.body.Label;
+            const Province = req.body.Province;
+            const Municipality = req.body.Municipality;
+            const Description = req.body.Description;
+            const Lat = req.body.Lat;
+            const Lon = req.body.Lon;
+            const Altitude = req.body.Altitude;
+            const Total = req.body.Total;
+            const Occupied = req.body.Occupied;
+
+            const parking = await dao.addParking(Label,Province,Municipality,Description,Lat,Lon,Altitude,Total,Occupied);
+            res.status(201).json(parking).end();
+        } catch (err) {
+            console.log(err)
+            res.status(500).json({ error: err });
+        }
+
+    });
+
+    //update parking 
+    app.put('/api/parkingLots/:id',  async (req, res) => {
+
+        const errors = validationResult(req);
+		if (!errors.isEmpty()) {
+			return res.status(422).json({ errors: errors.array() });
+		}
+
+        // check if the id of the parking lot is empty 
+		if (req.body.ParkingID === ''){
+			return res.status(422).json({ error: `Insert the id of a parking lot that you want to update.`});
+		}
+         ParkingID = req.params.id;
+         Label = req.body.Label;
+         Province = req.body.Province;
+         Municipality = req.body.Municipality;
+         Description = req.body.Description;
+         Lat = req.body.Lat;
+         Lon = req.body.Lon;
+         Altitude = req.body.Altitude;
+         Total = req.body.Total;
+         Occupied = req.body.Occupied;
+                
+        try {
+            const parking = await dao.updateParking(Label,Province,Municipality,Description,Lat,Lon,Altitude,Total,Occupied,ParkingID);
+            res.status(201).json(parking).end();
+        } catch (err) {
+        
+            res.status(500).json({ error: `Database error during update of the service name.`});
+        }
+        
+    });
+// DELETE parking lot
+    app.delete('/api/parkingLots/:id', async (req, res) => {
+        const ParkingID = req.params.id;
+        try {
+            await dao.deleteParking(ParkingID);
+            res.status(200).end();
+        }
+        catch (err) {
+            res.status(500).json({ error: 'Database error during update of the service name.' });
+        }
+    });
+
+
+
     app.get('/api/hikesrefpoints', async (req, res) => {
         try {
             const refpoints = await dao.getHikesRefPoints();
@@ -266,7 +351,7 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
         }
     });
 
-    // delete all tickets
+    // delete all hikes
     app.delete('/api/deleteAllHikes', async (req, res) => {
         try {
             await dao.deleteAllHikes();
@@ -356,6 +441,45 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
         }
 
     });
+
+
+    //GET StartPoint (for filters)
+    
+    app.get('/api/startPoint', async (req, res) => {
+        try {
+            const sp = await dao.getStartPoint();
+            res.status(200).json(sp);
+        }
+        catch (err) {
+            res.status(500).end();
+        }
+    });
+
+    //GET EndPoint (for filters)
+    
+    app.get('/api/endPoint', async (req, res) => {
+        try {
+            const ep = await dao.getEndPoint();
+            res.status(200).json(ep);
+        }
+        catch (err) {
+            res.status(500).end();
+        }
+    });
+
+    //GET ReferncePoint (for filters)
+    
+    app.get('/api/referencePoint', async (req, res) => {
+        try {
+            const rp = await dao.getReferencePoint();
+            res.status(200).json(rp);
+        }
+        catch (err) {
+            res.status(500).end();
+        }
+    });
+
+
 
     // POST /signup
     // signup

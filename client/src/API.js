@@ -232,6 +232,35 @@ async function getHikesRefPoints() {
     else throw refpoints;
 }
 
+async function getStartPoint() {
+    // call /api/startPoint
+    const response = await fetch(new URL('startPoint', APIURL));
+    const startPoints = await response.json();
+    if (response.ok)
+        return startPoints;
+    else throw startPoints;
+}
+
+async function getEndPoint() {
+    // call /api/endPoint
+    const response = await fetch(new URL('endPoint', APIURL));
+    const endPoints = await response.json();
+    if (response.ok)
+        return endPoints;
+    else throw endPoints;
+}
+
+async function getReferencePoint() {
+    // call /api/referencePoint
+    const response = await fetch(new URL('referencePoint', APIURL));
+    const referencePoint = await response.json();
+    if (response.ok)
+        return referencePoint;
+    else throw referencePoint;
+}
+
+
+
 async function getHike(id) {
     // call /api/hike
     const response = await fetch(new URL('hike/' + id, APIURL));
@@ -383,6 +412,6 @@ async function getUserAccessRight() {
     else throw accessRight;  // an object with the error coming from the server
 }
 
-const API = { addGPXTrack, addParkingLot, deleteParkingLot, updateParkingLot, deleteHike, getHikes, getParkingLots, addHut, updateHut, getHuts, deletHut, getHike, addHike, updateHike, signup, verifyEmail, login, logout, getUserInfo, getUserAccessRight, getHikesRefPoints };
+const API = { addGPXTrack, addParkingLot, deleteParkingLot, updateParkingLot, deleteHike, getHikes, getParkingLots, addHut, updateHut, getHuts, deletHut, getHike, addHike, updateHike, signup, verifyEmail, login, logout, getUserInfo, getUserAccessRight, getHikesRefPoints,getStartPoint,getEndPoint,getReferencePoint };
 export default API;
 

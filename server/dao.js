@@ -203,6 +203,49 @@ exports.getParkingLots = () => {
 }
 
 
+// get a specific parking lot
+exports.getParkingById = (id) => {
+    return new Promise((resolve, reject) => {
+        const sql = 'SELECT * FROM PARKINGLOTS WHERE ParkingID = ?';
+        db.all(sql, [id], (err, row) => {
+            if (err) reject(err);
+            const parking = row.map((p) => ({ ParkingID: p.ParkingID, Label: p.Label, Province: p.Province, Municipality: p.Municipality, Description: p.Description, Lat:p.Lat, Lon:p.Lon, Altitude:p.Altitude, Total: p.Total, Occupied: p.Occupied  }));
+            resolve(parking);
+        });
+    });
+}
+//Add new parking lot
+exports.addParking = (Label,Province,Municipality,Description,Lat,Lon,Altitude,Total, Occupied) => {
+    return new Promise((resolve, reject) => {
+        const sql = 'INSERT INTO PARKINGLOTS(Label, Province, Municipality, Description, Lat, Lon, Altitude,Total, Occupied) VALUES(?, ?, ?, ?,?,?,?,?,?)'
+        db.run(sql, [Label, Province, Municipality, Description, Lat, Lon, Altitude,Total, Occupied], function (err) {
+            if (err) reject(err);
+            resolve();
+        });
+    });
+}
+
+// UPDATE parking lot
+exports.updateParking = (Label,Province,Municipality,Description,Lat,Lon,Altitude,Total,Occupied,parkingID) => {
+    return new Promise((resolve, reject) => {
+        const sql = 'UPDATE PARKINGLOTS SET Label=?, Province=?, Municipality=?,Description=?, Lat=?, Lon=?, Altitude=?, Total=?, Occupied=?   WHERE ParkingID=?'
+        db.run(sql, [Label,Province,Municipality,Description,Lat,Lon,Altitude,Total,Occupied,parkingID], function (err) {
+            if (err) reject(err);
+            resolve();
+        });
+    });
+}
+//Delete parking lot
+exports.deleteParking = (ParkingID) => {
+    return new Promise((resolve, reject) => {
+        db.run("DELETE FROM PARKINGLOTS WHERE ParkingID = ?", [ParkingID], (err) => {
+            if (err) reject(err);
+            else resolve(null);
+        });
+    });
+};
+
+
 exports.getHikesRefPoints = () => {
     return new Promise((resolve, reject) => {
         const sql = 'SELECT * FROM Points WHERE RF=?';
@@ -277,6 +320,39 @@ exports.updateHike = (label, length, expTime, ascent, difficulty, description, p
         db.run(sql, [label, length, expTime, ascent, difficulty, description, province, municipality, hikeId], function (err) {
             if (err) reject(err);
             resolve();
+        });
+    });
+}
+
+exports.getStartPoint = () => {
+    return new Promise((resolve, reject) => {
+        const sql = 'SELECT * FROM POINTS WHERE SP = 1';
+        db.all(sql, [], (err, rows) => {
+            if (err) reject(err);
+            const startPoint = rows.map((sp) => ({ hikeID: sp.HikeID, pointID:sp.PointID, label: sp.Label }));
+            resolve(startPoint);
+        });
+    });
+}
+
+exports.getEndPoint = () => {
+    return new Promise((resolve, reject) => {
+        const sql = 'SELECT * FROM POINTS WHERE EP = 1';
+        db.all(sql, [], (err, rows) => {
+            if (err) reject(err);
+            const endPoint = rows.map((ep) => ({ hikeID: ep.HikeID, pointID:ep.PointID, label: ep.Label }));
+            resolve(endPoint);
+        });
+    });
+}
+
+exports.getReferencePoint = () => {
+    return new Promise((resolve, reject) => {
+        const sql = 'SELECT * FROM POINTS WHERE RP = 1';
+        db.all(sql, [], (err, rows) => {
+            if (err) reject(err);
+            const referencePoint = rows.map((rp) => ({ hikeID: rp.HikeID, pointID:rp.PointID, label: rp.Label }));
+            resolve(referencePoint);
         });
     });
 }
