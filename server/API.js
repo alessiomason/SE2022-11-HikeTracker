@@ -70,8 +70,16 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
                         length += coordinatesDistanceInMeter(lat_prev, lon_prev, pointsArray[i][1], pointsArray[i][0]);
                     } else {
                         await dao.addPoint(hikeID, pointsArray[i][1], pointsArray[i][0], pointsArray[i][2], 0, 0, 0, ""); //lat and lon in the json representation are swapped
+                     
+                        if(i==0){
+                        let prevArray=coordinatesArray[k-1].geometry.coordinates;
+                        lat_prev = prevArray[prevArray.length-1][1];
+                        lon_prev = prevArray[prevArray.length-1][0];
+                        }else{                           
                         lat_prev = pointsArray[i-1][1];
                         lon_prev = pointsArray[i-1][0];
+                        }
+                        
                         length += coordinatesDistanceInMeter(lat_prev, lon_prev, pointsArray[i][1], pointsArray[i][0]);
                     }
                 }
