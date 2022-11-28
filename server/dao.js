@@ -196,7 +196,7 @@ exports.getParkingLots = () => {
             if (err) reject(err);
             const pls = rows.map((pl) => ({ id: pl.ParkingID, label: pl.Label, 
                 description: pl.Description, province: pl.Province, municipality: pl.Municipality,
-            lat: pl.Lat, lon: pl.Lon, altitude: pl.Altitude}));
+            lat: pl.Lat, lon: pl.Lon, altitude: pl.Altitude, total: pl.Total, occupied: pl.Occupied }));
             resolve(pls);
         });
     });
@@ -209,7 +209,7 @@ exports.getParkingById = (id) => {
         const sql = 'SELECT * FROM PARKINGLOTS WHERE ParkingID = ?';
         db.all(sql, [id], (err, row) => {
             if (err) reject(err);
-            const parking = row.map((p) => ({ ParkingID: p.ParkingID, Label: p.Label, Province: p.Province, Municipality: p.Municipality, Description: p.Description, Lat:p.Lat, Lon:p.Lon, Altitude:p.Altitude, Total: p.Total, Occupied: p.Occupied  }));
+            const parking = row.map((p) => ({ parkingID: p.ParkingID, label: p.Label, province: p.Province, municipality: p.Municipality, description: p.Description, lat:p.Lat, lon:p.Lon, altitude:p.Altitude, total: p.Total, occupied: p.Occupied  }));
             resolve(parking);
         });
     });

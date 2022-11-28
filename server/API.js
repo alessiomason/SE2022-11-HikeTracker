@@ -249,17 +249,17 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
             return res.status(422).json({ errors: errors.array() });
 
         try {
-            const Label = req.body.Label;
-            const Province = req.body.Province;
-            const Municipality = req.body.Municipality;
-            const Description = req.body.Description;
-            const Lat = req.body.Lat;
-            const Lon = req.body.Lon;
-            const Altitude = req.body.Altitude;
-            const Total = req.body.Total;
-            const Occupied = req.body.Occupied;
+            const label = req.body.label;
+            const province = req.body.province;
+            const municipality = req.body.municipality;
+            const description = req.body.description;
+            const lat = req.body.lat;
+            const lon = req.body.lon;
+            const altitude = req.body.altitude;
+            const total = req.body.total;
+            const occupied = req.body.occupied;
 
-            const parking = await dao.addParking(Label,Province,Municipality,Description,Lat,Lon,Altitude,Total,Occupied);
+            const parking = await dao.addParking(label,province,municipality,description,lat,lon,altitude,total,occupied);
             res.status(201).json(parking).end();
         } catch (err) {
             console.log(err)
@@ -277,22 +277,22 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
 		}
 
         // check if the id of the parking lot is empty 
-		if (req.body.ParkingID === ''){
+		if (req.body.parkingID === ''){
 			return res.status(422).json({ error: `Insert the id of a parking lot that you want to update.`});
 		}
-         ParkingID = req.params.id;
-         Label = req.body.Label;
-         Province = req.body.Province;
-         Municipality = req.body.Municipality;
-         Description = req.body.Description;
-         Lat = req.body.Lat;
-         Lon = req.body.Lon;
-         Altitude = req.body.Altitude;
-         Total = req.body.Total;
-         Occupied = req.body.Occupied;
+         parkingID = req.params.id;
+         label = req.body.label;
+         province = req.body.province;
+         municipality = req.body.municipality;
+         description = req.body.description;
+         lat = req.body.lat;
+         lon = req.body.lon;
+         altitude = req.body.altitude;
+         total = req.body.total;
+         occupied = req.body.occupied;
                 
         try {
-            const parking = await dao.updateParking(Label,Province,Municipality,Description,Lat,Lon,Altitude,Total,Occupied,ParkingID);
+            const parking = await dao.updateParking(label,province,municipality,description,lat,lon,altitude,total,occupied,parkingID);
             res.status(201).json(parking).end();
         } catch (err) {
         
