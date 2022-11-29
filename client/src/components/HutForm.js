@@ -5,6 +5,7 @@ import { default as Img1 } from "../images/img8.jpg";
 import { useNavigate } from 'react-router-dom';
 import { Icon } from 'leaflet';
 import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
+import API from '../API';
 import '../styles/Map.css';
 import 'leaflet/dist/leaflet.css';
 import '../styles/HikeForm.css';
@@ -19,8 +20,6 @@ function HutForm(props) {
     const [longitude, setLongitude] = useState(0.0);
     const [altitude, setAltitude] = useState(0);
     const [beds, setBeds] = useState(0);
-    const [province, setProvince] = useState('');
-    const [municipality, setMunicipality] = useState('');
     const [errorMsg, setErrorMsg] = useState('');
 
     const handleSubmit = (event) => {
@@ -29,19 +28,24 @@ function HutForm(props) {
         if (name.trim().length === 0)
             setErrorMsg('The name of the hut cannot be consisted of only empty spaces');
         else {
-            const newHut = {
+            let newHut = {
                 name: name,
                 description: description,
                 lat: latitude,
                 lon: longitude,
                 altitude: altitude,
-                beds: beds,
-                province: province,
-                municipality: municipality
+                beds: beds
             }
-            props.addHut(newHut);
-            props.setDirty(true);
-            navigate('/hutManager');
+            // retrieve location info and address from coordinates
+            API.reverseNominatim(latitude, longitude)
+                .then((locationInfo) => {
+                    newHut.province = locationInfo.address.county;
+                    newHut.municipality = locationInfo.address.city || locationInfo.address.town || locationInfo.address.village;
+                    props.addHut(newHut);
+                    props.setDirty(true);
+                    navigate('/hutManager');
+                })
+                .catch(err => console.log(err))
         }
     }
 
@@ -69,20 +73,10 @@ function HutForm(props) {
                             </Form.Group>
 
                             <Form.Group>
-                                <Form.Label>Municipality</Form.Label>
-                                <Form.Control required={true} value={municipality} onChange={ev => setMunicipality(ev.target.value)} />
-                            </Form.Group>
-
-                            <Form.Group>
-                                <Form.Label>Province</Form.Label>
-                                <Form.Control required={true} value={province} onChange={ev => setProvince(ev.target.value)} />
-                            </Form.Group>
-
-                            <Form.Group>
                                 <Form.Label>Altitude [m]</Form.Label>
                                 <Form.Control required={true} type='number' step="any" value={altitude} onChange={ev => setAltitude(ev.target.value)} />
                             </Form.Group>
-                            
+
                             <Form.Group>
                                 <Form.Label>Number of Beds</Form.Label>
                                 <Form.Control required={true} type='number' step="any" min={0} value={beds} onChange={ev => setBeds(ev.target.value)} />
@@ -92,18 +86,18 @@ function HutForm(props) {
                                 <Form.Label>Description</Form.Label>
                                 <Form.Control required={true} value={description} onChange={ev => setDescription(ev.target.value)} />
                             </Form.Group>
-                        <Row className='my-3 box_btn'>
-                            <div className='d-flex justify-content-center'>
-                                <h3>Click on the map to select the hut's location</h3>
-                            </div>
-                            <HutMap setLatitude={setLatitude} setLongitude={setLongitude} />
-                        </Row>
-                        <Button className='save-button' type='submit' >Save</Button>
-                        <Button className='back-button' onClick={() => navigate('/hutManager')} variant='secondary' >Back</Button>
-                    </Form>
-                </Col>
+                            <Row className='my-3 box_btn'>
+                                <div className='d-flex justify-content-center'>
+                                    <h3>Click on the map to select the hut's location</h3>
+                                </div>
+                                <HutMap setLatitude={setLatitude} setLongitude={setLongitude} />
+                            </Row>
+                            <Button className='save-button' type='submit' >Save</Button>
+                            <Button className='back-button' onClick={() => navigate('/hutManager')} variant='secondary' >Back</Button>
+                        </Form>
+                    </Col>
+                </Row>
             </Row>
-        </Row>
         </Container >
     );
 }
