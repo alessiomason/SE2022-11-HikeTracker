@@ -87,17 +87,17 @@ function addHut(hut) {
             headers: {
                 'Content-Type': 'application/json',
             },
-            
-            
-            body: JSON.stringify({ 
-                name: hut.name, 
-                description: hut.description, 
-                lat: hut.lat, 
+
+
+            body: JSON.stringify({
+                name: hut.name,
+                description: hut.description,
+                lat: hut.lat,
                 lon: hut.lon,
                 altitude: hut.altitude,
                 beds: hut.beds,
                 province: hut.province,
-                municipality: hut.municipality    
+                municipality: hut.municipality
             }),
 
         }).then((response) => {
@@ -190,6 +190,7 @@ async function getHikes() {
         return hikes.map((h) => ({ id: h.id, label: h.label, length: h.length, expTime: h.expTime, ascent: h.ascent, difficulty: h.difficulty, description: h.description, province: h.province, municipality: h.municipality }))
     else throw hikes;
 }
+
 async function getParkingLots() {
     // call /api/parkingLots
     const response = await fetch(new URL('parkingLots', APIURL));
@@ -209,16 +210,17 @@ async function getHuts() {
     const response = await fetch(new URL('huts', APIURL));
     const huts = await response.json();
     if (response.ok)
-        return huts.map((h) => ({ 
-            id: h.id, 
-            name: h.hutName, 
-            description: h.hutDescription, 
-            lat: h.lat, 
+        return huts.map((h) => ({
+            id: h.id,
+            name: h.hutName,
+            description: h.hutDescription,
+            lat: h.lat,
             lon: h.lon,
             altitude: h.altitude,
             beds: h.beds,
             province: h.province,
-            municipality: h.municipality  }))
+            municipality: h.municipality
+        }))
     else throw huts;
 }
 
@@ -412,6 +414,14 @@ async function getUserAccessRight() {
     else throw accessRight;  // an object with the error coming from the server
 }
 
-const API = { addGPXTrack, addParkingLot, deleteParkingLot, updateParkingLot, deleteHike, getHikes, getParkingLots, addHut, updateHut, getHuts, deletHut, getHike, addHike, updateHike, signup, verifyEmail, login, logout, getUserInfo, getUserAccessRight, getHikesRefPoints,getStartPoint,getEndPoint,getReferencePoint };
-export default API;
+// external APIs
+async function reverseNominatim(latitude, longitude) {
+    const response = await fetch(new URL(`https://nominatim.openstreetmap.org/reverse?format=json&zoom=10&lat=${latitude}&lon=${longitude}`));
+    const reverseNom = await response.json();
+    if (response.ok)
+        return reverseNom;
+    else throw reverseNom;
+}
 
+const API = { addGPXTrack, addParkingLot, deleteParkingLot, updateParkingLot, deleteHike, getHikes, getParkingLots, addHut, updateHut, getHuts, deletHut, getHike, addHike, updateHike, signup, verifyEmail, login, logout, getUserInfo, getUserAccessRight, getHikesRefPoints, getStartPoint, getEndPoint, getReferencePoint, reverseNominatim };
+export default API;
