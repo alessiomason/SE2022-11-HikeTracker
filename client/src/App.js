@@ -1,6 +1,6 @@
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { BrowserRouter as Router, Routes, Route, useNavigate, Navigate, Outlet } from 'react-router-dom';
 import API from './API';
 import HikeForm from './components/HikeForm';
@@ -16,6 +16,7 @@ import HikePage from './components/pages/Hike';
 import Home from './components/pages/Home';
 import Loading from './components/Loading';
 import Footer from './components/Footer';
+import { Button } from "react-bootstrap";
 
 function App() {
     return (
@@ -175,7 +176,7 @@ function App2() {
     function Layout() {
         return (
             <>
-                <MyNavbar setShowLogin={setShowLogin} setShowSignup={setShowSignup} loggedIn={loggedIn} doLogout={doLogout} user={user}/>
+                <MyNavbar setShowLogin={setShowLogin} setShowSignup={setShowSignup} loggedIn={loggedIn} doLogout={doLogout} user={user} />
                 <Outlet />
                 <Footer />
             </>

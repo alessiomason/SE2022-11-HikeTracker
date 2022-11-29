@@ -1,13 +1,16 @@
 import HikesCards from '../HikeCards';
 import MyTopHome from '../TopHome';
+import MyHutSection from '../HutSection';
+import MyParkingSection from '../ParkingSection';
 import MyFilterSection from '../FilterSection';
 import MyModalLogin from '../ModalLogin';
 import MyModalSignup from '../ModalSignup';
+import ScrollToTop from '../ScrollToTop';
 import '../../App.css';
 import React, { useState,useEffect } from 'react';
 import API from '../../API.js';
 
-function Home(props) {
+function Home(props, ref) {
 
   const [minLength,setMinLength] = useState(0);
   const [maxLength,setMaxLength] = useState(1000000);
@@ -25,6 +28,7 @@ function Home(props) {
   const [hikes, setHikes] = useState([]);
   const [dirty, setDirty] = useState(true);
 
+  
 
   useEffect(() => {
     if (dirty) {
@@ -35,9 +39,12 @@ function Home(props) {
     }
   }, [dirty]);
 
+
+
   return (
     <>
-    
+
+      <ScrollToTop />
       <MyTopHome setShowEmailAlert={props.setShowEmailAlert} showEmailAlert={props.showEmailAlert}/>
       <MyModalLogin setShowLogin={props.setShowLogin} showLogin={props.showLogin} user={props.user} loggedIn={props.loggedIn} doLogin={props.doLogin} message={props.message} setMessage={props.setMessage} />
       <MyModalSignup setShowEmailAlert={props.setShowEmailAlert} setShowSignup={props.setShowSignup} showSignup={props.showSignup} setMessage={props.setMessage} doSignUp={props.doSignUp} message={props.message} />
@@ -46,6 +53,9 @@ function Home(props) {
                         municipality={municipality}  setMunicipality={setMunicipality} province={province} setProvince={setProvince} startPoint={startPoint} setStartPoint={setStartPoint} refPoint={refPoint} setRefPoint={setRefPoint} endPoint={endPoint} setEndPoint={setEndPoint}/>
       <HikesCards user={props.user} setMinLength={setMinLength} minLength={minLength} maxLength={maxLength} minTime={minTime} maxTime={maxTime} minAscent={minAscent} maxAscent={maxAscent} difficulty={difficulty}  municipality={municipality} province={province} startPoint={startPoint} endPoint={endPoint} refPoint={refPoint}
                   hikes={hikes}   />
+      <MyHutSection />
+      <MyParkingSection   />
+
     </>
   );
 }

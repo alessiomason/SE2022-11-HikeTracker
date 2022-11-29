@@ -12,7 +12,7 @@ function FilterSection(props) {
   
     return (
 
-      <Container fluid className='filterSection'>
+      <Container fluid className='filterSection' id="hikeSec">
         <Row>
           <h1>Find your perfect destinations!</h1>
         </Row>

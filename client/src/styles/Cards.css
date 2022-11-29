@@ -66,3 +66,35 @@
     margin-bottom: 50px !important;
     width: 75%;
 }
+
+.card-title{
+    font-style: italic;
+    font-size: 22px;
+    margin-bottom: 10px;
+    color: #62DDF5;
+}
+
+.card-credit{
+    font-style: italic;
+    font-size: 12px;
+    margin-bottom: 0px;
+    text-align: end;
+}
+
+.card-text{
+    margin-bottom: 8px;
+}
+.card-body {
+    height: 17rem;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+.card-body::-webkit-scrollbar {
+    display: none;
+}
+
+.card-body {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
