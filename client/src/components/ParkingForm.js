@@ -5,6 +5,7 @@ import { default as Img1 } from "../images/img1.jpg";
 import { useNavigate } from 'react-router-dom';
 import { Icon } from 'leaflet';
 import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
+import API from '../API';
 import '../styles/Map.css';
 import 'leaflet/dist/leaflet.css';
 import '../styles/HikeForm.css';
@@ -15,8 +16,6 @@ function ParkingForm(props) {
 
     const [label, setLabel] = useState('');
     const [description, setDescription] = useState('');
-    const [province, setProvince] = useState('');
-    const [municipality, setMunicipality] = useState('');
     const [latitude, setLatitude] = useState(0.0);
     const [longitude, setLongitude] = useState(0.0);
     const [altitude, setAltitude] = useState(0);
@@ -30,20 +29,26 @@ function ParkingForm(props) {
         if (label.trim().length === 0)
             setErrorMsg('The label of the hike cannot be consisted of only empty spaces');
         else {
-            const newParkingLot = {
+            let newParkingLot = {
                 label: label,
                 description: description,
-                province: province,
-                municipality: municipality,
                 lat: latitude,
                 lon: longitude,
                 altitude: 2.0,
                 total: total,
                 occupied: occupied
             }
-            props.addParkingLot(newParkingLot);
-            props.setDirty(true);
-            navigate('/parkingManager');
+
+            // retrieve location info and address from coordinates
+            API.reverseNominatim(latitude, longitude)
+                .then((locationInfo) => {
+                    newParkingLot.province = locationInfo.address.county;
+                    newParkingLot.municipality = locationInfo.address.city || locationInfo.address.town || locationInfo.address.village;
+                    props.addParkingLot(newParkingLot);
+                    props.setDirty(true);
+                    navigate('/parkingManager');
+                })
+                .catch(err => console.log(err))
         }
     }
 
@@ -68,16 +73,6 @@ function ParkingForm(props) {
                             <Form.Group>
                                 <Form.Label>Label</Form.Label>
                                 <Form.Control required={true} value={label} onChange={ev => setLabel(ev.target.value)}></Form.Control>
-                            </Form.Group>
-
-                            <Form.Group>
-                                <Form.Label>Municipality</Form.Label>
-                                <Form.Control required={true} value={municipality} onChange={ev => setMunicipality(ev.target.value)} />
-                            </Form.Group>
-
-                            <Form.Group>
-                                <Form.Label>Province</Form.Label>
-                                <Form.Control required={true} value={province} onChange={ev => setProvince(ev.target.value)} />
                             </Form.Group>
 
                             <Form.Group>
