@@ -44,13 +44,13 @@ function FilterSection(props) {
                 difficulty={props.difficulty} setDifficulty={props.setDifficulty} municipality={props.municipality} setMunicipality={props.setMunicipality} province={props.province} setProvince={props.setProvince} startPoint={props.startPoint} setStartPoint={props.setStartPoint} refPoint={props.refPoint} setRefPoint={props.setRefPoint} endPoint={props.endPoint} setEndPoint={props.setEndPoint} />
             <Row className='mt-3'>
                 <ButtonToolbar aria-label="Toolbar with button groups" >
-                    {props.minLength && <Button variant="info" size="sm" className='mx-2 my-1 btn_info px-2'>Minimum length: {props.minLength} m <img src={Close} alt="close" className='ms-1 my-1 close-filter-label' /></Button>}
-                    {props.maxLength && <Button variant="info" size="sm" className='mx-2 my-1 btn_info px-2'>Maximum length: {props.maxLength} m <img src={Close} alt="close" className='ms-1 my-1 close-filter-label' onClick={() => props.setMaxLength('')} /></Button>}
-                    {props.minTime && <Button variant="info" size="sm" className='mx-2 my-1 btn_info px-2'>Minimum time: {props.minTime} h <img src={Close} alt="close" className='ms-1 my-1 close-filter-label' /></Button>}
-                    {props.maxTime && <Button variant="info" size="sm" className='mx-2 my-1 btn_info px-2'>Maximum time: {props.maxTime} h <img src={Close} alt="close" className='ms-1 my-1 close-filter-label' /></Button>}
-                    {props.minAscent && <Button variant="info" size="sm" className='mx-2 my-1 btn_info px-2'>Minimum ascent: {props.minAscent} m <img src={Close} alt="close" className='ms-1 my-1 close-filter-label' /></Button>}
-                    {props.maxAscent && <Button variant="info" size="sm" className='mx-2 my-1 btn_info px-2'>Maximum ascent: {props.maxAscent} m <img src={Close} alt="close" className='ms-1 my-1 close-filter-label' /></Button>}
-                    {props.difficulty && <Button variant="info" size="sm" className='mx-2 my-1 btn_info px-2'>Difficulty: {props.difficulty} m <img src={Close} alt="close" className='ms-1 my-1 close-filter-label' /></Button>}
+                    {props.minLength && <Button variant="info" size="sm" className='mx-2 my-1 btn_info px-2 filter-label'>Minimum length: {props.minLength} m <img src={Close} alt="close" className='ms-1 my-1 close-filter-label' onClick={() => props.setMinLength('')} /></Button>}
+                    {props.maxLength && <Button variant="info" size="sm" className='mx-2 my-1 btn_info px-2 filter-label'>Maximum length: {props.maxLength} m <img src={Close} alt="close" className='ms-1 my-1 close-filter-label' onClick={() => props.setMaxLength('')} /></Button>}
+                    {props.minTime && <Button variant="info" size="sm" className='mx-2 my-1 btn_info px-2 filter-label'>Minimum time: {props.minTime} h <img src={Close} alt="close" className='ms-1 my-1 close-filter-label' onClick={() => props.setMinTime('')} /></Button>}
+                    {props.maxTime && <Button variant="info" size="sm" className='mx-2 my-1 btn_info px-2 filter-label'>Maximum time: {props.maxTime} h <img src={Close} alt="close" className='ms-1 my-1 close-filter-label' onClick={() => props.setMaxTime('')} /></Button>}
+                    {props.minAscent && <Button variant="info" size="sm" className='mx-2 my-1 btn_info px-2 filter-label'>Minimum ascent: {props.minAscent} m <img src={Close} alt="close" className='ms-1 my-1 close-filter-label' onClick={() => props.setMinAscent('')} /></Button>}
+                    {props.maxAscent && <Button variant="info" size="sm" className='mx-2 my-1 btn_info px-2 filter-label'>Maximum ascent: {props.maxAscent} m <img src={Close} alt="close" className='ms-1 my-1 close-filter-label' onClick={() => props.setMaxAscent('')} /></Button>}
+                    {props.difficulty && <Button variant="info" size="sm" className='mx-2 my-1 btn_info px-2 filter-label'>Difficulty: {props.difficulty} m <img src={Close} alt="close" className='ms-1 my-1 close-filter-label' onClick={() => props.setDifficulty('')} /></Button>}
 
                 </ButtonToolbar>
             </Row>
@@ -90,6 +90,16 @@ function MyModal(props) {
             .catch(err => console.log(err))
     }, []);
 
+    const clearStates = () => {
+        setTempMinLength(props.minLength);
+        setTempMaxLength(props.maxLength);
+        setTempMinTime(props.minTime);
+        setTempMaxTime(props.maxTime);
+        setTempMinAscent(props.minAscent);
+        setTempMaxAscent(props.maxAscent);
+        setTempDifficulty(props.difficulty);
+    }
+
     const confirmButton = () => {
         if (props.title == 'Difficulty' && tempDifficulty !== props.difficulty)
             props.setDifficulty(tempDifficulty);
@@ -109,7 +119,7 @@ function MyModal(props) {
 
     return (
 
-        <Modal {...props} onHide={props.onHide} aria-labelledby="contained-modal-title-vcenter" centered>
+        <Modal {...props} onShow={() => clearStates()} onHide={props.onHide} aria-labelledby="contained-modal-title-vcenter" centered>
             <Modal.Header closeButton>
                 <Modal.Title id="contained-modal-title-vcenter">
                     {props.title}
