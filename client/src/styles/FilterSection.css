@@ -12,6 +12,7 @@ h1 {
     text-align: center;
 }
 
+
 .modal_label {
     align-items: center;
 }
@@ -23,3 +24,44 @@ h1 {
 .btn_info {
     border-radius: 20px;
 }
+
+ .hike-img{
+    vertical-align: baseline ;
+ }
+
+ h2 {
+    width: 600px !important; 
+    font-weight: bold;
+    font-size: 50px;
+    font-style: italic;
+    color: #157347;
+    text-align: center;
+    text-transform: uppercase;
+  }
+  
+  h2.background {
+    position: relative;
+    z-index: 1;
+  }
+  
+  h2.background span {
+    background: #fff;
+    padding: 0 15px;
+  }
+  
+  h2.double:before {
+    border-top: none;
+  }
+  
+  h2.double:after {
+    border-bottom: 2px solid #157347;
+    content: "";
+    margin: 0 auto; /* this centers the line to the full width specified */
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    width: 100%;
+    z-index: -1;
+  }
+  
