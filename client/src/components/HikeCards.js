@@ -9,13 +9,18 @@ function HikesCards(props) {
         <Container fluid className="cards p-5">
             <Row className='mb-3 box_centered'>
                 {props.hikes.filter(h => {
+                    console.log(props.province && h.province !== props.province)
                     if (props.minLength && h.length < props.minLength
                     || props.maxLength && h.length > props.maxLength
                     || props.minTime && h.expTime < props.minTime
                     || props.maxTime && h.expTime > props.maxTime
                     || props.minAscent && h.ascent < props.minAscent
                     || props.maxAscent && h.ascent > props.maxAscent
-                    || !props.difficulties.find(d => d.level === parseInt(h.difficulty)).isChecked )
+                    || !props.difficulties.find(d => d.level === parseInt(h.difficulty)).isChecked
+                    || props.state && h.state !== props.state
+                    || props.region && h.region !== props.region
+                    || props.province && h.province !== props.province
+                    || props.municipality && h.municipality !== props.municipality )
                         return false;
 
                     return true;
