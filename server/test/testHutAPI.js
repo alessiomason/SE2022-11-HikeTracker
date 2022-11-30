@@ -4,6 +4,7 @@ chai.use(chaiHttp);
 chai.should();
 
 const app = require('../server');
+let agent = chai.request.agent(app);
 
 describe('test UPDATE Hut APIs', () => {
     deleteAllHuts();
