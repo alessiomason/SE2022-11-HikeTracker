@@ -3,6 +3,7 @@ import { Button, ListGroup, Modal, Col, Row, Form, Container, ButtonToolbar, But
 import '../styles/FilterSection.css';
 import { default as Close } from '../icons/close.svg';
 import API from '../API.js';
+import { default as Hiking } from '../icons/hiking.svg';
 
 function FilterSection(props) {
 
@@ -26,9 +27,9 @@ function FilterSection(props) {
 
   return (
 
-    <Container fluid className='filterSection'>
-      <Row>
-        <h1>Find your perfect destinations!</h1>
+    <Container fluid className='filterSection' id="hikeSec">
+      <Row> 
+        <h2 class="background double"><span><img src={Hiking} alt="hiking_image" className='me-2 hike-img'/>Hikes</span></h2>
       </Row>
       <Row className='mt-5'>
         <Col md="auto" sm="auto" xs="auto" >

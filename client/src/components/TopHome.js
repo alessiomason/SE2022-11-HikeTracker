@@ -16,6 +16,7 @@ function MyTopHome(props) {
             }
             <h1>HIKE TRACKER</h1>
             <p>Start a new adventure</p>
+            
             {/*
                 <Row className='input-group mt-4 mx-auto search-container '>
                     <InputGroup className="mb-3">

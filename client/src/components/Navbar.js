@@ -3,10 +3,18 @@ import { Button, Navbar, Nav, Container } from "react-bootstrap";
 import { default as Logo } from "../icons/logo.svg";
 import { default as User } from '../icons/user.svg';
 import '../styles/Navbar.css';
+import React, { useState, useEffect } from 'react';
+
 
 function MyNavbar(props) {
 
   const navigate = useNavigate();
+
+  const scrollIntoViewWithOffset = (id, offset) => {
+    const element = document.getElementById(id);
+    const y = element.getBoundingClientRect().top + window.pageYOffset - offset;
+    window.scrollTo({top: y, behavior: 'smooth'});
+  }
 
   return (
 
@@ -21,6 +29,9 @@ function MyNavbar(props) {
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="me-auto">
+            <Button variant="primary" className="mx-2" onClick={() => scrollIntoViewWithOffset("hikeSec", 40)} > Hike </Button>
+            <Button variant="secondary" className="mx-2" onClick={() => document.getElementById("hutSec", 40).scrollIntoView(true)} > Hut </Button>
+            <Button variant="warning" className="mx-2" onClick={() => document.getElementById("parkSec", 40).scrollIntoView(true)} > Parking </Button>
           </Nav>
           <Nav>
             {(!props.loggedIn) ?
