@@ -30,7 +30,7 @@ function FilterSection(props) {
                             <Button variant="success" className='btn_filter' onClick={() => { setModalShow(true); setTitle("Point from map"); setDesc("Select a specific point on the map:") }}>Point from map</Button>
                         </ButtonGroup>
                         <ButtonGroup className="my-1" aria-label="Second group">
-                            <Button variant="danger" onClick={() => { props.setMinLength(''); props.setMaxLength(''); props.setMinTime(''); props.setMaxTime(''); props.setMinAscent(''); props.setMaxAscent(''); props.setDifficulty(''); }}>Remove all filters</Button>
+                            <Button variant="danger" onClick={() => { props.setMinLength(''); props.setMaxLength(''); props.setMinTime(''); props.setMaxTime(''); props.setMinAscent(''); props.setMaxAscent(''); props.setDifficulties(props.difficultiesList); }}>Remove all filters</Button>
                         </ButtonGroup>
                     </ButtonToolbar>
                 </Col>
@@ -38,7 +38,7 @@ function FilterSection(props) {
 
             <MyModal show={modalShow} onHide={() => setModalShow(false)} hikes={props.hikes} title={title} desc={desc} minLength={props.minLength} setMinLength={props.setMinLength} maxLength={props.maxLength} setMaxLength={props.setMaxLength}
                 minTime={props.minTime} setMinTime={props.setMinTime} maxTime={props.maxTime} setMaxTime={props.setMaxTime} minAscent={props.minAscent} setMinAscent={props.setMinAscent} maxAscent={props.maxAscent} setMaxAscent={props.setMaxAscent}
-                difficulty={props.difficulty} setDifficulty={props.setDifficulty} municipality={props.municipality} setMunicipality={props.setMunicipality} province={props.province} setProvince={props.setProvince} startPoint={props.startPoint} setStartPoint={props.setStartPoint} refPoint={props.refPoint} setRefPoint={props.setRefPoint} endPoint={props.endPoint} setEndPoint={props.setEndPoint} />
+                difficulties={props.difficulties} setDifficulties={props.setDifficulties} municipality={props.municipality} setMunicipality={props.setMunicipality} province={props.province} setProvince={props.setProvince} startPoint={props.startPoint} setStartPoint={props.setStartPoint} refPoint={props.refPoint} setRefPoint={props.setRefPoint} endPoint={props.endPoint} setEndPoint={props.setEndPoint} />
             <Row className='mt-3'>
                 <ButtonToolbar aria-label="Toolbar with button groups" >
                     {props.minLength && <Button variant="info" size="sm" className='mx-2 my-1 btn_info px-2 filter-label'>Minimum length: {props.minLength} m <img src={Close} alt="close" className='ms-1 my-1 close-filter-label' onClick={() => props.setMinLength('')} /></Button>}
@@ -47,7 +47,17 @@ function FilterSection(props) {
                     {props.maxTime && <Button variant="info" size="sm" className='mx-2 my-1 btn_info px-2 filter-label'>Maximum time: {props.maxTime} h <img src={Close} alt="close" className='ms-1 my-1 close-filter-label' onClick={() => props.setMaxTime('')} /></Button>}
                     {props.minAscent && <Button variant="info" size="sm" className='mx-2 my-1 btn_info px-2 filter-label'>Minimum ascent: {props.minAscent} m <img src={Close} alt="close" className='ms-1 my-1 close-filter-label' onClick={() => props.setMinAscent('')} /></Button>}
                     {props.maxAscent && <Button variant="info" size="sm" className='mx-2 my-1 btn_info px-2 filter-label'>Maximum ascent: {props.maxAscent} m <img src={Close} alt="close" className='ms-1 my-1 close-filter-label' onClick={() => props.setMaxAscent('')} /></Button>}
-                    {props.difficulty && <Button variant="info" size="sm" className='mx-2 my-1 btn_info px-2 filter-label'>Difficulty: {props.difficulty} m <img src={Close} alt="close" className='ms-1 my-1 close-filter-label' onClick={() => props.setDifficulty('')} /></Button>}
+                    {props.difficulties.filter(d => d.isChecked).map((d) => {
+                      return (
+                        <Button variant="info" size="sm" className='mx-2 my-1 btn_info px-2 filter-label' key={'difficulty-label-' + d.level}>Difficulty: {d.difficulty} <img src={Close} alt="close" className='ms-1 my-1 close-filter-label' onClick={() => {
+                          let temp = [...props.difficulties];
+                          const index = temp.findIndex((t) => t.level === d.level);
+                          if (index === -1) return;
+                          temp[index].isChecked = false;
+                          props.setDifficulties(temp);
+                        }} /></Button>
+                      );
+                    })}
 
                 </ButtonToolbar>
             </Row>
@@ -67,7 +77,7 @@ function MyModal(props) {
     const [tempMaxTime, setTempMaxTime] = useState(props.maxTime);
     const [tempMinAscent, setTempMinAscent] = useState(props.minAscent);
     const [tempMaxAscent, setTempMaxAscent] = useState(props.maxAscent);
-    const [tempDifficulty, setTempDifficulty] = useState(props.difficulty);
+    const [tempDifficulties, setTempDifficulties] = useState(props.difficulties);
 
     useEffect(() => {
         API.getStartPoint()
@@ -94,12 +104,20 @@ function MyModal(props) {
         setTempMaxTime(props.maxTime);
         setTempMinAscent(props.minAscent);
         setTempMaxAscent(props.maxAscent);
-        setTempDifficulty(props.difficulty);
+        setTempDifficulties(props.difficulties);
     }
 
+    const changeCheckDifficulties = (level) => {
+      let temp = [...tempDifficulties];
+      const index = temp.findIndex((t) => t.level === level);
+      if (index === -1) return;
+      temp[index].isChecked = !temp[index].isChecked;
+      setTempDifficulties(temp);
+    };
+
     const confirmButton = () => {
-        if (props.title == 'Difficulty' && tempDifficulty !== props.difficulty)
-            props.setDifficulty(tempDifficulty);
+        if (props.title == 'Difficulty')
+            props.setDifficulties(tempDifficulties);
         if (props.title == 'Length (meters)' && tempMinLength !== props.minLength)
             props.setMinLength(tempMinLength);
         if (props.title == 'Length (meters)' && tempMaxLength !== props.maxLength)
@@ -126,17 +144,20 @@ function MyModal(props) {
             <Modal.Body >
                 <Container>
                     {(props.title == "Difficulty") ?
-                        <Row>
-                            <Col md="auto" sm="auto" xs="auto">
-                                <Button variant="success" size="sm" className='m-1' value={1} onClick={event => setTempDifficulty(event.target.value)}>Tourist</Button>
-                            </Col>
-                            <Col md="auto" sm="auto" xs="auto">
-                                <Button variant="warning" size="sm" className='m-1' value={2} onClick={event => setTempDifficulty(event.target.value)}>Hiker</Button>
-                            </Col>
-                            <Col md="auto" sm="auto" xs="auto">
-                                <Button variant="dark" size="sm" className='m-1' value={3} onClick={event => setTempDifficulty(event.target.value)}>Professional hiker</Button>
-                            </Col>
-                        </Row> :
+                        <Form>
+                          {tempDifficulties.map((tempDifficulty) => (
+                            <div key={`difficulty-${tempDifficulty.level}`} className="mb-3">
+                              <Form.Check 
+                                type='checkbox'
+                                id={'difficulty-' + tempDifficulty.level}
+                                checked={tempDifficulty.isChecked}
+                                label={tempDifficulty.difficulty}
+                                onChange={() => changeCheckDifficulties(tempDifficulty.level)}
+                              />
+                            </div>
+                          ))}
+                        </Form>
+                         :
                         (props.title === 'Length (meters)') ?
                             <Row className="mb-2 modal_label">
                                 <Form.Group className="mb-3">

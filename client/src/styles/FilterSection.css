@@ -31,3 +31,7 @@ h1 {
 .close-filter-label {
     cursor: pointer;
 }
+
+input[type=checkbox]:hover, label {
+    cursor: pointer;
+}

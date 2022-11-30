@@ -15,7 +15,7 @@ function HikesCards(props) {
                     || props.maxTime && h.expTime > props.maxTime
                     || props.minAscent && h.ascent < props.minAscent
                     || props.maxAscent && h.ascent > props.maxAscent
-                    || props.difficulty && h.difficulty !== props.difficulty)
+                    || !props.difficulties.find(d => d.level === parseInt(h.difficulty)).isChecked )
                         return false;
 
                     return true;
