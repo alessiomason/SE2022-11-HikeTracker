@@ -24,13 +24,10 @@ function FilterSection(props) {
                             <Button variant="success" onClick={() => { setModalShow(true); setTitle("Expected time"); setDesc("Select a specific expected time:") }}>Time</Button>
                             <Button variant="success" onClick={() => { setModalShow(true); setTitle("Ascent (meters)"); setDesc("Select a specific ascent:") }}>Ascent</Button>
                             <Button variant="success" className='btn_filter' onClick={() => { setModalShow(true); setTitle("Difficulty"); setDesc("Select a specific difficulty:") }}>Difficulty</Button>
-                            <Button variant='success' className='btn_filter' onClick={() => { setModalShow(true); setTitle("Province"); setDesc("Select a specific province:") }}>Province</Button>
-                            <Button variant='success' className='btn_filter' onClick={() => { setModalShow(true); setTitle("Municipality"); setDesc("Select a specific municipality:") }}>Municipality</Button>
+                            <Button variant='success' className='btn_filter' onClick={() => { setModalShow(true); setTitle("Address"); setDesc("Select a specific state, region, province or municipality:") }}>Address</Button>
                         </ButtonGroup>
                         <ButtonGroup size="lg" className='my-1 me-2'>
-                            <Button variant="success" className='btn_filter' onClick={() => { setModalShow(true); setTitle("Start point"); setDesc("Select a specific start point:") }}>Start point</Button>
-                            <Button variant="success" onClick={() => { setModalShow(true); setTitle("End point"); setDesc("Select a specific end point:") }}>End point</Button>
-                            <Button variant="success" className='btn_filter' onClick={() => { setModalShow(true); setTitle("Reference points"); setDesc("Select reference points:") }}>Reference points</Button>
+                            <Button variant="success" className='btn_filter' onClick={() => { setModalShow(true); setTitle("Point from map"); setDesc("Select a specific point on the map:") }}>Point from map</Button>
                         </ButtonGroup>
                         <ButtonGroup className="my-1" aria-label="Second group">
                             <Button variant="danger" onClick={() => { props.setMinLength(''); props.setMaxLength(''); props.setMinTime(''); props.setMaxTime(''); props.setMinAscent(''); props.setMaxAscent(''); props.setDifficulty(''); }}>Remove all filters</Button>
