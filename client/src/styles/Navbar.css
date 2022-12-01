@@ -2,63 +2,74 @@
     cursor: pointer;
 }
 
-.nav-links {
-    color: #fff;
-    display: flex;
-    align-items: center;
-    text-decoration: none;
-    padding: 0.5rem 1rem;
-    height: 100%;
-}
-
-.nav-links:hover {
-    border-bottom: 4px solid #fff;
-    transition: all 0.2s ease-out;
-}
-
-.nav-links-mobile {
-    display: none;
-}
-
-@media screen and (max-width: 960px) {
-    .nav-links {
-        text-align: center;
-        padding: 2rem;
-        width: 100%;
-        display: table;
-    }
-
-    .nav-links:hover {
-        background-color: #fff;
-        color: #242424;
-        border-radius: 0;
-    }
-
-    .nav-links-mobile {
-        display: block;
-        text-align: center;
-        margin: 2rem auto;
-        border-radius: 4px;
-        width: 80%;
-        text-decoration: none;
-        font-size: 1.5rem;
-        background-color: transparent;
-        color: #fff;
-        padding: 14px 20px;
-        border: 1px solid #fff;
-        transition: all 0.3s ease-out;
-    }
-
-    .nav-links-mobile:hover {
-        background: #fff;
-        color: #242424;
-        transition: 250ms;
-    }
-}
-
 .btn--outline {
     padding: 6px 12px !important;
     border: 1px solid var(--primary);
     font-weight: bold;
 }
+.button {
+    position: relative;
+    padding: 0.4em 1.5em;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    outline: none;
+    font-size: 16px;
+    font-weight: bold;
+    margin: 0em 0.4em;
+}
 
+.button.type1 {
+    color: #16a085;
+}
+
+.button.type2 {
+    color: #FF6700;
+}
+
+.button.type3 {
+    color: #4D4DFF;
+}
+
+.button.type1:after,
+.button.type1:before {
+    background-color: #16a085;
+}
+.button.type2:after,
+.button.type2:before {
+    background-color: #FF6700;
+}
+
+.button.type3:after,
+.button.type3:before {
+    background-color: #4D4DFF;
+}
+.button.type1:after,
+.button.type1:before,
+.button.type2:after,
+.button.type2:before,
+.button.type3:after,
+.button.type3:before {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    transition: all 0.3s ease;
+    transform: scale(0.85);
+}
+
+.button.type1:hover:before,
+.button.type2:hover:before,
+.button.type3:hover:before {
+    top: 0;
+    transform: scale(1);
+}
+
+.button.type1:hover:after,
+.button.type2:hover:after,
+.button.type3:hover:after {
+    transform: scale(1);
+}

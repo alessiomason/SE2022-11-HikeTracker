@@ -15,7 +15,7 @@ function FilterSection(props) {
 
       <Container fluid className='filterSection' id="hikeSec">
         <Row> 
-          <h2 class="background double"><span><img src={Hiking} alt="hiking_image" className='me-2 hike-img'/>Hikes</span></h2>
+          <h2 class="background double filter-title"><span><img src={Hiking} alt="hiking_image" className='me-2 hike-img'/>Hikes</span></h2>
         </Row>
         <Row className='mt-5'>
           <Col md="auto" sm="auto" xs="auto" >

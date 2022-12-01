@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Row, Col, Container, Button } from "react-bootstrap";
 import SingleHikeCard from './SingleHikeCard';
-import { default as Arrow } from "../icons/arrow.svg";
+import { default as Arrow } from "../icons/arrow-down.svg";
 import API from '../API.js';
 import '../styles/Cards.css';
 

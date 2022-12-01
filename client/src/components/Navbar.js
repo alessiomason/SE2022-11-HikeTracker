@@ -29,9 +29,9 @@ function MyNavbar(props) {
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="me-auto">
-            <Button variant="primary" className="mx-2" onClick={() => scrollIntoViewWithOffset("hikeSec", 40)} > Hike </Button>
-            <Button variant="secondary" className="mx-2" onClick={() => document.getElementById("hutSec", 40).scrollIntoView(true)} > Hut </Button>
-            <Button variant="warning" className="mx-2" onClick={() => document.getElementById("parkSec", 40).scrollIntoView(true)} > Parking </Button>
+            <button class="button type1" onClick={() => scrollIntoViewWithOffset("hikeSec", 40)}> Hike </button>
+            <button class="button type2" onClick={() => scrollIntoViewWithOffset("hutSec", 40)}> Hut </button>
+            <button class="button type3" onClick={() => scrollIntoViewWithOffset("parkSec", 40)}> Parking </button>
           </Nav>
           <Nav>
             {(!props.loggedIn) ?

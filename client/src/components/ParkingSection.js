@@ -1,5 +1,5 @@
 import { Container } from "react-bootstrap";
-import '../styles/SecondarySection.css';
+import '../styles/ParkingSection.css';
 
 function MyParkingSection(){
 
