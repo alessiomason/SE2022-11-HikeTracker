@@ -321,6 +321,17 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
         }
     });
 
+// DELETE All parking lots
+    app.delete('/api/deleteAllParkingLots/', async (req, res) => {
+        try {
+            await dao.deleteAllParkingLots();
+            res.status(200).end();
+        }
+        catch (err) {
+            res.status(500).json({ error: 'Database error during update of the service name.' });
+        }
+    });
+
 
 
     app.get('/api/hikesrefpoints', async (req, res) => {
