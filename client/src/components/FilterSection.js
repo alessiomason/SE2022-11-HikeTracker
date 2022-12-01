@@ -12,24 +12,24 @@ function FilterSection(props) {
   const [desc, setDesc] = useState('');
 
   const clearStates = () => {
-    props.setMinLength('');
-    props.setMaxLength('');
-    props.setMinTime('');
-    props.setMaxTime('');
-    props.setMinAscent('');
-    props.setMaxAscent('');
-    props.setDifficulties(props.difficultiesList);
-    props.setState('');
-    props.setRegion('');
-    props.setProvince('');
-    props.setMunicipality('');
+    props.setHikesMinLength('');
+    props.setHikesMaxLength('');
+    props.setHikesMinTime('');
+    props.setHikesMaxTime('');
+    props.setHikesMinAscent('');
+    props.setHikesMaxAscent('');
+    props.setHikesDifficulties(props.hikesDifficultiesList);
+    props.setHikesState('');
+    props.setHikesRegion('');
+    props.setHikesProvince('');
+    props.setHikesMunicipality('');
   }
 
   return (
 
     <Container fluid className='filterSection' id="hikeSec">
       <Row> 
-        <h2 class="background double"><span><img src={Hiking} alt="hiking_image" className='me-2 hike-img'/>Hikes</span></h2>
+        <h2 className="background double"><span><img src={Hiking} alt="hiking_image" className='me-2 hike-img'/>Hikes</span></h2>
       </Row>
       <Row className='mt-5'>
         <Col md="auto" sm="auto" xs="auto" >
@@ -51,32 +51,32 @@ function FilterSection(props) {
         </Col>
       </Row>
 
-      <MyModal show={modalShow} onHide={() => setModalShow(false)} hikes={props.hikes} title={title} desc={desc} minLength={props.minLength} setMinLength={props.setMinLength} maxLength={props.maxLength} setMaxLength={props.setMaxLength}
-        minTime={props.minTime} setMinTime={props.setMinTime} maxTime={props.maxTime} setMaxTime={props.setMaxTime} minAscent={props.minAscent} setMinAscent={props.setMinAscent} maxAscent={props.maxAscent} setMaxAscent={props.setMaxAscent}
-        difficulties={props.difficulties} setDifficulties={props.setDifficulties} state={props.state} setState={props.setState} region={props.region} setRegion={props.setRegion} province={props.province} setProvince={props.setProvince} municipality={props.municipality} setMunicipality={props.setMunicipality} startPoint={props.startPoint} setStartPoint={props.setStartPoint} refPoint={props.refPoint} setRefPoint={props.setRefPoint} endPoint={props.endPoint} setEndPoint={props.setEndPoint} />
+      <MyModal show={modalShow} onHide={() => setModalShow(false)} hikes={props.hikes} title={title} desc={desc} hikesMinLength={props.hikesMinLength} setHikesMinLength={props.setHikesMinLength} hikesMaxLength={props.hikesMaxLength} setHikesMaxLength={props.setHikesMaxLength}
+        hikesMinTime={props.hikesMinTime} setHikesMinTime={props.setHikesMinTime} hikesMaxTime={props.hikesMaxTime} setHikesMaxTime={props.setHikesMaxTime} hikesMinAscent={props.hikesMinAscent} setHikesMinAscent={props.setHikesMinAscent} hikesMaxAscent={props.hikesMaxAscent} setHikesMaxAscent={props.setHikesMaxAscent}
+        hikesDifficulties={props.hikesDifficulties} setHikesDifficulties={props.setHikesDifficulties} hikesState={props.hikesState} setHikesState={props.setHikesState} hikesRegion={props.hikesRegion} setHikesRegion={props.setHikesRegion} hikesProvince={props.hikesProvince} setHikesProvince={props.setHikesProvince} hikesMunicipality={props.hikesMunicipality} setHikesMunicipality={props.setHikesMunicipality} startPoint={props.startPoint} setStartPoint={props.setStartPoint} refPoint={props.refPoint} setRefPoint={props.setRefPoint} endPoint={props.endPoint} setEndPoint={props.setEndPoint} />
       <Row className='mt-3'>
         <ButtonToolbar aria-label="Toolbar with button groups" >
-          {props.minLength && <Button variant="info" size="sm" className='mx-2 my-1 btn_info px-2 filter-label'>Minimum length: {props.minLength} m <img src={Close} alt="close" className='ms-1 my-1 close-filter-label' onClick={() => props.setMinLength('')} /></Button>}
-          {props.maxLength && <Button variant="info" size="sm" className='mx-2 my-1 btn_info px-2 filter-label'>Maximum length: {props.maxLength} m <img src={Close} alt="close" className='ms-1 my-1 close-filter-label' onClick={() => props.setMaxLength('')} /></Button>}
-          {props.minTime && <Button variant="info" size="sm" className='mx-2 my-1 btn_info px-2 filter-label'>Minimum time: {props.minTime} h <img src={Close} alt="close" className='ms-1 my-1 close-filter-label' onClick={() => props.setMinTime('')} /></Button>}
-          {props.maxTime && <Button variant="info" size="sm" className='mx-2 my-1 btn_info px-2 filter-label'>Maximum time: {props.maxTime} h <img src={Close} alt="close" className='ms-1 my-1 close-filter-label' onClick={() => props.setMaxTime('')} /></Button>}
-          {props.minAscent && <Button variant="info" size="sm" className='mx-2 my-1 btn_info px-2 filter-label'>Minimum ascent: {props.minAscent} m <img src={Close} alt="close" className='ms-1 my-1 close-filter-label' onClick={() => props.setMinAscent('')} /></Button>}
-          {props.maxAscent && <Button variant="info" size="sm" className='mx-2 my-1 btn_info px-2 filter-label'>Maximum ascent: {props.maxAscent} m <img src={Close} alt="close" className='ms-1 my-1 close-filter-label' onClick={() => props.setMaxAscent('')} /></Button>}
-          {props.difficulties.filter(d => d.isChecked).map((d) => {
+          {props.hikesMinLength && <Button variant="info" size="sm" className='mx-2 my-1 btn_info px-2 filter-label'>Minimum length: {props.hikesMinLength} m <img src={Close} alt="close" className='ms-1 my-1 close-filter-label' onClick={() => props.setHikesMinLength('')} /></Button>}
+          {props.hikesMaxLength && <Button variant="info" size="sm" className='mx-2 my-1 btn_info px-2 filter-label'>Maximum length: {props.hikesMaxLength} m <img src={Close} alt="close" className='ms-1 my-1 close-filter-label' onClick={() => props.setHikesMaxLength('')} /></Button>}
+          {props.hikesMinTime && <Button variant="info" size="sm" className='mx-2 my-1 btn_info px-2 filter-label'>Minimum time: {props.hikesMinTime} h <img src={Close} alt="close" className='ms-1 my-1 close-filter-label' onClick={() => props.setHikesMinTime('')} /></Button>}
+          {props.hikesMaxTime && <Button variant="info" size="sm" className='mx-2 my-1 btn_info px-2 filter-label'>Maximum time: {props.hikesMaxTime} h <img src={Close} alt="close" className='ms-1 my-1 close-filter-label' onClick={() => props.setHikesMaxTime('')} /></Button>}
+          {props.hikesMinAscent && <Button variant="info" size="sm" className='mx-2 my-1 btn_info px-2 filter-label'>Minimum ascent: {props.hikesMinAscent} m <img src={Close} alt="close" className='ms-1 my-1 close-filter-label' onClick={() => props.setHikesMinAscent('')} /></Button>}
+          {props.hikesMaxAscent && <Button variant="info" size="sm" className='mx-2 my-1 btn_info px-2 filter-label'>Maximum ascent: {props.hikesMaxAscent} m <img src={Close} alt="close" className='ms-1 my-1 close-filter-label' onClick={() => props.setHikesMaxAscent('')} /></Button>}
+          {props.hikesDifficulties.filter(d => d.isChecked).map((d) => {
             return (
               <Button variant="info" size="sm" className='mx-2 my-1 btn_info px-2 filter-label' key={'difficulty-label-' + d.level}>Difficulty: {d.difficulty} <img src={Close} alt="close" className='ms-1 my-1 close-filter-label' onClick={() => {
-                let temp = [...props.difficulties];
+                let temp = [...props.hikesDifficulties];
                 const index = temp.findIndex((t) => t.level === d.level);
                 if (index === -1) return;
                 temp[index].isChecked = false;
-                props.setDifficulties(temp);
+                props.setHikesDifficulties(temp);
               }} /></Button>
             );
           })}
-          {props.state && <Button variant="info" size="sm" className='mx-2 my-1 btn_info px-2 filter-label'>State: {props.state} <img src={Close} alt="close" className='ms-1 my-1 close-filter-label' onClick={() => props.setState('')} /></Button>}
-          {props.region && <Button variant="info" size="sm" className='mx-2 my-1 btn_info px-2 filter-label'>Region: {props.region} <img src={Close} alt="close" className='ms-1 my-1 close-filter-label' onClick={() => props.setRegion('')} /></Button>}
-          {props.province && <Button variant="info" size="sm" className='mx-2 my-1 btn_info px-2 filter-label'>Province: {props.province} <img src={Close} alt="close" className='ms-1 my-1 close-filter-label' onClick={() => props.setProvince('')} /></Button>}
-          {props.municipality && <Button variant="info" size="sm" className='mx-2 my-1 btn_info px-2 filter-label'>Municipality: {props.municipality} <img src={Close} alt="close" className='ms-1 my-1 close-filter-label' onClick={() => props.setMunicipality('')} /></Button>}
+          {props.hikesState && <Button variant="info" size="sm" className='mx-2 my-1 btn_info px-2 filter-label'>State: {props.hikesState} <img src={Close} alt="close" className='ms-1 my-1 close-filter-label' onClick={() => props.setHikesState('')} /></Button>}
+          {props.hikesRegion && <Button variant="info" size="sm" className='mx-2 my-1 btn_info px-2 filter-label'>Region: {props.hikesRegion} <img src={Close} alt="close" className='ms-1 my-1 close-filter-label' onClick={() => props.setHikesRegion('')} /></Button>}
+          {props.hikesProvince && <Button variant="info" size="sm" className='mx-2 my-1 btn_info px-2 filter-label'>Province: {props.hikesProvince} <img src={Close} alt="close" className='ms-1 my-1 close-filter-label' onClick={() => props.setHikesProvince('')} /></Button>}
+          {props.hikesMunicipality && <Button variant="info" size="sm" className='mx-2 my-1 btn_info px-2 filter-label'>Municipality: {props.hikesMunicipality} <img src={Close} alt="close" className='ms-1 my-1 close-filter-label' onClick={() => props.setHikesMunicipality('')} /></Button>}
 
         </ButtonToolbar>
       </Row>
@@ -90,17 +90,17 @@ function MyModal(props) {
   const [startPoints, setStartPoints] = useState([]);
   const [endPoints, setEndPoints] = useState([]);
   const [refPoints, setRefPoints] = useState([]);
-  const [tempMinLength, setTempMinLength] = useState(props.minLength);
-  const [tempMaxLength, setTempMaxLength] = useState(props.maxLength);
-  const [tempMinTime, setTempMinTime] = useState(props.minTime);
-  const [tempMaxTime, setTempMaxTime] = useState(props.maxTime);
-  const [tempMinAscent, setTempMinAscent] = useState(props.minAscent);
-  const [tempMaxAscent, setTempMaxAscent] = useState(props.maxAscent);
-  const [tempDifficulties, setTempDifficulties] = useState(props.difficulties);
-  const [tempState, setTempState] = useState(props.state);
-  const [tempRegion, setTempRegion] = useState(props.region);
-  const [tempProvince, setTempProvince] = useState(props.province);
-  const [tempMunicipality, setTempMunicipality] = useState(props.municipality);
+  const [tempHikesMinLength, setTempHikesMinLength] = useState(props.hikesMinLength);
+  const [tempHikesMaxLength, setTempHikesMaxLength] = useState(props.hikesMaxLength);
+  const [tempHikesMinTime, setTempHikesMinTime] = useState(props.hikesMinTime);
+  const [tempHikesMaxTime, setTempHikesMaxTime] = useState(props.hikesMaxTime);
+  const [tempHikesMinAscent, setTempHikesMinAscent] = useState(props.hikesMinAscent);
+  const [tempHikesMaxAscent, setTempHikesMaxAscent] = useState(props.hikesMaxAscent);
+  const [tempHikesDifficulties, setTempHikesDifficulties] = useState(props.hikesDifficulties);
+  const [tempHikesState, setTempHikesState] = useState(props.hikesState);
+  const [tempHikesRegion, setTempHikesRegion] = useState(props.hikesRegion);
+  const [tempHikesProvince, setTempHikesProvince] = useState(props.hikesProvince);
+  const [tempHikesMunicipality, setTempHikesMunicipality] = useState(props.hikesMunicipality);
 
   useEffect(() => {
     API.getStartPoint()
@@ -121,50 +121,50 @@ function MyModal(props) {
   }, []);
 
   const clearTempStates = () => {
-    setTempMinLength(props.minLength);
-    setTempMaxLength(props.maxLength);
-    setTempMinTime(props.minTime);
-    setTempMaxTime(props.maxTime);
-    setTempMinAscent(props.minAscent);
-    setTempMaxAscent(props.maxAscent);
-    setTempDifficulties(props.difficulties);
-    setTempState(props.state);
-    setTempRegion(props.region);
-    setTempProvince(props.province);
-    setTempMunicipality(props.municipality);
+    setTempHikesMinLength(props.hikesMinLength);
+    setTempHikesMaxLength(props.hikesMaxLength);
+    setTempHikesMinTime(props.hikesMinTime);
+    setTempHikesMaxTime(props.hikesMaxTime);
+    setTempHikesMinAscent(props.hikesMinAscent);
+    setTempHikesMaxAscent(props.hikesMaxAscent);
+    setTempHikesDifficulties(props.hikesDifficulties);
+    setTempHikesState(props.hikesState);
+    setTempHikesRegion(props.hikesRegion);
+    setTempHikesProvince(props.hikesProvince);
+    setTempHikesMunicipality(props.hikesMunicipality);
   }
 
   const changeCheckDifficulties = (level) => {
-    let temp = [...tempDifficulties];
+    let temp = [...tempHikesDifficulties];
     const index = temp.findIndex((t) => t.level === level);
     if (index === -1) return;
     temp[index].isChecked = !temp[index].isChecked;
-    setTempDifficulties(temp);
+    setTempHikesDifficulties(temp);
   };
 
   const confirmButton = () => {
     if (props.title == 'Difficulty')
-      props.setDifficulties(tempDifficulties);
-    if (props.title == 'Length (meters)' && tempMinLength !== props.minLength)
-      props.setMinLength(tempMinLength);
-    if (props.title == 'Length (meters)' && tempMaxLength !== props.maxLength)
-      props.setMaxLength(tempMaxLength);
-    if (props.title == 'Expected time' && tempMinTime !== props.minTime)
-      props.setMinTime(tempMinTime);
-    if (props.title == 'Expected time' && tempMaxTime !== props.maxTime)
-      props.setMaxTime(tempMaxTime);
-    if (props.title == 'Ascent (meters)' && tempMinAscent !== props.minAscent)
-      props.setMinAscent(tempMinAscent);
-    if (props.title == 'Ascent (meters)' && tempMaxAscent !== props.maxAscent)
-      props.setMaxAscent(tempMaxAscent);
-    if (props.title == 'Location' && tempState !== props.state)
-      props.setState(tempState);
-    if (props.title == 'Location' && tempRegion !== props.region)
-      props.setRegion(tempRegion);
-    if (props.title == 'Location' && tempProvince !== props.province)
-      props.setProvince(tempProvince);
-    if (props.title == 'Location' && tempMunicipality !== props.municipality)
-      props.setMunicipality(tempMunicipality);
+      props.setHikesDifficulties(tempHikesDifficulties);
+    if (props.title == 'Length (meters)' && tempHikesMinLength !== props.hikesMinLength)
+      props.setHikesMinLength(tempHikesMinLength);
+    if (props.title == 'Length (meters)' && tempHikesMaxLength !== props.hikesMaxLength)
+      props.setHikesMaxLength(tempHikesMaxLength);
+    if (props.title == 'Expected time' && tempHikesMinTime !== props.hikesMinTime)
+      props.setHikesMinTime(tempHikesMinTime);
+    if (props.title == 'Expected time' && tempHikesMaxTime !== props.hikesMaxTime)
+      props.setHikesMaxTime(tempHikesMaxTime);
+    if (props.title == 'Ascent (meters)' && tempHikesMinAscent !== props.hikesMinAscent)
+      props.setHikesMinAscent(tempHikesMinAscent);
+    if (props.title == 'Ascent (meters)' && tempHikesMaxAscent !== props.hikesMaxAscent)
+      props.setHikesMaxAscent(tempHikesMaxAscent);
+    if (props.title == 'Location' && tempHikesState !== props.hikesState)
+      props.setHikesState(tempHikesState);
+    if (props.title == 'Location' && tempHikesRegion !== props.hikesRegion)
+      props.setHikesRegion(tempHikesRegion);
+    if (props.title == 'Location' && tempHikesProvince !== props.hikesProvince)
+      props.setHikesProvince(tempHikesProvince);
+    if (props.title == 'Location' && tempHikesMunicipality !== props.hikesMunicipality)
+      props.setHikesMunicipality(tempHikesMunicipality);
   }
 
   return (
@@ -180,14 +180,14 @@ function MyModal(props) {
         <Container>
           {(props.title == "Difficulty") ?
             <Form>
-              {tempDifficulties.map((tempDifficulty) => (
-                <div key={`difficulty-${tempDifficulty.level}`} className="mb-3">
+              {tempHikesDifficulties.map((tempHikesDifficulty) => (
+                <div key={`difficulty-${tempHikesDifficulty.level}`} className="mb-3">
                   <Form.Check
                     type='checkbox'
-                    id={'difficulty-' + tempDifficulty.level}
-                    checked={tempDifficulty.isChecked}
-                    label={tempDifficulty.difficulty}
-                    onChange={() => changeCheckDifficulties(tempDifficulty.level)}
+                    id={'difficulty-' + tempHikesDifficulty.level}
+                    checked={tempHikesDifficulty.isChecked}
+                    label={tempHikesDifficulty.difficulty}
+                    onChange={() => changeCheckDifficulties(tempHikesDifficulty.level)}
                   />
                 </div>
               ))}
@@ -198,36 +198,36 @@ function MyModal(props) {
                 <Form.Group className="mb-3">
                   <Form.Label>Enter min length (in meters)</Form.Label>
                   <Form.Control type="number" placeholder="Min"
-                    value={tempMinLength} onChange={event => setTempMinLength(event.target.value)} />
+                    value={tempHikesMinLength} onChange={event => setTempHikesMinLength(event.target.value)} />
                   <Form.Label>Enter max length (in meters)</Form.Label>
                   <Form.Control type="number" placeholder="Max"
-                    value={tempMaxLength} onChange={event => setTempMaxLength(event.target.value)} />
+                    value={tempHikesMaxLength} onChange={event => setTempHikesMaxLength(event.target.value)} />
                 </Form.Group>
               </Row> :
               (props.title === 'Expected time') ?
                 <Row className="mb-2 modal_label">
                   <Form.Label>Enter min time (in hours)</Form.Label>
                   <Form.Control type="number" placeholder="Min"
-                    value={tempMinTime} onChange={event => setTempMinTime(event.target.value)} />
+                    value={tempHikesMinTime} onChange={event => setTempHikesMinTime(event.target.value)} />
                   <Form.Label>Enter max time (in hours)</Form.Label>
                   <Form.Control type="number" placeholder="Max"
-                    value={tempMaxTime} onChange={event => setTempMaxTime(event.target.value)} />
+                    value={tempHikesMaxTime} onChange={event => setTempHikesMaxTime(event.target.value)} />
                 </Row> :
                 (props.title == 'Ascent (meters)') ?
                   <Row className="mb-2 modal_label">
                     <Form.Label>Enter min ascent (in meters)</Form.Label>
                     <Form.Control type="number" placeholder="Min"
-                      value={tempMinAscent} onChange={event => setTempMinAscent(event.target.value)} />
+                      value={tempHikesMinAscent} onChange={event => setTempHikesMinAscent(event.target.value)} />
                     <Form.Label>Enter max ascent (in meters)</Form.Label>
                     <Form.Control type="number" placeholder="Max"
-                      value={tempMaxAscent} onChange={event => setTempMaxAscent(event.target.value)} />
+                      value={tempHikesMaxAscent} onChange={event => setTempHikesMaxAscent(event.target.value)} />
                   </Row> :
                   (props.title == 'Location') ?
                     <Container>
                       <Row className="align-items-center">
                         <Col md={3} ><Form.Label>State</Form.Label></Col>
                         <Col>
-                          <Form.Select className="my-3" aria-label="Select a state" value={tempState} onChange={event => setTempState(event.target.value)} >
+                          <Form.Select className="my-3" aria-label="Select a state" value={tempHikesState} onChange={event => setTempHikesState(event.target.value)} >
                             <option>Select a state</option>
                             {props.hikes.filter(h => h.state).map(h => <option value={h.state}>{h.state}</option>)}
                           </Form.Select>
@@ -236,12 +236,12 @@ function MyModal(props) {
                       <Row className="align-items-center">
                         <Col md={3} ><Form.Label>Region</Form.Label></Col>
                         <Col>
-                          <Form.Select className="my-3" aria-label="Select a region" value={tempRegion} onChange={event => setTempRegion(event.target.value)} >
+                          <Form.Select className="my-3" aria-label="Select a region" value={tempHikesRegion} onChange={event => setTempHikesRegion(event.target.value)} >
                             <option>Select a region</option>
                             {props.hikes.filter(h => {
                               let showRegion = true;
                               // only show the regions in the selected state
-                              if (tempState !== '') showRegion = h.state === tempState;
+                              if (tempHikesState !== '') showRegion = h.hikesState === tempHikesState;
                               return showRegion && h.region;  // only create option from hikes that have a region
                             }).map(h => <option value={h.region}>{h.region}</option>)}
                           </Form.Select>
@@ -250,13 +250,13 @@ function MyModal(props) {
                       <Row className="align-items-center">
                         <Col md={3} ><Form.Label>Province</Form.Label></Col>
                         <Col>
-                          <Form.Select className="my-3" aria-label="Select a province" value={tempProvince} onChange={event => setTempProvince(event.target.value)} >
+                          <Form.Select className="my-3" aria-label="Select a province" value={tempHikesProvince} onChange={event => setTempHikesProvince(event.target.value)} >
                             <option>Select a province</option>
                             {props.hikes.filter(h => {
                               // only show the provinces in the selected region and state
                               let showProvince = true;
-                              if (tempState !== '') showProvince = h.state === tempState;
-                              if (tempRegion !== '') showProvince = showProvince && h.region === tempRegion;
+                              if (tempHikesState !== '') showProvince = h.hikesState === tempHikesState;
+                              if (tempHikesRegion !== '') showProvince = showProvince && h.region === tempHikesRegion;
                               return showProvince && h.province;  // only create option from hikes that have a province
                             }).map(h => <option value={h.province}>{h.province}</option>)}
                           </Form.Select>
@@ -265,14 +265,14 @@ function MyModal(props) {
                       <Row className="align-items-center">
                         <Col md={3} ><Form.Label>Municipality</Form.Label></Col>
                         <Col>
-                          <Form.Select className="my-3" aria-label="Select a municipality" value={tempMunicipality} onChange={event => setTempMunicipality(event.target.value)} >
+                          <Form.Select className="my-3" aria-label="Select a municipality" value={tempHikesMunicipality} onChange={event => setTempHikesMunicipality(event.target.value)} >
                             <option>Select a municipality</option>
                             {props.hikes.filter(h => {
                               // only show the municipalities in the selected province, region and state
                               let showMunicipality = true;
-                              if (tempState !== '') showMunicipality = h.state === tempState;
-                              if (tempRegion !== '') showMunicipality = showMunicipality && h.region === tempRegion;
-                              if (tempProvince !== '') showMunicipality = showMunicipality && h.province === tempProvince;
+                              if (tempHikesState !== '') showMunicipality = h.hikesState === tempHikesState;
+                              if (tempHikesRegion !== '') showMunicipality = showMunicipality && h.region === tempHikesRegion;
+                              if (tempHikesProvince !== '') showMunicipality = showMunicipality && h.province === tempHikesProvince;
                               return showMunicipality && h.municipality;  // only create option from hikes that have a municipality
                             }).map(h => <option value={h.municipality}>{h.municipality}</option>)}
                           </Form.Select>

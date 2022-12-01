@@ -9,18 +9,17 @@ function HikesCards(props) {
         <Container fluid className="cards p-5">
             <Row className='mb-3 box_centered'>
                 {props.hikes.filter(h => {
-                    console.log(props.province && h.province !== props.province)
-                    if (props.minLength && h.length < props.minLength
-                    || props.maxLength && h.length > props.maxLength
-                    || props.minTime && h.expTime < props.minTime
-                    || props.maxTime && h.expTime > props.maxTime
-                    || props.minAscent && h.ascent < props.minAscent
-                    || props.maxAscent && h.ascent > props.maxAscent
-                    || !props.difficulties.find(d => d.level === parseInt(h.difficulty)).isChecked
-                    || props.state && h.state !== props.state
-                    || props.region && h.region !== props.region
-                    || props.province && h.province !== props.province
-                    || props.municipality && h.municipality !== props.municipality )
+                    if (props.hikesMinLength && h.length < props.hikesMinLength
+                    || props.hikesMaxLength && h.length > props.hikesMaxLength
+                    || props.hikesMinTime && h.expTime < props.hikesMinTime
+                    || props.hikesMaxTime && h.expTime > props.hikesMaxTime
+                    || props.hikesMinAscent && h.ascent < props.hikesMinAscent
+                    || props.hikesMaxAscent && h.ascent > props.hikesMaxAscent
+                    || !props.hikesDifficulties.find(d => d.level === parseInt(h.difficulty)).isChecked
+                    || props.hikesState && h.state !== props.hikesState
+                    || props.hikesRegion && h.region !== props.hikesRegion
+                    || props.hikesProvince && h.province !== props.hikesProvince
+                    || props.hikesMunicipality && h.municipality !== props.hikesMunicipality )
                         return false;
 
                     return true;
