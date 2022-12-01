@@ -1,8 +1,7 @@
-import HikesCards from '../HikeCards';
 import MyTopHome from '../TopHome';
+import MyHikesSection from '../HikesSection';
 import MyHutSection from '../HutSection';
 import MyParkingSection from '../ParkingSection';
-import MyFilterSection from '../FilterSection';
 import MyModalLogin from '../ModalLogin';
 import MyModalSignup from '../ModalSignup';
 import ScrollToTop from '../ScrollToTop';
@@ -10,7 +9,7 @@ import '../../App.css';
 import React, { useState, useEffect } from 'react';
 import API from '../../API.js';
 
-function Home(props, ref) {
+function Home(props) {
 
     // filters
     const hikesDifficultiesList = [
@@ -62,12 +61,9 @@ function Home(props, ref) {
       <MyTopHome setShowEmailAlert={props.setShowEmailAlert} showEmailAlert={props.showEmailAlert} />
       <MyModalLogin setShowLogin={props.setShowLogin} showLogin={props.showLogin} user={props.user} loggedIn={props.loggedIn} doLogin={props.doLogin} message={props.message} setMessage={props.setMessage} />
       <MyModalSignup setShowEmailAlert={props.setShowEmailAlert} setShowSignup={props.setShowSignup} showSignup={props.showSignup} setMessage={props.setMessage} doSignUp={props.doSignUp} message={props.message} />
-      <MyFilterSection hikes={hikes} hikesMinLength={hikesMinLength} setHikesMinLength={setHikesMinLength} hikesMaxLength={hikesMaxLength} setHikesMaxLength={setHikesMaxLength} hikesMinTime={hikesMinTime} setHikesMinTime={setHikesMinTime} hikesMaxTime={hikesMaxTime} setHikesMaxTime={setHikesMaxTime}
+      <MyHikesSection user={props.user} hikes={hikes} hikesMinLength={hikesMinLength} setHikesMinLength={setHikesMinLength} hikesMaxLength={hikesMaxLength} setHikesMaxLength={setHikesMaxLength} hikesMinTime={hikesMinTime} setHikesMinTime={setHikesMinTime} hikesMaxTime={hikesMaxTime} setHikesMaxTime={setHikesMaxTime}
         hikesMinAscent={hikesMinAscent} setHikesMinAscent={setHikesMinAscent} hikesMaxAscent={hikesMaxAscent} setHikesMaxAscent={setHikesMaxAscent} hikesDifficulties={hikesDifficulties} setHikesDifficulties={setHikesDifficulties} hikesDifficultiesList={hikesDifficultiesList}
         hikesState={hikesState} setHikesState={setHikesState} hikesRegion={hikesRegion} setHikesRegion={setHikesRegion} hikesProvince={hikesProvince} setHikesProvince={setHikesProvince} hikesMunicipality={hikesMunicipality} setHikesMunicipality={setHikesMunicipality} />
-      <HikesCards user={props.user} hikesMinLength={hikesMinLength} hikesMaxLength={hikesMaxLength} hikesMinTime={hikesMinTime} hikesMaxTime={hikesMaxTime} hikesMinAscent={hikesMinAscent} hikesMaxAscent={hikesMaxAscent} hikesDifficulties={hikesDifficulties}
-        hikesState={hikesState} hikesRegion={hikesRegion} hikesProvince={hikesProvince} hikesMunicipality={hikesMunicipality}
-        hikes={hikes} />
       <MyHutSection />
       <MyParkingSection   />
 

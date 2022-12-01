@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Button, ListGroup, Modal, Col, Row, Form, Container, ButtonToolbar, ButtonGroup } from "react-bootstrap";
+import { Button, Modal, Col, Row, Form, Container, ButtonToolbar, ButtonGroup } from "react-bootstrap";
 import '../styles/FilterSection.css';
 import { default as Close } from '../icons/close.svg';
 import API from '../API.js';
 import { default as Hiking } from '../icons/hiking.svg';
 
-function FilterSection(props) {
+function HikesFilters(props) {
 
   const [modalShow, setModalShow] = useState(false);
   const [title, setTitle] = useState('');
@@ -298,4 +298,4 @@ function MyModal(props) {
   );
 }
 
-export default FilterSection;
+export default HikesFilters;
