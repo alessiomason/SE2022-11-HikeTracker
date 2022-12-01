@@ -25,6 +25,19 @@ h1 {
     border-radius: 20px;
 }
 
+.filter-label {
+    cursor: default !important;
+}
+
+.close-filter-label {
+    cursor: pointer;
+}
+
+input[type=checkbox]:hover,
+.form-check-label {
+    cursor: pointer;
+}
+
  .hike-img{
     vertical-align: baseline ;
  }

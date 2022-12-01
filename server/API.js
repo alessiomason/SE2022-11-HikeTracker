@@ -7,6 +7,7 @@ dayjs.extend(duration);
 const nodemailer = require('nodemailer');
 require('dotenv').config();
 
+// from https://stackoverflow.com/questions/639695/how-to-convert-latitude-or-longitude-to-meters
 function coordinatesDistanceInMeter(lat1, lon1, lat2, lon2) {  // generally used geo measurement function
     const R = 6378.137; // Radius of earth in KM
     const dLat = lat2 * Math.PI / 180 - lat1 * Math.PI / 180;
@@ -313,6 +314,17 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
         const ParkingID = req.params.id;
         try {
             await dao.deleteParking(ParkingID);
+            res.status(200).end();
+        }
+        catch (err) {
+            res.status(500).json({ error: 'Database error during update of the service name.' });
+        }
+    });
+
+// DELETE All parking lots
+    app.delete('/api/deleteAllParkingLots/', async (req, res) => {
+        try {
+            await dao.deleteAllParkingLots();
             res.status(200).end();
         }
         catch (err) {

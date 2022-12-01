@@ -214,6 +214,20 @@ exports.getParkingById = (id) => {
         });
     });
 }
+
+exports.getLastPArkingLotId = () => {
+    return new Promise((resolve, reject) => {
+        const sql = 'SELECT * FROM ParkingLots ORDER BY ParkingID DESC LIMIT 1';
+        db.get(sql, [], (err, row) => {
+            if (err) reject(err);
+            let parking;
+            if (row === undefined) parking = { id: 0 }
+            else parking = { id: row.ParkingID }
+
+            resolve(parking.id);
+        });
+    });
+}
 //Add new parking lot
 exports.addParking = (Label,Province,Municipality,Description,Lat,Lon,Altitude,Total, Occupied) => {
     return new Promise((resolve, reject) => {
@@ -245,6 +259,16 @@ exports.deleteParking = (ParkingID) => {
     });
 };
 
+
+//Delete all parking lots
+exports.deleteAllParkingLots = () => {
+    return new Promise((resolve, reject) => {
+        db.run("DELETE FROM PARKINGLOTS ", [], (err) => {
+            if (err) reject(err);
+            else resolve(null);
+        });
+    });
+};
 
 exports.getHikesRefPoints = () => {
     return new Promise((resolve, reject) => {
