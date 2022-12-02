@@ -417,7 +417,7 @@ async function getUserAccessRight() {
 
 // external APIs
 async function reverseNominatim(latitude, longitude) {
-    const response = await fetch(new URL(`https://nominatim.openstreetmap.org/reverse?format=json&zoom=10&lat=${latitude}&lon=${longitude}`));
+    const response = await fetch(new URL(`https://nominatim.openstreetmap.org/reverse?format=json&accept-language=en&zoom=10&lat=${latitude}&lon=${longitude}`));
     const reverseNom = await response.json();
     if (response.ok)
         return reverseNom;

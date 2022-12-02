@@ -68,7 +68,7 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
                         length = 0;
                         lat_prev = pointsArray[i][1];
                         lon_prev = pointsArray[i][0];
-                        const response = await fetch(new URL(`https://nominatim.openstreetmap.org/reverse?format=json&zoom=10&lat=${pointsArray[i][1]}&lon=${pointsArray[i][0]}`));
+                        const response = await fetch(new URL(`https://nominatim.openstreetmap.org/reverse?format=json&accept-language=en&zoom=10&lat=${pointsArray[i][1]}&lon=${pointsArray[i][0]}`));
                         const reverseNom = await response.json();
                         if (response.ok) {
                             state = reverseNom.address.country;
