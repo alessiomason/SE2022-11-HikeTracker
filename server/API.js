@@ -41,6 +41,10 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
 
             let label = element.properties.name;
             let desc = element.properties.desc;
+            let state = '';
+            let region = '';
+            let province = '';
+            let municipality = '';
             const hikeID = await dao.getLastHikeID() + 1;
             let startPointElev = null;
             let endPointElev = null;
@@ -53,7 +57,6 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
                 } else {
                     coordinatesArray.push(req.body.features[j]);
                 }
-
             }
 
             for (let k = 0; k < coordinatesArray.length; k++) {
@@ -65,22 +68,30 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
                         length = 0;
                         lat_prev = pointsArray[i][1];
                         lon_prev = pointsArray[i][0];
+                        const response = await fetch(new URL(`https://nominatim.openstreetmap.org/reverse?format=json&zoom=10&lat=${pointsArray[i][1]}&lon=${pointsArray[i][0]}`));
+                        const reverseNom = await response.json();
+                        if (response.ok) {
+                            state = reverseNom.address.country;
+                            region = reverseNom.address.state;
+                            province = reverseNom.address.county;
+                            municipality = reverseNom.address.city || reverseNom.address.town || reverseNom.address.village;
+                        }
                     } else if (i == (pointsArray.length - 1) & k == (coordinatesArray.length - 1)) { ///ultimo punto
                         await dao.addPoint(hikeID, pointsArray[i][1], pointsArray[i][0], pointsArray[i][2], 0, 1, 0, "");
                         endPointElev = pointsArray[i][2];
                         length += coordinatesDistanceInMeter(lat_prev, lon_prev, pointsArray[i][1], pointsArray[i][0]);
                     } else {
                         await dao.addPoint(hikeID, pointsArray[i][1], pointsArray[i][0], pointsArray[i][2], 0, 0, 0, ""); //lat and lon in the json representation are swapped
-                     
-                        if(i==0){
-                        let prevArray=coordinatesArray[k-1].geometry.coordinates;
-                        lat_prev = prevArray[prevArray.length-1][1];
-                        lon_prev = prevArray[prevArray.length-1][0];
-                        }else{                           
-                        lat_prev = pointsArray[i-1][1];
-                        lon_prev = pointsArray[i-1][0];
+
+                        if (i == 0) {
+                            let prevArray = coordinatesArray[k - 1].geometry.coordinates;
+                            lat_prev = prevArray[prevArray.length - 1][1];
+                            lon_prev = prevArray[prevArray.length - 1][0];
+                        } else {
+                            lat_prev = pointsArray[i - 1][1];
+                            lon_prev = pointsArray[i - 1][0];
                         }
-                        
+
                         length += coordinatesDistanceInMeter(lat_prev, lon_prev, pointsArray[i][1], pointsArray[i][0]);
                     }
                 }
@@ -95,7 +106,7 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
             // let endPoint = await dao.getEndPointOfHike(hikeID);
             let ascent = endPointElev - startPointElev;
             // const length = measure(startPoint.lat, startPoint.lon, endPoint.lat, endPoint.lon);
-            await dao.addHike(label, length, null, ascent, null, desc, null, null);
+            await dao.addHike(label, length, null, ascent, null, desc, state, region, province, municipality);
             let hike = await dao.getHike(hikeID)
             res.status(201).json(hike).end();
         } catch (err) {
@@ -119,10 +130,12 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
             const lon = req.body.lon;
             const altitude = req.body.altitude;
             const beds = req.body.beds;
+            const state = req.body.state;
+            const region = req.body.region;
             const province = req.body.province;
             const municipality = req.body.municipality;
 
-            const hut = await dao.addHut(name, description, lat, lon, altitude, beds, province, municipality);
+            const hut = await dao.addHut(name, description, lat, lon, altitude, beds, state, region, province, municipality);
             res.status(201).json(hut).end();
         } catch (err) {
             console.log(err)
@@ -185,10 +198,12 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
                 let lon = req.body.lon;
                 let altitude = req.body.altitude;
                 let beds = req.body.beds;
+                let state = req.body.state;
+                let region = req.body.region;
                 let province = req.body.province;
                 let municipality = req.body.municipality;
 
-                const huts = await dao.updateHut(name, description, lat, lon, altitude, beds, province, municipality, hutId);
+                const huts = await dao.updateHut(name, description, lat, lon, altitude, beds, state, region, province, municipality, hutId);
                 res.status(201).json(huts).end();
             }
         } catch (err) {
@@ -238,7 +253,7 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
         }
     });
 
-    
+
     // GET a specific parking lot
     app.get('/api/parkingLots/:id', async (req, res) => {
         try {
@@ -259,6 +274,8 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
 
         try {
             const label = req.body.label;
+            const state = req.body.state;
+            const region = req.body.region;
             const province = req.body.province;
             const municipality = req.body.municipality;
             const description = req.body.description;
@@ -268,7 +285,7 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
             const total = req.body.total;
             const occupied = req.body.occupied;
 
-            const parking = await dao.addParking(label,province,municipality,description,lat,lon,altitude,total,occupied);
+            const parking = await dao.addParking(label, state, region, province, municipality, description, lat, lon, altitude, total, occupied);
             res.status(201).json(parking).end();
         } catch (err) {
             console.log(err)
@@ -278,38 +295,40 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
     });
 
     //update parking 
-    app.put('/api/parkingLots/:id',  async (req, res) => {
+    app.put('/api/parkingLots/:id', async (req, res) => {
 
         const errors = validationResult(req);
-		if (!errors.isEmpty()) {
-			return res.status(422).json({ errors: errors.array() });
-		}
+        if (!errors.isEmpty()) {
+            return res.status(422).json({ errors: errors.array() });
+        }
 
         // check if the id of the parking lot is empty 
-		if (req.body.parkingID === ''){
-			return res.status(422).json({ error: `Insert the id of a parking lot that you want to update.`});
-		}
-         parkingID = req.params.id;
-         label = req.body.label;
-         province = req.body.province;
-         municipality = req.body.municipality;
-         description = req.body.description;
-         lat = req.body.lat;
-         lon = req.body.lon;
-         altitude = req.body.altitude;
-         total = req.body.total;
-         occupied = req.body.occupied;
-                
+        if (req.body.parkingID === '') {
+            return res.status(422).json({ error: `Insert the id of a parking lot that you want to update.` });
+        }
+        parkingID = req.params.id;
+        label = req.body.label;
+        state = req.body.state;
+        region = req.body.region;
+        province = req.body.province;
+        municipality = req.body.municipality;
+        description = req.body.description;
+        lat = req.body.lat;
+        lon = req.body.lon;
+        altitude = req.body.altitude;
+        total = req.body.total;
+        occupied = req.body.occupied;
+
         try {
-            const parking = await dao.updateParking(label,province,municipality,description,lat,lon,altitude,total,occupied,parkingID);
+            const parking = await dao.updateParking(label, state, region, province, municipality, description, lat, lon, altitude, total, occupied, parkingID);
             res.status(201).json(parking).end();
         } catch (err) {
-        
-            res.status(500).json({ error: `Database error during update of the service name.`});
+
+            res.status(500).json({ error: `Database error during update of the service name.` });
         }
-        
+
     });
-// DELETE parking lot
+    // DELETE parking lot
     app.delete('/api/parkingLots/:id', async (req, res) => {
         const ParkingID = req.params.id;
         try {
@@ -321,7 +340,7 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
         }
     });
 
-// DELETE All parking lots
+    // DELETE All parking lots
     app.delete('/api/deleteAllParkingLots/', async (req, res) => {
         try {
             await dao.deleteAllParkingLots();
@@ -450,10 +469,12 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
                     difficulty_level = 3;
 
                 let description = req.body.description;
+                let state = req.body.state;
+                let region = req.body.region;
                 let province = req.body.province;
                 let municipality = req.body.municipality;
 
-                const hikes = await dao.updateHike(label, length, expTime, ascent, difficulty_level, description, province, municipality, hikeId);
+                const hikes = await dao.updateHike(label, length, expTime, ascent, difficulty_level, description, state, region, province, municipality, hikeId);
                 res.status(201).json(hikes).end();
             }
         } catch (err) {
@@ -464,7 +485,7 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
 
 
     //GET StartPoint (for filters)
-    
+
     app.get('/api/startPoint', async (req, res) => {
         try {
             const sp = await dao.getStartPoint();
@@ -476,7 +497,7 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
     });
 
     //GET EndPoint (for filters)
-    
+
     app.get('/api/endPoint', async (req, res) => {
         try {
             const ep = await dao.getEndPoint();
@@ -488,7 +509,7 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
     });
 
     //GET ReferncePoint (for filters)
-    
+
     app.get('/api/referencePoint', async (req, res) => {
         try {
             const rp = await dao.getReferencePoint();

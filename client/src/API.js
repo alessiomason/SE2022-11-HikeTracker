@@ -58,9 +58,8 @@ function addParkingLot(pl) {
                 'Content-Type': 'application/json',
             },
 
-
             body: JSON.stringify({
-                label: pl.label, description: pl.description, province: pl.province,
+                label: pl.label, description: pl.description, state: pl.state, region: pl.region, province: pl.province,
                 municipality: pl.municipality, lat: pl.lat, lon: pl.lon, altitude: pl.altitude,
                 total: pl.total, occupied: pl.occupied
             }),
@@ -88,7 +87,6 @@ function addHut(hut) {
                 'Content-Type': 'application/json',
             },
 
-
             body: JSON.stringify({
                 name: hut.name,
                 description: hut.description,
@@ -96,6 +94,8 @@ function addHut(hut) {
                 lon: hut.lon,
                 altitude: hut.altitude,
                 beds: hut.beds,
+                state: hut.state,
+                region: hut.region,
                 province: hut.province,
                 municipality: hut.municipality
             }),
@@ -187,7 +187,7 @@ async function getHikes() {
     const response = await fetch(new URL('hikes', APIURL));
     const hikes = await response.json();
     if (response.ok)
-        return hikes.map((h) => ({ id: h.id, label: h.label, length: h.length, expTime: h.expTime, ascent: h.ascent, difficulty: h.difficulty, description: h.description, province: h.province, municipality: h.municipality }))
+        return hikes.map((h) => ({ id: h.id, label: h.label, length: h.length, expTime: h.expTime, ascent: h.ascent, difficulty: h.difficulty, description: h.description, state: h.state, region: h.region, province: h.province, municipality: h.municipality }))
     else throw hikes;
 }
 
@@ -198,7 +198,7 @@ async function getParkingLots() {
     if (response.ok)
         return pls.map((pl) => ({
             id: pl.id, label: pl.label,
-            description: pl.description, province: pl.province, municipality: pl.municipality,
+            description: pl.description, state:pl.state, region: pl.region, province: pl.province, municipality: pl.municipality,
             lat: pl.lat, lon: pl.lon, altitude: pl.altitude,
             total: pl.total, occupied: pl.occupied
         }))
@@ -218,6 +218,8 @@ async function getHuts() {
             lon: h.lon,
             altitude: h.altitude,
             beds: h.beds,
+            state: h.state,
+            region: h.region,
             province: h.province,
             municipality: h.municipality
         }))
@@ -261,8 +263,6 @@ async function getReferencePoint() {
     else throw referencePoint;
 }
 
-
-
 async function getHike(id) {
     // call /api/hike
     const response = await fetch(new URL('hike/' + id, APIURL));
@@ -276,13 +276,14 @@ async function getHike(id) {
             ascent: hike.ascent,
             difficulty: hike.difficulty,
             description: hike.description,
+            state: hike.state,
+            region: hike.region,
             province: hike.province,
             municipality: hike.municipality,
             points: hike.points
         });
     else throw hike;
 }
-
 
 function deleteHike(id) {
     // call: DELETE /api/hikes/:id
