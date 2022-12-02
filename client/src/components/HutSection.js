@@ -120,14 +120,6 @@ function Card() {
     ],
   };
 
-  const renderTooltip = (props) => (
-    <Tooltip id="button-tooltip" {...props}>
-      Simple tooltip
-    </Tooltip>
-  );
-  const [show, setShow] = useState(false);
-  const target = useRef(null);
-
   return (
     <div className="hutCardBox">
       <Slider {...settings}>

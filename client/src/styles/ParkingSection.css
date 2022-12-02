@@ -1,5 +1,116 @@
 
-.prova2{
-    height: 80vh;
-    background-color: red;
-}
+.parkingSection {
+    padding-top: 4rem;
+    padding-bottom: 2rem;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .parking-card {
+    border: 3px solid #4D4DFF;
+    background: white;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    height: 300px;
+    color: black;
+    cursor: pointer;
+    display: block;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 2);
+
+  }
+
+ .parking-card:hover {
+    box-shadow: 0 0 8px 2px #3434f5;
+  }
+
+  .parkingCardSection {
+    padding-bottom: 2rem;
+    background: #fff;
+    padding-bottom: 60px;
+    /*border-bottom: 2px solid #4D4DFF ;*/
+  }
+
+  
+.parking-title {
+    width: 600px !important;
+    font-weight: bold;
+    font-size: 50px;
+    font-style: italic;
+    color: #4D4DFF;
+    text-align: center;
+    text-transform: uppercase;
+  }
+  
+  .parking-title.background {
+    position: relative;
+    z-index: 1;
+  }
+  
+  .parking-title.background span {
+    background: #fff;
+    padding: 0 15px;
+  }
+  
+  .parking-title.double:before {
+    border-top: none;
+  }
+  
+  .parking-title.double:after {
+    border-bottom: 2px solid #4D4DFF;
+    content: "";
+    margin: 0 auto;
+    /* this centers the line to the full width specified */
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    width: 100%;
+    z-index: -1;
+  }
+
+  .card-top-img-park {
+    width: 100%;
+    height: 150px;
+    background-color: #fff;
+    transform: scale(1);
+    transition: transform 0.5s ease;
+  }
+  
+
+  .card-top-img-park:hover {
+    transform: scale(1.2);
+  }
+
+  .card-bottom-park {
+    padding: 10px 20px;
+    overflow-y: scroll;
+    height: 150px;
+  }
+  
+  .card-bottom-park::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .card-bottom-park {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .card-symbol-park{
+    width: 20px;
+    height: 20px;
+    fill: #4D4DFF;
+  }
+
+  .hut-card-title-park {
+    font-style: italic;
+    font-size: 22px;
+    margin-bottom: 10px;
+    color: #4D4DFF;
+    margin-top: 10px;
+    margin-bottom: 20px;
+  }
