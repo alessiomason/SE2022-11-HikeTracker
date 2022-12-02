@@ -30,6 +30,8 @@ function EditForm(props) {
     const [difficulty, setDifficulty] = useState(hikeToEdit ? hikeToEdit.text : '');
     const [difficultyText, setDifficultyText] = useState(difficulty_text);
     const [description, setDescription] = useState(hikeToEdit ? hikeToEdit.description : '');
+    const [state, setState] = useState(hikeToEdit ? hikeToEdit.state : '');
+    const [region, setRegion] = useState(hikeToEdit ? hikeToEdit.region : '');
     const [province, setProvince] = useState(hikeToEdit ? hikeToEdit.province : '');
     const [municipality, setMunicipality] = useState(hikeToEdit ? hikeToEdit.municipality : '');
     const [errorMsg, setErrorMsg] = useState('');
@@ -40,13 +42,13 @@ function EditForm(props) {
         if (label.trim().length === 0)
             setErrorMsg('The label of the hike cannot be consisted of only empty spaces');
         else {
-            const updatedHike = { 
-                id: hikeId, 
-                label: label, 
+            const updatedHike = {
+                id: hikeId,
+                label: label,
                 length: length,
-                expTime: expTime, 
-                ascent: ascent, 
-                difficulty: difficultyText, 
+                expTime: expTime,
+                ascent: ascent,
+                difficulty: difficultyText,
                 description: description,
                 province: province,
                 municipality: municipality
@@ -81,13 +83,23 @@ function EditForm(props) {
                             </Form.Group>
 
                             <Form.Group>
-                                <Form.Label>Municipality</Form.Label>
-                                <Form.Control required={true} value={municipality} onChange={ev => setMunicipality(ev.target.value)} />
+                                <Form.Label>State</Form.Label>
+                                <Form.Control required={true} value={state} disabled readOnly />
+                            </Form.Group>
+
+                            <Form.Group>
+                                <Form.Label>Region</Form.Label>
+                                <Form.Control required={true} value={region} disabled readOnly />
                             </Form.Group>
 
                             <Form.Group>
                                 <Form.Label>Province</Form.Label>
-                                <Form.Control required={true} value={province} onChange={ev => setProvince(ev.target.value)} />
+                                <Form.Control required={true} value={province} disabled readOnly />
+                            </Form.Group>
+
+                            <Form.Group>
+                                <Form.Label>Municipality</Form.Label>
+                                <Form.Control required={true} value={municipality} disabled readOnly />
                             </Form.Group>
 
                             <Form.Group>
