@@ -38,10 +38,10 @@ exports.deleteAllPoints = () => {
     });
 }
 
-exports.addHut = (hutName, hutDescription, lat, lon, altitude, beds, province, municipality) => {
+exports.addHut = (hutName, hutDescription, lat, lon, altitude, beds, state, region, province, municipality) => {
     return new Promise((resolve, reject) => {
-        const sql = 'INSERT INTO Huts(Name, Description, Lat, Lon, Altitude, Beds, Province, Municipality) VALUES(?, ?, ?, ?, ?, ?, ?, ?)'
-        db.run(sql, [hutName, hutDescription, lat, lon, altitude, beds, province, municipality], function (err) {
+        const sql = 'INSERT INTO Huts(Name, Description, Lat, Lon, Altitude, Beds, State, Region, Province, Municipality) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
+        db.run(sql, [hutName, hutDescription, lat, lon, altitude, beds, state, region, province, municipality], function (err) {
             if (err) reject(err);
             resolve();
         });
@@ -62,6 +62,8 @@ exports.getHuts = () => {
                 lon: h.Lon,
                 altitude: h.Altitude,
                 beds: h.Beds,
+                state: h.State,
+                region: h.Region,
                 province: h.Province,
                 municipality: h.Municipality
             }));
@@ -106,6 +108,8 @@ exports.getHut = (hutID) => {
                                                   lon: h.Lon,
                                                   altitude: h.Altitude,
                                                   beds: h.Beds,
+                                                  state: h.State,
+                                                  region: h.Region,
                                                   province: h.Province,
                                                   municipality: h.Municipality}));
                     resolve(hut);
@@ -115,10 +119,10 @@ exports.getHut = (hutID) => {
     });
 }
 
-exports.updateHut = (name, description, lat, lon, altitude, beds, province, municipality, id) => {
+exports.updateHut = (name, description, lat, lon, altitude, beds, state, region, province, municipality, id) => {
     return new Promise((resolve, reject) => {
-        const sql = 'UPDATE Huts SET Name=?, Description=?, Lat=?, Lon=?, Altitude= ?, Beds=?, Province=?, Municipality=? WHERE HutID=?'
-        db.run(sql, [name, description, lat, lon, altitude, beds, province, municipality, id], function (err) {
+        const sql = 'UPDATE Huts SET Name=?, Description=?, Lat=?, Lon=?, Altitude= ?, Beds=?, State=?, Region=?, Province=?, Municipality=? WHERE HutID=?'
+        db.run(sql, [name, description, lat, lon, altitude, beds, state, region, province, municipality, id], function (err) {
             if (err) reject(err);
             resolve();
         });
@@ -126,10 +130,10 @@ exports.updateHut = (name, description, lat, lon, altitude, beds, province, muni
 }
 
 
-exports.addHike = (trackName, len, time, ascent, diff, description,province,municipality) => {
+exports.addHike = (trackName, len, time, ascent, diff, description, state, region, province, municipality) => {
     return new Promise((resolve, reject) => {
-        const sql = 'INSERT INTO Hikes(Label, Length, ExpTime,Ascent,Difficulty,Description,Province,Municipality) VALUES(?,?,?,?,?,?,?,?)'
-        db.run(sql, [trackName, len, time, ascent, diff, description,province,municipality], function (err) {
+        const sql = 'INSERT INTO Hikes(Label, Length, ExpTime,Ascent,Difficulty,Description,State,Region,Province,Municipality) VALUES(?,?,?,?,?,?,?,?,?,?)'
+        db.run(sql, [trackName, len, time, ascent, diff, description,state,region,province,municipality], function (err) {
             if (err) reject(err);
             resolve();
         });
@@ -150,6 +154,7 @@ exports.getLastHikeID = () => {
         });
     });
 }
+
 exports.getStartPointOfHike = (hikeID) => {
     return new Promise((resolve, reject) => {
         const sql = 'SELECT * FROM Points  WHERE HikeID=? and SP=?';
@@ -163,6 +168,7 @@ exports.getStartPointOfHike = (hikeID) => {
         });
     });
 }
+
 exports.getEndPointOfHike = (hikeID) => {
     return new Promise((resolve, reject) => {
         const sql = 'SELECT * FROM Points  WHERE HikeID=? and EP=?';
@@ -177,13 +183,12 @@ exports.getEndPointOfHike = (hikeID) => {
     });
 }
 
-
 exports.getHikes = () => {
     return new Promise((resolve, reject) => {
         const sql = 'SELECT * FROM HIKES';
         db.all(sql, [], (err, rows) => {
             if (err) reject(err);
-            const hikes = rows.map((h) => ({ id: h.HikeID, label: h.Label, length: h.Length, expTime: h.ExpTime, ascent: h.Ascent, difficulty: h.Difficulty, description: h.Description, province: h.Province, municipality: h.Municipality }));
+            const hikes = rows.map((h) => ({ id: h.HikeID, label: h.Label, length: h.Length, expTime: h.ExpTime, ascent: h.Ascent, difficulty: h.Difficulty, description: h.Description, state: h.State, region: h.Region, province: h.Province, municipality: h.Municipality }));
             resolve(hikes);
         });
     });
@@ -195,7 +200,7 @@ exports.getParkingLots = () => {
         db.all(sql, [], (err, rows) => {
             if (err) reject(err);
             const pls = rows.map((pl) => ({ id: pl.ParkingID, label: pl.Label, 
-                description: pl.Description, province: pl.Province, municipality: pl.Municipality,
+                description: pl.Description, state: pl.State, region: pl.Region, province: pl.Province, municipality: pl.Municipality,
             lat: pl.Lat, lon: pl.Lon, altitude: pl.Altitude, total: pl.Total, occupied: pl.Occupied }));
             resolve(pls);
         });
@@ -209,7 +214,7 @@ exports.getParkingById = (id) => {
         const sql = 'SELECT * FROM PARKINGLOTS WHERE ParkingID = ?';
         db.all(sql, [id], (err, row) => {
             if (err) reject(err);
-            const parking = row.map((p) => ({ parkingID: p.ParkingID, label: p.Label, province: p.Province, municipality: p.Municipality, description: p.Description, lat:p.Lat, lon:p.Lon, altitude:p.Altitude, total: p.Total, occupied: p.Occupied  }));
+            const parking = row.map((p) => ({ parkingID: p.ParkingID, label: p.Label, state: p.State, region: p.Region, province: p.Province, municipality: p.Municipality, description: p.Description, lat:p.Lat, lon:p.Lon, altitude:p.Altitude, total: p.Total, occupied: p.Occupied  }));
             resolve(parking);
         });
     });
@@ -229,10 +234,10 @@ exports.getLastPArkingLotId = () => {
     });
 }
 //Add new parking lot
-exports.addParking = (Label,Province,Municipality,Description,Lat,Lon,Altitude,Total, Occupied) => {
+exports.addParking = (Label,State,Region,Province,Municipality,Description,Lat,Lon,Altitude,Total, Occupied) => {
     return new Promise((resolve, reject) => {
-        const sql = 'INSERT INTO PARKINGLOTS(Label, Province, Municipality, Description, Lat, Lon, Altitude,Total, Occupied) VALUES(?, ?, ?, ?,?,?,?,?,?)'
-        db.run(sql, [Label, Province, Municipality, Description, Lat, Lon, Altitude,Total, Occupied], function (err) {
+        const sql = 'INSERT INTO PARKINGLOTS(Label, State, Region, Province, Municipality, Description, Lat, Lon, Altitude,Total, Occupied) VALUES(?, ?, ?, ?,?,?,?,?,?)'
+        db.run(sql, [Label, State, Region, Province, Municipality, Description, Lat, Lon, Altitude,Total, Occupied], function (err) {
             if (err) reject(err);
             resolve();
         });
@@ -240,10 +245,10 @@ exports.addParking = (Label,Province,Municipality,Description,Lat,Lon,Altitude,T
 }
 
 // UPDATE parking lot
-exports.updateParking = (Label,Province,Municipality,Description,Lat,Lon,Altitude,Total,Occupied,parkingID) => {
+exports.updateParking = (Label,State,Region,Province,Municipality,Description,Lat,Lon,Altitude,Total,Occupied,parkingID) => {
     return new Promise((resolve, reject) => {
-        const sql = 'UPDATE PARKINGLOTS SET Label=?, Province=?, Municipality=?,Description=?, Lat=?, Lon=?, Altitude=?, Total=?, Occupied=?   WHERE ParkingID=?'
-        db.run(sql, [Label,Province,Municipality,Description,Lat,Lon,Altitude,Total,Occupied,parkingID], function (err) {
+        const sql = 'UPDATE PARKINGLOTS SET Label=?, State=?, Region=?, Province=?, Municipality=?,Description=?, Lat=?, Lon=?, Altitude=?, Total=?, Occupied=?   WHERE ParkingID=?'
+        db.run(sql, [Label,State,Region,Province,Municipality,Description,Lat,Lon,Altitude,Total,Occupied,parkingID], function (err) {
             if (err) reject(err);
             resolve();
         });
@@ -290,7 +295,7 @@ exports.getHike = (hikeID) => {
             else {
                 if (rows.length === 0) resolve(undefined);
                 else {
-                    const hike = rows.map((h) => ({ id: h.HikeID, label: h.Label, length: h.Length, expTime: h.ExpTime, ascent: h.Ascent, difficulty: h.Difficulty, description: h.Description, province: h.Province, municipality: h.Municipality }));
+                    const hike = rows.map((h) => ({ id: h.HikeID, label: h.Label, length: h.Length, expTime: h.ExpTime, ascent: h.Ascent, difficulty: h.Difficulty, description: h.Description, state: h.State, region: h.Region, province: h.Province, municipality: h.Municipality }));
                     resolve(hike);
                 }
             }
@@ -338,10 +343,10 @@ exports.newHike = (label, length, expTime, ascent, difficulty, description, prov
     });
 }
 
-exports.updateHike = (label, length, expTime, ascent, difficulty, description, province, municipality, hikeId) => {
+exports.updateHike = (label, length, expTime, ascent, difficulty, description, state, region, province, municipality, hikeId) => {
     return new Promise((resolve, reject) => {
-        const sql = 'UPDATE HIKES SET label=?,length=?,expTime=?,ascent=?,difficulty=?,description=?,province=?,municipality=? WHERE HikeId=?'
-        db.run(sql, [label, length, expTime, ascent, difficulty, description, province, municipality, hikeId], function (err) {
+        const sql = 'UPDATE HIKES SET label=?,length=?,expTime=?,ascent=?,difficulty=?,description=?,state=?,region=?,province=?,municipality=? WHERE HikeId=?'
+        db.run(sql, [label, length, expTime, ascent, difficulty, description, state, region, province, municipality, hikeId], function (err) {
             if (err) reject(err);
             resolve();
         });
