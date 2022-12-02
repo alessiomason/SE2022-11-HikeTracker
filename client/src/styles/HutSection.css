@@ -142,7 +142,7 @@
 .hutCardBox {
   width: 90%;
   margin: 0 auto;
-  margin-top: 50px;
+  margin-top: 20px;
 }
 
 .slick-slide>div {
@@ -156,32 +156,57 @@
 .hut-card {
   border: 3px solid #FF6700;
   background: black;
-  border-radius: 8px;
-  overflow: hidden;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  border-radius: 10px;
   height: 400px;
   color: #fff;
   cursor: pointer;
+  display: block;
 }
 
-.card-top h1 {
+.hut-card:hover {
+  box-shadow: 0 0 8px 4px #c75205;
+
+}
+
+.hut-card-title {
   font-style: italic;
   font-size: 22px;
   margin-bottom: 10px;
   color: #FF6700;
-  margin: 20px;
+  margin-top: 10px;
+  margin-bottom: 20px;
 }
 
-.card-top>img {
+.card-top-img {
   width: 100%;
   height: 200px;
-  object-fit: fill;
   background-color: #000;
+  transform: scale(1);
+  transition: transform 0.5s ease;
+}
+.card-top{
+  overflow: hidden;
+}
+.card-top-img:hover {
+  transform: scale(1.2);
 }
 
 .card-bottom {
-  margin: 10px 20px;
+  padding: 10px 20px;
+  overflow-y: scroll;
+  height: 200px;
 }
 
+.card-bottom::-webkit-scrollbar {
+  display: none;
+}
+
+.card-bottom {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
 
 .arrow-prev {
   left: -25px;
@@ -224,5 +249,17 @@
 
 .card-details{
   display: inline;
-  margin-bottom: 20px !important;
+  margin-top: 0px !important;
+  padding-top: 0px !important;
+}
+
+.delete-btn{
+  background-color: transparent;
+  border-color: transparent;
+  padding:0px;
+}
+
+.delete-btn:hover{
+  background-color: transparent;
+  border-color: transparent;
 }
