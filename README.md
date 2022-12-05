@@ -19,6 +19,11 @@ Main project for the Software Engineering II course (group 11)
 
 `npm run apiTest` (Integration Test)
 
+## Tests status
+
+![Unit tests](https://github.com/alessiomason/SE2022-11-HikeTracker/actions/workflows/unit_tests.yml/badge.svg)
+![Integration tests](https://github.com/alessiomason/SE2022-11-HikeTracker/actions/workflows/integration_tests.yml/badge.svg)
+
 
 # Docker commands for client
 
