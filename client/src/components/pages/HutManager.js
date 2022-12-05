@@ -64,6 +64,8 @@ function SingleUpdateHutCard(props) {
   const [lon, setLon] = useState(hutToEdit ? hutToEdit.lon : 0);
   const [altitude, setAltitude] = useState(hutToEdit ? hutToEdit.altitude : 0);
   const [beds, setBeds] = useState(hutToEdit ? hutToEdit.beds : 0);
+  const [state, setState] = useState(hutToEdit ? hutToEdit.state : '');
+  const [region, setRegion] = useState(hutToEdit ? hutToEdit.region : '');
   const [province, setProvince] = useState(hutToEdit ? hutToEdit.province : '');
   const [municipality, setMunicipality] = useState(hutToEdit ? hutToEdit.municipality : '');
   const [errorMsg, setErrorMsg] = useState('');
@@ -112,6 +114,20 @@ function SingleUpdateHutCard(props) {
               <Form.Group className="mb-3" >
                 <Form.Label>Number of Beds</Form.Label>
                 <Form.Control required={true} type='number' step="any" min={0} value={beds} onChange={ev => setBeds(ev.target.value)} />
+              </Form.Group>
+            </Col>
+          </Row>
+          <Row>
+            <Col md={6} >
+              <Form.Group className="mb-3" >
+                <Form.Label>State</Form.Label>
+                <Form.Control required={true} value={state} disabled readOnly></Form.Control>
+              </Form.Group>
+            </Col>
+            <Col md={6} >
+              <Form.Group className="mb-3" >
+                <Form.Label>Region</Form.Label>
+                <Form.Control required={true} value={region} disabled readOnly></Form.Control>
               </Form.Group>
             </Col>
           </Row>

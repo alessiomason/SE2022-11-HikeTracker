@@ -1,6 +1,6 @@
 
 import '../../styles/HikeManager.css';
-import { Container, Row, Col, InputGroup, Form, Button,Alert } from 'react-bootstrap';
+import { Container, Row, Col, InputGroup, Form, Button, Alert } from 'react-bootstrap';
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import API from '../../API.js';
@@ -43,7 +43,7 @@ function MyParkingManager(props) {
           <Button variant='primary' size="lg" className='mx-5 my-3' onClick={() => navigate("/newParking")}>Add new Parking Lot</Button>
         </Col>
       </Row>
-      {showUpdateBanner && <Alert variant='success' onClose={() => {setShowUpdateBanner(false); setMessage('')}} dismissible>{message}</Alert>}
+      {showUpdateBanner && <Alert variant='success' onClose={() => { setShowUpdateBanner(false); setMessage('') }} dismissible>{message}</Alert>}
       {parkingLots.map(pl => <SingleUpdateParkingCard key={pl.id} parking={pl} user={props.user}
         updateParkingLot={props.updateParkingLot} deleteParkingLot={props.deleteParkingLot} setDirty={setDirty}
         setShowUpdateBanner={setShowUpdateBanner} setMessage={setMessage} />)}
@@ -61,21 +61,23 @@ function SingleUpdateParkingCard(props) {
 
   const [label, setLabel] = useState(plToEdit?.label ?? '');
   const [description, setDescription] = useState(plToEdit ? plToEdit.description : '');
+  const [state, setState] = useState(plToEdit ? plToEdit.state : '');
+  const [region, setRegion] = useState(plToEdit ? plToEdit.region : '');
   const [province, setProvince] = useState(plToEdit ? plToEdit.province : '');
   const [municipality, setMunicipality] = useState(plToEdit ? plToEdit.municipality : '');
   const [occupied, setOccupied] = useState(plToEdit ? plToEdit.occupied : '');
   const [total, setTotal] = useState(plToEdit ? plToEdit.total : '');
   const [errorMsg, setErrorMsg] = useState('');
 
-  
+
   const handleSubmit = (event) => {
     event.preventDefault();
 
     if (label.trim().length === 0)
       setErrorMsg('The label of the hike cannot be consisted of only empty spaces');
     else {
-      const updatedParkingLot = { 
-        id: plId, 
+      const updatedParkingLot = {
+        id: plId,
         label: label,
         description: description,
         province: province,
@@ -108,49 +110,63 @@ function SingleUpdateParkingCard(props) {
                 <Form.Control required={true} value={label} onChange={ev => setLabel(ev.target.value)}></Form.Control>
               </Form.Group>
             </Col>
-            <Col md={4}>
+            <Col>
               <Form.Group>
-                <Form.Label>Municipality</Form.Label>
-                <Form.Control required={true} value={municipality} onChange={ev => setMunicipality(ev.target.value)} />
+                <Form.Label>Total Slots</Form.Label>
+                <Form.Control required={true} value={total} onChange={ev => setTotal(ev.target.value)} />
               </Form.Group>
             </Col>
-            <Col md={4} >
+            <Col>
+              <Form.Group>
+                <Form.Label>Occupied Slots</Form.Label>
+                <Form.Control required={true} value={occupied} onChange={ev => setOccupied(ev.target.value)} />
+              </Form.Group>
+            </Col>
+          </Row>
+
+          <Row>
+            <Col md={3}>
+              <Form.Group>
+                <Form.Label>State</Form.Label>
+                <Form.Control required={true} value={state} onChange={ev => setState(ev.target.value)} />
+              </Form.Group>
+            </Col>
+            <Col md={3} >
+              <Form.Group>
+                <Form.Label>Region</Form.Label>
+                <Form.Control required={true} value={region} onChange={ev => setRegion(ev.target.value)} />
+              </Form.Group>
+            </Col>
+            <Col md={3} >
               <Form.Group>
                 <Form.Label>Province</Form.Label>
                 <Form.Control required={true} value={province} onChange={ev => setProvince(ev.target.value)} />
               </Form.Group>
             </Col>
+            <Col md={3}>
+              <Form.Group>
+                <Form.Label>Municipality</Form.Label>
+                <Form.Control required={true} value={municipality} onChange={ev => setMunicipality(ev.target.value)} />
+              </Form.Group>
+            </Col>
           </Row>
-
           <Row>
             <Col>
               <Form.Group>
                 <Form.Label>Description</Form.Label>
                 <Form.Control required={true} value={description} onChange={ev => setDescription(ev.target.value)} />
               </Form.Group>
-            </Col> 
-            <Col>
-              <Form.Group>
-                <Form.Label>Total Slots</Form.Label>
-                <Form.Control required={true} value={total} onChange={ev => setTotal(ev.target.value)} />
-              </Form.Group>
-            </Col> 
-            <Col>
-              <Form.Group>
-                <Form.Label>Occupied Slots</Form.Label>
-                <Form.Control required={true} value={occupied} onChange={ev => setOccupied(ev.target.value)} />
-              </Form.Group>
-            </Col> 
-            </Row>
-            <Row>
+            </Col>
+          </Row>
+          <Row>
             <Col className="pt-4">
-              <Row> 
-              <Button variant="success" type='submit' className="btn_box2 mx-2">Save</Button>
+              <Row>
+                <Button variant="success" type='submit' className="btn_box2 mx-2">Save</Button>
                 <Button variant="danger" onClick={() => props.deleteParkingLot(plId)} className="btn_box2 mx-2" >Delete</Button>
-               
+
               </Row>
             </Col>
-         </Row>
+          </Row>
         </Form>
       </Col>
     </Row>

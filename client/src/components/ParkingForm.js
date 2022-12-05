@@ -15,6 +15,10 @@ function ParkingForm(props) {
     const navigate = useNavigate();
 
     const [label, setLabel] = useState('');
+    const [state, setState] = useState('Italy');
+    const [region, setRegion] = useState('Piedmont');
+    const [province, setProvince] = useState('Torino');
+    const [municipality, setMunicipality] = useState('Mompantero');
     const [description, setDescription] = useState('');
     const [latitude, setLatitude] = useState(0.0);
     const [longitude, setLongitude] = useState(0.0);
@@ -29,26 +33,22 @@ function ParkingForm(props) {
         if (label.trim().length === 0)
             setErrorMsg('The label of the hike cannot be consisted of only empty spaces');
         else {
-            let newParkingLot = {
+            const newParkingLot = {
                 label: label,
                 description: description,
+                state: state,
+                region: region,
+                province: province,
+                municipality: municipality,
                 lat: latitude,
                 lon: longitude,
                 altitude: 2.0,
                 total: total,
                 occupied: occupied
             }
-
-            // retrieve location info and address from coordinates
-            API.reverseNominatim(latitude, longitude)
-                .then((locationInfo) => {
-                    newParkingLot.province = locationInfo.address.county;
-                    newParkingLot.municipality = locationInfo.address.city || locationInfo.address.town || locationInfo.address.village;
-                    props.addParkingLot(newParkingLot);
-                    props.setDirty(true);
-                    navigate('/parkingManager');
-                })
-                .catch(err => console.log(err))
+            props.addParkingLot(newParkingLot);
+            props.setDirty(true);
+            navigate('/parkingManager');
         }
     }
 
@@ -79,16 +79,36 @@ function ParkingForm(props) {
                                 <Form.Label>Altitude [m]</Form.Label>
                                 <Form.Control required={true} type='number' step="any" value={altitude} onChange={ev => setAltitude(ev.target.value)} />
                             </Form.Group>
+
+                            <Form.Group>
+                                <Form.Label>State (defined from map)</Form.Label>
+                                <Form.Control required={true} value={state} disabled readOnly></Form.Control>
+                            </Form.Group>
+
+                            <Form.Group>
+                                <Form.Label>Region (defined from map)</Form.Label>
+                                <Form.Control required={true} value={region} disabled readOnly></Form.Control>
+                            </Form.Group>
+
+                            <Form.Group>
+                                <Form.Label>Province (defined from map)</Form.Label>
+                                <Form.Control required={true} value={province} disabled readOnly></Form.Control>
+                            </Form.Group>
+
+                            <Form.Group>
+                                <Form.Label>Municipality (defined from map)</Form.Label>
+                                <Form.Control required={true} value={municipality} disabled readOnly></Form.Control>
+                            </Form.Group>
+
                             <Form.Group>
                                 <Form.Label>Total Slots</Form.Label>
-                                <Form.Control required={true} type='number' step="any" value={total} onChange={ev => setTotal(ev.target.value)} />
+                                <Form.Control required={true} type='number' step="any" min={0} value={total} onChange={ev => setTotal(ev.target.value)} />
                             </Form.Group>
 
                             <Form.Group>
                                 <Form.Label>Occupied Slots</Form.Label>
-                                <Form.Control required={true} type='number' step="any" value={occupied} onChange={ev => setOccupied(ev.target.value)} />
+                                <Form.Control required={true} type='number' step="any" min={0} value={occupied} onChange={ev => setOccupied(ev.target.value)} />
                             </Form.Group>
-
 
                             <Form.Group>
                                 <Form.Label>Description</Form.Label>
@@ -98,7 +118,7 @@ function ParkingForm(props) {
                                 <div className='d-flex justify-content-center'>
                                     <h3>Click on the map to select the parking's location</h3>
                                 </div>
-                                <ParkingMap setLatitude={setLatitude} setLongitude={setLongitude} />
+                                <ParkingMap setLatitude={setLatitude} setLongitude={setLongitude} setState={setState} setRegion={setRegion} setProvince={setProvince} setMunicipality={setMunicipality} />
                             </Row>
                             <Button className='save-button' type='submit' >Save</Button>
                             <Button className='back-button' onClick={() => navigate('/parkingManager')} variant='secondary' >Back</Button>
@@ -117,7 +137,7 @@ function ParkingMap(props) {
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
-            <LocationMarker setLatitude={props.setLatitude} setLongitude={props.setLongitude} />
+            <LocationMarker setLatitude={props.setLatitude} setLongitude={props.setLongitude} setState={props.setState} setRegion={props.setRegion} setProvince={props.setProvince} setMunicipality={props.setMunicipality} />
         </MapContainer>
     );
 }
@@ -139,6 +159,13 @@ function LocationMarker(props) {
             props.setLatitude(e.latlng.lat);
             props.setLongitude(e.latlng.lng);
             setMarker([e.latlng.lat, e.latlng.lng]);
+            API.reverseNominatim(e.latlng.lat, e.latlng.lng)
+                .then((locationInfo) => {
+                    props.setState(locationInfo.address.country);
+                    props.setRegion(locationInfo.address.state);
+                    props.setProvince(locationInfo.address.county);
+                    props.setMunicipality(locationInfo.address.city || locationInfo.address.town || locationInfo.address.village);
+                })
         }
     });
 

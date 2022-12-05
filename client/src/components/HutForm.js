@@ -15,6 +15,10 @@ function HutForm(props) {
     const navigate = useNavigate();
 
     const [name, setName] = useState('');
+    const [state, setState] = useState('Italy');
+    const [region, setRegion] = useState('Piedmont');
+    const [province, setProvince] = useState('Torino');
+    const [municipality, setMunicipality] = useState('Mompantero');
     const [description, setDescription] = useState('');
     const [latitude, setLatitude] = useState(0.0);
     const [longitude, setLongitude] = useState(0.0);
@@ -28,24 +32,24 @@ function HutForm(props) {
         if (name.trim().length === 0)
             setErrorMsg('The name of the hut cannot be consisted of only empty spaces');
         else {
-            let newHut = {
+            const newHut = {
                 name: name,
                 description: description,
                 lat: latitude,
                 lon: longitude,
                 altitude: altitude,
-                beds: beds
+                state: state,
+                region: region,
+                province: province,
+                municipality: municipality,
+                beds: beds,
+                province: province,
+                municipality: municipality
             }
-            // retrieve location info and address from coordinates
-            API.reverseNominatim(latitude, longitude)
-                .then((locationInfo) => {
-                    newHut.province = locationInfo.address.county;
-                    newHut.municipality = locationInfo.address.city || locationInfo.address.town || locationInfo.address.village;
-                    props.addHut(newHut);
-                    props.setDirty(true);
-                    navigate('/hutManager');
-                })
-                .catch(err => console.log(err))
+
+            props.addHut(newHut);
+            props.setDirty(true);
+            navigate('/hutManager');
         }
     }
 
@@ -78,6 +82,26 @@ function HutForm(props) {
                             </Form.Group>
 
                             <Form.Group>
+                                <Form.Label>State (defined from map)</Form.Label>
+                                <Form.Control required={true} value={state} disabled readOnly></Form.Control>
+                            </Form.Group>
+
+                            <Form.Group>
+                                <Form.Label>Region (defined from map)</Form.Label>
+                                <Form.Control required={true} value={region} disabled readOnly></Form.Control>
+                            </Form.Group>
+
+                            <Form.Group>
+                                <Form.Label>Province (defined from map)</Form.Label>
+                                <Form.Control required={true} value={province} disabled readOnly></Form.Control>
+                            </Form.Group>
+
+                            <Form.Group>
+                                <Form.Label>Municipality (defined from map)</Form.Label>
+                                <Form.Control required={true} value={municipality} disabled readOnly></Form.Control>
+                            </Form.Group>
+
+                            <Form.Group>
                                 <Form.Label>Number of Beds</Form.Label>
                                 <Form.Control required={true} type='number' step="any" min={0} value={beds} onChange={ev => setBeds(ev.target.value)} />
                             </Form.Group>
@@ -90,7 +114,7 @@ function HutForm(props) {
                                 <div className='d-flex justify-content-center'>
                                     <h3>Click on the map to select the hut's location</h3>
                                 </div>
-                                <HutMap setLatitude={setLatitude} setLongitude={setLongitude} />
+                                <HutMap setLatitude={setLatitude} setLongitude={setLongitude} setState={setState} setRegion={setRegion} setProvince={setProvince} setMunicipality={setMunicipality} />
                             </Row>
                             <Button className='save-button' type='submit' >Save</Button>
                             <Button className='back-button' onClick={() => navigate('/hutManager')} variant='secondary' >Back</Button>
@@ -109,7 +133,7 @@ function HutMap(props) {
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
-            <LocationMarker setLatitude={props.setLatitude} setLongitude={props.setLongitude} />
+            <LocationMarker setLatitude={props.setLatitude} setLongitude={props.setLongitude} setState={props.setState} setRegion={props.setRegion} setProvince={props.setProvince} setMunicipality={props.setMunicipality} />
         </MapContainer>
     );
 }
@@ -131,6 +155,13 @@ function LocationMarker(props) {
             props.setLatitude(e.latlng.lat);
             props.setLongitude(e.latlng.lng);
             setMarker([e.latlng.lat, e.latlng.lng]);
+            API.reverseNominatim(e.latlng.lat, e.latlng.lng)
+                .then((locationInfo) => {
+                    props.setState(locationInfo.address.country);
+                    props.setRegion(locationInfo.address.state);
+                    props.setProvince(locationInfo.address.county);
+                    props.setMunicipality(locationInfo.address.city || locationInfo.address.town || locationInfo.address.village);
+                })
         }
     });
 
