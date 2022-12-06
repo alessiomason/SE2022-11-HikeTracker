@@ -16,28 +16,35 @@ function MyNavbar(props) {
     window.scrollTo({top: y, behavior: 'smooth'});
   }
 
+  const goToTop = () => {
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+    });
+};
+
   return (
 
     <Navbar collapseOnSelect expand="lg" fixed="top" bg="dark" variant="dark">
       <Container fluid >
-        <Navbar.Brand type="button" onClick={() => navigate("/")}>
+        <Navbar.Brand type="button" onClick={() => {navigate("/");  goToTop()}}>
           <img src={Logo} alt="logo" />
         </Navbar.Brand>
         <Navbar.Brand >
-          <h3 onClick={() => navigate("/")} className="logo-name">HikeTracker</h3>
+          <h3 onClick={() => {navigate("/");  goToTop()}} className="logo-name">HikeTracker</h3>
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="me-auto">
-            <button class="button type1" onClick={() => scrollIntoViewWithOffset("hikeSec", 40)}> Hike </button>
-            <button class="button type2" onClick={() => scrollIntoViewWithOffset("hutSec", 40)}> Hut </button>
-            <button class="button type3" onClick={() => scrollIntoViewWithOffset("parkSec", 40)}> Parking </button>
+            <button class="button type1" onClick={() => {navigate("/"); scrollIntoViewWithOffset("hikeSec", 40);}}>  Hike</button>
+            <button class="button type2" onClick={() => {navigate("/"); scrollIntoViewWithOffset("hutSec", 40)}}> Hut</button>
+            <button class="button type3" onClick={() => {navigate("/"); scrollIntoViewWithOffset("parkSec", 40)}}> Parking </button>
           </Nav>
           <Nav>
             {(!props.loggedIn) ?
               <Nav>
-                <Button variant="light" className="mx-2 my-1" onClick={() => props.setShowLogin(true)}>Sign In</Button>
-                <Button variant="primary" className="mx-2 my-1" onClick={() => props.setShowSignup(true)}>Sign Up</Button>
+                <Button className="mx-2 my-1 btn-log" onClick={() => props.setShowLogin(true)}>Sign In</Button>
+                <Button className="mx-2 my-1 btn-sign" onClick={() => props.setShowSignup(true)}>Sign Up</Button>
               </Nav> :
               <Nav>
                 {props.user.access_right === 'local-guide' ? <Button variant="outline-warning"  className="mx-2 my-2  btn--outline" onClick={() => navigate("/hikeManager")}> Manage Hike</Button> : false}

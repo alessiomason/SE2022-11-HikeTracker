@@ -10,6 +10,12 @@ function FilterSection(props) {
   const [modalShow, setModalShow] = useState(false);
   const [title, setTitle] = useState(false);
   const [desc, setDesc] = useState(false); 
+
+  const renderTooltip = (props) => (
+    <Tooltip id="button-tooltip" {...props}>
+      Remove all filters
+    </Tooltip>
+  );
   
     return (
 
@@ -34,7 +40,9 @@ function FilterSection(props) {
                 <Button variant="success" className='btn_filter' onClick={() => { setModalShow(true); setTitle("Reference points"); setDesc("Select reference points:") }}>Reference points</Button>
               </ButtonGroup>
               <ButtonGroup className="my-1" aria-label="Second group">
-                <Button variant="danger" onClick={ () => {props.setMinLength(0); props.setMaxLength(1000000); props.setMinTime(0); props.setMaxTime(24); props.setMinAscent(0); props.setMaxAscent(10000); props.setDifficulty(null); props.setStartPoint(null); props.setEndPoint(null); props.setRefPoint(null); props.setProvince(null); props.setMunicipality(null)  } }>Remove all filters</Button>
+              <OverlayTrigger placement="right" delay={{ show: 250, hide: 400 }} overlay={renderTooltip} >
+                  <Button className="delete-btn"><img src={Delete} alt="delete_image" className='' onClick={ () => {props.setMinLength(0); props.setMaxLength(1000000); props.setMinTime(0); props.setMaxTime(24); props.setMinAscent(0); props.setMaxAscent(10000); props.setDifficulty(null); props.setStartPoint(null); props.setEndPoint(null); props.setRefPoint(null); props.setProvince(null); props.setMunicipality(null)  }} /></Button>
+                </OverlayTrigger>
               </ButtonGroup>
               </ButtonToolbar>
           </Col>

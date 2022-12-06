@@ -18,3 +18,7 @@
     margin-left: 990px;
     background-color: red;
 }
+
+.box{
+    min-height: 80vh;
+}

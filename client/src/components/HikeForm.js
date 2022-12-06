@@ -44,7 +44,7 @@ function HikeForm(props) {
     }
 
     return (
-        <Container>
+        <Container fluid className='box'>
             <Row>
                 <Col><h1 className="hike_form-title">Create new hike</h1></Col>
             </Row>

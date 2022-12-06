@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { Button, Col, Modal, Form, Row, Container, Alert } from "react-bootstrap";
 import { default as UserLogin } from "../icons/user-login.svg";
 import { default as Password } from "../icons/password.svg";
-import '../App.css';
+import '../styles/SignInSignUp.css';
+
 
 function MyModalLogin(props) {
 
@@ -44,10 +45,10 @@ function MyModalLogin(props) {
 
   return (
 
-    <Modal className="mt-3 me-5" show={props.showLogin} onHide={() => props.setShowLogin(false)}>
-      <Container fluid className="me-5">
+    <Modal className="mt-3 me-5 " show={props.showLogin} onHide={() => props.setShowLogin(false)}>
+      <Container fluid className="me-5 box-login">
         <Row>
-          <h1 className='my-5' >Login</h1>
+          <h1 className='my-5' >Sign In</h1>
         </Row>
         <Row>
           <Col >
@@ -62,6 +63,8 @@ function MyModalLogin(props) {
                     <Form.Control type="email" placeholder="Enter email address" value={email} onChange={ev => setEmail(ev.target.value)} />
                   </Form.Group>
                 </Col>
+                <Col md={12}>
+              </Col>
               </Row>
               <Row className='my-4 box_center'>
                 <Col md="auto" sm="auto" xs="auto" className='box_center'>
@@ -74,7 +77,7 @@ function MyModalLogin(props) {
                 </Col>
               </Row>
               <Row className="my-5 box_center">
-                <Button variant="primary login_btn" type="submit" > Login </Button>
+                <Button variant="primary login_btn slide" type="submit" > Sign In </Button>
               </Row>
             </Form>
           </Col>

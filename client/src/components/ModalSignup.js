@@ -3,7 +3,7 @@ import { Button, Col, Form, Row, Container, Alert, Modal } from "react-bootstrap
 import { default as UserLogin } from "../icons/user-login.svg";
 import { default as Password } from "../icons/password.svg";
 import { default as UserKind } from "../icons/user_kind.svg";
-import '../App.css';
+import '../styles/SignInSignUp.css';
 
 function MyModalSignup(props) {
 
@@ -53,7 +53,7 @@ function MyModalSignup(props) {
   return (
 
     <Modal className="mt-3 me-5 " show={props.showSignup} onHide={() => props.setShowSignup(false)}>
-      <Container fluid className="me-5">
+      <Container fluid className="me-5 box-signup">
         <Row>
           <h1 className='my-5' >Sign Up</h1>
         </Row>
@@ -106,7 +106,7 @@ function MyModalSignup(props) {
                 </Col>
               </Row>
               <Row className="my-5 box_center">
-                <Button variant="primary login_btn" type="submit" > Sign Up </Button>
+                <Button variant="primary signup_btn" type="submit" > Sign Up </Button>
               </Row>
             </Form>
           </Col>

@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Modal, Col, Row, Form, Container, ButtonToolbar, ButtonGroup } from "react-bootstrap";
+import { Button, Modal, Col, Row, Form, Container, ButtonToolbar, ButtonGroup, Tooltip, OverlayTrigger } from "react-bootstrap";
 import '../styles/FilterSection.css';
 import { default as Close } from '../icons/close.svg';
 import API from '../API.js';
 import { default as Hiking } from '../icons/hiking.svg';
+import { default as Delete } from '../icons/delete.svg';
 
 function HikesFilters(props) {
 
@@ -25,6 +26,12 @@ function HikesFilters(props) {
     props.setHikesMunicipality('');
   }
 
+  const renderTooltip = (props) => (
+    <Tooltip id="button-tooltip" {...props}>
+      Remove all filters
+    </Tooltip>
+  );
+
   return (
 
     <Container fluid className='filterSection' id="hikeSec">
@@ -45,7 +52,9 @@ function HikesFilters(props) {
               <Button variant="success" className='btn_filter' onClick={() => { setModalShow(true); setTitle("Point from map"); setDesc("Select a specific point on the map:") }}>Point from map</Button>
             </ButtonGroup>
             <ButtonGroup className="my-1" aria-label="Second group">
-              <Button variant="danger" onClick={clearStates}>Remove all filters</Button>
+            <OverlayTrigger placement="right" delay={{ show: 250, hide: 400 }} overlay={renderTooltip} >
+                  <Button className="delete-btn"><img src={Delete} alt="delete_image" className='' onClick={clearStates}/></Button>
+                </OverlayTrigger>
             </ButtonGroup>
           </ButtonToolbar>
         </Col>
