@@ -21,8 +21,8 @@ Main project for the Software Engineering II course (group 11)
 
 ## Tests status
 
-![Unit tests](https://github.com/alessiomason/SE2022-11-HikeTracker/actions/workflows/unit_tests.yml/badge.svg)
-![Integration tests](https://github.com/alessiomason/SE2022-11-HikeTracker/actions/workflows/integration_tests.yml/badge.svg)
+[![Unit tests](https://github.com/alessiomason/SE2022-11-HikeTracker/actions/workflows/unit_tests.yml/badge.svg)](https://github.com/alessiomason/SE2022-11-HikeTracker/actions)
+[![I](https://github.com/alessiomason/SE2022-11-HikeTracker/actions/workflows/integration_tests.yml/badge.svg)](https://github.com/alessiomason/SE2022-11-HikeTracker/actions)
 
 
 # Docker commands for client

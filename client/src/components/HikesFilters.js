@@ -25,6 +25,8 @@ function HikesFilters(props) {
     props.setHikesMunicipality('');
   }
 
+  const deselectedDifficulties = props.hikesDifficulties.filter(d => !d.isChecked).flatMap(d => d.difficulty).join(", ");
+
   return (
 
     <Container fluid className='filterSection' id="hikeSec">
@@ -62,17 +64,7 @@ function HikesFilters(props) {
           {props.hikesMaxTime && <Button variant="info" size="sm" className='mx-2 my-1 btn_info px-2 filter-label'>Maximum time: {props.hikesMaxTime} h <img src={Close} alt="close" className='ms-1 my-1 close-filter-label' onClick={() => props.setHikesMaxTime('')} /></Button>}
           {props.hikesMinAscent && <Button variant="info" size="sm" className='mx-2 my-1 btn_info px-2 filter-label'>Minimum ascent: {props.hikesMinAscent} m <img src={Close} alt="close" className='ms-1 my-1 close-filter-label' onClick={() => props.setHikesMinAscent('')} /></Button>}
           {props.hikesMaxAscent && <Button variant="info" size="sm" className='mx-2 my-1 btn_info px-2 filter-label'>Maximum ascent: {props.hikesMaxAscent} m <img src={Close} alt="close" className='ms-1 my-1 close-filter-label' onClick={() => props.setHikesMaxAscent('')} /></Button>}
-          {props.hikesDifficulties.filter(d => d.isChecked).map((d) => {
-            return (
-              <Button variant="info" size="sm" className='mx-2 my-1 btn_info px-2 filter-label' key={'difficulty-label-' + d.level}>Difficulty: {d.difficulty} <img src={Close} alt="close" className='ms-1 my-1 close-filter-label' onClick={() => {
-                let temp = [...props.hikesDifficulties];
-                const index = temp.findIndex((t) => t.level === d.level);
-                if (index === -1) return;
-                temp[index].isChecked = false;
-                props.setHikesDifficulties(temp);
-              }} /></Button>
-            );
-          })}
+          {deselectedDifficulties !== "" && <Button variant="info" size="sm" className='mx-2 my-1 btn_info px-2 filter-label'>Deselected difficulties: {deselectedDifficulties}<img src={Close} alt="close" className='ms-1 my-1 close-filter-label' onClick={() => props.setHikesDifficulties(props.hikesDifficultiesList)} /></Button>}
           {props.hikesState && <Button variant="info" size="sm" className='mx-2 my-1 btn_info px-2 filter-label'>State: {props.hikesState} <img src={Close} alt="close" className='ms-1 my-1 close-filter-label' onClick={() => props.setHikesState('')} /></Button>}
           {props.hikesRegion && <Button variant="info" size="sm" className='mx-2 my-1 btn_info px-2 filter-label'>Region: {props.hikesRegion} <img src={Close} alt="close" className='ms-1 my-1 close-filter-label' onClick={() => props.setHikesRegion('')} /></Button>}
           {props.hikesProvince && <Button variant="info" size="sm" className='mx-2 my-1 btn_info px-2 filter-label'>Province: {props.hikesProvince} <img src={Close} alt="close" className='ms-1 my-1 close-filter-label' onClick={() => props.setHikesProvince('')} /></Button>}

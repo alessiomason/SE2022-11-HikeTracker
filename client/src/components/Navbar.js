@@ -29,9 +29,9 @@ function MyNavbar(props) {
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="me-auto">
-            <button class="button type1" onClick={() => scrollIntoViewWithOffset("hikeSec", 40)}> Hike </button>
-            <button class="button type2" onClick={() => scrollIntoViewWithOffset("hutSec", 40)}> Hut </button>
-            <button class="button type3" onClick={() => scrollIntoViewWithOffset("parkSec", 40)}> Parking </button>
+            <button className="button type1" onClick={() => scrollIntoViewWithOffset("hikeSec", 40)}> Hike </button>
+            <button className="button type2" onClick={() => scrollIntoViewWithOffset("hutSec", 40)}> Hut </button>
+            <button className="button type3" onClick={() => scrollIntoViewWithOffset("parkSec", 40)}> Parking </button>
           </Nav>
           <Nav>
             {(!props.loggedIn) ?

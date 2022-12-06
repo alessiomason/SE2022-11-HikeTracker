@@ -26,7 +26,7 @@ function MyParkingSection() {
     <>
       <Container fluid className="parkingSection" id="parkSec">
         <Row>
-          <h2 class="background double parking-title"><span><img src={Parking} alt="hut_image" className='me-2 hike-img' />PARKINGS</span></h2>
+          <h2 className="background double parking-title"><span><img src={Parking} alt="hut_image" className='me-2 hike-img' />PARKINGS</span></h2>
         </Row>
       </Container>
       <Container fluid className="parkingCardSection">
@@ -96,7 +96,7 @@ function Card() {
     <div className="hutCardBox">
       <Slider {...settings}>
         {huts.map((item) => (
-          <div className="parking-card ">
+          <div className="parking-card" key={item.id}>
             <div className="card-top">
               <img src={image3} alt={item.title} className="card-top-img-park" />
             </div>
