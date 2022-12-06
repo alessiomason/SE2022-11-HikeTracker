@@ -21,6 +21,8 @@ function SingleHikeCard(props) {
                 {props.hike.ascent && <Card.Text className="card-text">Ascent: {Math.round(props.hike.ascent)} m</Card.Text>}
                 {props.hike.difficulty && <Card.Text className="card-text">Difficulty: {difficultiesNames[props.hike.difficulty-1]}</Card.Text>}
                 {/*props.hike.description && <Card.Text>Description: {props.hike.description}</Card.Text>*/}
+                {props.hike.state && <Card.Text className="card-text">State: {props.hike.state}</Card.Text>}
+                {props.hike.region && <Card.Text className="card-text">Region: {props.hike.region}</Card.Text>}
                 {props.hike.province && <Card.Text className="card-text">Province: {props.hike.province}</Card.Text>}
                 {props.hike.municipality && <Card.Text className="card-text">Municipality: {props.hike.municipality}</Card.Text>}
                 <p className='card-credit'> Credit: HikeTracker </p>

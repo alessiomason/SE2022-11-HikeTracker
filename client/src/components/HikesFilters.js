@@ -32,11 +32,13 @@ function HikesFilters(props) {
     </Tooltip>
   );
 
+  const deselectedDifficulties = props.hikesDifficulties.filter(d => !d.isChecked).flatMap(d => d.difficulty).join(", ");
+
   return (
 
     <Container fluid className='filterSection' id="hikeSec">
-      <Row> 
-        <h2 className="background double filter-title"><span><img src={Hiking} alt="hiking_image" className='me-2 hike-img'/>Hikes</span></h2>
+      <Row>
+        <h2 className="background double filter-title"><span><img src={Hiking} alt="hiking_image" className='me-2 hike-img' />Hikes</span></h2>
       </Row>
       <Row className='mt-5'>
         <Col md="auto" sm="auto" xs="auto" >
@@ -71,17 +73,7 @@ function HikesFilters(props) {
           {props.hikesMaxTime && <Button variant="info" size="sm" className='mx-2 my-1 btn_info px-2 filter-label'>Maximum time: {props.hikesMaxTime} h <img src={Close} alt="close" className='ms-1 my-1 close-filter-label' onClick={() => props.setHikesMaxTime('')} /></Button>}
           {props.hikesMinAscent && <Button variant="info" size="sm" className='mx-2 my-1 btn_info px-2 filter-label'>Minimum ascent: {props.hikesMinAscent} m <img src={Close} alt="close" className='ms-1 my-1 close-filter-label' onClick={() => props.setHikesMinAscent('')} /></Button>}
           {props.hikesMaxAscent && <Button variant="info" size="sm" className='mx-2 my-1 btn_info px-2 filter-label'>Maximum ascent: {props.hikesMaxAscent} m <img src={Close} alt="close" className='ms-1 my-1 close-filter-label' onClick={() => props.setHikesMaxAscent('')} /></Button>}
-          {props.hikesDifficulties.filter(d => d.isChecked).map((d) => {
-            return (
-              <Button variant="info" size="sm" className='mx-2 my-1 btn_info px-2 filter-label' key={'difficulty-label-' + d.level}>Difficulty: {d.difficulty} <img src={Close} alt="close" className='ms-1 my-1 close-filter-label' onClick={() => {
-                let temp = [...props.hikesDifficulties];
-                const index = temp.findIndex((t) => t.level === d.level);
-                if (index === -1) return;
-                temp[index].isChecked = false;
-                props.setHikesDifficulties(temp);
-              }} /></Button>
-            );
-          })}
+          {deselectedDifficulties !== "" && <Button variant="info" size="sm" className='mx-2 my-1 btn_info px-2 filter-label'>Deselected difficulties: {deselectedDifficulties}<img src={Close} alt="close" className='ms-1 my-1 close-filter-label' onClick={() => props.setHikesDifficulties(props.hikesDifficultiesList)} /></Button>}
           {props.hikesState && <Button variant="info" size="sm" className='mx-2 my-1 btn_info px-2 filter-label'>State: {props.hikesState} <img src={Close} alt="close" className='ms-1 my-1 close-filter-label' onClick={() => props.setHikesState('')} /></Button>}
           {props.hikesRegion && <Button variant="info" size="sm" className='mx-2 my-1 btn_info px-2 filter-label'>Region: {props.hikesRegion} <img src={Close} alt="close" className='ms-1 my-1 close-filter-label' onClick={() => props.setHikesRegion('')} /></Button>}
           {props.hikesProvince && <Button variant="info" size="sm" className='mx-2 my-1 btn_info px-2 filter-label'>Province: {props.hikesProvince} <img src={Close} alt="close" className='ms-1 my-1 close-filter-label' onClick={() => props.setHikesProvince('')} /></Button>}
@@ -166,15 +158,43 @@ function MyModal(props) {
       props.setHikesMinAscent(tempHikesMinAscent);
     if (props.title == 'Ascent (meters)' && tempHikesMaxAscent !== props.hikesMaxAscent)
       props.setHikesMaxAscent(tempHikesMaxAscent);
-    if (props.title == 'Location' && tempHikesState !== props.hikesState)
+    if (props.title == 'Location' && tempHikesState !== props.hikesState && tempHikesState !== "Select a state")
       props.setHikesState(tempHikesState);
-    if (props.title == 'Location' && tempHikesRegion !== props.hikesRegion)
+    if (props.title == 'Location' && tempHikesRegion !== props.hikesRegion && tempHikesRegion !== "Select a region")
       props.setHikesRegion(tempHikesRegion);
-    if (props.title == 'Location' && tempHikesProvince !== props.hikesProvince)
+    if (props.title == 'Location' && tempHikesProvince !== props.hikesProvince && tempHikesProvince !== "Select a province")
       props.setHikesProvince(tempHikesProvince);
-    if (props.title == 'Location' && tempHikesMunicipality !== props.hikesMunicipality)
+    if (props.title == 'Location' && tempHikesMunicipality !== props.hikesMunicipality && tempHikesMunicipality !== "Select a municipality")
       props.setHikesMunicipality(tempHikesMunicipality);
   }
+
+  // preparation for location filter options
+  // Set in order to create a list of unique items
+  const hikesStatesInDB = new Set(props.hikes.filter(h => h.state).map(h => h.state).sort());
+
+  const hikesRegionsInDB = new Set(props.hikes.filter(h => {
+    let showRegion = true;
+    // only show the regions in the selected state
+    if (tempHikesState !== '') showRegion = h.state === tempHikesState;
+    return showRegion && h.region;  // only create option from hikes that have a region
+  }).map(h => h.region).sort());
+
+  const hikesProvincesInDB = new Set(props.hikes.filter(h => {
+    // only show the provinces in the selected region and state
+    let showProvince = true;
+    if (tempHikesState !== '') showProvince = h.state === tempHikesState;
+    if (tempHikesRegion !== '') showProvince = showProvince && h.region === tempHikesRegion;
+    return showProvince && h.province;  // only create option from hikes that have a province
+  }).map(h => h.province).sort());
+
+  const hikesMunicipalitiesInDB = new Set(props.hikes.filter(h => {
+    // only show the municipalities in the selected province, region and state
+    let showMunicipality = true;
+    if (tempHikesState !== '') showMunicipality = h.state === tempHikesState;
+    if (tempHikesRegion !== '') showMunicipality = showMunicipality && h.region === tempHikesRegion;
+    if (tempHikesProvince !== '') showMunicipality = showMunicipality && h.province === tempHikesProvince;
+    return showMunicipality && h.municipality;  // only create option from hikes that have a municipality
+  }).map(h => h.municipality).sort());
 
   return (
 
@@ -237,8 +257,8 @@ function MyModal(props) {
                         <Col md={3} ><Form.Label>State</Form.Label></Col>
                         <Col>
                           <Form.Select className="my-3" aria-label="Select a state" value={tempHikesState} onChange={event => setTempHikesState(event.target.value)} >
-                            <option>Select a state</option>
-                            {props.hikes.filter(h => h.state).map(h => <option value={h.state}>{h.state}</option>)}
+                            <option key={'Select a state'}>Select a state</option>
+                            {[...hikesStatesInDB].map(s => <option key={s} value={s}>{s}</option>)}
                           </Form.Select>
                         </Col>
                       </Row>
@@ -246,13 +266,8 @@ function MyModal(props) {
                         <Col md={3} ><Form.Label>Region</Form.Label></Col>
                         <Col>
                           <Form.Select className="my-3" aria-label="Select a region" value={tempHikesRegion} onChange={event => setTempHikesRegion(event.target.value)} >
-                            <option>Select a region</option>
-                            {props.hikes.filter(h => {
-                              let showRegion = true;
-                              // only show the regions in the selected state
-                              if (tempHikesState !== '') showRegion = h.hikesState === tempHikesState;
-                              return showRegion && h.region;  // only create option from hikes that have a region
-                            }).map(h => <option value={h.region}>{h.region}</option>)}
+                            <option key={'Select a region'}>Select a region</option>
+                            {[...hikesRegionsInDB].map(r => <option key={r} value={r}>{r}</option>)}
                           </Form.Select>
                         </Col>
                       </Row>
@@ -260,14 +275,8 @@ function MyModal(props) {
                         <Col md={3} ><Form.Label>Province</Form.Label></Col>
                         <Col>
                           <Form.Select className="my-3" aria-label="Select a province" value={tempHikesProvince} onChange={event => setTempHikesProvince(event.target.value)} >
-                            <option>Select a province</option>
-                            {props.hikes.filter(h => {
-                              // only show the provinces in the selected region and state
-                              let showProvince = true;
-                              if (tempHikesState !== '') showProvince = h.hikesState === tempHikesState;
-                              if (tempHikesRegion !== '') showProvince = showProvince && h.region === tempHikesRegion;
-                              return showProvince && h.province;  // only create option from hikes that have a province
-                            }).map(h => <option value={h.province}>{h.province}</option>)}
+                            <option key={'Select a province'}>Select a province</option>
+                            {[...hikesProvincesInDB].map(p => <option key={p} value={p}>{p}</option>)}
                           </Form.Select>
                         </Col>
                       </Row>
@@ -275,15 +284,8 @@ function MyModal(props) {
                         <Col md={3} ><Form.Label>Municipality</Form.Label></Col>
                         <Col>
                           <Form.Select className="my-3" aria-label="Select a municipality" value={tempHikesMunicipality} onChange={event => setTempHikesMunicipality(event.target.value)} >
-                            <option>Select a municipality</option>
-                            {props.hikes.filter(h => {
-                              // only show the municipalities in the selected province, region and state
-                              let showMunicipality = true;
-                              if (tempHikesState !== '') showMunicipality = h.hikesState === tempHikesState;
-                              if (tempHikesRegion !== '') showMunicipality = showMunicipality && h.region === tempHikesRegion;
-                              if (tempHikesProvince !== '') showMunicipality = showMunicipality && h.province === tempHikesProvince;
-                              return showMunicipality && h.municipality;  // only create option from hikes that have a municipality
-                            }).map(h => <option value={h.municipality}>{h.municipality}</option>)}
+                            <option key={'Select a municipality'}>Select a municipality</option>
+                            {[...hikesMunicipalitiesInDB].map(m => <option key={m} value={m}>{m}</option>)}
                           </Form.Select>
                         </Col>
                       </Row>

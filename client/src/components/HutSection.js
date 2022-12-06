@@ -30,12 +30,12 @@ function MyHutSection() {
     <>
     <Container fluid className="hutSection" id="hutSec">
       <Row>
-        <h2 class="background double hut-title"><span><img src={Hut} alt="hut_image" className='me-2 hike-img' />HUTS</span></h2>
+        <h2 className="background double hut-title"><span><img src={Hut} alt="hut_image" className='me-2 hike-img' />HUTS</span></h2>
       </Row>
       <Row className='mt-5'>
-        <div class="search-box">
-          <button class="btn-search"><FaSearch className="icon" /></button>
-          <input type="text" class="input-search" placeholder="Type to Search..." />
+        <div className="search-box">
+          <button className="btn-search"><FaSearch className="icon" /></button>
+          <input type="text" className="input-search" placeholder="Type to Search..." />
         </div>
       </Row>
       <Row className='mt-5'>
@@ -124,7 +124,7 @@ function Card() {
     <div className="hutCardBox">
       <Slider {...settings}>
         {huts.map((item) => (
-          <div className="hut-card">
+          <div className="hut-card" key={item.id}>
             <div className="card-top">
               <img src={image4} alt={item.title} className="card-top-img" />
             </div>
