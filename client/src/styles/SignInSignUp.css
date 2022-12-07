@@ -9,6 +9,7 @@
     border-radius: 0px !important;
     width: 160px !important;
     border: 2px solid #0B5ED7 !important;
+    font-weight: bold;
     background-color: transparent !important;
     --hover: #0B5ED7;
     color: #0B5ED7 !important;
@@ -17,6 +18,7 @@
 .login_btn:hover,
 .login_btn:focus {
     color: white !important;
+    font-weight: bold;
     box-shadow: inset 160px 0 0 0 var(--hover);
 }
 
@@ -31,6 +33,7 @@
     border-radius: 0px !important;
     width: 160px !important;
     border: 2px solid #198754 !important;
+    font-weight: bold;
     background-color: transparent !important;
     --hover: #198754;
     color: #198754 !important;
@@ -39,5 +42,6 @@
 .signup_btn:hover,
 .signup_btn:focus {
     color: white !important;
+    font-weight: bold;
     box-shadow: inset 160px 0 0 0 var(--hover);
 }
