@@ -5,6 +5,7 @@
 
 .card {
     width: 20rem;
+    border: 2px solid #62DDF5;
     box-shadow: 0 6px 20px rgba(56, 125, 255, 0.17) !important;
     -webkit-filter: drop-shadow(0 6px 20px rgba(56, 125, 255, 0.017)) !important;
     filter: drop-shadow(0 6px 20px rgba(56, 125, 255, 0.017)) !important;
