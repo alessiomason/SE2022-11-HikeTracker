@@ -2,7 +2,7 @@ import "bootstrap-slider/dist/css/bootstrap-slider.css";
 import React, { useState, useEffect } from 'react';
 import { Button, Modal, Col, Row, Form, Container, ButtonToolbar, ButtonGroup, Tooltip, OverlayTrigger } from "react-bootstrap";
 import { Icon } from 'leaflet';
-import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, useMapEvents, Circle } from 'react-leaflet';
 import ReactBootstrapSlider from 'react-bootstrap-slider';
 import '../styles/FilterSection.css';
 import { default as Close } from '../icons/close.svg';
@@ -345,12 +345,15 @@ function MyModal(props) {
 
 function HikesFiltersMap(props) {
   return (
-    <MapContainer center={[props.tempHikesLatitude, props.tempHikesLongitude]} zoom={10} scrollWheelZoom={true} className='hikes-filter-map'>
+    <MapContainer center={[props.tempHikesLatitude, props.tempHikesLongitude]} zoom={12} scrollWheelZoom={true} className='hikes-filter-map'>
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
       <LocationMarker tempHikesLatitude={props.tempHikesLatitude} setTempHikesLatitude={props.setTempHikesLatitude} tempHikesLongitude={props.tempHikesLongitude} setTempHikesLongitude={props.setTempHikesLongitude} />
+      <Circle center={{ lat: props.tempHikesLatitude, lng: props.tempHikesLongitude }}
+        fillColor="blue"
+        radius={props.tempHikesRadius * 1000} />
     </MapContainer>
   );
 }
