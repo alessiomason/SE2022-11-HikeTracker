@@ -1,5 +1,9 @@
+import "bootstrap-slider/dist/css/bootstrap-slider.css";
 import React, { useState, useEffect } from 'react';
 import { Button, Modal, Col, Row, Form, Container, ButtonToolbar, ButtonGroup, Tooltip, OverlayTrigger } from "react-bootstrap";
+import { Icon } from 'leaflet';
+import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
+import ReactBootstrapSlider from 'react-bootstrap-slider';
 import '../styles/FilterSection.css';
 import { default as Close } from '../icons/close.svg';
 import API from '../API.js';
@@ -24,6 +28,9 @@ function HikesFilters(props) {
     props.setHikesRegion('');
     props.setHikesProvince('');
     props.setHikesMunicipality('');
+    props.setHikesLatitude(-1);
+    props.setHikesLongitude(-1);
+    props.setHikesRadius(-1);
   }
 
   const renderTooltip = (props) => (
@@ -54,17 +61,18 @@ function HikesFilters(props) {
               <Button variant="success" className='btn_filter' onClick={() => { setModalShow(true); setTitle("Point from map"); setDesc("Select a specific point on the map:") }}>Point from map</Button>
             </ButtonGroup>
             <ButtonGroup className="my-1" aria-label="Second group">
-            <OverlayTrigger placement="right" delay={{ show: 250, hide: 400 }} overlay={renderTooltip} >
-                  <Button className="delete-btn"><img src={Delete} alt="delete_image" className='' onClick={clearStates}/></Button>
-                </OverlayTrigger>
+              <OverlayTrigger placement="right" delay={{ show: 250, hide: 400 }} overlay={renderTooltip} >
+                <Button className="delete-btn"><img src={Delete} alt="delete_image" className='' onClick={clearStates} /></Button>
+              </OverlayTrigger>
             </ButtonGroup>
           </ButtonToolbar>
         </Col>
       </Row>
 
-      <MyModal show={modalShow} onHide={() => setModalShow(false)} hikes={props.hikes} title={title} desc={desc} hikesMinLength={props.hikesMinLength} setHikesMinLength={props.setHikesMinLength} hikesMaxLength={props.hikesMaxLength} setHikesMaxLength={props.setHikesMaxLength}
+      <MyModal className={title === 'Point from map' && 'wide-modal'} show={modalShow} onHide={() => setModalShow(false)} hikes={props.hikes} title={title} desc={desc} hikesMinLength={props.hikesMinLength} setHikesMinLength={props.setHikesMinLength} hikesMaxLength={props.hikesMaxLength} setHikesMaxLength={props.setHikesMaxLength}
         hikesMinTime={props.hikesMinTime} setHikesMinTime={props.setHikesMinTime} hikesMaxTime={props.hikesMaxTime} setHikesMaxTime={props.setHikesMaxTime} hikesMinAscent={props.hikesMinAscent} setHikesMinAscent={props.setHikesMinAscent} hikesMaxAscent={props.hikesMaxAscent} setHikesMaxAscent={props.setHikesMaxAscent}
-        hikesDifficulties={props.hikesDifficulties} setHikesDifficulties={props.setHikesDifficulties} hikesState={props.hikesState} setHikesState={props.setHikesState} hikesRegion={props.hikesRegion} setHikesRegion={props.setHikesRegion} hikesProvince={props.hikesProvince} setHikesProvince={props.setHikesProvince} hikesMunicipality={props.hikesMunicipality} setHikesMunicipality={props.setHikesMunicipality} startPoint={props.startPoint} setStartPoint={props.setStartPoint} refPoint={props.refPoint} setRefPoint={props.setRefPoint} endPoint={props.endPoint} setEndPoint={props.setEndPoint} />
+        hikesDifficulties={props.hikesDifficulties} setHikesDifficulties={props.setHikesDifficulties} hikesState={props.hikesState} setHikesState={props.setHikesState} hikesRegion={props.hikesRegion} setHikesRegion={props.setHikesRegion} hikesProvince={props.hikesProvince} setHikesProvince={props.setHikesProvince}
+        hikesMunicipality={props.hikesMunicipality} setHikesMunicipality={props.setHikesMunicipality} hikesLatitude={props.hikesLatitude} setHikesLatitude={props.setHikesLatitude} hikesLongitude={props.hikesLongitude} setHikesLongitude={props.setHikesLongitude} hikesRadius={props.hikesRadius} setHikesRadius={props.setHikesRadius} startPoint={props.startPoint} setStartPoint={props.setStartPoint} refPoint={props.refPoint} setRefPoint={props.setRefPoint} endPoint={props.endPoint} setEndPoint={props.setEndPoint} />
       <Row className='mt-3'>
         <ButtonToolbar aria-label="Toolbar with button groups" >
           {props.hikesMinLength && <Button variant="info" size="sm" className='mx-2 my-1 btn_info px-2 filter-label'>Minimum length: {props.hikesMinLength} m <img src={Close} alt="close" className='ms-1 my-1 close-filter-label' onClick={() => props.setHikesMinLength('')} /></Button>}
@@ -78,6 +86,7 @@ function HikesFilters(props) {
           {props.hikesRegion && <Button variant="info" size="sm" className='mx-2 my-1 btn_info px-2 filter-label'>Region: {props.hikesRegion} <img src={Close} alt="close" className='ms-1 my-1 close-filter-label' onClick={() => props.setHikesRegion('')} /></Button>}
           {props.hikesProvince && <Button variant="info" size="sm" className='mx-2 my-1 btn_info px-2 filter-label'>Province: {props.hikesProvince} <img src={Close} alt="close" className='ms-1 my-1 close-filter-label' onClick={() => props.setHikesProvince('')} /></Button>}
           {props.hikesMunicipality && <Button variant="info" size="sm" className='mx-2 my-1 btn_info px-2 filter-label'>Municipality: {props.hikesMunicipality} <img src={Close} alt="close" className='ms-1 my-1 close-filter-label' onClick={() => props.setHikesMunicipality('')} /></Button>}
+          {props.hikesLatitude !== -1 && props.hikesLongitude !== -1 && props.hikesRadius !== -1 && <Button variant="info" size="sm" className='mx-2 my-1 btn_info px-2 filter-label'>Point from map in a radius of {props.hikesRadius} km<img src={Close} alt="close" className='ms-1 my-1 close-filter-label' onClick={() => { props.setHikesLatitude(-1); props.setHikesLongitude(-1); props.setHikesRadius(-1); }} /></Button>}
 
         </ButtonToolbar>
       </Row>
@@ -102,6 +111,9 @@ function MyModal(props) {
   const [tempHikesRegion, setTempHikesRegion] = useState(props.hikesRegion);
   const [tempHikesProvince, setTempHikesProvince] = useState(props.hikesProvince);
   const [tempHikesMunicipality, setTempHikesMunicipality] = useState(props.hikesMunicipality);
+  const [tempHikesLatitude, setTempHikesLatitude] = useState(props.hikesLatitude !== -1 ? props.hikesLatitude : 45.177786);
+  const [tempHikesLongitude, setTempHikesLongitude] = useState(props.hikesLongitude !== -1 ? props.hikesLongitude : 7.083372);
+  const [tempHikesRadius, setTempHikesRadius] = useState(props.hikesRadius !== -1 ? props.hikesRadius : 1);
 
   useEffect(() => {
     API.getStartPoint()
@@ -133,6 +145,9 @@ function MyModal(props) {
     setTempHikesRegion(props.hikesRegion);
     setTempHikesProvince(props.hikesProvince);
     setTempHikesMunicipality(props.hikesMunicipality);
+    setTempHikesLatitude(props.hikesLatitude !== -1 ? props.hikesLatitude : 45.177786);
+    setTempHikesLongitude(props.hikesLongitude !== -1 ? props.hikesLongitude : 7.083372);
+    setTempHikesRadius(props.hikesRadius !== -1 ? props.hikesRadius : 1);
   }
 
   const changeCheckDifficulties = (level) => {
@@ -144,28 +159,34 @@ function MyModal(props) {
   };
 
   const confirmButton = () => {
-    if (props.title == 'Difficulty')
+    if (props.title === 'Difficulty')
       props.setHikesDifficulties(tempHikesDifficulties);
-    if (props.title == 'Length (meters)' && tempHikesMinLength !== props.hikesMinLength)
+    if (props.title === 'Length (meters)' && tempHikesMinLength !== props.hikesMinLength)
       props.setHikesMinLength(tempHikesMinLength);
-    if (props.title == 'Length (meters)' && tempHikesMaxLength !== props.hikesMaxLength)
+    if (props.title === 'Length (meters)' && tempHikesMaxLength !== props.hikesMaxLength)
       props.setHikesMaxLength(tempHikesMaxLength);
-    if (props.title == 'Expected time' && tempHikesMinTime !== props.hikesMinTime)
+    if (props.title === 'Expected time' && tempHikesMinTime !== props.hikesMinTime)
       props.setHikesMinTime(tempHikesMinTime);
-    if (props.title == 'Expected time' && tempHikesMaxTime !== props.hikesMaxTime)
+    if (props.title === 'Expected time' && tempHikesMaxTime !== props.hikesMaxTime)
       props.setHikesMaxTime(tempHikesMaxTime);
-    if (props.title == 'Ascent (meters)' && tempHikesMinAscent !== props.hikesMinAscent)
+    if (props.title === 'Ascent (meters)' && tempHikesMinAscent !== props.hikesMinAscent)
       props.setHikesMinAscent(tempHikesMinAscent);
-    if (props.title == 'Ascent (meters)' && tempHikesMaxAscent !== props.hikesMaxAscent)
+    if (props.title === 'Ascent (meters)' && tempHikesMaxAscent !== props.hikesMaxAscent)
       props.setHikesMaxAscent(tempHikesMaxAscent);
-    if (props.title == 'Location' && tempHikesState !== props.hikesState && tempHikesState !== "Select a state")
+    if (props.title === 'Location' && tempHikesState !== props.hikesState && tempHikesState !== "Select a state")
       props.setHikesState(tempHikesState);
-    if (props.title == 'Location' && tempHikesRegion !== props.hikesRegion && tempHikesRegion !== "Select a region")
+    if (props.title === 'Location' && tempHikesRegion !== props.hikesRegion && tempHikesRegion !== "Select a region")
       props.setHikesRegion(tempHikesRegion);
-    if (props.title == 'Location' && tempHikesProvince !== props.hikesProvince && tempHikesProvince !== "Select a province")
+    if (props.title === 'Location' && tempHikesProvince !== props.hikesProvince && tempHikesProvince !== "Select a province")
       props.setHikesProvince(tempHikesProvince);
-    if (props.title == 'Location' && tempHikesMunicipality !== props.hikesMunicipality && tempHikesMunicipality !== "Select a municipality")
+    if (props.title === 'Location' && tempHikesMunicipality !== props.hikesMunicipality && tempHikesMunicipality !== "Select a municipality")
       props.setHikesMunicipality(tempHikesMunicipality);
+    if (props.title === 'Point from map' && tempHikesLatitude !== props.hikesLatitude)
+      props.setHikesLatitude(tempHikesLatitude);
+    if (props.title === 'Point from map' && tempHikesLongitude !== props.hikesLongitude)
+      props.setHikesLongitude(tempHikesLongitude);
+    if (props.title === 'Point from map' && tempHikesRadius !== props.hikesRadius)
+      props.setHikesRadius(tempHikesRadius);
   }
 
   // preparation for location filter options
@@ -252,7 +273,7 @@ function MyModal(props) {
                       value={tempHikesMaxAscent} onChange={event => setTempHikesMaxAscent(event.target.value)} />
                   </Row> :
                   (props.title == 'Location') ?
-                    <Container>
+                    <>
                       <Row className="align-items-center">
                         <Col md={3} ><Form.Label>State</Form.Label></Col>
                         <Col>
@@ -289,7 +310,20 @@ function MyModal(props) {
                           </Form.Select>
                         </Col>
                       </Row>
-                    </Container> : 'false'
+                    </> :
+                    (props.title == 'Point from map') ?
+                      <>
+                        <HikesFiltersMap tempHikesLatitude={tempHikesLatitude} setTempHikesLatitude={setTempHikesLatitude} tempHikesLongitude={tempHikesLongitude} setTempHikesLongitude={setTempHikesLongitude} tempHikesRadius={tempHikesRadius} setTempHikesRadius={setTempHikesRadius} />
+                        <h4>Select the maximum distance from the point</h4>
+                        <h5 className="text-center">Radius of {tempHikesRadius} km</h5>
+                        <Row>
+                          <Col>1 km</Col>
+                          <Col xs={10}>
+                            <ReactBootstrapSlider value={tempHikesRadius} min={1} max={5} step={1} change={event => setTempHikesRadius(event.target.value)} className='my-slider' />
+                          </Col>
+                          <Col>5 km</Col>
+                        </Row>
+                      </> : 'false'
 
           }
         </Container>
@@ -307,6 +341,41 @@ function MyModal(props) {
       </Modal.Footer>
     </Modal>
   );
+}
+
+function HikesFiltersMap(props) {
+  return (
+    <MapContainer center={[props.tempHikesLatitude, props.tempHikesLongitude]} zoom={10} scrollWheelZoom={true} className='hikes-filter-map'>
+      <TileLayer
+        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+      />
+      <LocationMarker tempHikesLatitude={props.tempHikesLatitude} setTempHikesLatitude={props.setTempHikesLatitude} tempHikesLongitude={props.tempHikesLongitude} setTempHikesLongitude={props.setTempHikesLongitude} />
+    </MapContainer>
+  );
+}
+
+function LocationMarker(props) {
+  const markerIcon = new Icon({
+    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
+    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41]
+  });
+
+  const [marker, setMarker] = useState([props.tempHikesLatitude, props.tempHikesLongitude]);
+
+  useMapEvents({
+    click(e) {
+      props.setTempHikesLatitude(e.latlng.lat);
+      props.setTempHikesLongitude(e.latlng.lng);
+      setMarker([e.latlng.lat, e.latlng.lng]);
+    }
+  });
+
+  return (<Marker position={marker} icon={markerIcon} />);
 }
 
 export default HikesFilters;
