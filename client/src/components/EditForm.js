@@ -52,6 +52,8 @@ function EditForm(props) {
                 ascent: ascent,
                 difficulty: difficultyText,
                 description: description,
+                state: state,
+                region:region,
                 province: province,
                 municipality: municipality,
                 image: image
