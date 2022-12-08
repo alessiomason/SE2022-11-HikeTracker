@@ -1,12 +1,12 @@
 import "bootstrap-slider/dist/css/bootstrap-slider.css";
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import { Link } from "react-router-dom";
 import { Button, Modal, Col, Row, Form, Container, ButtonToolbar, ButtonGroup, Tooltip, OverlayTrigger } from "react-bootstrap";
 import { Icon } from 'leaflet';
-import { MapContainer, TileLayer, Marker, useMapEvents, Circle } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, useMapEvents, Circle } from 'react-leaflet';
 import ReactBootstrapSlider from 'react-bootstrap-slider';
 import '../styles/FilterSection.css';
 import { default as Close } from '../icons/close.svg';
-import API from '../API.js';
 import { default as Hiking } from '../icons/hiking.svg';
 import { default as Delete } from '../icons/delete.svg';
 
@@ -96,10 +96,6 @@ function HikesFilters(props) {
 }
 
 function MyModal(props) {
-
-  const [startPoints, setStartPoints] = useState([]);
-  const [endPoints, setEndPoints] = useState([]);
-  const [refPoints, setRefPoints] = useState([]);
   const [tempHikesMinLength, setTempHikesMinLength] = useState(props.hikesMinLength);
   const [tempHikesMaxLength, setTempHikesMaxLength] = useState(props.hikesMaxLength);
   const [tempHikesMinTime, setTempHikesMinTime] = useState(props.hikesMinTime);
@@ -111,27 +107,9 @@ function MyModal(props) {
   const [tempHikesRegion, setTempHikesRegion] = useState(props.hikesRegion);
   const [tempHikesProvince, setTempHikesProvince] = useState(props.hikesProvince);
   const [tempHikesMunicipality, setTempHikesMunicipality] = useState(props.hikesMunicipality);
-  const [tempHikesLatitude, setTempHikesLatitude] = useState(props.hikesLatitude !== -1 ? props.hikesLatitude : 45.177786);
-  const [tempHikesLongitude, setTempHikesLongitude] = useState(props.hikesLongitude !== -1 ? props.hikesLongitude : 7.083372);
-  const [tempHikesRadius, setTempHikesRadius] = useState(props.hikesRadius !== -1 ? props.hikesRadius : 1);
-
-  useEffect(() => {
-    API.getStartPoint()
-      .then((startPoints) => setStartPoints(startPoints))
-      .catch(err => console.log(err))
-  }, []);
-
-  useEffect(() => {
-    API.getEndPoint()
-      .then((endPoints) => setEndPoints(endPoints))
-      .catch(err => console.log(err))
-  }, []);
-
-  useEffect(() => {
-    API.getReferencePoint()
-      .then((refPoints) => setRefPoints(refPoints))
-      .catch(err => console.log(err))
-  }, []);
+  const [tempHikesLatitude, setTempHikesLatitude] = useState(props.hikesLatitude !== -1 ? props.hikesLatitude : 45.17731777167853);
+  const [tempHikesLongitude, setTempHikesLongitude] = useState(props.hikesLongitude !== -1 ? props.hikesLongitude : 7.090988159179688);
+  const [tempHikesRadius, setTempHikesRadius] = useState(props.hikesRadius !== -1 ? props.hikesRadius : 3);
 
   const clearTempStates = () => {
     setTempHikesMinLength(props.hikesMinLength);
@@ -145,9 +123,9 @@ function MyModal(props) {
     setTempHikesRegion(props.hikesRegion);
     setTempHikesProvince(props.hikesProvince);
     setTempHikesMunicipality(props.hikesMunicipality);
-    setTempHikesLatitude(props.hikesLatitude !== -1 ? props.hikesLatitude : 45.177786);
-    setTempHikesLongitude(props.hikesLongitude !== -1 ? props.hikesLongitude : 7.083372);
-    setTempHikesRadius(props.hikesRadius !== -1 ? props.hikesRadius : 1);
+    setTempHikesLatitude(props.hikesLatitude !== -1 ? props.hikesLatitude : 45.17731777167853);
+    setTempHikesLongitude(props.hikesLongitude !== -1 ? props.hikesLongitude : 7.090988159179688);
+    setTempHikesRadius(props.hikesRadius !== -1 ? props.hikesRadius : 3);
   }
 
   const changeCheckDifficulties = (level) => {
@@ -313,7 +291,7 @@ function MyModal(props) {
                     </> :
                     (props.title == 'Point from map') ?
                       <>
-                        <HikesFiltersMap tempHikesLatitude={tempHikesLatitude} setTempHikesLatitude={setTempHikesLatitude} tempHikesLongitude={tempHikesLongitude} setTempHikesLongitude={setTempHikesLongitude} tempHikesRadius={tempHikesRadius} setTempHikesRadius={setTempHikesRadius} />
+                        <HikesFiltersMap hikes={props.hikes} tempHikesLatitude={tempHikesLatitude} setTempHikesLatitude={setTempHikesLatitude} tempHikesLongitude={tempHikesLongitude} setTempHikesLongitude={setTempHikesLongitude} tempHikesRadius={tempHikesRadius} setTempHikesRadius={setTempHikesRadius} />
                         <h4>Select the maximum distance from the point</h4>
                         <h5 className="text-center">Radius of {tempHikesRadius} km</h5>
                         <Row>
@@ -344,6 +322,15 @@ function MyModal(props) {
 }
 
 function HikesFiltersMap(props) {
+  const startPointIcon = new Icon({
+    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
+    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41]
+  });
+
   return (
     <MapContainer center={[props.tempHikesLatitude, props.tempHikesLongitude]} zoom={12} scrollWheelZoom={true} className='hikes-filter-map'>
       <TileLayer
@@ -354,6 +341,16 @@ function HikesFiltersMap(props) {
       <Circle center={{ lat: props.tempHikesLatitude, lng: props.tempHikesLongitude }}
         fillColor="blue"
         radius={props.tempHikesRadius * 1000} />
+      {props.hikes.map(h => {
+        return (
+          <Marker position={[h.startPoint.latitude, h.startPoint.longitude]} icon={startPointIcon}>
+            <Popup>
+              {h.startPoint.label && <p>{h.startPoint.label}</p>}
+              {<p><Link to={'/hike/' + h.id}>See hike page</Link></p>}
+            </Popup>
+          </Marker>
+        );
+      })}
     </MapContainer>
   );
 }
