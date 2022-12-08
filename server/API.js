@@ -166,13 +166,52 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
 
             const hut = await dao.addHut(name, description, lat, lon, altitude, beds, state, region, province, municipality);
             
-            res.status(201).json(hut).end();
+            res.status(201).json(hut.id).end();
         } catch (err) {
             console.log(err)
             res.status(500).json({ error: err });
         }
 
     });
+
+    app.put('/api/uploadHutImage/:id', upload.single('file'), async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty())
+            return res.status(422).json({ errors: errors.array() });
+
+        const hutId = req.params.id;
+
+        try {
+            let result = await dao.getHut(hutId);
+            if (result.error)
+                res.status(404).json(result);
+            else {
+                res.status(201).end();
+            }
+        } catch (err) {
+            res.status(500).json({ error: `Error during upload of the hut's image` });
+        }
+    });
+
+    app.put('/api/uploadParkingLotImage/:id', upload.single('file'), async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty())
+            return res.status(422).json({ errors: errors.array() });
+
+        const parkingLotID = req.params.id;
+
+        try {
+            let result = await dao.getParkingById(parkingLotID);
+            if (result.error)
+                res.status(404).json(result);
+            else {
+                res.status(201).end();
+            }
+        } catch (err) {
+            res.status(500).json({ error: `Error during upload of the parking lot's image` });
+        }
+    });
+
 
     app.get('/api/huts', async (req, res) => {
         try {
@@ -322,7 +361,7 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
             const occupied = req.body.occupied;
 
             const parking = await dao.addParking(label, state, region, province, municipality, description, lat, lon, altitude, total, occupied);
-            res.status(201).json(parking).end();
+            res.status(201).json(parking.id).end();
         } catch (err) {
             console.log(err)
             res.status(500).json({ error: err });

@@ -27,8 +27,10 @@ function HutForm(props) {
     const [errorMsg, setErrorMsg] = useState('');
     const [image, setImage] = useState('');
     const [preview, setPreview] = useState('');
+    const [newHutID, setNewHutID] = useState('');
 
-    const handleSubmit = (event) => {
+
+    const handleSubmit = async (event) => {
         event.preventDefault();
 
         if (name.trim().length === 0)
@@ -46,11 +48,14 @@ function HutForm(props) {
                 municipality: municipality,
                 beds: beds,
                 province: province,
-                municipality: municipality,
-                image: image
+                municipality: municipality
             }
 
-            props.addHut(newHut);
+            await API.addHut(newHut)
+                .then( async (h) => { setNewHutID( (h) ); await API.uploadHutImage(h, image) } )
+                .catch( err => console.log(err));
+
+            // props.addHut(newHut);
             props.setDirty(true);
             navigate('/hutManager');
         }
@@ -74,7 +79,7 @@ function HutForm(props) {
                         }}
                     />
                     <Form.Group controlId="formFile" className="mb-3">
-                        <Form.Label className='updateImage'>Update Image</Form.Label>
+                        <Form.Label className='updateImage'>Upload Image</Form.Label>
                         <Form.Control type="file"
                             onChange={(e) =>  { setImage(e.currentTarget.files[0]); setPreview(URL.createObjectURL(e.currentTarget.files[0])) } } />
                     </Form.Group>

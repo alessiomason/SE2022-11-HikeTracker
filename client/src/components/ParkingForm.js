@@ -28,8 +28,9 @@ function ParkingForm(props) {
     const [errorMsg, setErrorMsg] = useState('');
     const [image, setImage] = useState('');
     const [preview, setPreview] = useState('');
+    const [newParkingLotID, setNewParkingLotID] = useState('');
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
 
         if (label.trim().length === 0)
@@ -46,10 +47,14 @@ function ParkingForm(props) {
                 lon: longitude,
                 altitude: altitude,
                 total: total,
-                occupied: occupied,
-                image: image
+                occupied: occupied
             }
-            props.addParkingLot(newParkingLot);
+            
+            await API.addParkingLot(newParkingLot)
+                .then( async (pl) => { setNewParkingLotID( (pl) ); await API.uploadParkingLotImage(pl, image) } )
+                .catch( err => console.log(err));
+            
+            // props.addParkingLot(newParkingLot);
             props.setDirty(true);
             navigate('/parkingManager');
         }
@@ -73,7 +78,7 @@ function ParkingForm(props) {
                         }}
                     />
                     <Form.Group controlId="formFile" className="mb-3">
-                        <Form.Label className='updateImage'>Update Image</Form.Label>
+                        <Form.Label className='updateImage'>Upload Image</Form.Label>
                         <Form.Control type="file"
                             onChange={(e) =>  { setImage(e.currentTarget.files[0]); setPreview(URL.createObjectURL(e.currentTarget.files[0])) } } />
                     </Form.Group>

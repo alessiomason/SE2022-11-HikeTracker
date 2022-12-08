@@ -43,10 +43,16 @@ exports.addHut = (hutName, hutDescription, lat, lon, altitude, beds, state, regi
         const sql = 'INSERT INTO Huts(Name, Description, Lat, Lon, Altitude, Beds, State, Region, Province, Municipality) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
         db.run(sql, [hutName, hutDescription, lat, lon, altitude, beds, state, region, province, municipality], function (err) {
             if (err) reject(err);
-            resolve();
+            else {
+                db.get('SELECT last_insert_rowid() AS ID', (err, row) => {
+                    if (err) reject(err);
+                    else if (row === undefined) resolve(false);
+                    else
+                        resolve({ id: row.ID });
+                })
+            }
         });
     });
-
 }
 
 exports.getHuts = () => {
@@ -258,12 +264,19 @@ exports.getLastPArkingLotId = () => {
     });
 }
 //Add new parking lot
-exports.addParking = (Label, State, Region, Province, Municipality, Description, Lat, Lon, Altitude, Total, Occupied) => {
+exports.addParking = (Label,State,Region,Province,Municipality,Description,Lat,Lon,Altitude,Total, Occupied) => {
     return new Promise((resolve, reject) => {
         const sql = 'INSERT INTO PARKINGLOTS(Label, State, Region, Province, Municipality, Description, Lat, Lon, Altitude,Total, Occupied) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
-        db.run(sql, [Label, State, Region, Province, Municipality, Description, Lat, Lon, Altitude, Total, Occupied], function (err) {
+        db.run(sql, [Label, State, Region, Province, Municipality, Description, Lat, Lon, Altitude,Total, Occupied], function (err) {
             if (err) reject(err);
-            resolve();
+            else {
+                db.get('SELECT last_insert_rowid() AS ID', (err, row) => {
+                    if (err) reject(err);
+                    else if (row === undefined) resolve(false);
+                    else
+                        resolve({ id: row.ID });
+                })
+            }
         });
     });
 }
