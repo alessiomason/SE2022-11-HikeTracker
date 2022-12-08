@@ -41,8 +41,6 @@ function HikePage(props) {
 
   const [modalShow, setModalShow] = useState(false);
 
-  const [log, setLog] = useState(false); //to remove
-
   return (
     <Container fluid className="external-box">
       <MyImageModal hikeId={hike.id} hikeLabel={hike.label} show={modalShow} onHide={() => setModalShow(false)} />
@@ -80,13 +78,13 @@ function HikePage(props) {
                 <OverlayTrigger placement="bottom" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip-2">Length</Tooltip>}>
                   <img src={Length} alt="length_image" className='me-3 single-hike-icon' />
                 </OverlayTrigger>
-                <p className='p-hike'>{hike.length} m</p>
+                <p className='p-hike'>{Math.round(hike.length)} m</p>
               </Col>
               <Col lg={6} md={12} sm={6} xs={6} className='mb-3 align'>
                 <OverlayTrigger placement="bottom" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip-2">Ascent</Tooltip>}>
                   <img src={Ascent} alt="ascent_image" className='me-3 single-hike-icon' />
                 </OverlayTrigger>
-                <p className='p-hike'>{hike.ascent} m</p>
+                <p className='p-hike'>{Math.round(hike.ascent)} m</p>
               </Col>
 
             </Row>
@@ -110,14 +108,15 @@ function HikePage(props) {
           </Col>
           <Col md={{ span: 7, offset: 1 }} >
             <Row className='mt-3'>
-              {log ? <HikeMap length={hike.length} points={hike.points} /> : 
+              {!props.loggedIn ?
                 <div className="hike-page-container">
                   <img src={FakeMap} alt="fake_map" className="fake-image" />
                   <div className="middle">
-                  <h3 className='mb-5 text'> Sign In to look the Map!</h3>
-                  <Button variant="primary log_btn slide" type="submit" onClick={() => {navigate("/");props.setShowLogin(true)}} > Sign In </Button>
+                    <h3 className='mb-5 text'> Sign In to look the Map!</h3>
+                    <Button variant="primary log_btn slide" type="submit" onClick={() => { props.setShowLogin(true); navigate("/"); }} > Sign In </Button>
                   </div>
-                </div>}
+                </div> : hike.id && <HikeMap length={hike.length} points={hike.points} />}
+                {/* hike.id ensures that the map is rendered only when the hike is loaded  */}
             </Row>
             <Row className='btn-row'>
               <Button className="mx-1 mt-2 share_btn slide" type="submit" > Share Track </Button>
@@ -137,7 +136,7 @@ function HikePage(props) {
                 </Tab>
               </Tabs>
             </Row>
-          </Col>  
+          </Col>
         </Row>
       </Container>
     </Container>
@@ -165,17 +164,3 @@ function MyImageModal(props) {
 }
 
 export default HikePage;
-
-
-/*
-<Row>
-                <div className=' d-flex justify-content-center'>
-                    <SingleHikeCard key={hike.id} hike={hike} user={props.user} />
-                </div>
-            </Row>
-            <Row>
-                <div className=' d-flex justify-content-center'>
-                     Map is rendered only when hike is loaded 
-                    {hike.id && <HikeMap length={hike.length} points={hike.points} />}
-                </div>
-            </Row>*/

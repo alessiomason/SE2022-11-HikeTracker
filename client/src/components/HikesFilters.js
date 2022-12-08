@@ -337,10 +337,6 @@ function HikesFiltersMap(props) {
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      <LocationMarker tempHikesLatitude={props.tempHikesLatitude} setTempHikesLatitude={props.setTempHikesLatitude} tempHikesLongitude={props.tempHikesLongitude} setTempHikesLongitude={props.setTempHikesLongitude} />
-      <Circle center={{ lat: props.tempHikesLatitude, lng: props.tempHikesLongitude }}
-        fillColor="blue"
-        radius={props.tempHikesRadius * 1000} />
       {props.hikes.map(h => {
         return (
           <Marker position={[h.startPoint.latitude, h.startPoint.longitude]} icon={startPointIcon}>
@@ -351,6 +347,10 @@ function HikesFiltersMap(props) {
           </Marker>
         );
       })}
+      <LocationMarker tempHikesLatitude={props.tempHikesLatitude} setTempHikesLatitude={props.setTempHikesLatitude} tempHikesLongitude={props.tempHikesLongitude} setTempHikesLongitude={props.setTempHikesLongitude} />
+      <Circle center={{ lat: props.tempHikesLatitude, lng: props.tempHikesLongitude }}
+        fillColor="blue"
+        radius={props.tempHikesRadius * 1000} />
     </MapContainer>
   );
 }
