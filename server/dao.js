@@ -236,7 +236,7 @@ exports.getLastPArkingLotId = () => {
 //Add new parking lot
 exports.addParking = (Label,State,Region,Province,Municipality,Description,Lat,Lon,Altitude,Total, Occupied) => {
     return new Promise((resolve, reject) => {
-        const sql = 'INSERT INTO PARKINGLOTS(Label, State, Region, Province, Municipality, Description, Lat, Lon, Altitude,Total, Occupied) VALUES(?, ?, ?, ?,?,?,?,?,?)'
+        const sql = 'INSERT INTO PARKINGLOTS(Label, State, Region, Province, Municipality, Description, Lat, Lon, Altitude,Total, Occupied) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
         db.run(sql, [Label, State, Region, Province, Municipality, Description, Lat, Lon, Altitude,Total, Occupied], function (err) {
             if (err) reject(err);
             resolve();

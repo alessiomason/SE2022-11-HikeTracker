@@ -56,7 +56,7 @@ function SingleUpdateHikeCard(props) {
   let hikeId = props.hike.id;
   const hikeToEdit = props.hike;
   let difficulty_text;
-  
+
   if (props.hike.difficulty == 1) {
     difficulty_text = "Tourist";
   } else if (props.hike.difficulty == 2) {
@@ -64,7 +64,7 @@ function SingleUpdateHikeCard(props) {
   } else if (props.hike.difficulty == 3) {
     difficulty_text = "Professional hiker";
   }
-  
+
 
   const [label, setLabel] = useState(hikeToEdit ? hikeToEdit.label : '');
   const [length, setLength] = useState(hikeToEdit ? hikeToEdit.length : 0);
@@ -76,24 +76,27 @@ function SingleUpdateHikeCard(props) {
   const [province, setProvince] = useState(hikeToEdit ? hikeToEdit.province : '');
   const [municipality, setMunicipality] = useState(hikeToEdit ? hikeToEdit.municipality : '');
   const [errorMsg, setErrorMsg] = useState('');
+  const [image, setImage] = useState(`http://localhost:3001/images/hike-${hikeId}.jpg`);
+  const [preview, setPreview] = useState(`http://localhost:3001/images/hike-${hikeId}.jpg`);
 
-  
+
   const handleSubmit = (event) => {
     event.preventDefault();
 
     if (label.trim().length === 0)
       setErrorMsg('The label of the hike cannot be consisted of only empty spaces');
     else {
-      const updatedHike = { 
-        id: hikeId, 
-        label: label, 
-        length: length, 
-        expTime: expTime, 
-        ascent: ascent, 
-        difficulty: difficultyText, 
+      const updatedHike = {
+        id: hikeId,
+        label: label,
+        length: length,
+        expTime: expTime,
+        ascent: ascent,
+        difficulty: difficultyText,
         description: description,
         province: province,
-        municipality: municipality
+        municipality: municipality,
+        image: image
       }
       props.updateHike(updatedHike);
       props.setDirty(true);
@@ -107,8 +110,18 @@ function SingleUpdateHikeCard(props) {
 
     <Row className="hike_box mx-5 py-5 px-5 mb-4">
       <Col md={2} className="box_img_box" >
-        <img className=" img_box mb-3" src={Img1} alt="First slide" />
-        <Button variant="primary" size="sm" className="btn_box"> Update Image </Button>
+        <img className=" img_box mb-3"
+          src={preview}
+          onError={({ currentTarget }) => {
+            currentTarget.onerror = null; // prevents looping
+            currentTarget.src = Img1;
+          }}
+        />
+        <Form.Group controlId="formFile" className="mb-3">
+          <Form.Label className='updateImageButton'>Update Image</Form.Label>
+          <Form.Control type="file"
+            onChange={(e) => { setImage(e.target.files[0]); setPreview(URL.createObjectURL(e.target.files[0]))} }/>
+        </Form.Group>
       </Col>
 
       <Col md={10} className="px-4" >

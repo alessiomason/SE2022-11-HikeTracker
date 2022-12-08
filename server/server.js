@@ -51,6 +51,9 @@ const port = 3001;
 // set-up the middlewares
 app.use(morgan('dev'));
 
+app.use(express.static('images'));
+app.use('/images', express.static('images'));
+
 
 app.use(express.json({limit: '50mb'}));
 const corsOptions = {

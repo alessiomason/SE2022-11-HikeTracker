@@ -1,7 +1,7 @@
 import { Alert, Form } from 'react-bootstrap';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import { useState } from 'react';
-import { default as Img1 } from "../images/img8.jpg";
+import { default as Img1 } from "../images/img1.jpg";
 import { useNavigate } from 'react-router-dom';
 import { Icon } from 'leaflet';
 import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
@@ -25,6 +25,8 @@ function HutForm(props) {
     const [altitude, setAltitude] = useState(0);
     const [beds, setBeds] = useState(0);
     const [errorMsg, setErrorMsg] = useState('');
+    const [image, setImage] = useState('');
+    const [preview, setPreview] = useState('');
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -44,7 +46,8 @@ function HutForm(props) {
                 municipality: municipality,
                 beds: beds,
                 province: province,
-                municipality: municipality
+                municipality: municipality,
+                image: image
             }
 
             props.addHut(newHut);
@@ -62,9 +65,19 @@ function HutForm(props) {
             </Row>
 
             <Row className="hut_box mx-5 py-5 px-5 mb-4">
-                <Col md={13} className="box_img_box" >
-                    <img className=" img_box mb-3" src={Img1} alt="First slide" />
-                    <Button variant="primary" size="sm" className="btn_box"> Update Image </Button>
+            <Col md={13} className="box_img_box" >
+                    <img className=" img_box mb-3"
+                        src={preview}
+                        onError={({ currentTarget }) => {
+                            currentTarget.onerror = null; // prevents looping
+                            currentTarget.src = Img1;
+                        }}
+                    />
+                    <Form.Group controlId="formFile" className="mb-3">
+                        <Form.Label className='updateImage'>Update Image</Form.Label>
+                        <Form.Control type="file"
+                            onChange={(e) =>  { setImage(e.currentTarget.files[0]); setPreview(URL.createObjectURL(e.currentTarget.files[0])) } } />
+                    </Form.Group>
                 </Col>
 
                 <Row>
