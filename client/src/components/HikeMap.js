@@ -58,7 +58,7 @@ function HikeMap(props) {
     const positions = props.points?.filter(p => !p.referencePoint).map(p => [p.latitude, p.longitude]);
 
     return (
-        <MapContainer center={center} zoom={zoom} scrollWheelZoom={false}>
+        <MapContainer className='single-hike-map' center={center} zoom={zoom} scrollWheelZoom={false}>
             <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

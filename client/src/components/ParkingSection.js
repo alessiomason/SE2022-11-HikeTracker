@@ -1,26 +1,31 @@
-
+import React, { useState, useEffect } from 'react';
 import '../styles/ParkingSection.css';
-
-import { Container, Row, Col, Button, ButtonGroup, ButtonToolbar, OverlayTrigger, Tooltip, Overlay } from "react-bootstrap";
+import { Container, Row, Col } from "react-bootstrap";
 import { default as Parking } from '../icons/parking.svg';
 import { default as arrowRight } from '../icons/arrow-next-park.svg';
 import { default as arrowLeft } from '../icons/arrow-prev-park.svg';
-import { default as Delete } from '../icons/delete.svg';
-import { FaSearch } from "react-icons/fa";
 import { FaParking } from "react-icons/fa";
 import { FaLocationArrow } from "react-icons/fa";
+import { FaMountain } from "react-icons/fa";
 import { ImPriceTag } from "react-icons/im";
-
-
-import React, { useState, useRef } from 'react';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-
 import { default as image3 } from "../images/image3.jpg";
+import API from './../API.js';
 
 function MyParkingSection() {
+  const [parkings, setParkings] = useState([]);
+  const [dirty, setDirty] = useState(true);
 
+  useEffect(() => {
+    if (dirty) {
+      API.getParkingLots()
+        .then((parkings) => setParkings(parkings))
+        .catch(err => console.log(err))
+      setDirty(false);
+    }
+  }, [dirty]);
 
   return (
     <>
@@ -31,7 +36,7 @@ function MyParkingSection() {
       </Container>
       <Container fluid className="parkingCardSection">
         <Row>
-          <Card />
+          <ParkingCards parkings={parkings} />
         </Row>
       </Container>
     </>
@@ -39,7 +44,7 @@ function MyParkingSection() {
 
 }
 
-function Card() {
+function ParkingCards(props) {
 
   function SampleNextArrow(props) {
     const { onClick } = props;
@@ -57,7 +62,7 @@ function Card() {
 
   const settings = {
     dots: true,
-    infinite: false,
+    infinite: true,
     speed: 500,
     slidesToShow: 4,
     slidesToScroll: 4,
@@ -95,26 +100,74 @@ function Card() {
   return (
     <div className="hutCardBox">
       <Slider {...settings}>
-        {huts.map((item) => (
-          <div className="parking-card" key={item.id}>
+        {props.parkings.map((parking) => {
+          let locationsArray = [];
+          if (parking.municipality) locationsArray.push(parking.municipality);
+          if (parking.province) locationsArray.push(parking.province);
+          if (parking.region) locationsArray.push(parking.region);
+          if (parking.state) locationsArray.push(parking.state);
+
+          return (<div className="parking-card" key={parking.id}>
             <div className="card-top">
-              <img src={image3} alt={item.title} className="card-top-img-park" />
+              <img src={`http://localhost:3001/images/parkingLot-${parking.id}.jpg`}
+                onError={({ currentTarget }) => {
+                  currentTarget.onerror = null; // prevents looping
+                  currentTarget.src = image3;
+                }} alt={parking.label} className="card-top-img-park" />
             </div>
             <div className="card-bottom-park">
               <div>
-                <h1 className="hut-card-title-park">{item.title}</h1>
+                <h1 className="hut-card-title-park">{parking.label}</h1>
+              </div>
+              <Row >
+                <Col xs={2} className="mb-1">
+                  <FaLocationArrow className="card-symbol-park me-3" />
+                </Col>
+                <Col>
+                  <h6 className="card-details">{locationsArray.join(", ")}</h6>
+                </Col>
+              </Row>
+              <Row >
+                <Col xs={2} className="mb-1">
+                  <FaParking className="card-symbol-park me-3" />
+                </Col>
+                <Col>
+                  <h6 className="card-details">{parking.occupied} / {parking.total} occupied {parking.occupied === 1 ? 'slot' : 'slots'}</h6>
+                </Col>
+              </Row>
+              <Row >
+                <Col xs={2}>
+                  <FaMountain className="card-symbol-park me-3" />
+                </Col>
+                <Col>
+                  <h6 className="card-details">{parking.altitude} m</h6>
+                </Col>
+              </Row>
+            </div>
+          </div>);
+        })}
+
+
+        {parkings.map((parking) => (
+          <div className="parking-card" key={parking.id}>
+            <div className="card-top">
+              <img src={image3} alt={parking.title} className="card-top-img-park" />
+            </div>
+            <div className="card-bottom-park">
+              <div>
+                <h1 className="hut-card-title-park">{parking.title}</h1>
               </div>
               <Row >
                 <Col md={12} lg={12} xl={12} xxl={6} className="mb-1">
-                  <FaLocationArrow className="card-symbol-park me-3" /><h6 className="card-details">{item.location}</h6>
+                  <FaLocationArrow className="card-symbol-park me-3" /><h6 className="card-details">{parking.location}</h6>
                 </Col>
               </Row>
               <Row>
                 <Col md={12} lg={6} sm={12} className="mb-1" >
-                  <ImPriceTag className="card-symbol-park me-3" /> <h6 className="card-details">{item.price}</h6>
+                  <ImPriceTag className="card-symbol-park me-3" /> <h6 className="card-details">{parking.price}</h6>
                 </Col>
                 <Col md={12} lg={6} sm={12} className="mb-1">
-                  <FaParking className="card-symbol-park me-3" /> <h6 className="card-details">{item.parkingNumb}</h6>
+                  <FaParking className="card-symbol-park me-3" /> <h6 className="card-details">{parking.parkingNumb}</h6>
                 </Col>
               </Row>
             </div>
@@ -125,59 +178,59 @@ function Card() {
   );
 }
 
-const huts = [
+const parkings = [
   {
     id: 1,
-    title: 'Parking bianca',
-    location: 'Garessio, Cuneo',
+    title: 'Delete these cards when more than 4 parkings in DB',
+    location: 'Garessio',
     price: '10$',
     parkingNumb: '150',
   },
   {
     id: 2,
-    title: 'Parking nera',
+    title: 'Delete these cards when more than 4 parkings in DB',
     location: 'politecnico',
     price: '10$',
     parkingNumb: '150',
   },
   {
     id: 3,
-    title: 'Parking corta',
+    title: 'Delete these cards when more than 4 parkings in DB',
     location: 'politecnico',
     price: '10$',
     parkingNumb: '150',
   },
   {
     id: 4,
-    title: 'Parking lunga',
+    title: 'Delete these cards when more than 4 parkings in DB',
     location: 'politecnico',
     price: '10$',
     parkingNumb: '150',
   },
   {
     id: 5,
-    title: 'Parking bella',
+    title: 'Delete these cards when more than 4 parkings in DB',
     location: 'politecnico',
     price: '10$',
     parkingNumb: '150',
   },
   {
     id: 6,
-    title: 'Parking brutta',
+    title: 'Delete these cards when more than 4 parkings in DB',
     location: 'politecnico',
     price: '10$',
     parkingNumb: '150',
   },
   {
     id: 7,
-    title: 'Parking alta',
+    title: 'Delete these cards when more than 4 parkings in DB',
     location: 'politecnico',
     price: '10$',
     parkingNumb: '150',
   },
   {
     id: 8,
-    title: 'Parking bassa',
+    title: 'Delete these cards when more than 4 parkings in DB',
     location: 'politecnico',
     price: '10$',
     parkingNumb: '150',

@@ -36,15 +36,15 @@ function MyNavbar(props) {
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="me-auto">
-            <button class="button type1" onClick={() => {navigate("/"); scrollIntoViewWithOffset("hikeSec", 40);}}>  Hike</button>
-            <button class="button type2" onClick={() => {navigate("/"); scrollIntoViewWithOffset("hutSec", 40)}}> Hut</button>
-            <button class="button type3" onClick={() => {navigate("/"); scrollIntoViewWithOffset("parkSec", 40)}}> Parking </button>
+            <button className="button type1" onClick={() => {navigate("/"); scrollIntoViewWithOffset("hikeSec", 40);}}>  Hike</button>
+            <button className="button type2" onClick={() => {navigate("/"); scrollIntoViewWithOffset("hutSec", 40)}}> Hut</button>
+            <button className="button type3" onClick={() => {navigate("/"); scrollIntoViewWithOffset("parkSec", 40)}}> Parking </button>
           </Nav>
           <Nav>
             {(!props.loggedIn) ?
               <Nav>
-                <Button className="mx-2 my-1 btn-log" onClick={() => props.setShowLogin(true)}>Sign In</Button>
-                <Button className="mx-2 my-1 btn-sign" onClick={() => props.setShowSignup(true)}>Sign Up</Button>
+                <Button className="mx-2 my-1 btn-log" onClick={() => {navigate("/");props.setShowLogin(true)}}>Sign In</Button>
+                <Button className="mx-2 my-1 btn-sign" onClick={() => {navigate("/");props.setShowSignup(true)}}>Sign Up</Button>
               </Nav> :
               <Nav>
                 {props.user.access_right === 'local-guide' ? <Button variant="outline-warning"  className="mx-2 my-2  btn--outline" onClick={() => navigate("/hikeManager")}> Manage Hike</Button> : false}

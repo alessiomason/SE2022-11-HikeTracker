@@ -11,22 +11,23 @@ function Footer() {
   }
 
   return (
-    <footer class="site-footer">
+    <footer className="site-footer">
     <Container fluid className='px-5'>
-      <Row class="row">
+      <Row >
         <Col md={5} sm={12}>
           <h6>About</h6>
-          <p class="text-justify"><i> HIKE TRACKER </i> is a simple web application created for the Software Engineering 2 course of the computer science master's degree at the Turin Polytechnic. <br/> All the features present within the site have been created to cover the user stories requested by the professor.</p>
+          <p className="text-justify"><i> HIKE TRACKER </i> is a web application created for the Software Engineering 2 course of the Computer Science Master's degree at the Turin Polytechnic.</p>
         </Col>
         <Col md={{span:3, offset:1}} xs={6} >
           <h6>Creators</h6>
+          <p>Group 11</p>
           <ul >
             <li> Luca Rota, s303941</li>
-            <li> Alessio Mason, s</li>
-            <li> Salvatore Mallemaci, s</li>
+            <li> Alessio Mason, s306017</li>
+            <li> Salvatore Mallemaci, s303357</li>
             <li> Viola Mudu, s295156</li>
-            <li> Eren Gul, s</li>
-            <li> Islom Khoshimov, s</li>
+            <li> Eren Gul, s297978</li>
+            <li> Islom Khoshimov, s301783</li>
           </ul>
         </Col>
         <Col md={3} xs={6} >
@@ -42,7 +43,7 @@ function Footer() {
     </Container>
     <Container fluid className='px-4'>
       <Row className='center-box'>
-        <p class="copyright-text">Copyright &copy; 2022 All Rights Reserved by <i>HIKETRACKER</i></p>
+        <p className="copyright-text">Copyright &copy; 2022 All Rights Reserved by <i>HIKETRACKER</i></p>
       </Row>
     </Container>
     </footer>

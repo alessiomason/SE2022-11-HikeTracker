@@ -49,6 +49,19 @@ function addHike(hike) {
 }
 
 function addParkingLot(pl) {
+    /*
+    const dataParkingLot = new FormData();
+    dataParkingLot.append('parkingLotID', pl.id);
+    dataParkingLot.append('label', pl.label);
+    dataParkingLot.append('description', pl.description);
+    dataParkingLot.append('state', pl.state);
+    dataParkingLot.append('region', pl.region);
+    dataParkingLot.append('province', pl.province);
+    dataParkingLot.append('municipality', pl.municipality);
+    dataParkingLot.append('total', pl.total);
+    dataParkingLot.append('occupied', pl.occupied);
+    dataParkingLot.append('file', pl.image);
+    */
     // call: POST /api/newParkingLot
     return new Promise((resolve, reject) => {
         fetch(new URL('newParkingLot', APIURL), {
@@ -57,7 +70,7 @@ function addParkingLot(pl) {
             headers: {
                 'Content-Type': 'application/json',
             },
-
+            
             body: JSON.stringify({
                 label: pl.label, description: pl.description, state: pl.state, region: pl.region, province: pl.province,
                 municipality: pl.municipality, lat: pl.lat, lon: pl.lon, altitude: pl.altitude,
@@ -114,15 +127,27 @@ function addHut(hut) {
 }
 
 function updateHike(hike) {
+    
+    const dataHike = new FormData();
+    dataHike.append('hikeID', hike.id);
+    dataHike.append('label', hike.label);
+    dataHike.append('length', hike.length);
+    dataHike.append('expTime', hike.expTime);
+    dataHike.append('ascent', hike.ascent);
+    dataHike.append('difficulty', hike.difficulty);
+    dataHike.append('description', hike.description);
+    dataHike.append('state', hike.state);
+    dataHike.append('region', hike.region);
+    dataHike.append('province', hike.province);
+    dataHike.append('municipality', hike.municipality);
+    dataHike.append('file', hike.image);
+
     // call: PUT /api/updateHike/:id
     return new Promise((resolve, reject) => {
         fetch(new URL('updateHike/' + hike.id, APIURL), {
             method: 'PUT',
             credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(hike),
+            body: dataHike
         }).then((response) => {
             if (response.ok)
                 resolve(null);
@@ -137,15 +162,28 @@ function updateHike(hike) {
 }
 
 function updateParkingLot(pl) {
+
+    const dataParkingLot = new FormData();
+    dataParkingLot.append('parkingLotID', pl.id);
+    dataParkingLot.append('label', pl.label);
+    dataParkingLot.append('description', pl.description);
+    dataParkingLot.append('lat', pl.lat);
+    dataParkingLot.append('lon', pl.lon);
+    dataParkingLot.append('altitude', pl.altitude);
+    dataParkingLot.append('state', pl.state);
+    dataParkingLot.append('region', pl.region);
+    dataParkingLot.append('province', pl.province);
+    dataParkingLot.append('municipality', pl.municipality);
+    dataParkingLot.append('total', pl.total);
+    dataParkingLot.append('occupied', pl.occupied);
+    dataParkingLot.append('file', pl.image);
+
     // call: PUT /api/parkingLots/:id
     return new Promise((resolve, reject) => {
         fetch(new URL('parkingLots/' + pl.id, APIURL), {
             method: 'PUT',
             credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(pl),
+            body: dataParkingLot
         }).then((response) => {
             if (response.ok)
                 resolve(null);
@@ -160,15 +198,27 @@ function updateParkingLot(pl) {
 }
 
 function updateHut(hut) {
+    
+    const dataHut = new FormData();
+    dataHut.append('hutID', hut.id);
+    dataHut.append('name', hut.name);
+    dataHut.append('description', hut.description);
+    dataHut.append('lat', hut.lat);
+    dataHut.append('lon', hut.lon);
+    dataHut.append('altitude', hut.altitude);
+    dataHut.append('beds', hut.beds);
+    dataHut.append('state', hut.state);
+    dataHut.append('region', hut.region);
+    dataHut.append('province', hut.province);
+    dataHut.append('municipality', hut.municipality);
+    dataHut.append('file', hut.image);
+
     // call: PUT /api/updateHut/:id
     return new Promise((resolve, reject) => {
         fetch(new URL('updateHut/' + hut.id, APIURL), {
             method: 'PUT',
             credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(hut),
+            body: dataHut
         }).then((response) => {
             if (response.ok)
                 resolve(null);
