@@ -4,7 +4,6 @@
 }
 
 .card {
-    width: 20rem;
     border: 2px solid #62DDF5;
     box-shadow: 0 6px 20px rgba(56, 125, 255, 0.17) !important;
     -webkit-filter: drop-shadow(0 6px 20px rgba(56, 125, 255, 0.017)) !important;
@@ -12,7 +11,11 @@
     border-radius: 10px;
     text-decoration: none !important;
     display: block;
+    margin-bottom: 2rem !important;
+    margin-left: 68px !important;
+    margin-right: 68px !important;
 }
+
 
 .card:hover {
     box-shadow: 5px 10px 20px 1px rgba(0, 0, 0, 253) !important;
@@ -24,6 +27,7 @@
 }
 
 .card_img {
+    height: 13rem;
     transform: scale(1);
     transition: transform 0.5s ease;
 }
@@ -63,12 +67,6 @@
     cursor: pointer;
 }
 
-.hike-page-card {
-    margin-top: 100px;
-    margin-bottom: 50px !important;
-    width: 75%;
-}
-
 .card-title-box{
     display: flex;
     flex-direction: column;
@@ -95,6 +93,7 @@
 .card-text{
     margin-bottom: 8px;
 }
+
 .card-body {
     height: 17rem;
     overflow-y: scroll;
