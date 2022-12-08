@@ -237,7 +237,20 @@ async function getHikes() {
     const response = await fetch(new URL('hikes', APIURL));
     const hikes = await response.json();
     if (response.ok)
-        return hikes.map((h) => ({ id: h.id, label: h.label, length: h.length, expTime: h.expTime, ascent: h.ascent, difficulty: h.difficulty, description: h.description, state: h.state, region: h.region, province: h.province, municipality: h.municipality }))
+        return hikes.map((h) => ({
+            id: h.id,
+            label: h.label,
+            length: h.length,
+            expTime: h.expTime,
+            ascent: h.ascent,
+            difficulty: h.difficulty,
+            description: h.description,
+            state: h.state,
+            region: h.region,
+            province: h.province,
+            municipality: h.municipality,
+            startPoint: h.startPoint
+        }))
     else throw hikes;
 }
 
@@ -248,7 +261,7 @@ async function getParkingLots() {
     if (response.ok)
         return pls.map((pl) => ({
             id: pl.id, label: pl.label,
-            description: pl.description, state:pl.state, region: pl.region, province: pl.province, municipality: pl.municipality,
+            description: pl.description, state: pl.state, region: pl.region, province: pl.province, municipality: pl.municipality,
             lat: pl.lat, lon: pl.lon, altitude: pl.altitude,
             total: pl.total, occupied: pl.occupied
         }))

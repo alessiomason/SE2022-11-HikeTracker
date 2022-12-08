@@ -12,6 +12,9 @@ h1 {
     text-align: center;
 }
 
+.wide-modal {
+    --bs-modal-width: 800px;
+}
 
 .modal_label {
     align-items: center;
@@ -38,43 +41,55 @@ input[type=checkbox]:hover,
     cursor: pointer;
 }
 
- .hike-img{
-    vertical-align: baseline ;
- }
+.hike-img {
+    vertical-align: baseline;
+}
 
- .filter-title {
-    width: 600px !important; 
+.filter-title {
+    width: 600px !important;
     font-weight: bold;
     font-size: 50px;
     font-style: italic;
     color: #16a085;
     text-align: center;
     text-transform: uppercase;
-  }
-  
-  .filter-title.background {
+}
+
+.filter-title.background {
     position: relative;
     z-index: 1;
-  }
-  
-  .filter-title.background span {
+}
+
+.filter-title.background span {
     background: #fff;
     padding: 0 15px;
-  }
-  
-  .filter-title.double:before {
+}
+
+.filter-title.double:before {
     border-top: none;
-  }
-  
-  .filter-title.double:after {
+}
+
+.filter-title.double:after {
     border-bottom: 2px solid #16a085;
     content: "";
-    margin: 0 auto; /* this centers the line to the full width specified */
+    margin: 0 auto;
+    /* this centers the line to the full width specified */
     position: absolute;
     top: 50%;
     left: 0;
     right: 0;
     width: 100%;
     z-index: -1;
-  }
-  
+}
+
+.hikes-filter-map {
+    width: 100%;
+}
+
+.slider.slider-horizontal {
+    width: 100%;
+}
+
+.tooltip-main {
+    visibility: hidden;
+}
