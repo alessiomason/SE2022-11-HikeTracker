@@ -1,10 +1,8 @@
-import "bootstrap-slider/dist/css/bootstrap-slider.css";
 import React, { useState } from 'react';
 import { Link } from "react-router-dom";
 import { Button, Modal, Col, Row, Form, Container, ButtonToolbar, ButtonGroup, Tooltip, OverlayTrigger } from "react-bootstrap";
 import { Icon } from 'leaflet';
 import { MapContainer, TileLayer, Marker, Popup, useMapEvents, Circle } from 'react-leaflet';
-import ReactBootstrapSlider from 'react-bootstrap-slider';
 import '../styles/FilterSection.css';
 import { default as Close } from '../icons/close.svg';
 import { default as Hiking } from '../icons/hiking.svg';
@@ -295,11 +293,11 @@ function MyModal(props) {
                         <h4>Select the maximum distance from the point</h4>
                         <h5 className="text-center">Radius of {tempHikesRadius} km</h5>
                         <Row>
-                          <Col>1 km</Col>
+                          <Col className='slider-label'>1 km</Col>
                           <Col xs={10}>
-                            <ReactBootstrapSlider value={tempHikesRadius} min={1} max={5} step={1} change={event => setTempHikesRadius(event.target.value)} className='my-slider' />
+                            <input type='range' value={tempHikesRadius} min={1} max={5} step={1} onChange={event => setTempHikesRadius(event.target.value)} className='my-slider' />
                           </Col>
-                          <Col>5 km</Col>
+                          <Col className='slider-label'>5 km</Col>
                         </Row>
                       </> : 'false'
 
