@@ -12,16 +12,15 @@ function SingleHikeCard(props) {
 
   const navigate = useNavigate();
 
-  const cardClassName = "card mb-3 mx-1 hike-list-card";
   const difficultiesNames = ['Tourist', 'Hiker', 'Pro Hiker'];
   let locationsArray = [];
-  if (props.hike.state) locationsArray.push(props.hike.state);
-  if (props.hike.region) locationsArray.push(props.hike.region);
-  if (props.hike.province) locationsArray.push(props.hike.province);
   if (props.hike.municipality) locationsArray.push(props.hike.municipality);
+  if (props.hike.province) locationsArray.push(props.hike.province);
+  if (props.hike.region) locationsArray.push(props.hike.region);
+  if (props.hike.state) locationsArray.push(props.hike.state);
 
   return (
-    <Card className={cardClassName} onClick={() => navigate('/hike/' + props.hike.id)}>
+    <Card className={'card mb-3 mx-1 hike-list-card'} onClick={() => navigate('/hike/' + props.hike.id)}>
       <div className='overflow'>
         <Card.Img variant="top" src={`http://localhost:3001/images/hike-${props.hike.id}.jpg`}
           onError={({ currentTarget }) => {
