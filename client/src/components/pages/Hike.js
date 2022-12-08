@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Container, Row, Col, OverlayTrigger, Tooltip, Button, Tabs, Tab, Modal } from 'react-bootstrap';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import HikeMap from '../HikeMap';
 import API from '../../API';
 import '../../styles/singlePageHike.css';
@@ -14,6 +14,9 @@ import { default as Img1 } from "../../images/image3.jpg";
 import { default as FakeMap } from "../../images/fakeMap.jpg";
 
 function HikePage() {
+
+  const navigate = useNavigate();
+
   const [hike, setHike] = useState({});
   const [dirty, setDirty] = useState(true);
 
@@ -112,7 +115,7 @@ function HikePage() {
                   <img src={FakeMap} alt="fake_map" className="fake-image" />
                   <div className="middle">
                   <h3 className='mb-5 text'> Sign In to look the Map!</h3>
-                  <Button variant="primary log_btn slide" type="submit" > Sign In </Button>
+                  <Button variant="primary log_btn slide" type="submit" onClick={() => {navigate("/");props.setShowLogin(true)}} > Sign In </Button>
                   </div>
                 </div>}
             </Row>
