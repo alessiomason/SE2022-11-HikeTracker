@@ -136,6 +136,8 @@ function updateHike(hike) {
     dataHike.append('ascent', hike.ascent);
     dataHike.append('difficulty', hike.difficulty);
     dataHike.append('description', hike.description);
+    dataHike.append('state', hike.state);
+    dataHike.append('region', hike.region);
     dataHike.append('province', hike.province);
     dataHike.append('municipality', hike.municipality);
     dataHike.append('file', hike.image);

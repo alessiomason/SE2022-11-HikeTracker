@@ -175,7 +175,7 @@ function SingleUpdateParkingCard(props) {
             <Col>
               <Form.Group>
                 <Form.Label>Description</Form.Label>
-                <Form.Control required={true} value={description} onChange={ev => setDescription(ev.target.value)} />
+                <Form.Control required={true} value={description} onChange={ev => setDescription(ev.target.value)} as="textarea" rows={3} />
               </Form.Group>
             </Col>
           </Row>
