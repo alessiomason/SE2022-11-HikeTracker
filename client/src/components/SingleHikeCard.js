@@ -12,19 +12,21 @@ function SingleHikeCard(props) {
 
   const navigate = useNavigate();
 
-  const cardClassName = "card mb-3 mx-1" + (props.fromHikeCards ? " hike-list-card" : " hike-page-card");
   const difficultiesNames = ['Tourist', 'Hiker', 'Pro Hiker'];
-
-  
-  function lengths(){
-    const len = props.hike.length.toString()
-    return len.substring(0, len.indexOf('.'))
-  }
+  let locationsArray = [];
+  if (props.hike.municipality) locationsArray.push(props.hike.municipality);
+  if (props.hike.province) locationsArray.push(props.hike.province);
+  if (props.hike.region) locationsArray.push(props.hike.region);
+  if (props.hike.state) locationsArray.push(props.hike.state);
 
   return (
-    <Card className={cardClassName} onClick={() => { if (props.fromHikeCards) navigate('/hike/' + props.hike.id) }}>
+    <Card className={'card mb-3 mx-1 hike-list-card'} onClick={() => navigate('/hike/' + props.hike.id)}>
       <div className='overflow'>
-        <Card.Img variant="top" src={Img1} className="card_img" />
+        <Card.Img variant="top" src={`http://localhost:3001/images/hike-${props.hike.id}.jpg`}
+          onError={({ currentTarget }) => {
+            currentTarget.onerror = null; // prevents looping
+            currentTarget.src = Img1;
+          }} className="card_img" />
       </div>
       <Card.Body className='card-body'>
         <Row className='card-title-box'>
@@ -35,7 +37,7 @@ function SingleHikeCard(props) {
           <OverlayTrigger placement="bottom" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip-2">Length</Tooltip>}>
             <img src={Length} alt="length_image" className='me-3' />
           </OverlayTrigger>
-          {props.hike.length && <Card.Text className="card-text p-card"> {lengths()} m</Card.Text>}
+          {props.hike.length && <Card.Text className="card-text p-card"> {Math.round(props.hike.length)} m</Card.Text>}
           </Col>
           <Col md={6} sm={6} xs={6} className='mb-3 align'>
           <OverlayTrigger placement="bottom" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip-2">Expected time</Tooltip>}>
@@ -63,17 +65,11 @@ function SingleHikeCard(props) {
           <OverlayTrigger placement="bottom" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip-2">Location</Tooltip>}>
             <img src={Location} alt="location_image"   className='me-3'/>
           </OverlayTrigger>
-          <Card.Text className="card-text p-card"> {props.hike.municipality}, {props.hike.province}, {props.hike.region}, {props.hike.state}</Card.Text>
+          <Card.Text className="card-text p-card">{locationsArray.join(", ")}</Card.Text>
           </Col>
         </Row>
-        
-        {/*props.hike.description && <Card.Text>Description: {props.hike.description}</Card.Text>*/}
-        {/*props.hike.state && <Card.Text className="card-text ">State: {props.hike.state}</Card.Text>}
-        {props.hike.region && <Card.Text className="card-text">Region: {props.hike.region}</Card.Text>}
-        {props.hike.province && <Card.Text className="card-text">Province: {props.hike.province}</Card.Text>}
-        {props.hike.municipality && <Card.Text className="card-text p-card">Municipality: {props.hike.municipality}</Card.Text>*/}
 
-        <p className='card-credit'> Credit: HikeTracker </p>
+        <p className='card-credit'>Credit: HikeTracker</p>
       </Card.Body>
     </Card>
   );

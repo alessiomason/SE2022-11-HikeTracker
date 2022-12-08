@@ -6,6 +6,35 @@ const duration = require('dayjs/plugin/duration');
 dayjs.extend(duration);
 const nodemailer = require('nodemailer');
 require('dotenv').config();
+const multer = require('multer');
+const fs = require("fs");
+
+const storage = multer.diskStorage(
+    {
+        destination: './images',
+        filename: function (req, file, cb ) {
+
+            let type;
+            let id;
+
+            // It is an hike, hut or parking lot?
+            if (req.body['hikeID'] != null){
+                type = "hike";
+                id = req.body["hikeID"];
+            } else if (req.body['hutID'] != null){
+                type = "hut";
+                id = req.body["hutID"];
+            } else if (req.body['parkingLotID'] != null){
+                type = "parkingLot";
+                id = req.body["parkingLotID"];
+            } 
+            // hike-id.jpg || hut-id.jpg || parkingLot-id.jpg
+            cb( null, type + "-" + id + ".jpg");  
+        }
+    }
+);
+
+const upload = multer({ storage: storage});
 
 // from https://stackoverflow.com/questions/639695/how-to-convert-latitude-or-longitude-to-meters
 function coordinatesDistanceInMeter(lat1, lon1, lat2, lon2) {  // generally used geo measurement function
@@ -136,6 +165,7 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
             const municipality = req.body.municipality;
 
             const hut = await dao.addHut(name, description, lat, lon, altitude, beds, state, region, province, municipality);
+            
             res.status(201).json(hut).end();
         } catch (err) {
             console.log(err)
@@ -170,6 +200,7 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
 
     app.delete('/api/huts/:id', async (req, res) => {
         const hutID = req.params.id;
+        const path = `./images/hut-${hutID}.jpg`;
         try {
             await dao.deleteHut(hutID);
             res.status(200).end();
@@ -177,10 +208,15 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
         catch (err) {
             res.status(500).json({ error: 'The hut could not be deleted' });
         }
+
+        try{
+            fs.unlinkSync(path);
+        } catch {
+        }
     });
 
 
-    app.put('/api/updateHut/:id', async (req, res) => {
+    app.put('/api/updateHut/:id', upload.single('file'), async (req, res) => {
         const errors = validationResult(req);
         if (!errors.isEmpty())
             return res.status(422).json({ errors: errors.array() });
@@ -192,16 +228,16 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
             if (result.error)
                 res.status(404).json(result);
             else {
-                let name = req.body.name;
-                let description = req.body.description;
-                let lat = req.body.lat;
-                let lon = req.body.lon;
-                let altitude = req.body.altitude;
-                let beds = req.body.beds;
-                let state = req.body.state;
-                let region = req.body.region;
-                let province = req.body.province;
-                let municipality = req.body.municipality;
+                let name = req.body["name"];
+                let description = req.body["description"];
+                let lat = req.body["lat"];
+                let lon = req.body["lon"];
+                let altitude = req.body["altitude"];
+                let beds = req.body["beds"];
+                let state = req.body["state"];
+                let region = req.body["region"];
+                let province = req.body["province"];
+                let municipality = req.body["municipality"];
 
                 const huts = await dao.updateHut(name, description, lat, lon, altitude, beds, state, region, province, municipality, hutId);
                 res.status(201).json(huts).end();
@@ -295,7 +331,7 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
     });
 
     //update parking 
-    app.put('/api/parkingLots/:id', async (req, res) => {
+    app.put('/api/parkingLots/:id', upload.single('file'), async (req, res) => {
 
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -303,22 +339,21 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
         }
 
         // check if the id of the parking lot is empty 
-        if (req.body.parkingID === '') {
+        if (req.body["parkingLotID"] === '') {
             return res.status(422).json({ error: `Insert the id of a parking lot that you want to update.` });
         }
-        parkingID = req.params.id;
-        label = req.body.label;
-        state = req.body.state;
-        region = req.body.region;
-        province = req.body.province;
-        municipality = req.body.municipality;
-        description = req.body.description;
-        lat = req.body.lat;
-        lon = req.body.lon;
-        altitude = req.body.altitude;
-        total = req.body.total;
-        occupied = req.body.occupied;
-
+        let parkingID = req.params.id;
+        let label = req.body["label"];
+        let state = req.body["state"];
+        let region = req.body["region"];
+        let province = req.body["province"];
+        let municipality = req.body["municipality"];
+        let description = req.body["description"];
+        let lat = req.body["lat"];
+        let lon = req.body["lon"];
+        let altitude = req.body["altitude"];
+        let total = req.body["total"];
+        let occupied = req.body["occupied"];
         try {
             const parking = await dao.updateParking(label, state, region, province, municipality, description, lat, lon, altitude, total, occupied, parkingID);
             res.status(201).json(parking).end();
@@ -331,12 +366,17 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
     // DELETE parking lot
     app.delete('/api/parkingLots/:id', async (req, res) => {
         const ParkingID = req.params.id;
+        const path = `./images/parkingLot-${ParkingID}.jpg`;
         try {
             await dao.deleteParking(ParkingID);
             res.status(200).end();
         }
         catch (err) {
             res.status(500).json({ error: 'Database error during update of the service name.' });
+        }
+        try{
+            fs.unlinkSync(path);
+        } catch {
         }
     });
 
@@ -380,6 +420,7 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
 
     app.delete('/api/hikes/:id', async (req, res) => {
         const hikeID = req.params.id;
+        const path = `./images/hike-${hikeID}.jpg`;
         try {
             await dao.deleteHike(hikeID);
             await dao.deletePointsByHikeID(hikeID);
@@ -387,6 +428,10 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
         }
         catch (err) {
             res.status(500).json({ error: 'The hike could not be deleted' });
+        }
+        try{
+            fs.unlinkSync(path);
+        } catch {
         }
     });
 
@@ -436,6 +481,7 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
 
     });
 
+    /*
     // update hike
     app.put('/api/updateHike/:id', async (req, res) => {
         const errors = validationResult(req);
@@ -446,7 +492,6 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
         if (req.body.label === '')
             return res.status(422).json({ error: `New name of the hike can not be empty.` });
 
-        // let hikeId = req.body.id
         const hikeId = req.params.id;
 
         try {
@@ -482,6 +527,54 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
         }
 
     });
+    */
+
+    // update hike
+    app.put('/api/updateHike/:id', upload.single('file') ,async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty())
+            return res.status(422).json({ errors: errors.array() });
+
+        // check if the new desription of the hike is empty 
+        if (req.body["label"] === '')
+            return res.status(422).json({ error: `New name of the hike can not be empty.` });
+
+        const hikeId = req.params.id;
+
+        try {
+            let result = await dao.getHike(hikeId);
+            if (result.error)
+                res.status(404).json(result);
+            else {
+                let label = req.body["label"];
+                let length = req.body["length"];
+                let expTime = req.body["expTime"];
+                let ascent = req.body["ascent"];
+                let difficulty = req.body["difficulty"];
+                let difficulty_level = 0;
+
+                if (difficulty == "Tourist")
+                    difficulty_level = 1;
+                else if (difficulty == "Hiker")
+                    difficulty_level = 2;
+                else if (difficulty == "Professional hiker")
+                    difficulty_level = 3;
+
+                let description = req.body["description"];
+                let state = req.body["state"];
+                let region = req.body["region"];
+                let province = req.body["province"];
+                let municipality = req.body["municipality"];
+
+                const hikes = await dao.updateHike(label, length, expTime, ascent, difficulty_level, description, state, region, province, municipality, hikeId);
+                res.status(201).json(hikes).end();
+            }
+        } catch (err) {
+            res.status(500).json({ error: `Database error during update of the service name.` });
+        }
+
+    });
+
 
 
     //GET StartPoint (for filters)

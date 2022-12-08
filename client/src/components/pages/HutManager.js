@@ -1,10 +1,10 @@
-
 import '../../styles/HutManager.css';
 import { Container, Row, Col, InputGroup, Form, Button, Carousel, Alert } from 'react-bootstrap';
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import MyHutImages from "../HutImages";
 import API from '../../API.js';
+import { default as Img1 } from "../../images/img1.jpg";
 
 function MyHutManager(props) {
 
@@ -69,6 +69,8 @@ function SingleUpdateHutCard(props) {
   const [province, setProvince] = useState(hutToEdit ? hutToEdit.province : '');
   const [municipality, setMunicipality] = useState(hutToEdit ? hutToEdit.municipality : '');
   const [errorMsg, setErrorMsg] = useState('');
+  const [image, setImage] = useState(`http://localhost:3001/images/hut-${hutID}.jpg`);
+  const [preview, setPreview] = useState(`http://localhost:3001/images/hut-${hutID}.jpg`);
 
 
   const handleSubmit = (event) => {
@@ -85,8 +87,11 @@ function SingleUpdateHutCard(props) {
         lon: lon, 
         altitude: altitude, 
         beds: beds,
+        state: state,
+        region: region,
         province: province,
-        municipality: municipality
+        municipality: municipality,
+        image: image
       }
       props.updateHut(updatedHut);
       props.setDirty(true);
@@ -97,10 +102,28 @@ function SingleUpdateHutCard(props) {
   }
 
   return (
+    
       <Row className="hut_box mx-5 py-5 px-5 mb-4">
-        <Col md={6}>
+        
+        {/*<Col md={6}>
         <MyHutImages/>
+  </Col>*/}
+
+        <Col md={5} className="box_img_box" >
+          <img className=" img_box mb-3"
+            src={preview}
+              onError={({ currentTarget }) => {
+              currentTarget.onerror = null; // prevents looping
+              currentTarget.src = Img1;
+            }}
+           />
+          <Form.Group controlId="formFile" className="mb-3">
+            <Form.Label className='updateImageHut'>Update Image</Form.Label>
+            <Form.Control type="file"
+              onChange={(e) => { setImage(e.target.files[0]); setPreview(URL.createObjectURL(e.target.files[0]))} }/>
+          </Form.Group>
         </Col>
+
         <Col md={6}>
           <Form onSubmit={handleSubmit}>
           <Row>
