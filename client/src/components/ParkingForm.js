@@ -182,7 +182,7 @@ function LocationMarker(props) {
                     props.setState(locationInfo.address.country);
                     props.setRegion(locationInfo.address.state);
                     props.setProvince(locationInfo.address.county);
-                    props.setMunicipality(locationInfo.address.city || locationInfo.address.town || locationInfo.address.village);
+                    props.setMunicipality(locationInfo.address.city || locationInfo.address.town || locationInfo.address.village || locationInfo.address.municipality);
                 })
         }
     });
