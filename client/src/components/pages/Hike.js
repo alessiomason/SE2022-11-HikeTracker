@@ -12,6 +12,7 @@ import { default as Time } from "../../icons/stopwatch.svg";
 import { default as Ascent } from "../../icons/mountain.svg";
 import { default as Difficulty } from "../../icons/volume.svg";
 import { default as Img1 } from "../../images/image3.jpg";
+import { default as FakeMap } from "../../images/fakeMap.jpg";
 
 function HikePage(props) {
   const [hike, setHike] = useState({});
@@ -30,6 +31,8 @@ function HikePage(props) {
   }, [dirty, hikeId]);
 
   const [modalShow, setModalShow] = useState(false);
+
+  const [log, setLog] = useState(false); //to remove
 
   return (
     <Container fluid className="external-box">
@@ -89,11 +92,19 @@ function HikePage(props) {
                 <p className='p-hike'>Pro Hiker</p>
               </Col>
             </Row>
-
           </Col>
           <Col md={{ span: 7, offset: 1 }} >
             <Row className='mt-3'>
-              {hike.id && <HikeMap length={hike.length} points={hike.points} />}
+            
+              {log ? <HikeMap length={hike.length} points={hike.points} /> : 
+                <div className="container">
+                  <img src={FakeMap} alt="fake_map" className="fake-image" />
+                  <div className="middle">
+                  <h3 className='mb-5 text'> Sign In to look the Map!</h3>
+                  <Button variant="primary log_btn slide" type="submit" > Sign In </Button>
+                  </div>
+                </div>}
+
             </Row>
             <Row className='btn-row'>
             <Button className="mx-1 mt-2 share_btn slide" type="submit" > Share Track </Button>
@@ -116,7 +127,7 @@ function HikePage(props) {
                 </Tab>
               </Tabs>
             </Row>
-          </Col>
+          </Col>  
         </Row>
       </Container>
     </Container>
