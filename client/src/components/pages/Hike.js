@@ -13,7 +13,7 @@ import { default as Difficulty } from "../../icons/volume.svg";
 import { default as Img1 } from "../../images/image3.jpg";
 import { default as FakeMap } from "../../images/fakeMap.jpg";
 
-function HikePage() {
+function HikePage(props) {
 
   const navigate = useNavigate();
 
@@ -111,7 +111,7 @@ function HikePage() {
           <Col md={{ span: 7, offset: 1 }} >
             <Row className='mt-3'>
               {log ? <HikeMap length={hike.length} points={hike.points} /> : 
-                <div className="container">
+                <div className="hike-page-container">
                   <img src={FakeMap} alt="fake_map" className="fake-image" />
                   <div className="middle">
                   <h3 className='mb-5 text'> Sign In to look the Map!</h3>
@@ -147,12 +147,12 @@ function HikePage() {
 function MyImageModal(props) {
   return (
     <Modal {...props} size="lg" aria-labelledby="contained-modal-title-vcenter" centered >
-      <Modal.Header closeButton className='box-modal'>
+      <Modal.Header closeButton className='box-modal hike-page-modal-header'>
         <Modal.Title id="contained-modal-title-vcenter">
           {props.hikeLabel}
         </Modal.Title>
       </Modal.Header>
-      <Modal.Body className='box-modal'>
+      <Modal.Body className='box-modal hike-page-modal-body'>
         <img src={`http://localhost:3001/images/hike-${props.hikeId}.jpg`}
           onError={({ currentTarget }) => {
             currentTarget.onerror = null; // prevents looping

@@ -166,20 +166,20 @@
   font-weight: bold !important;
 }
 
-.modal-header{
+.hike-page-modal-header {
   border-top: 2px solid #30AC42;
   border-left: 2px solid #30AC42;
   border-right: 2px solid #30AC42;
 }
 
-.modal-body{
+.hike-page-modal-body {
   border-radius: 0px 0px 8px 8px !important;
   border-left: 2px solid #30AC42;
   border-right: 2px solid #30AC42;
   border-bottom: 2px solid #30AC42;
 }
 
-.container {
+.hike-page-container {
   position: relative;
   background-color: #212529;
   border: 2px solid #30AC42;
