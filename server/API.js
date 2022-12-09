@@ -103,7 +103,7 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
                             state = reverseNom.address.country;
                             region = reverseNom.address.state;
                             province = reverseNom.address.county;
-                            municipality = reverseNom.address.city || reverseNom.address.town || reverseNom.address.village;
+                            municipality = reverseNom.address.city || reverseNom.address.town || reverseNom.address.village || reverseNom.address.municipality;
                         }
                     } else if (i == (pointsArray.length - 1) & k == (coordinatesArray.length - 1)) { ///ultimo punto
                         await dao.addPoint(hikeID, pointsArray[i][1], pointsArray[i][0], pointsArray[i][2], 0, 1, 0, "");
