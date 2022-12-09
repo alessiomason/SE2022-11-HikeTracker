@@ -142,13 +142,13 @@ function SingleUpdateHikeCard(props) {
             <Col md={3}>
               <Form.Group>
                 <Form.Label>State</Form.Label>
-                <Form.Control required={true} value={state} disabled readOnly/>
+                <Form.Control required={true} value={state} disabled readOnly />
               </Form.Group>
             </Col>
             <Col md={3} >
               <Form.Group>
                 <Form.Label>Region</Form.Label>
-                <Form.Control required={true} value={region} disabled readOnly/>
+                <Form.Control required={true} value={region} disabled readOnly />
               </Form.Group>
             </Col>
             <Col md={3} >
@@ -205,12 +205,20 @@ function SingleUpdateHikeCard(props) {
               </Form.Group>
             </Col>
             <Col md={4} >
-              <Row className='my-3 box_btn'>
-                <Button variant="primary" className="btn_ref" >Manage reference points </Button>
+              <Row className='m-3'>
+                <Col className="text-center"><Button variant="primary" className="mt-2 btn btn-primary" >Manage reference points </Button></Col>
+
               </Row>
-              <Row className='box_btn my-2'>
-                <Button variant="danger" onClick={() => props.deleteHike(hikeId)} className="btn_box2 mx-2" >Delete</Button>
-                <Button variant="success" type='submit' className="btn_box2 mx-2">Save</Button>
+              <Row className='m-3'>
+                <Col className="text-center"><Button variant="warning" className="btn btn-primary"
+                  onClick={() => navigate(`/linkHike/${hikeId}`)}>Link hut/parking lot </Button></Col>
+
+              </Row>
+              <Row className='m-2 text-center' >
+                <Col ><Button variant="danger" onClick={() => props.deleteHike(hikeId)} className="m-2 btn btn-primary" >Delete</Button>
+                  <Button variant="success" type='submit' className="btn btn-primary">Save</Button>
+                </Col>
+
               </Row>
             </Col>
           </Row>

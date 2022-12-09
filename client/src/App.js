@@ -13,6 +13,7 @@ import MyHikeManager from './components/pages/HikeManager';
 import MyHutManager from './components/pages/HutManager';
 import MyParkingManager from './components/pages/ParkingManager';
 import HikePage from './components/pages/Hike';
+import LinkHike from './components/LinkHike';
 import Home from './components/pages/Home';
 import Loading from './components/Loading';
 import Footer from './components/Footer';
@@ -204,6 +205,7 @@ function App2() {
                  <ParkingForm  addParkingLot={addParkingLot} setDirty={setDirty}/>  : <Navigate to='/' />} ></Route>
                 <Route path="updateHike/:hikeId/" element={loggedIn && user.access_right === 'local-guide' ? <EditForm hike={hike} updateHike={updateHike}
                  deleteHike={deleteHike} setDirty={setDirty} /> : <Navigate to='/' />} ></Route>
+                 <Route path="linkHike/:hikeId/" element={loggedIn && user.access_right === 'local-guide' ? <LinkHike /> : <Navigate to='/' />} ></Route>
             </Route>
         </Routes>
     );
