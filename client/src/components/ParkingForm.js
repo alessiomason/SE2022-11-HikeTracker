@@ -49,11 +49,11 @@ function ParkingForm(props) {
                 total: total,
                 occupied: occupied
             }
-            
+
             await API.addParkingLot(newParkingLot)
-                .then( async (pl) => { setNewParkingLotID( (pl) ); await API.uploadParkingLotImage(pl, image) } )
-                .catch( err => console.log(err));
-            
+                .then(async (pl) => { setNewParkingLotID((pl)); await API.uploadParkingLotImage(pl, image) })
+                .catch(err => console.log(err));
+
             // props.addParkingLot(newParkingLot);
             props.setDirty(true);
             navigate('/parkingManager');
@@ -69,7 +69,7 @@ function ParkingForm(props) {
             </Row>
 
             <Row className="hut_box mx-5 py-5 px-5 mb-4">
-            <Col md={13} className="box_img_box" >
+                <Col md={13} className="box_img_box" >
                     <img className=" img_box mb-3"
                         src={preview}
                         onError={({ currentTarget }) => {
@@ -80,7 +80,7 @@ function ParkingForm(props) {
                     <Form.Group controlId="formFile" className="mb-3">
                         <Form.Label className='updateImage'>Upload Image</Form.Label>
                         <Form.Control type="file"
-                            onChange={(e) =>  { setImage(e.currentTarget.files[0]); setPreview(URL.createObjectURL(e.currentTarget.files[0])) } } />
+                            onChange={(e) => { setImage(e.currentTarget.files[0]); setPreview(URL.createObjectURL(e.currentTarget.files[0])) }} />
                     </Form.Group>
                 </Col>
 
@@ -182,7 +182,8 @@ function LocationMarker(props) {
                     props.setState(locationInfo.address.country);
                     props.setRegion(locationInfo.address.state);
                     props.setProvince(locationInfo.address.county);
-                    props.setMunicipality(locationInfo.address.city || locationInfo.address.town || locationInfo.address.village || locationInfo.address.municipality);
+                    props.setMunicipality(locationInfo.address.city || locationInfo.address.town || locationInfo.address.village || locationInfo.address.municipality
+                        || locationInfo.address.isolated_dwelling || locationInfo.address.croft || locationInfo.address.hamlet);
                 })
         }
     });

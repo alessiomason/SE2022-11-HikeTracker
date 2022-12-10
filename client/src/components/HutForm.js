@@ -178,7 +178,8 @@ function LocationMarker(props) {
                     props.setState(locationInfo.address.country);
                     props.setRegion(locationInfo.address.state);
                     props.setProvince(locationInfo.address.county);
-                    props.setMunicipality(locationInfo.address.city || locationInfo.address.town || locationInfo.address.village || locationInfo.address.municipality);
+                    props.setMunicipality(locationInfo.address.city || locationInfo.address.town || locationInfo.address.village || locationInfo.address.municipality
+                        || locationInfo.address.isolated_dwelling || locationInfo.address.croft || locationInfo.address.hamlet);
                 })
         }
     });
