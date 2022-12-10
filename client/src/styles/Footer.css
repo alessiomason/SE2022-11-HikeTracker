@@ -1,6 +1,6 @@
 .site-footer {
     background-color: #26272b;
-    padding: 45px 0 20px;
+    padding: 1rem;
     font-size: 15px;
     line-height: 24px;
     color: #737373;
@@ -8,7 +8,6 @@
     right: 0;
     bottom: 0;
     left: 0;
-    padding: 1rem;
 }
 
 .site-footer hr {

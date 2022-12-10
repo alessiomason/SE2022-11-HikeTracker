@@ -46,9 +46,7 @@ function HutForm(props) {
                 region: region,
                 province: province,
                 municipality: municipality,
-                beds: beds,
-                province: province,
-                municipality: municipality
+                beds: beds
             }
 
             await API.addHut(newHut)
