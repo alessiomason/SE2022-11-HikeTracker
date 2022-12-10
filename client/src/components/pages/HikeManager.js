@@ -17,7 +17,7 @@ function MyHikeManager(props) {
   useEffect(() => {
     if (dirty) {
       API.getHikes()
-        .then((hikes) => setHikes(hikes))
+        .then((hikes) => {setHikes(hikes.sort((a, b) => (a.id > b.id) ? 1 : -1)) })
         .catch(err => console.log(err))
       setDirty(false);
     }
@@ -42,7 +42,7 @@ function MyHikeManager(props) {
       </Row>
       {showUpdateBanner && <Alert variant='success' onClose={() => { setShowUpdateBanner(false); setMessage('') }} dismissible>{message}</Alert>}
       {hikes.map(h => <SingleUpdateHikeCard key={h.id} hike={h} user={props.user}
-        updateHike={props.updateHike} deleteHike={props.deleteHike} setDirty={setDirty}
+        updateHike={props.updateHike} deleteHike={props.deleteHike} setDirty={setDirty}  
         setShowUpdateBanner={setShowUpdateBanner} setMessage={setMessage} />)}
     </Container>
 

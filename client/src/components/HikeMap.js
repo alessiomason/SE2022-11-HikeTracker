@@ -55,7 +55,7 @@ function HikeMap(props) {
     else if (props.length && props.length >= 14000)
         zoom = 10;
 
-    const positions = props.points?.filter(p => !p.referencePoint).map(p => [p.latitude, p.longitude]);
+    const positions = props.points?.filter(p => !p.referencePoint && !p.hutID && !p.parkingID).map(p => [p.latitude, p.longitude]);
 
     return (
         <MapContainer className='single-hike-map' center={center} zoom={zoom} scrollWheelZoom={false}>

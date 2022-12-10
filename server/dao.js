@@ -9,10 +9,10 @@ const db = new sqlite.Database('db/hike_tracker.db', (err) => {
     if (err) throw err;
 });
 
-exports.addPoint = (hikeID, lat, lon, alt, SP, EP, RP, label) => {
+exports.addPoint = (hikeID, lat, lon, alt, SP, EP, RP, label, hutID, parkingID) => {
     return new Promise((resolve, reject) => {
-        const sql = 'INSERT INTO Points(HikeID,Lat,Lon,Altitude,SP,EP,RP,Label) VALUES(?, ?,?, ?,?,?,?,?)'
-        db.run(sql, [hikeID, lat, lon, alt, SP, EP, RP, label], function (err) {
+        const sql = 'INSERT INTO Points(HikeID,Lat,Lon,Altitude,SP,EP,RP,Label,HutID,ParkingID) VALUES(?,?,?,?,?,?,?,?,?,?)'
+        db.run(sql, [hikeID, lat, lon, alt, SP, EP, RP, label, hutID, parkingID], function (err) {
             if (err) reject(err);
             resolve();
         });
@@ -28,10 +28,29 @@ exports.deletePointsByHikeID = (hikeID) => {
     });
 };
 
+exports.deletePointByPointID = (pointID) => {
+    return new Promise((resolve, reject) => {
+        db.run("DELETE FROM Points WHERE PointID = ?", [pointID], (err) => {
+            if (err) reject(err);
+            else resolve(null);
+        });
+    });
+}
+
 exports.deleteAllPoints = () => {
     return new Promise((resolve, reject) => {
         const sql = 'DELETE FROM Points';
         db.all(sql, (err) => {
+            if (err) reject(err);
+            resolve();
+        });
+    });
+}
+
+exports.updatePoint = (pointID, SP, EP) => {
+    return new Promise((resolve, reject) => {
+        const sql = 'UPDATE Points SET SP=?, EP=? WHERE PointID=?'
+        db.run(sql, [SP, EP, pointID], function (err) {
             if (err) reject(err);
             resolve();
         });
@@ -390,7 +409,7 @@ exports.getHikePoints = (hikeID) => {
         const sql = 'SELECT * FROM POINTS WHERE HikeID = ?';
         db.all(sql, [hikeID], (err, rows) => {
             if (err) reject(err);
-            const points = rows.map((p) => ({ pointID: p.PointID, label: p.Label, latitude: p.Lat, longitude: p.Lon, startPoint: p.SP, endPoint: p.EP, referencePoint: p.RP }));
+            const points = rows.map((p) => ({ pointID: p.PointID, label: p.Label, latitude: p.Lat, longitude: p.Lon, startPoint: p.SP, endPoint: p.EP, referencePoint: p.RP, hutID: p.HutID, parkingID: p.ParkingID }));
             resolve(points);
         });
     });

@@ -366,6 +366,43 @@ async function getReferencePoint() {
     else throw referencePoint;
 }
 
+function AddPoint(point) {
+    // call: POST /api/addPoint
+
+        
+    return new Promise((resolve, reject) => {
+        fetch(new URL('addPoint', APIURL), {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                hikeID: point.hikeID,
+                lat: point.lat,
+                lon: point.lon,
+                altitude: point.altitude,
+                SP: point.SP,
+                EP: point.EP,
+                RP: point.RP,
+                label: point.label,
+                hutID: point.hutID,
+                parkingID: point.parkingID
+            }),
+        }).then((response) => {
+            if (response.ok)
+                resolve(response.json());
+            else {
+                // analyze the cause of error
+                response.json()
+                    .then((message) => { reject(message); }) // error message in the response body
+                    .catch(() => { reject({ error: "Cannot parse server response." }) }); // something else
+            }
+        }).catch(() => { reject({ error: "Cannot communicate with the server." }) }); // connection errors
+    });
+}
+
+
 async function getHike(id) {
     // call /api/hike
     const response = await fetch(new URL('hike/' + id, APIURL));
@@ -528,5 +565,5 @@ async function reverseNominatim(latitude, longitude) {
     else throw reverseNom;
 }
 
-const API = { addGPXTrack, addParkingLot, deleteParkingLot, updateParkingLot, deleteHike, getHikes, getParkingLots, addHut, updateHut, uploadHutImage, uploadParkingLotImage, getHuts, deletHut, getHike, addHike, updateHike, signup, verifyEmail, login, logout, getUserInfo, getUserAccessRight, getHikesRefPoints, getStartPoint, getEndPoint, getReferencePoint, reverseNominatim };
+const API = { addGPXTrack, addParkingLot, AddPoint, deleteParkingLot, updateParkingLot, deleteHike, getHikes, getParkingLots, addHut, updateHut, uploadHutImage, uploadParkingLotImage, getHuts, deletHut, getHike, addHike, updateHike, signup, verifyEmail, login, logout, getUserInfo, getUserAccessRight, getHikesRefPoints, getStartPoint, getEndPoint, getReferencePoint, reverseNominatim };
 export default API;

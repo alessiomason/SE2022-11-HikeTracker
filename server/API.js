@@ -175,6 +175,66 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
 
     });
 
+    app.post('/api/addPoint', async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty())
+            return res.status(422).json({ errors: errors.array() });
+
+        try {
+
+            const hikeID = req.body.hikeID;
+            const SP = req.body.SP;
+            const EP = req.body.EP;
+            const RP = req.body.RP;
+            const hutID = req.body.hutID;
+            const lat = req.body.lat;
+            const lon = req.body.lon;
+            const alt = req.body.altitude;
+            const label = req.body.label;
+            const parkingID = req.body.parkingID;
+
+            // mi occupo della cancellazione dello start/end point precedente solo se SP o EP !=0
+            if ((SP !== 0 || EP !== 0)) {
+                // verifico che ci sia uno start point e un end point associato all'hike corrente
+                let hikePoints = [];
+                hikePoints = await dao.getHikePoints(hikeID);
+                const hikeStartPoint = hikePoints.filter((p) => p.startPoint === 1).pop();
+                const hikeEndPoint = hikePoints.filter((p) => p.endPoint === 1).pop();
+
+                // se si, rimuovo flag a seconda del valore SP e EP
+                if (hikeStartPoint.startPoint === 1 && SP === 1) {
+                    if (hikeStartPoint.hutID !== 0 || hikeStartPoint.parkingID !== 0) {
+                        // se lo start point era un hut/parking lot, lo cancello dalla tabella Points
+                        await dao.deletePointByPointID(hikeStartPoint.pointID);
+                    } else {
+                        // rimuovo flag SP di hikeStartPoint, ma continua a far parte del tracciato
+                        await dao.updatePoint(hikeStartPoint.pointID, 0, hikeStartPoint.endPoint);
+                    }
+
+                } else if (hikeEndPoint.endPoint === 1 && EP === 1) {
+                    if (hikeEndPoint.hutID !== 0 || hikeEndPoint.parkingID !== 0) {
+                        // se l'end point era un hut/parking lot, lo cancello dalla tabella Points
+                        await dao.deletePointByPointID(hikeEndPoint.pointID);
+                    } else {
+                        // rimuovo flag EP di hikeEndPoint
+                        await dao.updatePoint(hikeEndPoint.pointID, hikeEndPoint.startPoint, 0);
+                    }
+
+                }
+                // se no, nulla
+            }
+            // aggiungo un nuovo punto in tabella, che sarà start o end point
+
+            const point = await dao.addPoint(hikeID, lat, lon, alt, SP, EP, RP, label, hutID, parkingID);
+            res.status(201).json(point).end();
+        } catch (err) {
+            console.log(err)
+            res.status(500).json({ error: err });
+        }
+
+    });
+
+
     app.put('/api/uploadHutImage/:id', upload.single('file'), async (req, res) => {
         const errors = validationResult(req);
         if (!errors.isEmpty())
