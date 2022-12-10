@@ -12,29 +12,29 @@ const fs = require("fs");
 const storage = multer.diskStorage(
     {
         destination: './images',
-        filename: function (req, file, cb ) {
+        filename: function (req, file, cb) {
 
             let type;
             let id;
 
             // It is an hike, hut or parking lot?
-            if (req.body['hikeID'] != null){
+            if (req.body['hikeID'] != null) {
                 type = "hike";
                 id = req.body["hikeID"];
-            } else if (req.body['hutID'] != null){
+            } else if (req.body['hutID'] != null) {
                 type = "hut";
                 id = req.body["hutID"];
-            } else if (req.body['parkingLotID'] != null){
+            } else if (req.body['parkingLotID'] != null) {
                 type = "parkingLot";
                 id = req.body["parkingLotID"];
-            } 
+            }
             // hike-id.jpg || hut-id.jpg || parkingLot-id.jpg
-            cb( null, type + "-" + id + ".jpg");  
+            cb(null, type + "-" + id + ".jpg");
         }
     }
 );
 
-const upload = multer({ storage: storage});
+const upload = multer({ storage: storage });
 
 // from https://stackoverflow.com/questions/639695/how-to-convert-latitude-or-longitude-to-meters
 function coordinatesDistanceInMeter(lat1, lon1, lat2, lon2) {  // generally used geo measurement function
@@ -104,7 +104,7 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
                             region = reverseNom.address.state;
                             province = reverseNom.address.county;
                             municipality = reverseNom.address.city || reverseNom.address.town || reverseNom.address.village || reverseNom.address.municipality
-                            || reverseNom.address.isolated_dwelling || reverseNom.address.croft || reverseNom.address.hamlet;
+                                || reverseNom.address.isolated_dwelling || reverseNom.address.croft || reverseNom.address.hamlet;
                         }
                     } else if (i == (pointsArray.length - 1) & k == (coordinatesArray.length - 1)) { ///ultimo punto
                         await dao.addPoint(hikeID, pointsArray[i][1], pointsArray[i][0], pointsArray[i][2], 0, 1, 0, "");
@@ -136,7 +136,7 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
             // let endPoint = await dao.getEndPointOfHike(hikeID);
             let ascent = endPointElev - startPointElev;
             // const length = measure(startPoint.lat, startPoint.lon, endPoint.lat, endPoint.lon);
-            await dao.addHike(label, length, null, ascent, null, desc, state, region, province, municipality);
+            await dao.addHike(label, length, null, ascent, null, desc, state, region, province, municipality, req.user.id);
             let hike = await dao.getHike(hikeID)
             res.status(201).json(hike).end();
         } catch (err) {
@@ -165,8 +165,8 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
             const province = req.body.province;
             const municipality = req.body.municipality;
 
-            const hut = await dao.addHut(name, description, lat, lon, altitude, beds, state, region, province, municipality);
-            
+            const hut = await dao.addHut(name, description, lat, lon, altitude, beds, state, region, province, municipality, req.user.id);
+
             res.status(201).json(hut.id).end();
         } catch (err) {
             console.log(err)
@@ -249,7 +249,7 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
             res.status(500).json({ error: 'The hut could not be deleted' });
         }
 
-        try{
+        try {
             fs.unlinkSync(path);
         } catch {
         }
@@ -286,16 +286,6 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
             res.status(500).json({ error: `Database error during update of the hut` });
         }
 
-    });
-
-    app.get('/api/huts', async (req, res) => {
-        try {
-            const hikes = await dao.getHuts();
-            res.status(200).json(hikes);
-        }
-        catch (err) {
-            res.status(500).end();
-        }
     });
 
 
@@ -361,7 +351,7 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
             const total = req.body.total;
             const occupied = req.body.occupied;
 
-            const parking = await dao.addParking(label, state, region, province, municipality, description, lat, lon, altitude, total, occupied);
+            const parking = await dao.addParking(label, state, region, province, municipality, description, lat, lon, altitude, total, occupied, req.user.id);
             res.status(201).json(parking.id).end();
         } catch (err) {
             console.log(err)
@@ -414,7 +404,7 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
         catch (err) {
             res.status(500).json({ error: 'Database error during update of the service name.' });
         }
-        try{
+        try {
             fs.unlinkSync(path);
         } catch {
         }
@@ -469,7 +459,7 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
         catch (err) {
             res.status(500).json({ error: 'The hike could not be deleted' });
         }
-        try{
+        try {
             fs.unlinkSync(path);
         } catch {
         }
@@ -570,7 +560,7 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
     */
 
     // update hike
-    app.put('/api/updateHike/:id', upload.single('file') ,async (req, res) => {
+    app.put('/api/updateHike/:id', upload.single('file'), async (req, res) => {
         const errors = validationResult(req);
         if (!errors.isEmpty())
             return res.status(422).json({ errors: errors.array() });

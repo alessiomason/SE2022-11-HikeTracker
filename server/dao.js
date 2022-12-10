@@ -38,10 +38,10 @@ exports.deleteAllPoints = () => {
     });
 }
 
-exports.addHut = (hutName, hutDescription, lat, lon, altitude, beds, state, region, province, municipality) => {
+exports.addHut = (hutName, hutDescription, lat, lon, altitude, beds, state, region, province, municipality, userId) => {
     return new Promise((resolve, reject) => {
-        const sql = 'INSERT INTO Huts(Name, Description, Lat, Lon, Altitude, Beds, State, Region, Province, Municipality) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
-        db.run(sql, [hutName, hutDescription, lat, lon, altitude, beds, state, region, province, municipality], function (err) {
+        const sql = 'INSERT INTO Huts(Name, Description, Lat, Lon, Altitude, Beds, State, Region, Province, Municipality, Author) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
+        db.run(sql, [hutName, hutDescription, lat, lon, altitude, beds, state, region, province, municipality, userId], function (err) {
             if (err) reject(err);
             else {
                 db.get('SELECT last_insert_rowid() AS ID', (err, row) => {
@@ -57,21 +57,24 @@ exports.addHut = (hutName, hutDescription, lat, lon, altitude, beds, state, regi
 
 exports.getHuts = () => {
     return new Promise((resolve, reject) => {
-        const sql = 'SELECT * FROM Huts';
+        const sql = `SELECT H.*, FullName
+                     FROM Huts H, Users U
+                     WHERE H.Author = U.UserId`;
         db.all(sql, [], (err, rows) => {
             if (err) reject(err);
-            const huts = rows.map((h) => ({
-                id: h.HutID,
-                hutName: h.Name,
-                hutDescription: h.Description,
-                lat: h.Lat,
-                lon: h.Lon,
-                altitude: h.Altitude,
-                beds: h.Beds,
-                state: h.State,
-                region: h.Region,
-                province: h.Province,
-                municipality: h.Municipality
+            const huts = rows.map((r) => ({
+                id: r.HutID,
+                hutName: r.Name,
+                hutDescription: r.Description,
+                lat: r.Lat,
+                lon: r.Lon,
+                altitude: r.Altitude,
+                beds: r.Beds,
+                state: r.State,
+                region: r.Region,
+                province: r.Province,
+                municipality: r.Municipality,
+                author: r.FullName
             }));
             resolve(huts);
         });
@@ -101,24 +104,28 @@ exports.deleteAllHuts = () => {
 
 exports.getHut = (hutID) => {
     return new Promise((resolve, reject) => {
-        const sql = 'SELECT * FROM Huts WHERE HutID = ?';
+        const sql = `SELECT H.*, FullName
+                     FROM Huts H, Users U
+                     WHERE HutID = ?
+                     AND H.Author = U.UserId`;
         db.all(sql, [hutID], (err, rows) => {
             if (err) reject(err);
             else {
                 if (rows.length === 0) resolve(undefined);
                 else {
-                    const hut = rows.map((h) => ({
-                        id: h.HutID,
-                        hutName: h.Name,
-                        hutDescription: h.Description,
-                        lat: h.Lat,
-                        lon: h.Lon,
-                        altitude: h.Altitude,
-                        beds: h.Beds,
-                        state: h.State,
-                        region: h.Region,
-                        province: h.Province,
-                        municipality: h.Municipality
+                    const hut = rows.map((r) => ({
+                        id: r.HutID,
+                        hutName: r.Name,
+                        hutDescription: r.Description,
+                        lat: r.Lat,
+                        lon: r.Lon,
+                        altitude: r.Altitude,
+                        beds: r.Beds,
+                        state: r.State,
+                        region: r.Region,
+                        province: r.Province,
+                        municipality: r.Municipality,
+                        author: r.FullName
                     }));
                     resolve(hut);
                 }
@@ -138,10 +145,10 @@ exports.updateHut = (name, description, lat, lon, altitude, beds, state, region,
 }
 
 
-exports.addHike = (trackName, len, time, ascent, diff, description, state, region, province, municipality) => {
+exports.addHike = (trackName, len, time, ascent, diff, description, state, region, province, municipality, userId) => {
     return new Promise((resolve, reject) => {
-        const sql = 'INSERT INTO Hikes(Label, Length, ExpTime,Ascent,Difficulty,Description,State,Region,Province,Municipality) VALUES(?,?,?,?,?,?,?,?,?,?)'
-        db.run(sql, [trackName, len, time, ascent, diff, description, state, region, province, municipality], function (err) {
+        const sql = 'INSERT INTO Hikes(Label, Length, ExpTime, Ascent, Difficulty, Description, State, Region, Province, Municipality, Author) VALUES(?,?,?,?,?,?,?,?,?,?,?)'
+        db.run(sql, [trackName, len, time, ascent, diff, description, state, region, province, municipality, userId], function (err) {
             if (err) reject(err);
             resolve();
         });
@@ -194,28 +201,30 @@ exports.getEndPointOfHike = (hikeID) => {
 exports.getHikes = () => {
     return new Promise((resolve, reject) => {
         const sql = `SELECT H.HikeID, H.Label, H.Length, H.ExpTime, H.Ascent, H.Difficulty, H.Description,
-                        H.State, H.Region, H. Province, H.Municipality, P.Lat, P.Lon, P.Label AS StartPointLabel
-                     FROM Hikes H, Points P
-                     WHERE H.HikeID = P.HikeID AND P.SP = 1`;
+                        H.State, H.Region, H. Province, H.Municipality, P.Lat, P.Lon, P.Label AS StartPointLabel, U.FullName
+                     FROM Hikes H, Points P, Users U
+                     WHERE H.HikeID = P.HikeID AND P.SP = 1
+                     AND H.Author = U.UserId`;
         db.all(sql, [], (err, rows) => {
             if (err) reject(err);
-            const hikes = rows.map((h) => ({
-                id: h.HikeID,
-                label: h.Label,
-                length: h.Length,
-                expTime: h.ExpTime,
-                ascent: h.Ascent,
-                difficulty: h.Difficulty,
-                description: h.Description,
-                state: h.State,
-                region: h.Region,
-                province: h.Province,
-                municipality: h.Municipality,
+            const hikes = rows.map((r) => ({
+                id: r.HikeID,
+                label: r.Label,
+                length: r.Length,
+                expTime: r.ExpTime,
+                ascent: r.Ascent,
+                difficulty: r.Difficulty,
+                description: r.Description,
+                state: r.State,
+                region: r.Region,
+                province: r.Province,
+                municipality: r.Municipality,
                 startPoint: {
-                    latitude: h.Lat,
-                    longitude: h.Lon,
-                    label: h.StartPointLabel
-                }
+                    latitude: r.Lat,
+                    longitude: r.Lon,
+                    label: r.StartPointLabel
+                },
+                author: r.FullName
             }));
             resolve(hikes);
         });
@@ -224,13 +233,15 @@ exports.getHikes = () => {
 
 exports.getParkingLots = () => {
     return new Promise((resolve, reject) => {
-        const sql = 'SELECT * FROM ParkingLots';
+        const sql = `SELECT P.*, FullName
+                     FROM ParkingLots P, Users U
+                     Where P.Author = U.UserId`;
         db.all(sql, [], (err, rows) => {
             if (err) reject(err);
-            const pls = rows.map((pl) => ({
-                id: pl.ParkingID, label: pl.Label,
-                description: pl.Description, state: pl.State, region: pl.Region, province: pl.Province, municipality: pl.Municipality,
-                lat: pl.Lat, lon: pl.Lon, altitude: pl.Altitude, total: pl.Total, occupied: pl.Occupied
+            const pls = rows.map((r) => ({
+                id: r.ParkingID, label: r.Label,
+                description: r.Description, state: r.State, region: r.Region, province: r.Province, municipality: r.Municipality,
+                lat: r.Lat, lon: r.Lon, altitude: r.Altitude, total: r.Total, occupied: r.Occupied, author: r.FullName
             }));
             resolve(pls);
         });
@@ -241,10 +252,27 @@ exports.getParkingLots = () => {
 // get a specific parking lot
 exports.getParkingById = (id) => {
     return new Promise((resolve, reject) => {
-        const sql = 'SELECT * FROM PARKINGLOTS WHERE ParkingID = ?';
+        const sql = `SELECT P.*, FullName
+                     FROM ParkingLots P, Users U
+                     WHERE ParkingID = ?
+                     AND P.Author = U.UserId`;
         db.all(sql, [id], (err, row) => {
             if (err) reject(err);
-            const parking = row.map((p) => ({ parkingID: p.ParkingID, label: p.Label, state: p.State, region: p.Region, province: p.Province, municipality: p.Municipality, description: p.Description, lat: p.Lat, lon: p.Lon, altitude: p.Altitude, total: p.Total, occupied: p.Occupied }));
+            const parking = row.map((r) => ({
+                parkingID: r.ParkingID,
+                label: r.Label,
+                state: r.State,
+                region: r.Region,
+                province: r.Province,
+                municipality: r.Municipality,
+                description: r.Description,
+                lat: r.Lat,
+                lon: r.Lon,
+                altitude: r.Altitude,
+                total: r.Total,
+                occupied: r.Occupied,
+                author: r.FullName
+            }));
             resolve(parking);
         });
     });
@@ -264,10 +292,10 @@ exports.getLastPArkingLotId = () => {
     });
 }
 //Add new parking lot
-exports.addParking = (Label,State,Region,Province,Municipality,Description,Lat,Lon,Altitude,Total, Occupied) => {
+exports.addParking = (Label, State, Region, Province, Municipality, Description, Lat, Lon, Altitude, Total, Occupied, UserId) => {
     return new Promise((resolve, reject) => {
-        const sql = 'INSERT INTO PARKINGLOTS(Label, State, Region, Province, Municipality, Description, Lat, Lon, Altitude,Total, Occupied) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
-        db.run(sql, [Label, State, Region, Province, Municipality, Description, Lat, Lon, Altitude,Total, Occupied], function (err) {
+        const sql = 'INSERT INTO PARKINGLOTS(Label, State, Region, Province, Municipality, Description, Lat, Lon, Altitude,Total, Occupied, Author) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
+        db.run(sql, [Label, State, Region, Province, Municipality, Description, Lat, Lon, Altitude, Total, Occupied, UserId], function (err) {
             if (err) reject(err);
             else {
                 db.get('SELECT last_insert_rowid() AS ID', (err, row) => {
@@ -327,13 +355,29 @@ exports.getHikesRefPoints = () => {
 
 exports.getHike = (hikeID) => {
     return new Promise((resolve, reject) => {
-        const sql = 'SELECT * FROM HIKES WHERE HikeID = ?';
+        const sql = `SELECT H.*, FullName
+                     FROM HIKES H, Users U
+                     WHERE HikeID = ?
+                     AND H.Author = U.UserId`;
         db.all(sql, [hikeID], (err, rows) => {
             if (err) reject(err);
             else {
                 if (rows.length === 0) resolve(undefined);
                 else {
-                    const hike = rows.map((h) => ({ id: h.HikeID, label: h.Label, length: h.Length, expTime: h.ExpTime, ascent: h.Ascent, difficulty: h.Difficulty, description: h.Description, state: h.State, region: h.Region, province: h.Province, municipality: h.Municipality }));
+                    const hike = rows.map((r) => ({
+                        id: r.HikeID,
+                        label: r.Label,
+                        length: r.Length,
+                        expTime: r.ExpTime,
+                        ascent: r.Ascent,
+                        difficulty: r.Difficulty,
+                        description: r.Description,
+                        state: r.State,
+                        region: r.Region,
+                        province: r.Province,
+                        municipality: r.Municipality,
+                        author: r.FullName
+                    }));
                     resolve(hike);
                 }
             }
