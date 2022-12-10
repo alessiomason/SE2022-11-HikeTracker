@@ -9,6 +9,7 @@ import { default as Location } from "../../icons/map.svg";
 import { default as Length } from "../../icons/location-on-road.svg";
 import { default as Time } from "../../icons/stopwatch.svg";
 import { default as Ascent } from "../../icons/mountain.svg";
+import { default as User } from "../../icons/user-login.svg";
 import { default as Difficulty } from "../../icons/volume.svg";
 import { default as Img1 } from "../../images/image3.jpg";
 import { default as FakeMap } from "../../images/fakeMap.jpg";
@@ -86,7 +87,6 @@ function HikePage(props) {
                 </OverlayTrigger>
                 <p className='p-hike'>{Math.round(hike.ascent)} m</p>
               </Col>
-
             </Row>
             <Row>
               <h6 className='side-title'>Experience:</h6>
@@ -103,6 +103,17 @@ function HikePage(props) {
                   <img src={Difficulty} alt="difficulty_image" className='me-3 single-hike-icon ' />
                 </OverlayTrigger>
                 <p className='p-hike'>{difficultiesNames[hike.difficulty - 1]}</p>
+              </Col>
+            </Row>
+            <Row>
+              <h6 className='side-title'>Author:</h6>
+            </Row>
+            <Row className="info-row">
+              <Col lg={6} md={12} sm={6} xs={6} className='mb-3 align'>
+                <OverlayTrigger placement="bottom" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip-2">Author</Tooltip>}>
+                  <img src={User} alt="time_image" className='me-3 single-hike-icon bigger-icon' />
+                </OverlayTrigger>
+                <p className='p-hike'>{hike.author}</p>
               </Col>
             </Row>
           </Col>

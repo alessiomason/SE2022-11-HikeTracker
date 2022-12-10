@@ -69,7 +69,7 @@ function SingleHikeCard(props) {
           </Col>
         </Row>
 
-        <p className='card-credit'>Credit: HikeTracker</p>
+        {/*<p className='card-credit'>Added by {props.hike.author}</p>*/}
       </Card.Body>
     </Card>
   );

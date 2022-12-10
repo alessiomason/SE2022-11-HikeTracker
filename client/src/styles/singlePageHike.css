@@ -86,6 +86,11 @@
   filter: invert(55%) sepia(51%) saturate(593%) hue-rotate(89deg) brightness(98%) contrast(85%);
 }
 
+.bigger-icon {
+  width: 30px;
+  height: 30px;
+}
+
 .single-hike-map {
   margin-bottom: 0px !important;
   height: 400px !important;
