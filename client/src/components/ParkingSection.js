@@ -62,7 +62,7 @@ function ParkingCards(props) {
 
   const settings = {
     dots: true,
-    infinite: true,
+    infinite: props.parkings.length > 4,
     speed: 500,
     slidesToShow: 4,
     slidesToScroll: 4,
@@ -75,8 +75,7 @@ function ParkingCards(props) {
         settings: {
           slidesToShow: 3,
           slidesToScroll: 3,
-          infinite: true,
-          dots: true,
+          infinite: props.parkings.length > 3
         },
       },
       {
@@ -84,7 +83,7 @@ function ParkingCards(props) {
         settings: {
           slidesToShow: 2,
           slidesToScroll: 2,
-          initialSlide: 2,
+          infinite: props.parkings.length > 2
         },
       },
       {
@@ -92,6 +91,7 @@ function ParkingCards(props) {
         settings: {
           slidesToShow: 1,
           slidesToScroll: 1,
+          infinite: props.parkings.length > 1
         },
       },
     ],
@@ -146,95 +146,9 @@ function ParkingCards(props) {
             </div>
           </div>);
         })}
-
-
-        {parkings.map((parking) => (
-          <div className="parking-card" key={parking.id}>
-            <div className="card-top">
-              <img src={image3} alt={parking.title} className="card-top-img-park" />
-            </div>
-            <div className="card-bottom-park">
-              <div>
-                <h1 className="hut-card-title-park">{parking.title}</h1>
-              </div>
-              <Row >
-                <Col md={12} lg={12} xl={12} xxl={6} className="mb-1">
-                  <FaLocationArrow className="card-symbol-park me-3" /><h6 className="card-details">{parking.location}</h6>
-                </Col>
-              </Row>
-              <Row>
-                <Col md={12} lg={6} sm={12} className="mb-1" >
-                  <ImPriceTag className="card-symbol-park me-3" /> <h6 className="card-details">{parking.price}</h6>
-                </Col>
-                <Col md={12} lg={6} sm={12} className="mb-1">
-                  <FaParking className="card-symbol-park me-3" /> <h6 className="card-details">{parking.parkingNumb}</h6>
-                </Col>
-              </Row>
-            </div>
-          </div>
-        ))}
       </Slider>
     </div>
   );
 }
-
-const parkings = [
-  {
-    id: 1,
-    title: 'Delete these cards when more than 4 parkings in DB',
-    location: 'Garessio',
-    price: '10$',
-    parkingNumb: '150',
-  },
-  {
-    id: 2,
-    title: 'Delete these cards when more than 4 parkings in DB',
-    location: 'politecnico',
-    price: '10$',
-    parkingNumb: '150',
-  },
-  {
-    id: 3,
-    title: 'Delete these cards when more than 4 parkings in DB',
-    location: 'politecnico',
-    price: '10$',
-    parkingNumb: '150',
-  },
-  {
-    id: 4,
-    title: 'Delete these cards when more than 4 parkings in DB',
-    location: 'politecnico',
-    price: '10$',
-    parkingNumb: '150',
-  },
-  {
-    id: 5,
-    title: 'Delete these cards when more than 4 parkings in DB',
-    location: 'politecnico',
-    price: '10$',
-    parkingNumb: '150',
-  },
-  {
-    id: 6,
-    title: 'Delete these cards when more than 4 parkings in DB',
-    location: 'politecnico',
-    price: '10$',
-    parkingNumb: '150',
-  },
-  {
-    id: 7,
-    title: 'Delete these cards when more than 4 parkings in DB',
-    location: 'politecnico',
-    price: '10$',
-    parkingNumb: '150',
-  },
-  {
-    id: 8,
-    title: 'Delete these cards when more than 4 parkings in DB',
-    location: 'politecnico',
-    price: '10$',
-    parkingNumb: '150',
-  },
-];
 
 export default MyParkingSection;

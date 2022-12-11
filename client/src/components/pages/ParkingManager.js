@@ -16,6 +16,7 @@ function MyParkingManager(props) {
   const [dirty, setDirty] = useState(true);
   const [showUpdateBanner, setShowUpdateBanner] = useState(false);
   const [message, setMessage] = useState('');
+  const [searchField, setSearchField] = useState('');
 
   useEffect(() => {
     if (dirty) {
@@ -35,8 +36,8 @@ function MyParkingManager(props) {
       <Row className='input-group my-5 mx-auto search_row'>
         <Col md={{ span: 4, offset: 4 }} sm={{ span: 6, offset: 3 }} xs={12} >
           <InputGroup >
-            <Form.Control placeholder="Insert an parking lot label" />
-            <Button variant="success">Search</Button>
+            <Form.Control value={searchField} onChange={ev => setSearchField(ev.target.value)} placeholder="Type to search a parking lot by label" />
+            <Button variant="success" onClick={() => setSearchField('')}>Clear</Button>
           </InputGroup>
         </Col>
         <Col className='search_row'>
@@ -44,9 +45,10 @@ function MyParkingManager(props) {
         </Col>
       </Row>
       {showUpdateBanner && <Alert variant='success' onClose={() => { setShowUpdateBanner(false); setMessage('') }} dismissible>{message}</Alert>}
-      {parkingLots.map(pl => <SingleUpdateParkingCard key={pl.id} parking={pl} user={props.user}
-        updateParkingLot={props.updateParkingLot} deleteParkingLot={props.deleteParkingLot} setDirty={setDirty}
-        setShowUpdateBanner={setShowUpdateBanner} setMessage={setMessage} />)}
+      {parkingLots.filter(pl => searchField === '' || searchField !== '' && pl.label.toLowerCase().indexOf(searchField) !== -1).sort((a, b) => (a.id > b.id))
+        .map(pl => <SingleUpdateParkingCard key={pl.id} parking={pl} user={props.user}
+          updateParkingLot={props.updateParkingLot} deleteParkingLot={props.deleteParkingLot} setDirty={setDirty}
+          setShowUpdateBanner={setShowUpdateBanner} setMessage={setMessage} />)}
     </Container>
 
   );
@@ -84,9 +86,9 @@ function SingleUpdateParkingCard(props) {
       const updatedParkingLot = {
         id: plId,
         label: label,
-        lat: lat, 
-        lon: lon, 
-        altitude: altitude, 
+        lat: lat,
+        lon: lon,
+        altitude: altitude,
         description: description,
         state: state,
         region: region,
@@ -112,13 +114,13 @@ function SingleUpdateParkingCard(props) {
           src={preview}
           onError={({ currentTarget }) => {
             currentTarget.onerror = null; // prevents looping
-            currentTarget.src = Img1; 
+            currentTarget.src = Img1;
           }}
         />
         <Form.Group controlId="formFile" className="mb-3">
           <Form.Label className='updateImageButton'>Update Image</Form.Label>
           <Form.Control type="file"
-            onChange={(e) => { setImage(e.target.files[0]); setPreview(URL.createObjectURL(e.target.files[0]))} }/>
+            onChange={(e) => { setImage(e.target.files[0]); setPreview(URL.createObjectURL(e.target.files[0])) }} />
         </Form.Group>
       </Col>
 
@@ -149,13 +151,13 @@ function SingleUpdateParkingCard(props) {
             <Col md={3}>
               <Form.Group>
                 <Form.Label>State</Form.Label>
-                <Form.Control required={true} value={state} disabled readOnly/>
+                <Form.Control required={true} value={state} disabled readOnly />
               </Form.Group>
             </Col>
             <Col md={3} >
               <Form.Group>
                 <Form.Label>Region</Form.Label>
-                <Form.Control required={true} value={region} disabled readOnly/>
+                <Form.Control required={true} value={region} disabled readOnly />
               </Form.Group>
             </Col>
             <Col md={3} >

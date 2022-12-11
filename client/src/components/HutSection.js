@@ -94,7 +94,7 @@ function HutCards(props) {
 
   const settings = {
     dots: true,
-    infinite: true,
+    infinite: props.huts.length > 4,
     speed: 500,
     slidesToShow: 4,
     slidesToScroll: 4,
@@ -107,8 +107,7 @@ function HutCards(props) {
         settings: {
           slidesToShow: 3,
           slidesToScroll: 3,
-          infinite: true,
-          dots: true,
+          infinite: props.huts.length > 3
         },
       },
       {
@@ -116,7 +115,7 @@ function HutCards(props) {
         settings: {
           slidesToShow: 2,
           slidesToScroll: 2,
-          initialSlide: 2,
+          infinite: props.huts.length > 2
         },
       },
       {
@@ -124,6 +123,7 @@ function HutCards(props) {
         settings: {
           slidesToShow: 1,
           slidesToScroll: 1,
+          infinite: props.huts.length > 1
         },
       },
     ],
@@ -178,106 +178,9 @@ function HutCards(props) {
             </div>
           </div>);
         })}
-
-
-        {huts.map((hut) => (
-          <div className="hut-card" key={hut.id}>
-            <div className="card-top">
-              <img src={image4} alt={hut.title} className="card-top-img" />
-            </div>
-            <div className="card-bottom">
-              <div>
-                <h1 className="hut-card-title">{hut.title}</h1>
-              </div>
-              <Row >
-                <Col md={12} lg={12} xl={12} xxl={6} className="mb-1">
-                  <FaLocationArrow className="card-symbol me-3" /><h6 className="card-details">{hut.location}</h6>
-                </Col>
-                <Col md={12} lg={12} xl={12} xxl={6} className="mb-1">
-                  <FaMountain className="card-symbol me-3" /> <h6 className="card-details">{hut.ascent}</h6>
-                </Col>
-              </Row>
-              <Row>
-                <Col md={12} lg={6} sm={12} className="mb-1" >
-                  <ImPriceTag className="card-symbol me-3" /> <h6 className="card-details">{hut.price}</h6>
-                </Col>
-                <Col md={12} lg={6} sm={12} className="mb-1">
-                  <FaBed className="card-symbol me-3" /> <h6 className="card-details">{hut.beds}</h6>
-                </Col>
-              </Row>
-            </div>
-          </div>
-        ))}
       </Slider>
     </div>
   );
 }
-
-const huts = [
-  {
-    id: 1,
-    title: 'Delete these cards when more than 4 huts in DB',
-    location: 'Garessio, Cuneo',
-    ascent: '1200m',
-    price: '200$',
-    beds: '150',
-  },
-  {
-    id: 2,
-    title: 'Delete these cards when more than 4 huts in DB',
-    location: 'politecnico',
-    ascent: '1200m',
-    price: '200$',
-    beds: '150',
-  },
-  {
-    id: 3,
-    title: 'Delete these cards when more than 4 huts in DB',
-    location: 'politecnico',
-    ascent: '1200m',
-    price: '200$',
-    beds: '150',
-  },
-  {
-    id: 4,
-    title: 'Delete these cards when more than 4 huts in DB',
-    location: 'politecnico',
-    ascent: '1200m',
-    price: '200$',
-    beds: '150',
-  },
-  {
-    id: 5,
-    title: 'Delete these cards when more than 4 huts in DB',
-    location: 'politecnico',
-    ascent: '1200m',
-    price: '200$',
-    beds: '150',
-  },
-  {
-    id: 6,
-    title: 'Delete these cards when more than 4 huts in DB',
-    location: 'politecnico',
-    ascent: '1200m',
-    price: '200$',
-    beds: '150',
-  },
-  {
-    id: 7,
-    title: 'Delete these cards when more than 4 huts in DB',
-    location: 'politecnico',
-    ascent: '1200m',
-    price: '200$',
-    beds: '150',
-  },
-  {
-    id: 8,
-    title: 'Delete these cards when more than 4 huts in DB',
-    location: 'politecnico',
-    ascent: '1200m',
-    price: '200$',
-    beds: '150',
-  }
-];
 
 export default MyHutSection;

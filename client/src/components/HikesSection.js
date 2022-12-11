@@ -45,7 +45,7 @@ function MyHikesSection(props) {
 	useEffect(() => {
 		if (dirty) {
 			API.getHikes()
-				.then((hikes) => {setHikes(hikes.sort((a, b) => (a.id > b.id) ? 1 : -1)) })
+				.then((hikes) => setHikes(hikes))
 				.catch(err => console.log(err))
 			setDirty(false);
 		}
