@@ -41,7 +41,7 @@ function HikesCards(props) {
                         return false;
 
                     return true;
-                }).slice(0, showingAll ? undefined : 9).map(h => {
+                }).sort((a, b) => (a.id > b.id)).slice(0, showingAll ? undefined : 9).map(h => {
                     return (
                         <Col xl={4} lg="auto" md="auto" sm="auto" xs="auto" key={h.id} >
                             <SingleHikeCard fromHikeCards key={h.id} hike={h} user={props.user} />
