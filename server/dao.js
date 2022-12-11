@@ -37,6 +37,24 @@ exports.deletePointByPointID = (pointID) => {
     });
 }
 
+exports.deletePointsByHutID = (hutID) => {
+    return new Promise((resolve, reject) => {
+        db.run("DELETE FROM Points WHERE HutID = ?", [hutID], (err) => {
+            if (err) reject(err);
+            else resolve(null);
+        });
+    });
+}
+
+exports.deletePointsByParkingID = (parkingID) => {
+    return new Promise((resolve, reject) => {
+        db.run("DELETE FROM Points WHERE ParkingID = ?", [parkingID], (err) => {
+            if (err) reject(err);
+            else resolve(null);
+        });
+    });
+}
+
 exports.deleteAllPoints = () => {
     return new Promise((resolve, reject) => {
         const sql = 'DELETE FROM Points';
@@ -483,6 +501,28 @@ exports.getReferencePoint = () => {
             if (err) reject(err);
             const referencePoint = rows.map((rp) => ({ hikeID: rp.HikeID, pointID: rp.PointID, label: rp.Label }));
             resolve(referencePoint);
+        });
+    });
+}
+
+exports.getHutPoints = (hutID) => {
+    return new Promise((resolve, reject) => {
+        const sql = 'SELECT * FROM POINTS WHERE HutID = ?';
+        db.all(sql, [hutID], (err, rows) => {
+            if (err) reject(err);
+            const points = rows.map((p) => ({ pointID: p.PointID, label: p.Label, latitude: p.Lat, longitude: p.Lon, startPoint: p.SP, endPoint: p.EP, referencePoint: p.RP, hutID: p.HutID, parkingID: p.ParkingID }));
+            resolve(points);
+        });
+    });
+}
+
+exports.getParkingPoints = (parkingID) => {
+    return new Promise((resolve, reject) => {
+        const sql = 'SELECT * FROM POINTS WHERE ParkingID = ?';
+        db.all(sql, [parkingID], (err, rows) => {
+            if (err) reject(err);
+            const points = rows.map((p) => ({ pointID: p.PointID, label: p.Label, latitude: p.Lat, longitude: p.Lon, startPoint: p.SP, endPoint: p.EP, referencePoint: p.RP, hutID: p.HutID, parkingID: p.ParkingID }));
+            resolve(points);
         });
     });
 }

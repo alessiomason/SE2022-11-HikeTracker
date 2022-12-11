@@ -302,16 +302,36 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
         const hutID = req.params.id;
         const path = `./images/hut-${hutID}.jpg`;
         try {
-            await dao.deleteHut(hutID);
-            res.status(200).end();
+            // verifico la presenza dell'hut nella tabella Points
+            const hutPoints = await dao.getHutPoints(hutID);
+            if(hutPoints.length !== 0){
+                    // se sono start point/end point --> ERRORE
+                if(hutPoints.filter((p) => p.startPoint === 1 || p.endPoint === 1).length !== 0){
+                    res.status(500).json({ error: 'The hut could not be deleted, it is a start/end point!' })
+                }else{
+                    // ci sono degli hut linkati, possono essere cancellati sempre problemi -> CANCELLO
+                    await dao.deletePointsByHutID(hutID);
+                    await dao.deleteHut(hutID);
+                    // cancello l'eventuale immagine associata
+                    try {
+                        fs.unlinkSync(path);
+                    } catch {
+                    }
+                    res.status(200).end();
+                }
+            }else {
+                // non ci sono né hut linkati, né hut settati come start/end point -> CANCELLO
+                await dao.deleteHut(hutID);
+                // cancello l'eventuale immagine associata
+                try {
+                    fs.unlinkSync(path);
+                } catch {
+                }
+                res.status(200).end();
+            }
         }
         catch (err) {
             res.status(500).json({ error: 'The hut could not be deleted' });
-        }
-
-        try {
-            fs.unlinkSync(path);
-        } catch {
         }
     });
 
@@ -458,15 +478,24 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
         const ParkingID = req.params.id;
         const path = `./images/parkingLot-${ParkingID}.jpg`;
         try {
-            await dao.deleteParking(ParkingID);
-            res.status(200).end();
+            // verifico la presenza del parking lot nella tabella Points
+            const parkingPoints = await dao.getParkingPoints(ParkingID);
+            if (parkingPoints.length !== 0){
+                // se ci sono --> ERRORE
+                res.status(500).json({ error: 'The parking lot could not be deleted, it is a start/end point' });
+            } else {
+                // posso cancellare il parking lot senza problemi --> CANCELLO
+                await dao.deleteParking(ParkingID);
+                // cancello l'eventuale immagine associata
+                try {
+                    fs.unlinkSync(path);
+                } catch {
+                }
+                res.status(200).end();
+            }
         }
         catch (err) {
             res.status(500).json({ error: 'Database error during update of the service name.' });
-        }
-        try {
-            fs.unlinkSync(path);
-        } catch {
         }
     });
 
