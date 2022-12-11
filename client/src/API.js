@@ -391,7 +391,7 @@ function AddPoint(point) {
             }),
         }).then((response) => {
             if (response.ok)
-                resolve(response.json());
+                resolve(null);
             else {
                 // analyze the cause of error
                 response.json()

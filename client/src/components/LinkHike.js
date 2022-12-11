@@ -79,6 +79,7 @@ function LinkHike(props) {
     setFilteredParkingLots(tempFilteredParkingLots);
     setStartOrEnd("Start Point");
     setLinkedHut([]);
+    setDirty(true);
   }
 
   const chooseNewEndPoint = () => {
@@ -95,29 +96,43 @@ function LinkHike(props) {
     setFilteredParkingLots(tempFilteredParkingLots);
     setStartOrEnd("End Point");
     setLinkedHut([]);
+    setDirty(true);
   }
 
   const chooseLinkHut = () => {
-    let mediumPoint = Math.round(hike.points.length/2);
+    // let mediumPoint = Math.round(hike.points.length/2);
 
     // verifico quali hut sono già linkati sono entro 5 km dallo starting point attuale dell'hike
 
     // già linkati
     let tempAlreadyLinkedHut = hike.points.filter((h) => (h.startPoint === 0 && h.endPoint === 0 && h.referencePoint === 0 && h.hutID));
-    // entro 5 km
-    tempAlreadyLinkedHut = tempAlreadyLinkedHut.filter((h) => coordinatesDistanceInMeter(startPoint[0], startPoint[1], h.latitude, h.longitude) < radiusDistance);
-    tempAlreadyLinkedHut.concat(tempAlreadyLinkedHut.filter((h) => coordinatesDistanceInMeter(endPoint[0], endPoint[1], h.latitude, h.longitude) < radiusDistance));
-    tempAlreadyLinkedHut.concat(tempAlreadyLinkedHut.filter((h) => coordinatesDistanceInMeter(hike.points[mediumPoint].latitude, hike.points[mediumPoint].longitude, h.latitude, h.longitude) < radiusDistance));
+    // entro 5 km (VERSIONE 1: 1 punto ogni 25)
+    for(let i=0;i<hike.points.length;i=i+25){
+      // per ogni punto dell'hike verifico la distanza dall'hut linkato
+      tempAlreadyLinkedHut.concat(tempAlreadyLinkedHut.filter((h) => coordinatesDistanceInMeter(hike.points[i].latitude, hike.points[i].longitude, h.latitude, h.longitude) < radiusDistance));
+    }
+    // VERSIONE 2: VALUTO SOLO START POINT, MEDIUM POINT, END POINT
+    // tempAlreadyLinkedHut = tempAlreadyLinkedHut.filter((h) => coordinatesDistanceInMeter(startPoint[0], startPoint[1], h.latitude, h.longitude) < radiusDistance);
+    // tempAlreadyLinkedHut.concat(tempAlreadyLinkedHut.filter((h) => coordinatesDistanceInMeter(endPoint[0], endPoint[1], h.latitude, h.longitude) < radiusDistance));
+    // tempAlreadyLinkedHut.concat(tempAlreadyLinkedHut.filter((h) => coordinatesDistanceInMeter(hike.points[mediumPoint].latitude, hike.points[mediumPoint].longitude, h.latitude, h.longitude) < radiusDistance));
     setAlreadyLinkedHut(tempAlreadyLinkedHut);
     
-    let tempLinkedHuts = huts.filter(h => coordinatesDistanceInMeter(startPoint[0], startPoint[1], h.lat, h.lon) < radiusDistance);
-    tempLinkedHuts.concat(huts.filter(h => coordinatesDistanceInMeter(endPoint[0], endPoint[1], h.lat, h.lon) < radiusDistance));
-    tempLinkedHuts.concat(huts.filter(h => coordinatesDistanceInMeter(hike.points[mediumPoint].latitude, hike.points[mediumPoint].longitude, h.lat, h.lon) < radiusDistance));
+    let tempLinkedHuts =[];
+    for(let i=0;i<hike.points.length;i=i+25){
+      // per ogni punto dell'hike verifico la distanza dal potenziale hut linkabile (VERSIONE 1: 1 PUNTO OGNI 25)
+      tempLinkedHuts = huts.filter((h) => coordinatesDistanceInMeter(hike.points[i].latitude, hike.points[i].longitude, h.lat, h.lon) < radiusDistance);
+    }
+    // VERSIONE 2: VALUTO SOLO START POINT, MEDIUM POINT, END POINT
+    // let tempLinkedHuts = huts.filter(h => coordinatesDistanceInMeter(startPoint[0], startPoint[1], h.lat, h.lon) < radiusDistance);
+    // tempLinkedHuts.concat(huts.filter(h => coordinatesDistanceInMeter(endPoint[0], endPoint[1], h.lat, h.lon) < radiusDistance));
+    // tempLinkedHuts.concat(huts.filter(h => coordinatesDistanceInMeter(hike.points[mediumPoint].latitude, hike.points[mediumPoint].longitude, h.lat, h.lon) < radiusDistance));
     
+    // mi passo come hut linkabili quelli sono in range e che non sono già linkati
     tempLinkedHuts = tempLinkedHuts.filter(h => !tempAlreadyLinkedHut.map((a)=> a.hutID).includes(h.id));
     setLinkedHut(tempLinkedHuts);
     setFilteredHuts([]);
     setFilteredParkingLots([]);
+    setDirty(true);
   }
 
   return (
@@ -150,10 +165,13 @@ function LinkHike(props) {
 
 function LinkHikeMap(props) {
 
-  const [dirty, setDirty] = useState(false);
+  const [dirty, setDirty] = useState(true);
   const [startPoint, setStartPoint] = useState(props.points?.filter(p => p.startPoint).map(p => [p.latitude, p.longitude]).pop());
   const [endPoint, setEndPoint] = useState(props.points?.filter(p => p.endPoint).map(p => [p.latitude, p.longitude]).pop());
-  // const [positions, setPositions] = useState(props.points?.filter(p => !p.referencePoint && !p.hutID && !p.parkingID).map(p => [p.latitude, p.longitude]));
+  const [startPointLabel, setStartPointLabel] = useState(props.points?.filter(p => p.startPoint).pop().label);
+  const [endPointLabel, setEndPointLabel] = useState(props.points?.filter(p => p.endPoint).pop().label);
+  const [nPoints, setNPoints] = useState(props.points?.length);
+  const [positions, setPositions] = useState(props.points?.filter(p => !p.referencePoint && !p.hutID && !p.parkingID).map(p => [p.latitude, p.longitude]));
 
   const iconStartPoint = new Icon({
     iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
@@ -210,19 +228,21 @@ function LinkHikeMap(props) {
   })
 
   useEffect(() => {
-      
     setStartPoint(props.points?.filter(p => p.startPoint).map(p => [p.latitude, p.longitude]).pop());
     setEndPoint(props.points?.filter(p => p.endPoint).map(p => [p.latitude, p.longitude]).pop());
-    
+    setStartPointLabel(props.points?.filter(p => p.startPoint).pop().label);
+    setEndPointLabel(props.points?.filter(p => p.endPoint).pop().label);
+    setNPoints(props.points?.length);
+    setPositions(props.points?.filter(p => !p.referencePoint && !p.hutID && !p.parkingID).map(p => [p.latitude, p.longitude]));
     setDirty(false);
     props.setDirty(false);
-  }, [dirty]);
+  }, [dirty, props]);
 
   // const startPoint = props.points?.filter(p => p.startPoint).map(p => [p.latitude, p.longitude]).pop();
-  const startPointLabel = props.points?.filter(p => p.startPoint).pop().label;
+  // const startPointLabel = props.points?.filter(p => p.startPoint).pop().label;
   // const endPoint = props.points?.filter(p => p.endPoint).map(p => [p.latitude, p.longitude]).pop();
-  const endPointLabel = props.points?.filter(p => p.endPoint).pop().label;
-  const nPoints = props.points?.length;
+  // const endPointLabel = props.points?.filter(p => p.endPoint).pop().label;
+  // const nPoints = props.points?.length;
   
   
   let middlePoint;
@@ -243,7 +263,7 @@ function LinkHikeMap(props) {
   else if (props.length && props.length >= 14000)
     zoom = 10;
 
-    const positions = props.points?.filter(p => !p.referencePoint && !p.hutID && !p.parkingID).map(p => [p.latitude, p.longitude]);
+    // const positions = props.points?.filter(p => !p.referencePoint && !p.hutID && !p.parkingID).map(p => [p.latitude, p.longitude]);
   
     const defineNewStartPoint = (point, type) => {
     if(type === "hut"){
