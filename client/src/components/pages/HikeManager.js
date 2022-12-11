@@ -13,11 +13,12 @@ function MyHikeManager(props) {
   const [dirty, setDirty] = useState(true);
   const [showUpdateBanner, setShowUpdateBanner] = useState(false);
   const [message, setMessage] = useState('');
+  const [searchField, setSearchField] = useState('');
 
   useEffect(() => {
     if (dirty) {
       API.getHikes()
-        .then((hikes) => {setHikes(hikes.sort((a, b) => (a.id > b.id) ? 1 : -1)) })
+        .then((hikes) => setHikes(hikes))
         .catch(err => console.log(err))
       setDirty(false);
     }
@@ -32,8 +33,8 @@ function MyHikeManager(props) {
       <Row className='input-group my-5 mx-auto search_row'>
         <Col md={{ span: 4, offset: 4 }} sm={{ span: 6, offset: 3 }} xs={12} >
           <InputGroup >
-            <Form.Control placeholder="Insert an hike label" />
-            <Button variant="success">Search</Button>
+            <Form.Control value={searchField} onChange={ev => setSearchField(ev.target.value)} placeholder="Type to search an hike by label" />
+            <Button variant="success" onClick={() => setSearchField('')}>Clear</Button>
           </InputGroup>
         </Col>
         <Col className='search_row'>
@@ -41,7 +42,7 @@ function MyHikeManager(props) {
         </Col>
       </Row>
       {showUpdateBanner && <Alert variant='success' onClose={() => { setShowUpdateBanner(false); setMessage('') }} dismissible>{message}</Alert>}
-      {hikes.map(h => <SingleUpdateHikeCard key={h.id} hike={h} user={props.user}
+      {hikes.filter(h => searchField === '' || searchField !== '' && h.label.toLowerCase().indexOf(searchField) !== -1).sort((a, b) => (a.id > b.id)).map(h => <SingleUpdateHikeCard key={h.id} hike={h} user={props.user}
         updateHike={props.updateHike} deleteHike={props.deleteHike} setDirty={setDirty}  
         setShowUpdateBanner={setShowUpdateBanner} setMessage={setMessage} />)}
     </Container>
@@ -188,7 +189,7 @@ function SingleUpdateHikeCard(props) {
               <Form.Group>
                 <Form.Label>Difficulty</Form.Label>
                 <Form.Select required={true} value={difficultyText} onChange={ev => setDifficultyText(ev.target.value)}>
-                  <option selected disabled value="">Choose...</option>
+                  <option disabled value="">Choose...</option>
                   <option>Tourist</option>
                   <option>Hiker</option>
                   <option>Professional hiker</option>

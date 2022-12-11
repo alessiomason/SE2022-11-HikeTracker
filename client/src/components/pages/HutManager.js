@@ -8,13 +8,13 @@ import { default as Img1 } from "../../images/img1.jpg";
 
 function MyHutManager(props) {
 
-
   const navigate = useNavigate();
 
   const [huts, setHuts] = useState([]);
   const [dirty, setDirty] = useState(true);
   const [showUpdateBanner, setShowUpdateBanner] = useState(false);
   const [message, setMessage] = useState('');
+  const [searchField, setSearchField] = useState('');
 
   useEffect(() => {
     if (dirty) {
@@ -34,18 +34,19 @@ function MyHutManager(props) {
       <Row className='input-group my-5 mx-auto search_row'>
         <Col md={{ span: 4, offset: 4 }} sm={{ span: 6, offset: 3 }} xs={12} >
           <InputGroup >
-            <Form.Control placeholder="Insert an hut name" />
-            <Button variant="success">Search</Button>
+            <Form.Control value={searchField} onChange={ev => setSearchField(ev.target.value)} placeholder="Type to search an hut by name" />
+            <Button variant="success" onClick={() => setSearchField('')}>Clear</Button>
           </InputGroup>
         </Col>
         <Col className='search_row'>
           <Button variant='primary' size="lg" className='mx-5 my-3' onClick={() => navigate("/newHut")}>Add new Hut</Button>
         </Col>
       </Row>
-      {showUpdateBanner && <Alert variant='success' onClose={() => {setShowUpdateBanner(false); setMessage('')}} dismissible>{message}</Alert>}
-      {huts.map(h => <SingleUpdateHutCard key={h.id} hut={h} user={props.user}
-        updateHut={props.updateHut} deleteHut={props.deleteHut} setDirty={setDirty}
-        setShowUpdateBanner={setShowUpdateBanner} setMessage={setMessage} />)}
+      {showUpdateBanner && <Alert variant='success' onClose={() => { setShowUpdateBanner(false); setMessage('') }} dismissible>{message}</Alert>}
+      {huts.filter(h => searchField === '' || searchField !== '' && h.name.toLowerCase().indexOf(searchField) !== -1).sort((a, b) => (a.id > b.id))
+        .map(h => <SingleUpdateHutCard key={h.id} hut={h} user={props.user}
+          updateHut={props.updateHut} deleteHut={props.deleteHut} setDirty={setDirty}
+          setShowUpdateBanner={setShowUpdateBanner} setMessage={setMessage} />)}
     </Container>
 
   );
@@ -79,13 +80,13 @@ function SingleUpdateHutCard(props) {
     if (name.trim().length === 0)
       setErrorMsg('The name of the hut cannot be consisted of only empty spaces');
     else {
-      const updatedHut = { 
-        id: hutID, 
-        name: name, 
-        description: description, 
-        lat: lat, 
-        lon: lon, 
-        altitude: altitude, 
+      const updatedHut = {
+        id: hutID,
+        name: name,
+        description: description,
+        lat: lat,
+        lon: lon,
+        altitude: altitude,
         beds: beds,
         state: state,
         region: region,
@@ -102,30 +103,30 @@ function SingleUpdateHutCard(props) {
   }
 
   return (
-    
-      <Row className="hut_box mx-5 py-5 px-5 mb-4">
-        
-        {/*<Col md={6}>
+
+    <Row className="hut_box mx-5 py-5 px-5 mb-4">
+
+      {/*<Col md={6}>
         <MyHutImages/>
   </Col>*/}
 
-        <Col md={5} className="box_img_box" >
-          <img className=" img_box mb-3"
-            src={preview}
-              onError={({ currentTarget }) => {
-              currentTarget.onerror = null; // prevents looping
-              currentTarget.src = Img1;
-            }}
-           />
-          <Form.Group controlId="formFile" className="mb-3">
-            <Form.Label className='updateImageHut'>Update Image</Form.Label>
-            <Form.Control type="file"
-              onChange={(e) => { setImage(e.target.files[0]); setPreview(URL.createObjectURL(e.target.files[0]))} }/>
-          </Form.Group>
-        </Col>
+      <Col md={5} className="box_img_box" >
+        <img className=" img_box mb-3"
+          src={preview}
+          onError={({ currentTarget }) => {
+            currentTarget.onerror = null; // prevents looping
+            currentTarget.src = Img1;
+          }}
+        />
+        <Form.Group controlId="formFile" className="mb-3">
+          <Form.Label className='updateImageHut'>Update Image</Form.Label>
+          <Form.Control type="file"
+            onChange={(e) => { setImage(e.target.files[0]); setPreview(URL.createObjectURL(e.target.files[0])) }} />
+        </Form.Group>
+      </Col>
 
-        <Col md={6}>
-          <Form onSubmit={handleSubmit}>
+      <Col md={6}>
+        <Form onSubmit={handleSubmit}>
           <Row>
             <Col md={6} >
               <Form.Group className="mb-3" >
@@ -183,7 +184,7 @@ function SingleUpdateHutCard(props) {
           */}
           <Row className='btn_box mt-3'>
             <Button variant="info" className="btn_ref mx-2 mb-2" >Add Image</Button>
-            { /* <Button variant="primary" className="btn_box2 mx-2 mb-2" >Ref Point</Button> */ }
+            { /* <Button variant="primary" className="btn_box2 mx-2 mb-2" >Ref Point</Button> */}
             <Button variant="danger" onClick={() => props.deleteHut(hutID)} className="btn_box2 mx-2 mb-2" >Delete</Button>
             <Button variant="success" type='submit' className="btn_box2 mx-2 mb-2">Save</Button>
           </Row>
