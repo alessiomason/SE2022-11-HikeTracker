@@ -45,3 +45,30 @@
     box-shadow: 0 0.6em 0.4em -0.4em var(--hover);
     transform: translateY(-0.25em);
 }
+
+.linkSubTitleStartPoint {
+    padding-left: 38rem;
+    font-style: italic;
+    font-size: medium;
+    font-weight: bold;
+}
+
+
+.linkSubTitleEndPoint {
+    padding-left: 38.5rem;
+    font-style: italic;
+    font-size: medium;
+    font-weight: bold;
+}
+
+
+.linkSubTitleHut {
+    padding-left: 40rem;
+    font-style: italic;
+    font-size: medium;
+    font-weight: bold;
+}
+
+.alertStyle{
+    text-align: center;
+}

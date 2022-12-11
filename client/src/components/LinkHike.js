@@ -41,6 +41,8 @@ function LinkHike(props) {
   const [showChooseEndPoint, setShowChooseEndPoint] = useState(false);
   const [showLinkHut, setShowLinkHut] = useState(false);
   const [startOrEnd, setStartOrEnd]= useState("");
+  const [showLinkedHutBanner, setShowLinkedHutBanner] = useState(false);
+  const [message, setMessage] = useState('');
   const radiusDistance = 5000; // 5km
 
   let { hikeId } = useParams();
@@ -142,20 +144,21 @@ function LinkHike(props) {
       <Container fluid className='internal-box' >
         <Row className="center-box mb-4">
           <h2 className="background double single-hike-title"><span><img src={Hiking} alt="hiking_image" className='me-2 hike-img single-hike-icon' />{hike.label}</span></h2>
-          {showChooseStartPoint ? "Select a new Start point" : ""}
-          {showChooseEndPoint ? "Select a new End point" : ""}
-          {showLinkHut ? "Link a new Hut" : ""}
+          {showLinkedHutBanner && <Alert className='alertStyle' variant='success' onClose={() => { setShowLinkedHutBanner(false); setMessage('') }} dismissible>{message}</Alert>}
+          {showChooseStartPoint ? <p className='linkSubTitleStartPoint'>Select a new Start point</p> : ""}
+          {showChooseEndPoint ? <p className='linkSubTitleEndPoint'>Select a new End point</p> : ""}
+          {showLinkHut ? <p className='linkSubTitleHut'>Link a new Hut</p> : ""}
         </Row>
         <Row className="mx-4">
           <Col >
             <Row className='mt-3'>
-              {hike.id && <LinkHikeMap length={hike.length} points={hike.points} filteredHuts={filteredHuts} filteredParkingLots={filteredParkingLots} startOrEnd={startOrEnd} hikeId={hikeId} setDirty={setDirty} linkedHut={linkedHut} alreadyLinkedHut={alreadyLinkedHut} setFilteredHuts={setFilteredHuts} setFilteredParkingLots={setFilteredParkingLots} setLinkedHut={setLinkedHut} setAlreadyLinkedHut={setAlreadyLinkedHut}/>}
+              {hike.id && <LinkHikeMap length={hike.length} points={hike.points} filteredHuts={filteredHuts} filteredParkingLots={filteredParkingLots} startOrEnd={startOrEnd} hikeId={hikeId} setDirty={setDirty} linkedHut={linkedHut} alreadyLinkedHut={alreadyLinkedHut} setFilteredHuts={setFilteredHuts} setFilteredParkingLots={setFilteredParkingLots} setLinkedHut={setLinkedHut} setAlreadyLinkedHut={setAlreadyLinkedHut} setShowChooseStartPoint={setShowChooseStartPoint} setShowChooseEndPoint={setShowChooseEndPoint} setShowLinkHut={setShowLinkHut} setShowLinkedHutBanner={setShowLinkedHutBanner} setMessage={setMessage}/>}
               {/* hike.id ensures that the map is rendered only when the hike is loaded  */}
             </Row>
             <Row className='btn-row'>
-            <Button className="mx-1 mt-2 choose_start slide" onClick={() => { chooseNewStartPoint(); setShowChooseStartPoint(true); setShowChooseEndPoint(false); setShowLinkHut(false); setDirty(true);  }} > Choose new Start Point </Button>
-              <Button className="mx-1 mt-2 choose_end slide" onClick={() => { chooseNewEndPoint(); setShowChooseEndPoint(true); setShowChooseStartPoint(false); setShowLinkHut(false); setDirty(true); }} > Choose new End Point  </Button>
-              <Button className="mx-1 mt-2 link_hut slide" onClick={() => { chooseLinkHut(); setShowLinkHut(true); setShowChooseEndPoint(false); setShowChooseStartPoint(false); setDirty(true);}} > Link hut </Button>
+            <Button className="mx-1 mt-2 choose_start slide" onClick={() => { chooseNewStartPoint(); setShowChooseStartPoint(true); setShowChooseEndPoint(false); setShowLinkHut(false); setDirty(true); setShowLinkedHutBanner(false); }} > Choose new Start Point </Button>
+              <Button className="mx-1 mt-2 choose_end slide" onClick={() => { chooseNewEndPoint(); setShowChooseEndPoint(true); setShowChooseStartPoint(false); setShowLinkHut(false); setDirty(true); setShowLinkedHutBanner(false); }} > Choose new End Point  </Button>
+              <Button className="mx-1 mt-2 link_hut slide" onClick={() => { chooseLinkHut(); setShowLinkHut(true); setShowChooseEndPoint(false); setShowChooseStartPoint(false); setDirty(true); setShowLinkedHutBanner(false); }} > Link hut </Button>
             </Row>
           </Col>
         </Row>
@@ -391,7 +394,7 @@ function LinkHikeMap(props) {
             {p.name && 
             <Popup>
               <p>{p.name}</p> 
-              <p><Button onClick={ () => {props.startOrEnd === "Start Point" ? defineNewStartPoint(p, "hut") : defineNewEndPoint(p, "hut"); props.setFilteredHuts([]); props.setFilteredParkingLots([]); props.setAlreadyLinkedHut([]); } }>{`Set as ${props.startOrEnd}`}</Button></p>
+              <p><Button onClick={ () => {props.startOrEnd === "Start Point" ? defineNewStartPoint(p, "hut") : defineNewEndPoint(p, "hut"); props.setFilteredHuts([]); props.setFilteredParkingLots([]); props.setAlreadyLinkedHut([]); props.setShowChooseStartPoint(false); props.setShowChooseEndPoint(false); props.setShowLinkHut(false); } }>{`Set as ${props.startOrEnd}`}</Button></p>
             </Popup>}
           </Marker>
         );
@@ -402,7 +405,7 @@ function LinkHikeMap(props) {
             {p.label && 
             <Popup>
               <p>{p.label}</p> 
-              <p><Button onClick={ () => {props.startOrEnd === "End Point" ? defineNewEndPoint(p, "parking lot") : defineNewStartPoint(p, "parking lot"); props.setFilteredHuts([]); props.setFilteredParkingLots([]); props.setAlreadyLinkedHut([]); } }>{`Set as ${props.startOrEnd}`}</Button></p>
+              <p><Button onClick={ () => {props.startOrEnd === "End Point" ? defineNewEndPoint(p, "parking lot") : defineNewStartPoint(p, "parking lot"); props.setFilteredHuts([]); props.setFilteredParkingLots([]); props.setAlreadyLinkedHut([]); props.setShowChooseStartPoint(false); props.setShowChooseEndPoint(false); props.setShowLinkHut(false); } }>{`Set as ${props.startOrEnd}`}</Button></p>
             </Popup>}
           </Marker>
         );
@@ -413,7 +416,7 @@ function LinkHikeMap(props) {
             {p.name && 
             <Popup>
               <p>{p.name}</p>
-              <p><Button onClick={ () => { linkHut(p); props.setLinkedHut([]); props.setAlreadyLinkedHut([]) } }>{`Link Hut`}</Button></p>
+              <p><Button onClick={ () => { linkHut(p); props.setLinkedHut([]); props.setAlreadyLinkedHut([]); props.setShowChooseStartPoint(false); props.setShowChooseEndPoint(false); props.setShowLinkHut(false); props.setShowLinkedHutBanner(true); props.setMessage(`Hut "${p.name}" linked successfully!`)} }>{`Link Hut`}</Button></p>
             </Popup>}
           </Marker>
         );
