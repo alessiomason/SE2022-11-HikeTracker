@@ -151,7 +151,7 @@ function EditForm(props) {
                             </Row>
                             <Button className='save-button' type='submit' >Save</Button>
                             <Button className='back-button' onClick={() => navigate('/')} variant='secondary' >Back</Button>
-                            <Button className='delete-button' onClick={() => props.deleteHike(hikeId)} variant='secondary' >Delete</Button>
+                            <Button className='delete-button' onClick={() => { props.deleteHike(hikeId); navigate('/hikeManager'); }} variant='secondary' >Delete</Button>
                         </Form>
                     </Col>
                 </Row>
