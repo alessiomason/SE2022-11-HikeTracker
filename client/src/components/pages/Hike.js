@@ -14,12 +14,27 @@ import { default as Difficulty } from "../../icons/volume.svg";
 import { default as Img1 } from "../../images/image3.jpg";
 import { default as FakeMap } from "../../images/fakeMap.jpg";
 
+// from https://stackoverflow.com/questions/639695/how-to-convert-latitude-or-longitude-to-meters
+function coordinatesDistanceInMeter(lat1, lon1, lat2, lon2) {  // generally used geo measurement function
+  const R = 6378.137; // Radius of earth in KM
+  const dLat = lat2 * Math.PI / 180 - lat1 * Math.PI / 180;
+  const dLon = lon2 * Math.PI / 180 - lon1 * Math.PI / 180;
+  const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+    Math.sin(dLon / 2) * Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  const d = R * c;
+  return d * 1000; // meters
+}
+
 function HikePage(props) {
 
   const navigate = useNavigate();
 
   const [hike, setHike] = useState({});
   const [dirty, setDirty] = useState(true);
+  const [alreadyLinkedHut, setAlreadyLinkedHut] = useState([]);
+  const radiusDistance = 5000; // 5km
 
   let { hikeId } = useParams();
   hikeId = parseInt(hikeId);
@@ -27,7 +42,15 @@ function HikePage(props) {
   useEffect(() => {
     if (dirty) {
       API.getHike(hikeId)
-        .then((hike) => setHike(hike))
+        .then((hike) => {
+          setHike(hike); 
+          let tempAlreadyLinkedHut = hike.points.filter((h) => (h.startPoint === 0 && h.endPoint === 0 && h.referencePoint === 0 && h.hutID));
+          for(let i=0;i<hike.points?.length;i=i+25){
+            // per ogni punto dell'hike verifico la distanza dall'hut linkato
+            tempAlreadyLinkedHut.concat(tempAlreadyLinkedHut?.filter((h) => coordinatesDistanceInMeter(hike.points[i].latitude, hike.points[i].longitude, h.latitude, h.longitude) < radiusDistance));
+          }
+          setAlreadyLinkedHut(tempAlreadyLinkedHut);
+        })
         .catch(err => console.log(err))
       setDirty(false);
     }
@@ -126,14 +149,17 @@ function HikePage(props) {
                     <h3 className='mb-5 text'> Sign In to look the Map!</h3>
                     <Button variant="primary log_btn slide" type="submit" onClick={() => { props.setShowLogin(true); navigate("/"); }} > Sign In </Button>
                   </div>
-                </div> : hike.id && <HikeMap length={hike.length} points={hike.points} />}
+                </div> : hike.id && <HikeMap length={hike.length} points={hike.points} alreadyLinkedHut={alreadyLinkedHut}/>}
                 {/* hike.id ensures that the map is rendered only when the hike is loaded  */}
             </Row>
+            <br></br>
+            {/*
             <Row className='btn-row'>
               <Button className="mx-1 mt-2 share_btn slide" type="submit" > Share Track </Button>
               <Button className="mx-1 mt-2 terminate_btn slide" type="submit" > Terminate  </Button>
               <Button className="mx-1 mt-2 start_btn slide" type="submit" > Start Track </Button>
             </Row>
+              */}
             <Row className="tab-box">
               <Tabs defaultActiveKey="description" id="justify-tab-example" className="mb-3 " justify >
                 <Tab eventKey="description" title="Description" >

@@ -2,6 +2,7 @@ import { Icon } from 'leaflet';
 import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet';
 import '../styles/Map.css';
 import 'leaflet/dist/leaflet.css';
+import { default as LinkedHutIcon} from '../images/linked_hut_icon.png'
 
 function HikeMap(props) {
 
@@ -31,6 +32,15 @@ function HikeMap(props) {
         popupAnchor: [1, -34],
         shadowSize: [41, 41]
     })
+
+    const iconLinkedHut = new Icon({
+        iconUrl: LinkedHutIcon,
+        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+        iconSize: [30, 30],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+        shadowSize: [41, 41]
+      })
 
     const startPoint = props.points?.filter(p => p.startPoint).map(p => [p.latitude, p.longitude]).pop();
     const startPointLabel = props.points?.filter(p => p.startPoint).pop().label;
@@ -77,6 +87,17 @@ function HikeMap(props) {
                     </Marker>
                 );
             })}
+            {props.alreadyLinkedHut.length !== 0 ? props.alreadyLinkedHut.map(p => {
+                return (
+                    <Marker position={[p.latitude, p.longitude]} icon={iconLinkedHut} key={p.id} >
+                        {p.label &&
+                            <Popup>
+                                <p>{p.label}</p>
+                            </Popup>}
+                    </Marker>
+                );
+            }) : false}
+
         </MapContainer>
     );
 }
