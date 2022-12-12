@@ -127,7 +127,7 @@ function HutCards(props) {
   return (
     <div className="hutCardBox">
       <Slider {...settings}>
-        {props.huts.sort((a, b) => (a.id > b.id)).map((hut) => {
+        {props.huts.sort((a, b) => (a.id > b.id) ? 1 : -1).map((hut) => {
 
           let locationsArray = [];
           if (hut.municipality) locationsArray.push(hut.municipality);

@@ -152,14 +152,11 @@ function HikePage(props) {
                 </div> : hike.id && <HikeMap length={hike.length} points={hike.points} alreadyLinkedHut={alreadyLinkedHut}/>}
                 {/* hike.id ensures that the map is rendered only when the hike is loaded  */}
             </Row>
-            <br></br>
-            {/*
             <Row className='btn-row'>
               <Button className="mx-1 mt-2 share_btn slide" type="submit" > Share Track </Button>
               <Button className="mx-1 mt-2 terminate_btn slide" type="submit" > Terminate  </Button>
               <Button className="mx-1 mt-2 start_btn slide" type="submit" > Start Track </Button>
             </Row>
-              */}
             <Row className="tab-box">
               <Tabs defaultActiveKey="description" id="justify-tab-example" className="mb-3 " justify >
                 <Tab eventKey="description" title="Description" >

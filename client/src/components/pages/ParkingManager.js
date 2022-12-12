@@ -45,7 +45,7 @@ function MyParkingManager(props) {
         </Col>
       </Row>
       {showUpdateBanner && <Alert variant='success' onClose={() => { setShowUpdateBanner(false); setMessage('') }} dismissible>{message}</Alert>}
-      {parkingLots.filter(pl => searchField === '' || searchField !== '' && pl.label.toLowerCase().indexOf(searchField) !== -1).sort((a, b) => (a.id > b.id))
+      {parkingLots.filter(pl => searchField === '' || searchField !== '' && pl.label.toLowerCase().indexOf(searchField) !== -1).sort((a, b) => (a.id > b.id) ? 1 : -1)
         .map(pl => <SingleUpdateParkingCard key={pl.id} parking={pl} user={props.user}
           updateParkingLot={props.updateParkingLot} deleteParkingLot={props.deleteParkingLot} setDirty={setDirty}
           setShowUpdateBanner={setShowUpdateBanner} setMessage={setMessage} />)}

@@ -42,7 +42,7 @@ function MyHikeManager(props) {
         </Col>
       </Row>
       {showUpdateBanner && <Alert variant='success' onClose={() => { setShowUpdateBanner(false); setMessage('') }} dismissible>{message}</Alert>}
-      {hikes.filter(h => searchField === '' || searchField !== '' && h.label.toLowerCase().indexOf(searchField) !== -1).sort((a, b) => (a.id > b.id)).map(h => <SingleUpdateHikeCard key={h.id} hike={h} user={props.user}
+      {hikes.filter(h => searchField === '' || searchField !== '' && h.label.toLowerCase().indexOf(searchField) !== -1).sort((a, b) => (a.id > b.id) ? 1 : -1).map(h => <SingleUpdateHikeCard key={h.id} hike={h} user={props.user}
         updateHike={props.updateHike} deleteHike={props.deleteHike} setDirty={setDirty}  
         setShowUpdateBanner={setShowUpdateBanner} setMessage={setMessage} />)}
     </Container>
