@@ -720,7 +720,7 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
         }
     });
 
-    //GET ReferncePoint (for filters)
+    //GET ReferencePoint (for filters)
 
     app.get('/api/referencePoint', async (req, res) => {
         try {
@@ -731,6 +731,57 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
             res.status(500).end();
         }
     });
+
+
+    app.get('/api/referencePoint/:id', async (req, res) => {
+        try {
+            const pointID = req.params.id;
+            const rp = await dao.getReferencePointID(pointID);
+            res.status(200).json(rp);
+        }
+        catch (err) {
+            res.status(500).end();
+        }
+    });
+
+    // Mark a point as a new Reference Point
+    app.put('/api/newReferencePoint/:id', async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty())
+            return res.status(422).json({ errors: errors.array() });
+
+        const pointID = req.params.id;
+
+        try {
+            
+                await dao.setNewReferencePoint(pointID);
+                res.status(201).json().end();
+            
+        } catch (err) {
+            res.status(500).json({ error: `Database error during update of the hut` });
+        }
+
+    });
+
+    // Mark a point as NOT-a-Reference-Point
+    app.put('/api/clearReferencePoint/:id', async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty())
+            return res.status(422).json({ errors: errors.array() });
+
+        const pointID = req.params.id;
+
+        try {
+            
+                await dao.clearReferencePoint(pointID);
+                res.status(201).json().end();
+            
+        } catch (err) {
+            res.status(500).json({ error: `Database error during update of the hut` });
+        }
+
+    });
+
 
 
 

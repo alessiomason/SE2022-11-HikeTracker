@@ -270,6 +270,58 @@ function uploadHutImage(hutID, image) {
     });
 }
 
+
+
+//Set new Reference point
+
+function setNewReferencePoint(pointID) {
+    
+   
+    // call: PUT /api/newReferencePoint/:id
+    return new Promise((resolve, reject) => {
+        fetch(new URL('newReferencePoint/' + pointID, APIURL), {
+            method: 'PUT',
+            credentials: 'include',
+            body: null
+        }).then((response) => {
+            if (response.ok)
+                resolve(null);
+            else {
+                // analyze the cause of error
+                response.json()
+                    .then((obj) => { reject(obj); }) // error message in the response body
+                    .catch(() => { reject({ error: "Cannot parse server response." }) }); // something else
+            }
+        }).catch(() => { reject({ error: "Cannot communicate with the server." }) }); // connection errors
+    });
+}
+
+
+// Clear a Reference point
+function clearReferencePoint(pointID) {
+    
+   
+    // call: PUT /api/newReferencePoint/:id
+    return new Promise((resolve, reject) => {
+        fetch(new URL('clearReferencePoint/' + pointID, APIURL), {
+            method: 'PUT',
+            credentials: 'include',
+            body: null
+        }).then((response) => {
+            if (response.ok)
+                resolve(null);
+            else {
+                // analyze the cause of error
+                response.json()
+                    .then((obj) => { reject(obj); }) // error message in the response body
+                    .catch(() => { reject({ error: "Cannot parse server response." }) }); // something else
+            }
+        }).catch(() => { reject({ error: "Cannot communicate with the server." }) }); // connection errors
+    });
+}
+
+
+
 async function getHikes() {
     // call /api/hikes
     const response = await fetch(new URL('hikes', APIURL));
@@ -565,5 +617,5 @@ async function reverseNominatim(latitude, longitude) {
     else throw reverseNom;
 }
 
-const API = { addGPXTrack, addParkingLot, AddPoint, deleteParkingLot, updateParkingLot, deleteHike, getHikes, getParkingLots, addHut, updateHut, uploadHutImage, uploadParkingLotImage, getHuts, deletHut, getHike, addHike, updateHike, signup, verifyEmail, login, logout, getUserInfo, getUserAccessRight, getHikesRefPoints, getStartPoint, getEndPoint, getReferencePoint, reverseNominatim };
+const API = { addGPXTrack, addParkingLot, AddPoint, deleteParkingLot, updateParkingLot, deleteHike, getHikes, getParkingLots, addHut, updateHut, uploadHutImage, uploadParkingLotImage, getHuts, deletHut, getHike, addHike, updateHike, signup, verifyEmail, login, logout, getUserInfo, getUserAccessRight, getHikesRefPoints, getStartPoint, getEndPoint, getReferencePoint, reverseNominatim,setNewReferencePoint,clearReferencePoint };
 export default API;

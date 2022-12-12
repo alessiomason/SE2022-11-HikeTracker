@@ -19,6 +19,14 @@ import API from './../API.js';
 function MyHutSection() {
   const [huts, setHuts] = useState([]);
   const [dirty, setDirty] = useState(true);
+  const [search,setSearch] = useState(true);
+  const [tempName1,setTempName1] = useState('');
+  const [tempName2,setTempName2] = useState('');
+
+  const clearHuts = () =>{
+    setSearch(true);
+  }
+
 
   useEffect(() => {
     if (dirty) {
@@ -30,10 +38,11 @@ function MyHutSection() {
   }, [dirty]);
 
   const renderTooltip = (props) => (
-    <Tooltip id="button-tooltip" {...props}>
+    <Tooltip id="button-tooltip" {...props} >
       Remove all filters
     </Tooltip>
   );
+
 
   return (
     <>
@@ -43,22 +52,22 @@ function MyHutSection() {
         </Row>
         <Row className='mt-5'>
           <div className="search-box">
-            <button className="btn-search"><FaSearch className="icon" /></button>
-            <input type="text" className="input-search" placeholder="Type to Search..." />
+            <button className="btn-search"><FaSearch className="icon" onClick={() => {setTempName2(tempName1); setSearch(false)}}  /></button>
+            <input type="text" className="input-search" placeholder="Type to Search..." value={tempName1} onChange={ev => {setTempName1(ev.target.value)}}/>
           </div>
         </Row>
         <Row className='mt-5'>
           <Col md="auto" sm="auto" xs="auto" >
             <ButtonToolbar aria-label="Toolbar with button groups" >
               <ButtonGroup className='my-1  me-3' size="lg" aria-label="First group">
-                <Button variant="success" className='btn_filter btn-filter-hut'>Location</Button>
-                <Button variant="success" className='btn_filter btn-filter-hut'>Ascent</Button>
+                <Button variant="success" className='btn_filter btn-filter-hut' >Location</Button>
+                <Button variant="success" className='btn_filter btn-filter-hut' >Ascent</Button>
                 <Button variant="success" className='btn_filter btn-filter-hut' >Number of beds</Button>
                 <Button variant='success' className='btn_filter btn-filter-hut' >Services</Button>
               </ButtonGroup>
               <ButtonGroup className="my-1" aria-label="Second group">
                 <OverlayTrigger placement="right" delay={{ show: 250, hide: 400 }} overlay={renderTooltip} >
-                  <Button className="delete-btn"><img src={Delete} alt="delete_image" className='' /></Button>
+                  <Button className="delete-btn"><img src={Delete} alt="delete_image" className='' onClick={clearHuts} /></Button>
                 </OverlayTrigger>
               </ButtonGroup>
             </ButtonToolbar>
@@ -67,8 +76,9 @@ function MyHutSection() {
 
       </Container>
       <Container fluid className="hutCardSection">
+
         <Row>
-          <HutCards huts={huts} />
+          <HutCards huts={huts} search={search} tempName={tempName2} />
         </Row>
       </Container>
     </>
@@ -133,12 +143,13 @@ function HutCards(props) {
     <div className="hutCardBox">
       <Slider {...settings}>
         {props.huts.map((hut) => {
+
           let locationsArray = [];
           if (hut.municipality) locationsArray.push(hut.municipality);
           if (hut.province) locationsArray.push(hut.province);
           if (hut.region) locationsArray.push(hut.region);
           if (hut.state) locationsArray.push(hut.state);
-
+          if(props.search || (props.search == false && hut.name.toLowerCase().match(props.tempName.toLowerCase()))){
           return (<div className="hut-card" key={hut.id}>
             <div className="card-top">
               <img src={`http://localhost:3001/images/hut-${hut.id}.jpg`}
@@ -176,8 +187,9 @@ function HutCards(props) {
                 </Col>
               </Row>
             </div>
-          </div>);
+          </div>);}
         })}
+
       </Slider>
     </div>
   );

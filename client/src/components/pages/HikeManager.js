@@ -207,7 +207,8 @@ function SingleUpdateHikeCard(props) {
             </Col>
             <Col md={4} >
               <Row className='m-3'>
-                <Col className="text-center"><Button variant="primary" className="mt-2 btn btn-primary" >Manage reference points </Button></Col>
+              <Col className="text-center"><Button variant="primary" className="mt-2 btn btn-primary" 
+                onClick={() => navigate(`/refPoints/${hikeId}`)} >Manage reference points </Button></Col>
 
               </Row>
               <Row className='m-3'>

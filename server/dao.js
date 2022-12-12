@@ -505,6 +505,37 @@ exports.getReferencePoint = () => {
     });
 }
 
+exports.getReferencePointID = (pointID) => {
+    return new Promise((resolve, reject) => {
+        const sql = 'SELECT * FROM POINTS WHERE PointID = ?';
+        db.get(sql, [pointID], (err, row) => {
+            if (err) reject(err);
+            const point = row.map((p) => ({ pointID: p.PointID, latitude: p.Lat, longitude: p.Lon, referencePoint: p.RP, hikeID:p.HikeID }));
+            resolve(point);
+        });
+    });
+}
+
+exports.setNewReferencePoint = (pointID) => {
+    return new Promise((resolve, reject) => {
+        const sql = 'UPDATE POINTS SET RP=1 WHERE PointID=?';
+        db.run(sql, [pointID], (err, row) => {
+            if (err) reject(err);
+            resolve();
+        });
+    });
+}
+
+exports.clearReferencePoint = (pointID) => {
+    return new Promise((resolve, reject) => {
+        const sql = 'UPDATE POINTS SET RP=0 WHERE PointID=?';
+        db.run(sql, [pointID], (err, row) => {
+            if (err) reject(err);
+            resolve();
+        });
+    });
+}
+
 exports.getHutPoints = (hutID) => {
     return new Promise((resolve, reject) => {
         const sql = 'SELECT * FROM POINTS WHERE HutID = ?';
