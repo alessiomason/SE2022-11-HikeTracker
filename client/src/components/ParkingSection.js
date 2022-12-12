@@ -100,7 +100,7 @@ function ParkingCards(props) {
   return (
     <div className="hutCardBox">
       <Slider {...settings}>
-        {props.parkings.map((parking) => {
+        {props.parkings.sort((a, b) => (a.id > b.id)).map((parking) => {
           let locationsArray = [];
           if (parking.municipality) locationsArray.push(parking.municipality);
           if (parking.province) locationsArray.push(parking.province);

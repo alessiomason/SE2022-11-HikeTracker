@@ -37,7 +37,7 @@ function MyHutManager(props) {
       <Row className='input-group my-5 mx-auto search_row'>
         <Col md={{ span: 4, offset: 4 }} sm={{ span: 6, offset: 3 }} xs={12} >
           <InputGroup >
-            <Form.Control placeholder="Enter a hut name to search" value={name} onChange={ev => {setName(ev.target.value)}}/>
+            <Form.Control placeholder="Type to search an hut by name" value={name} onChange={ev => {setName(ev.target.value)}}/>
             <Button variant="success" onClick={()=>{setName('')}} >Clear</Button>
           </InputGroup>
         </Col>
