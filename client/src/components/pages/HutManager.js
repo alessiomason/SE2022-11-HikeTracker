@@ -15,9 +15,7 @@ function MyHutManager(props) {
   const [dirty, setDirty] = useState(true);
   const [showUpdateBanner, setShowUpdateBanner] = useState(false);
   const [message, setMessage] = useState('');
-  const [tempDesc1,setTempDesc1] = useState('');
-  const [tempDesc2,setTempDesc2] = useState('');
-  const [search,setSearch] = useState(false);
+  const [name,setName] = useState('');
 
   useEffect(() => {
     if (dirty) {
@@ -39,8 +37,8 @@ function MyHutManager(props) {
       <Row className='input-group my-5 mx-auto search_row'>
         <Col md={{ span: 4, offset: 4 }} sm={{ span: 6, offset: 3 }} xs={12} >
           <InputGroup >
-            <Form.Control placeholder="Enter a hut name to search" value={tempDesc1} onChange={ev => {setTempDesc1(ev.target.value)}}/>
-            <Button variant="success" onClick={()=>{setSearch(true); setTempDesc2(tempDesc1)}} >Search</Button>
+            <Form.Control placeholder="Enter a hut name to search" value={name} onChange={ev => {setName(ev.target.value)}}/>
+            <Button variant="success" onClick={()=>{setName('')}} >Clear</Button>
           </InputGroup>
         </Col>
         <Col className='search_row'>
@@ -50,7 +48,7 @@ function MyHutManager(props) {
       {showUpdateBanner && <Alert variant='success' onClose={() => {setShowUpdateBanner(false); setMessage('')}} dismissible>{message}</Alert>}
       {huts.map(h => <SingleUpdateHutCard key={h.id} hut={h} user={props.user}
         updateHut={props.updateHut} deleteHut={props.deleteHut} setDirty={setDirty}
-        setShowUpdateBanner={setShowUpdateBanner} setMessage={setMessage} tempDesc2={tempDesc2} search={search}/>)}
+        setShowUpdateBanner={setShowUpdateBanner} setMessage={setMessage} name={name} />)}
     </Container>
 
   );
@@ -107,7 +105,7 @@ function SingleUpdateHutCard(props) {
     }
   }
     
-    if(props.search == false || (props.search && name.toLowerCase().match(props.tempDesc2.toLowerCase()))){
+    if(props.name == '' ||  name.toLowerCase().match(props.name.toLowerCase())){
   return (
       
     
