@@ -1,6 +1,6 @@
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useNavigate, Navigate, Outlet } from 'react-router-dom';
 import API from './API';
 import HikeForm from './components/HikeForm';
@@ -18,7 +18,6 @@ import ReferencePoints from './components/ManageRefPoints';
 import Home from './components/pages/Home';
 import Loading from './components/Loading';
 import Footer from './components/Footer';
-import { Button } from "react-bootstrap";
 
 function App() {
     return (
@@ -75,7 +74,7 @@ function App2() {
                 navigate('/');
             })
             .catch(err => {
-                if (err.indexOf('not verified') != -1)
+                if (err.indexOf('not verified') !== -1)
                     navigate('/verify-email');
                 setMessage(err);
             })

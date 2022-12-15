@@ -1,6 +1,6 @@
 import { Alert, Form } from 'react-bootstrap';
 import { Container, Row, Col, Button } from 'react-bootstrap';
-import { useState, useEffect } from 'react';
+import { useState} from 'react';
 import { default as Img1 } from "../images/img1.jpg";
 import { useNavigate, useParams } from 'react-router-dom';
 import '../styles/HikeForm.css';
@@ -12,14 +12,14 @@ function EditForm(props) {
 
     let { hikeId } = useParams();
     hikeId = parseInt(hikeId);
-    const hikeToEdit = props.hike.filter((h) => h.id == hikeId)[0];
+    const hikeToEdit = props.hike.filter((h) => h.id === hikeId)[0];
     let difficulty_text;
 
-    if (props.hike.difficulty == 1) {
+    if (props.hike.difficulty === 1) {
         difficulty_text = "Tourist";
-    } else if (props.hike.difficulty == 2) {
+    } else if (props.hike.difficulty === 2) {
         difficulty_text = "Hiker";
-    } else if (props.hike.difficulty == 3) {
+    } else if (props.hike.difficulty === 3) {
         difficulty_text = "Professional hiker";
     }
 
@@ -27,7 +27,7 @@ function EditForm(props) {
     const [length, setLength] = useState(hikeToEdit ? hikeToEdit.length : 0);
     const [expTime, setExpTime] = useState(hikeToEdit ? hikeToEdit.expTime : 0);
     const [ascent, setAscent] = useState(hikeToEdit ? hikeToEdit.ascent : 0);
-    const [difficulty, setDifficulty] = useState(hikeToEdit ? hikeToEdit.text : '');
+  
     const [difficultyText, setDifficultyText] = useState(difficulty_text);
     const [description, setDescription] = useState(hikeToEdit ? hikeToEdit.description : '');
     const [state, setState] = useState(hikeToEdit ? hikeToEdit.state : '');
@@ -74,7 +74,7 @@ function EditForm(props) {
 
             <Row className="hut_box mx-5 py-5 px-5 mb-4">
                 <Col md={13} className="box_img_box" >
-                    <img className=" img_box mb-3"
+                    <img alt="edit form"className=" img_box mb-3"
                         src={preview}
                         onError={({ currentTarget }) => {
                             currentTarget.onerror = null; // prevents looping

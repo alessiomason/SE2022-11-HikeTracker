@@ -1,15 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Button, ButtonGroup, ButtonToolbar, OverlayTrigger, Tooltip } from "react-bootstrap";
+import { Container, Row, Col, Tooltip } from "react-bootstrap";
 import '../styles/HutSection.css';
 import { default as Hut } from '../icons/hut.svg';
 import { default as arrowRight } from '../icons/arrow-right.svg';
 import { default as arrowLeft } from '../icons/arrow-left.svg';
-import { default as Delete } from '../icons/delete.svg';
 import { FaSearch } from "react-icons/fa";
 import { FaBed } from "react-icons/fa";
 import { FaLocationArrow } from "react-icons/fa";
 import { FaMountain } from "react-icons/fa";
-import { ImPriceTag } from "react-icons/im";
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
@@ -85,7 +83,7 @@ function HutCards(props) {
     );
   }
 
-  const hutsOnScreen = props.huts.filter(h => props.search || (props.search == false && (h.name.toLowerCase().match(props.tempName.toLowerCase()) || h.description.toLowerCase().match(props.tempName.toLowerCase())))).length;
+  const hutsOnScreen = props.huts.filter(h => props.search || (props.search === false && (h.name.toLowerCase().match(props.tempName.toLowerCase()) || h.description.toLowerCase().match(props.tempName.toLowerCase())))).length;
 
   const settings = {
     dots: true,
@@ -135,7 +133,7 @@ function HutCards(props) {
           if (hut.region) locationsArray.push(hut.region);
           if (hut.state) locationsArray.push(hut.state);
 
-          if (props.search || (props.search == false && (hut.name.toLowerCase().match(props.tempName.toLowerCase()) || hut.description.toLowerCase().match(props.tempName.toLowerCase())))) {
+          if (props.search || (props.search === false && (hut.name.toLowerCase().match(props.tempName.toLowerCase()) || hut.description.toLowerCase().match(props.tempName.toLowerCase())))) {
             return (<div className="hut-card" key={hut.id}>
               <div className="card-top">
                 <img src={`http://localhost:3001/images/hut-${hut.id}.jpg`}
