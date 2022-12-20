@@ -67,7 +67,8 @@ function HikePage(props) {
   }, [dirty, hikeId]);
 
   const startHike = async () => {
-    API.startHike(hike.id)
+    API.startHike(hikeId)
+      .then(() => setDirty(true))
       .catch(err => console.log(err));
   }
 
@@ -164,7 +165,7 @@ function HikePage(props) {
                     <h3 className='mb-5 text'> Sign In to look the Map!</h3>
                     <Button variant="primary log_btn slide" type="submit" onClick={() => { props.setShowLogin(true); navigate("/"); }} > Sign In </Button>
                   </div>
-                </div> : hike.id && <HikeMap length={hike.length} points={hike.points} alreadyLinkedHut={alreadyLinkedHut} />}
+                </div> : hike.id && <HikeMap length={hike.length} points={hike.points} alreadyLinkedHut={alreadyLinkedHut} showStartHike={trackedHikes.filter(th => th.endTime === null || th.endTime === undefined).length === 0} startHike={startHike} />}
               {/* hike.id ensures that the map is rendered only when the hike is loaded  */}
             </Row>
             <Row className='btn-row'>
@@ -238,15 +239,13 @@ function TrackedHikes(props) {
   return (
     <>
       {ongoingHike && <Row className='tracked-hikes-row'>
-        <h3>Ongoing hike</h3>
-        <hr />
-        <p>Start time: {dayjs(ongoingHike.startTime).format('MMM DD, YYYY hh:mm a')}</p>
+        <h3 className='sub-title'>Ongoing hike</h3>
+        <p>Start time: {dayjs(ongoingHike.startTime).format('MMM DD, YYYY h:mm a')}</p>
         <p>Elapsed time: {ongoingHikeElapsedTime?.format('H [h] mm [m] ss [s]')}</p>
       </Row>}
       {completedHikes.length > 0 &&
         <Row className='tracked-hikes-row'>
-          <h3>Completed hikes</h3>
-          <hr />
+          <h3 className='sub-title'>Completed hikes</h3>
           <Table striped>
             <thead>
               <tr>
@@ -261,8 +260,8 @@ function TrackedHikes(props) {
                 return (
                   <tr key={ch.id}>
                     <td>{i + 1}</td>
-                    <td>{dayjs(ch.startTime).format('MMM DD, YYYY hh:mm a')}</td>
-                    <td>{dayjs(ch.endTime).format('MMM DD, YYYY hh:mm a')}</td>
+                    <td>{dayjs(ch.startTime).format('MMM DD, YYYY h:mm a')}</td>
+                    <td>{dayjs(ch.endTime).format('MMM DD, YYYY h:mm a')}</td>
                     <td>{dayjs.duration(dayjs(ch.endTime) - dayjs(ch.startTime)).format('H [h] mm [m]')}</td>
                   </tr>
                 );

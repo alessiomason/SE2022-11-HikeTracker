@@ -1,8 +1,9 @@
 import { Icon } from 'leaflet';
 import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet';
+import { Button } from 'react-bootstrap';
 import '../styles/Map.css';
 import 'leaflet/dist/leaflet.css';
-import { default as LinkedHutIcon} from '../images/linked_hut_icon.png'
+import { default as LinkedHutIcon} from '../images/linked_hut_icon.png';
 
 function HikeMap(props) {
 
@@ -75,10 +76,19 @@ function HikeMap(props) {
             />
             {positions && <Polyline pathOptions={{ fillColor: 'red', color: 'blue' }} positions={positions} />}
             {startPoint && <Marker position={startPoint} icon={iconStartPoint}>
-                {startPointLabel && <Popup>{startPointLabel}</Popup>}
+                {startPointLabel || props.showStartHike &&
+                <Popup>
+                    {startPointLabel}
+                    {props.showStartHike && <Button variant='success' onClick={props.startHike}>Start hike</Button>}
+                </Popup>}
             </Marker>}
             {endPoint && <Marker position={endPoint} icon={iconEndPoint}>
                 {endPointLabel && <Popup>{endPointLabel}</Popup>}
+                {endPointLabel || props.showEndHike &&
+                <Popup>
+                    {endPointLabel}
+                    {props.showEndHike && <Button variant='success' onClick={props.terminateHike}>Terminate hike</Button>}
+                </Popup>}
             </Marker>}
             {props.points?.filter(p => p.referencePoint).map(p => {
                 return (
@@ -87,7 +97,7 @@ function HikeMap(props) {
                     </Marker>
                 );
             })}
-            {props.alreadyLinkedHut.length !== 0 ? props.alreadyLinkedHut.map(p => {
+            {props.alreadyLinkedHut.length !== 0 && props.alreadyLinkedHut.map(p => {
                 return (
                     <Marker position={[p.latitude, p.longitude]} icon={iconLinkedHut} key={p.id} >
                         {p.label &&
@@ -96,7 +106,7 @@ function HikeMap(props) {
                             </Popup>}
                     </Marker>
                 );
-            }) : false}
+            })}
 
         </MapContainer>
     );
