@@ -599,3 +599,13 @@ exports.terminateHike = (trackedHikeID, endTime) => {
         });
     });
 }
+
+exports.deleteAllTrackedHikes = () => {
+    return new Promise((resolve, reject) => {
+        const sql = 'DELETE FROM TrackedHikes';
+        db.all(sql, (err) => {
+            if (err) reject(err);
+            resolve();
+        });
+    });
+}
