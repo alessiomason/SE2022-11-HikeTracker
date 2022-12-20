@@ -806,9 +806,25 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
 
     });
 
-    app.get('/api/test', async (req, res) => {
+    app.get('/api/trackedHikes/:id', async (req, res) => {
+        const hikeID = req.params.id;
+        const userID = req.user.id;
+
         try {
-            res.status(200).json(dayjs().format());
+            const trackedHikes = await dao.getTrackedHikesByHikeIDAndUserID(hikeID, userID);
+            res.status(200).json(trackedHikes);
+        }
+        catch (err) {
+            res.status(500).end();
+        }
+    });
+
+    app.get('/api/trackedHikes', async (req, res) => {
+        const userID = req.user.id;
+
+        try {
+            const trackedHikes = await dao.getTrackedHikesByUserID(userID);
+            res.status(200).json(trackedHikes);
         }
         catch (err) {
             res.status(500).end();

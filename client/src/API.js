@@ -560,6 +560,34 @@ function startHike(hikeID, startTime) {
     });
 }
 
+async function getTrackedHikesByHikeIDAndUserID(hikeID) {
+    // call /api/trackedHikes/:id
+    const response = await fetch(new URL('trackedHikes/' + hikeID, APIURL), { credentials: 'include' });
+    const trackedHikes = await response.json();
+    if (response.ok)
+        return trackedHikes.map((th) => ({
+            id: th.id,
+            hikeID: th.hikeID,
+            startTime: th.startTime,
+            endTime: th.endTime
+        }))
+    else throw trackedHikes;
+}
+
+async function getTrackedHikesByUserID() {
+    // call /api/trackedHikes/:id
+    const response = await fetch(new URL('trackedHikes', APIURL), { credentials: 'include' });
+    const trackedHikes = await response.json();
+    if (response.ok)
+        return trackedHikes.map((th) => ({
+            id: th.id,
+            hikeID: th.hikeID,
+            startTime: th.startTime,
+            endTime: th.endTime
+        }))
+    else throw trackedHikes;
+}
+
 async function signup(credentials) {
     let response = await fetch(new URL('signup', APIURL), {
         method: 'POST',
@@ -645,6 +673,7 @@ async function reverseNominatim(latitude, longitude) {
 const API = {
     addGPXTrack, addParkingLot, AddPoint, deleteParkingLot, updateParkingLot, deleteHike, getHikes, getParkingLots, addHut, updateHut, uploadHutImage,
     uploadParkingLotImage, getHuts, deletHut, getHike, addHike, updateHike, signup, verifyEmail, login, logout, getUserInfo, getUserAccessRight, getHikesRefPoints,
-    getStartPoint, getEndPoint, getReferencePoint, reverseNominatim, setNewReferencePoint, clearReferencePoint, startHike
+    getStartPoint, getEndPoint, getReferencePoint, reverseNominatim, setNewReferencePoint, clearReferencePoint, startHike, getTrackedHikesByHikeIDAndUserID,
+    getTrackedHikesByUserID
 };
 export default API;

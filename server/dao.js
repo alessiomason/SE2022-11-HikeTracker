@@ -568,6 +568,28 @@ exports.startHike = (hikeID, userID, startTime) => {
     });
 }
 
+exports.getTrackedHikesByHikeIDAndUserID = (hikeID, userID) => {
+    return new Promise((resolve, reject) => {
+        const sql = 'SELECT * FROM TrackedHikes WHERE HikeID = ? AND UserID = ?';
+        db.all(sql, [hikeID, userID], (err, rows) => {
+            if (err) reject(err);
+            const points = rows.map((r) => ({ id: r.TrackedHikeID, hikeID: r.HikeID, startTime: r.StartTime, endTime: r.EndTime }));
+            resolve(points);
+        });
+    });
+}
+
+exports.getTrackedHikesByUserID = (userID) => {
+    return new Promise((resolve, reject) => {
+        const sql = 'SELECT * FROM TrackedHikes WHERE UserID = ?';
+        db.all(sql, [userID], (err, rows) => {
+            if (err) reject(err);
+            const points = rows.map((r) => ({ id: r.TrackedHikeID, hikeID: r.HikeID, startTime: r.StartTime, endTime: r.EndTime }));
+            resolve(points);
+        });
+    });
+}
+
 exports.terminateHike = (trackedHikeID, endTime) => {
     return new Promise((resolve, reject) => {
         const sql = 'UPDATE TrackedHikes SET EndTime=? WHERE TrackedHikeID=?'

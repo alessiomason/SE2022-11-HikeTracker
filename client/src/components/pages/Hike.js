@@ -35,6 +35,7 @@ function HikePage(props) {
   const [dirty, setDirty] = useState(true);
   const [alreadyLinkedHut, setAlreadyLinkedHut] = useState([]);
   const radiusDistance = 5000; // 5km
+  const [trackedHikes, setTrackedHikes] = useState([]);
 
   let { hikeId } = useParams();
   hikeId = parseInt(hikeId);
@@ -51,7 +52,13 @@ function HikePage(props) {
           }
           setAlreadyLinkedHut(tempAlreadyLinkedHut);
         })
-        .catch(err => console.log(err))
+        .catch(err => console.log(err));
+
+      if (props.loggedIn) {
+        API.getTrackedHikesByHikeIDAndUserID(hikeId)
+          .then((trackedHikes) => setTrackedHikes(trackedHikes))
+          .catch(err => console.log(err));
+      }
       setDirty(false);
     }
   }, [dirty, hikeId]);
