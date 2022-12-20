@@ -120,7 +120,7 @@ function SingleUpdateHutCard(props) {
            />
           <Form.Group controlId="formFile" className="mb-3">
             <Form.Label className='updateImageHut'>Update Image</Form.Label>
-            <Form.Control type="file"
+            <Form.Control type="file" accept='.jpg'
               onChange={(e) => { setImage(e.target.files[0]); setPreview(URL.createObjectURL(e.target.files[0]))} }/>
           </Form.Group>
         </Col>
@@ -176,8 +176,6 @@ function SingleUpdateHutCard(props) {
             </Form.Group>
           </Row>
           <Row className='btn_box mt-3'>
-            <Button variant="info" className="btn_ref mx-2 mb-2" >Add Image</Button>
-            { /* <Button variant="primary" className="btn_box2 mx-2 mb-2" >Ref Point</Button> */ }
             <Button variant="danger" onClick={() => props.deleteHut(hutID)} className="btn_box2 mx-2 mb-2" >Delete</Button>
             <Button variant="success" type='submit' className="btn_box2 mx-2 mb-2">Save</Button>
           </Row>

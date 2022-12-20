@@ -1,5 +1,4 @@
-import { Alert, Form } from 'react-bootstrap';
-import { Container, Row, Col, Button } from 'react-bootstrap';
+import { Alert, Form ,Container, Row, Col, Button} from 'react-bootstrap';
 import { useState} from 'react';
 import { default as Img1 } from "../images/img1.jpg";
 import { useNavigate, useParams } from 'react-router-dom';
@@ -83,7 +82,7 @@ function EditForm(props) {
                     />
                     <Form.Group controlId="formFile" className="mb-3">
                         <Form.Label className='updateImage'>Upload Image</Form.Label>
-                        <Form.Control type="file"
+                        <Form.Control type="file" accept='.jpg'
                             onChange={(e) =>  { setImage(e.currentTarget.files[0]); setPreview(URL.createObjectURL(e.currentTarget.files[0])) } } />
                     </Form.Group>
                 </Col>

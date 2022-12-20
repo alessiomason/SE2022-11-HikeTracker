@@ -79,7 +79,7 @@ function ParkingForm(props) {
                     />
                     <Form.Group controlId="formFile" className="mb-3">
                         <Form.Label className='updateImage'>Upload Image</Form.Label>
-                        <Form.Control type="file"
+                        <Form.Control type="file" accept='.jpg'
                             onChange={(e) => { setImage(e.currentTarget.files[0]); setPreview(URL.createObjectURL(e.currentTarget.files[0])) }} />
                     </Form.Group>
                 </Col>

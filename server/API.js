@@ -8,6 +8,7 @@ const nodemailer = require('nodemailer');
 require('dotenv').config();
 const multer = require('multer');
 const fs = require("fs");
+const maxSize = 10 * 1024 * 1024; // 10 MB
 
 const storage = multer.diskStorage(
     {
@@ -34,7 +35,7 @@ const storage = multer.diskStorage(
     }
 );
 
-const upload = multer({ storage: storage });
+const upload = multer({ storage: storage, limits: {fileSize : maxSize} });
 
 // from https://stackoverflow.com/questions/639695/how-to-convert-latitude-or-longitude-to-meters
 function coordinatesDistanceInMeter(lat1, lon1, lat2, lon2) {  // generally used geo measurement function

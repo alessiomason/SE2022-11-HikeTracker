@@ -119,7 +119,7 @@ function SingleUpdateParkingCard(props) {
         />
         <Form.Group controlId="formFile" className="mb-3">
           <Form.Label className='updateImageButton'>Update Image</Form.Label>
-          <Form.Control type="file"
+          <Form.Control type="file" accept='.jpg'
             onChange={(e) => { setImage(e.target.files[0]); setPreview(URL.createObjectURL(e.target.files[0])) }} />
         </Form.Group>
       </Col>

@@ -338,7 +338,7 @@ function HikesFiltersMap(props) {
       />
       {props.hikes.map(h => {
         return (
-          <Marker position={[h.startPoint.latitude, h.startPoint.longitude]} icon={startPointIcon}>
+          <Marker key={h.label} position={[h.startPoint.latitude, h.startPoint.longitude]} icon={startPointIcon}>
             <Popup>
               {h.label && <p><strong>{h.label}</strong></p>}
               {h.startPoint.label && <p>{h.startPoint.label}</p>}

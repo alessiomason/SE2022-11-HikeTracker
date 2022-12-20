@@ -1,10 +1,11 @@
-import { Alert, Form } from 'react-bootstrap';
+
 import { Icon } from 'leaflet';
 import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet';
-import { Container, Row, Col, OverlayTrigger, Tooltip, Button, Tabs, Tab, Modal } from 'react-bootstrap';
+import { Alert ,Container, Row, Col, Button} from 'react-bootstrap';
 import { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import '..//styles/SinglePageHike.css';
+
+import { useParams } from 'react-router-dom';
+import '..//styles/singlePageHike.css';
 import '..//styles/LinkHike.css';
 import '../styles/Map.css';
 import 'leaflet/dist/leaflet.css';
@@ -27,7 +28,6 @@ function coordinatesDistanceInMeter(lat1, lon1, lat2, lon2) {  // generally used
 
 function LinkHike(props) {
 
-  const navigate = useNavigate();
 
   const [hike, setHike] = useState({});
   const [huts, setHuts] = useState({});
@@ -104,7 +104,7 @@ function LinkHike(props) {
   }
 
   const chooseLinkHut = () => {
-    // let mediumPoint = Math.round(hike.points.length/2);
+    
 
     // verifico quali hut sono già linkati che sono entro 5 km dallo starting point attuale dell'hike
 
@@ -243,12 +243,7 @@ function LinkHikeMap(props) {
     props.setDirty(false);
   }, [dirty, props]);
 
-  // const startPoint = props.points?.filter(p => p.startPoint).map(p => [p.latitude, p.longitude]).pop();
-  // const startPointLabel = props.points?.filter(p => p.startPoint).pop().label;
-  // const endPoint = props.points?.filter(p => p.endPoint).map(p => [p.latitude, p.longitude]).pop();
-  // const endPointLabel = props.points?.filter(p => p.endPoint).pop().label;
-  // const nPoints = props.points?.length;
-  
+
   
   let middlePoint;
   if (nPoints)
@@ -268,7 +263,7 @@ function LinkHikeMap(props) {
   else if (props.length && props.length >= 14000)
     zoom = 10;
 
-    // const positions = props.points?.filter(p => !p.referencePoint && !p.hutID && !p.parkingID).map(p => [p.latitude, p.longitude]);
+   
   
     const defineNewStartPoint = (point, type) => {
     if(type === "hut"){

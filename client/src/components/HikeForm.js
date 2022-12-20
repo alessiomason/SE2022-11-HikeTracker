@@ -54,7 +54,7 @@ function HikeForm(props) {
                     <Form onSubmit={handleSubmit}>
                         <Form.Group controlId="formFile" className="mb-3">
                             <Form.Label>Upload GPX File</Form.Label>
-                            <Form.Control type="file"
+                            <Form.Control type="file" accept='.gpx'
                                 onChange={(e) => setFile(e.target.files[0])} />
                         </Form.Group>
                         <Button className='save-button' type='submit'>Send</Button>
