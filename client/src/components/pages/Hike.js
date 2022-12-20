@@ -43,9 +43,9 @@ function HikePage(props) {
     if (dirty) {
       API.getHike(hikeId)
         .then((hike) => {
-          setHike(hike); 
+          setHike(hike);
           let tempAlreadyLinkedHut = hike.points.filter((h) => (h.startPoint === 0 && h.endPoint === 0 && h.referencePoint === 0 && h.hutID));
-          for(let i=0;i<hike.points?.length;i=i+25){
+          for (let i = 0; i < hike.points?.length; i = i + 25) {
             // per ogni punto dell'hike verifico la distanza dall'hut linkato
             tempAlreadyLinkedHut.concat(tempAlreadyLinkedHut?.filter((h) => coordinatesDistanceInMeter(hike.points[i].latitude, hike.points[i].longitude, h.latitude, h.longitude) < radiusDistance));
           }
@@ -55,6 +55,11 @@ function HikePage(props) {
       setDirty(false);
     }
   }, [dirty, hikeId]);
+
+  const startHike = async () => {
+    API.startHike(hike.id)
+      .catch(err => console.log(err));
+  }
 
   const difficultiesNames = ['Tourist', 'Hiker', 'Pro Hiker'];
   let locationsArray = [];
@@ -149,13 +154,12 @@ function HikePage(props) {
                     <h3 className='mb-5 text'> Sign In to look the Map!</h3>
                     <Button variant="primary log_btn slide" type="submit" onClick={() => { props.setShowLogin(true); navigate("/"); }} > Sign In </Button>
                   </div>
-                </div> : hike.id && <HikeMap length={hike.length} points={hike.points} alreadyLinkedHut={alreadyLinkedHut}/>}
-                {/* hike.id ensures that the map is rendered only when the hike is loaded  */}
+                </div> : hike.id && <HikeMap length={hike.length} points={hike.points} alreadyLinkedHut={alreadyLinkedHut} />}
+              {/* hike.id ensures that the map is rendered only when the hike is loaded  */}
             </Row>
             <Row className='btn-row'>
-              <Button className="mx-1 mt-2 share_btn slide" type="submit" > Share Track </Button>
               <Button className="mx-1 mt-2 terminate_btn slide" type="submit" > Terminate  </Button>
-              <Button className="mx-1 mt-2 start_btn slide" type="submit" > Start Track </Button>
+              <Button className="mx-1 mt-2 start_btn slide" type="submit" onClick={startHike}> Start Track </Button>
             </Row>
             <Row className="tab-box">
               <Tabs defaultActiveKey="description" id="justify-tab-example" className="mb-3 " justify >

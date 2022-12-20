@@ -557,3 +557,23 @@ exports.getParkingPoints = (parkingID) => {
         });
     });
 }
+
+exports.startHike = (hikeID, userID, startTime) => {
+    return new Promise((resolve, reject) => {
+        const sql = 'INSERT INTO TrackedHikes(HikeID, UserID, StartTime) VALUES(?, ?, ?)'
+        db.run(sql, [hikeID, userID, startTime], function (err) {
+            if (err) reject(err);
+            resolve();
+        });
+    });
+}
+
+exports.terminateHike = (trackedHikeID, endTime) => {
+    return new Promise((resolve, reject) => {
+        const sql = 'UPDATE TrackedHikes SET EndTime=? WHERE TrackedHikeID=?'
+        db.run(sql, [endTime, trackedHikeID], function (err) {
+            if (err) reject(err);
+            resolve();
+        });
+    });
+}
