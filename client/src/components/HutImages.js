@@ -1,7 +1,6 @@
 import '../styles/HutManager.css';
-import { Container, Row, Col, InputGroup, Form, Button, Carousel } from 'react-bootstrap';
-import { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Container, Row, Button } from 'react-bootstrap';
+import { useState, } from 'react';
 import { default as Close2 } from '../icons/close2.svg';
 
 function MyHutImages(props) {

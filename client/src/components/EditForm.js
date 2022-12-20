@@ -1,5 +1,4 @@
-import { Alert, Form } from 'react-bootstrap';
-import { Container, Row, Col, Button } from 'react-bootstrap';
+import { Alert, Form ,Container, Row, Col, Button} from 'react-bootstrap';
 import { useState} from 'react';
 import { default as Img1 } from "../images/img1.jpg";
 import { useNavigate, useParams } from 'react-router-dom';

@@ -1,5 +1,4 @@
-import { Alert, Form } from 'react-bootstrap';
-import { Container, Row, Col, Button } from 'react-bootstrap';
+import { Alert, Form, Container, Row, Col, Button} from 'react-bootstrap';
 import { useState } from 'react';
 import { default as Img1 } from "../images/img1.jpg";
 import { useNavigate } from 'react-router-dom';
@@ -53,7 +52,6 @@ function HutForm(props) {
                 .then( async (h) => { setNewHutID( (h) ); await API.uploadHutImage(h, image) } )
                 .catch( err => console.log(err));
 
-            // props.addHut(newHut);
             props.setDirty(true);
             navigate('/hutManager');
         }
