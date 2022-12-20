@@ -20,7 +20,7 @@ function Profile(props) {
           <div className="overflow-profile">
             <img src={Img1} alt="profile_photo" className="profile-img" />
           </div>
-          <h1 className="profile-role"> LOCAL GUIDE </h1>
+          <h1 className="profile-role"> PLATFORM MANAGER </h1>
         </Row>
         <Row >
           <Col md={4} className="center-top-side mb-4">
