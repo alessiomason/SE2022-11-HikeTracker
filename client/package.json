@@ -8,6 +8,7 @@
     "@testing-library/user-event": "^13.5.0",
     "bootstrap": "^5.2.2",
     "bootstrap-icons": "^1.10.1",
+    "dayjs": "^1.11.7",
     "free": "^1.0.0",
     "gpxparser": "^3.0.8",
     "leaflet": "^1.9.3",

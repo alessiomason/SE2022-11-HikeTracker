@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Container, Row, Col, OverlayTrigger, Tooltip, Button, Tabs, Tab, Modal } from 'react-bootstrap';
+import { Container, Row, Col, OverlayTrigger, Tooltip, Button, Tabs, Tab, Modal, Table } from 'react-bootstrap';
 import { useParams, useNavigate } from 'react-router-dom';
 import HikeMap from '../HikeMap';
 import API from '../../API';
@@ -13,6 +13,9 @@ import { default as User } from "../../icons/user-login.svg";
 import { default as Difficulty } from "../../icons/volume.svg";
 import { default as Img1 } from "../../images/image3.jpg";
 import { default as FakeMap } from "../../images/fakeMap.jpg";
+const dayjs = require('dayjs');
+const duration = require('dayjs/plugin/duration');
+dayjs.extend(duration);
 
 // from https://stackoverflow.com/questions/639695/how-to-convert-latitude-or-longitude-to-meters
 function coordinatesDistanceInMeter(lat1, lon1, lat2, lon2) {  // generally used geo measurement function
@@ -165,9 +168,10 @@ function HikePage(props) {
               {/* hike.id ensures that the map is rendered only when the hike is loaded  */}
             </Row>
             <Row className='btn-row'>
-              <Button className="mx-1 mt-2 terminate_btn slide" type="submit" > Terminate  </Button>
-              <Button className="mx-1 mt-2 start_btn slide" type="submit" onClick={startHike}> Start Track </Button>
+              {trackedHikes.filter(th => th.endTime === null || th.endTime === undefined).length === 0 && <Button className="mx-1 mt-2 start_btn slide" type="submit" onClick={startHike}>Start hike</Button>}
+              {trackedHikes.filter(th => th.endTime === null || th.endTime === undefined).length === 1 && <Button className="mx-1 mt-2 terminate_btn slide" type="submit">Terminate hike</Button>}
             </Row>
+            {props.loggedIn && <TrackedHikes trackedHikes={trackedHikes} />}
             <Row className="tab-box">
               <Tabs defaultActiveKey="description" id="justify-tab-example" className="mb-3 " justify >
                 <Tab eventKey="description" title="Description" >
@@ -205,6 +209,68 @@ function MyImageModal(props) {
       </Modal.Body>
 
     </Modal>
+  );
+}
+
+function TrackedHikes(props) {
+  const ongoingHike = props.trackedHikes.filter(th => th.endTime === null || th.endTime === undefined).pop();
+  const [ongoingHikeElapsedTime, setOngoingHikeElapsedTime] = useState(ongoingHike ? dayjs.duration(dayjs() - dayjs(ongoingHike.startTime)) : undefined);
+  const completedHikes = props.trackedHikes.filter(th => th.endTime !== null && th.endTime !== undefined);
+
+  let setIntervalsToUpdateElapsedTime = [];
+
+  useEffect(() => {
+    if (ongoingHike) {
+      setOngoingHikeElapsedTime(dayjs.duration(dayjs() - dayjs(ongoingHike.startTime)));
+
+      const setIntervalToUpdateElapsedTime = setInterval(() => {		// update the elapsed time every second
+        setOngoingHikeElapsedTime(dayjs.duration(dayjs() - dayjs(ongoingHike.startTime)));
+      }, 1000);
+
+      setIntervalsToUpdateElapsedTime.push(setIntervalToUpdateElapsedTime);
+    }
+
+    return () => {		// stop setInterval on page leave
+      setIntervalsToUpdateElapsedTime.forEach(s => clearInterval(s));
+    };
+  }, [ongoingHike])
+
+  return (
+    <>
+      {ongoingHike && <Row className='tracked-hikes-row'>
+        <h3>Ongoing hike</h3>
+        <hr />
+        <p>Start time: {dayjs(ongoingHike.startTime).format('MMM DD, YYYY hh:mm a')}</p>
+        <p>Elapsed time: {ongoingHikeElapsedTime?.format('H [h] mm [m] ss [s]')}</p>
+      </Row>}
+      {completedHikes.length > 0 &&
+        <Row className='tracked-hikes-row'>
+          <h3>Completed hikes</h3>
+          <hr />
+          <Table striped>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Start time</th>
+                <th>End time</th>
+                <th>Time</th>
+              </tr>
+            </thead>
+            <tbody>
+              {completedHikes.map((ch, i) => {
+                return (
+                  <tr key={ch.id}>
+                    <td>{i + 1}</td>
+                    <td>{dayjs(ch.startTime).format('MMM DD, YYYY hh:mm a')}</td>
+                    <td>{dayjs(ch.endTime).format('MMM DD, YYYY hh:mm a')}</td>
+                    <td>{dayjs.duration(dayjs(ch.endTime) - dayjs(ch.startTime)).format('H [h] mm [m]')}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </Table>
+        </Row>}
+    </>
   );
 }
 
