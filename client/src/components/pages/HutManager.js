@@ -176,8 +176,6 @@ function SingleUpdateHutCard(props) {
             </Form.Group>
           </Row>
           <Row className='btn_box mt-3'>
-            <Button variant="info" className="btn_ref mx-2 mb-2" >Add Image</Button>
-            { /* <Button variant="primary" className="btn_box2 mx-2 mb-2" >Ref Point</Button> */ }
             <Button variant="danger" onClick={() => props.deleteHut(hutID)} className="btn_box2 mx-2 mb-2" >Delete</Button>
             <Button variant="success" type='submit' className="btn_box2 mx-2 mb-2">Save</Button>
           </Row>
