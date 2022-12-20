@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { Button, Navbar, Nav, Container, Row, Col, Form, OverlayTrigger, Tooltip, FloatingLabel } from "react-bootstrap";
 
-import '../styles/Profile.css';
+import '../styles/ProfileManager.css';
 import React, { useState, useEffect } from 'react';
 import { default as Img1 } from '../images/img1.jpg';
 import { default as Hut } from "../icons/hut.svg";
@@ -108,19 +108,19 @@ function WeatherAlert(props){
     </Row>
 
     <Row className="val-user-box mx-5 mb-4 p-4 mt-5">
-        <Col md={4} className="align">
+        <Col md={4} className="align margin-bottom">
         <OverlayTrigger placement="bottom" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip-2">Location</Tooltip>}>
                   <img src={Location} alt="location_image" className='me-3 profile-icon' />
                 </OverlayTrigger>
                 <h6 className="card-text p-card">{"Torino, TO, Piemonte, Italia"}</h6>
         </Col>
-        <Col md={2} className="align">
+        <Col md={2} className="align margin-bottom">
         <OverlayTrigger placement="bottom" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip-2">Radius</Tooltip>}>
                   <img src={Radius} alt="radius_image" className='me-3' />
                 </OverlayTrigger>
                 <h6 className="card-text p-card">{"400 km"}</h6>
         </Col>
-        <Col md={4} className="align">
+        <Col md={4} className="align margin-bottom">
 <Form.Control placeholder="Description" as="textarea" rows={2} />
         </Col>
         <Col md={{offset:1, span:1}} className="box-center">
