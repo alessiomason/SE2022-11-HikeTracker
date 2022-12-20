@@ -36,9 +36,9 @@ function MyNavbar(props) {
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="me-auto">
-            <button className="button type1" onClick={() => {navigate("/"); scrollIntoViewWithOffset("hikeSec", 40);}}>  Hikes</button>
-            <button className="button type2" onClick={() => {navigate("/"); scrollIntoViewWithOffset("hutSec", 40)}}> Huts</button>
-            <button className="button type3" onClick={() => {navigate("/"); scrollIntoViewWithOffset("parkSec", 40)}}> Parkings </button>
+            <button className="button type1" onClick={() => {navigate("/"); scrollIntoViewWithOffset("hikeSec", 40);}}>  HIKES</button>
+            <button className="button type2" onClick={() => {navigate("/"); scrollIntoViewWithOffset("hutSec", 40)}}> HUTS</button>
+            <button className="button type3" onClick={() => {navigate("/"); scrollIntoViewWithOffset("parkSec", 40)}}> PARKINGS </button>
           </Nav>
           <Nav>
             {(!props.loggedIn) ?
@@ -50,7 +50,7 @@ function MyNavbar(props) {
                 {props.user.access_right === 'local-guide' ? <Button variant="outline-warning"  className="mx-2 my-2  btn--outline" onClick={() => navigate("/hikeManager")}> Manage Hikes</Button> : false}
                 {props.user.access_right === 'local-guide' ? <Button variant="outline-warning"  className="mx-2 my-2 btn--outline" onClick={() => navigate("/hutManager")}> Manage Huts</Button> : false}
                 {props.user.access_right === 'local-guide' ? <Button variant="outline-warning"  className="mx-2 my-2  btn--outline" onClick={() => navigate("/parkingManager")}> Manage Parkings</Button> : false}
-                <Button variant="outline-success" className="mx-2 my-1 btn--outline" onClick={props.doLogout}><img src={User} alt="user_image" /> Logout</Button>
+                <Button variant="outline-success" className="mx-2 my-1 btn-profile" onClick={() => {navigate("/profile1")}}><img src={User} alt="user_image" className="me-2" /> YOUR PROFILE </Button>
               </Nav>
             }
           </Nav>

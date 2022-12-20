@@ -119,23 +119,23 @@ function ParkingCards(props) {
               <div>
                 <h1 className="hut-card-title-park">{parking.label}</h1>
               </div>
-              <Row >
-                <Col xs={2} className="mb-1">
+              <Row className="mb-2" >
+                <Col xs={2}>
                   <FaLocationArrow className="card-symbol-park me-3" />
                 </Col>
                 <Col>
                   <h6 className="card-details">{locationsArray.join(", ")}</h6>
                 </Col>
               </Row>
-              <Row >
-                <Col xs={2} className="mb-1">
+              <Row className="mb-2">
+                <Col xs={2} >
                   <FaParking className="card-symbol-park me-3" />
                 </Col>
                 <Col>
                   <h6 className="card-details">{parking.occupied} / {parking.total} occupied {parking.occupied === 1 ? 'slot' : 'slots'}</h6>
                 </Col>
               </Row>
-              <Row >
+              <Row className="mb-2" >
                 <Col xs={2}>
                   <FaMountain className="card-symbol-park me-3" />
                 </Col>

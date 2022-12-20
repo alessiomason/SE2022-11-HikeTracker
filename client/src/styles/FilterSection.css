@@ -22,6 +22,14 @@ h1 {
 
 .btn_filter {
     border-radius: 0px !important;
+    background-color: #16a085;
+    border-color: #16a085;
+}
+
+.btn_filter:hover {
+    border-radius: 0px !important;
+    background-color: #05725c;
+    border-color: #16a085;
 }
 
 .btn_info {

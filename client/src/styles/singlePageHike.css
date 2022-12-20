@@ -160,12 +160,12 @@
   margin-bottom: 30px;
 }
 
-.nav-link{
+.tab-box .nav-link{
   color: #30AC42 !important;
   font-weight: bold !important;
 }
 
-.nav-link.active{
+.tab-box .nav-link.active{
   background-color: #30AC42 !important;
   color: #212529 !important;
   font-weight: bold !important;
@@ -182,6 +182,10 @@
   border-left: 2px solid #30AC42;
   border-right: 2px solid #30AC42;
   border-bottom: 2px solid #30AC42;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .hike-page-container {

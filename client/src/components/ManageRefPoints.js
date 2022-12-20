@@ -4,7 +4,7 @@ import { MapContainer, TileLayer, Marker, Popup, Polyline, useMapEvents } from '
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import '..//styles/singlePageHike.css';
+import '..//styles/SinglePageHike.css';
 import '..//styles/ReferencePoints.css';
 import '../styles/Map.css';
 import 'leaflet/dist/leaflet.css';

@@ -50,13 +50,14 @@ function HikesFilters(props) {
           <ButtonToolbar aria-label="Toolbar with button groups" >
             <ButtonGroup className='my-1' size="lg" aria-label="First group">
               <Button variant="success" className='btn_filter' onClick={() => { setModalShow(true); setTitle("Length (meters)"); setDesc("Select a specific length:") }}>Length</Button>
-              <Button variant="success" onClick={() => { setModalShow(true); setTitle("Expected time"); setDesc("Select a specific expected time:") }}>Time</Button>
-              <Button variant="success" onClick={() => { setModalShow(true); setTitle("Ascent (meters)"); setDesc("Select a specific ascent:") }}>Ascent</Button>
+              <Button variant="success" className='btn_filter' onClick={() => { setModalShow(true); setTitle("Expected time"); setDesc("Select a specific expected time:") }}>Time</Button>
+              <Button variant="success" className='btn_filter' onClick={() => { setModalShow(true); setTitle("Ascent (meters)"); setDesc("Select a specific ascent:") }}>Ascent</Button>
               <Button variant="success" className='btn_filter' onClick={() => { setModalShow(true); setTitle("Difficulty"); setDesc("Select a specific difficulty:") }}>Difficulty</Button>
               <Button variant='success' className='btn_filter' onClick={() => { setModalShow(true); setTitle("Location"); setDesc("Select a specific state, region, province or municipality:") }}>Location</Button>
             </ButtonGroup>
             <ButtonGroup size="lg" className='my-1 me-2'>
               <Button variant="success" className='btn_filter' onClick={() => { setModalShow(true); setTitle("Point from map"); setDesc("Select a specific point on the map:") }}>Point from map</Button>
+              <Button variant="success" className='btn_filter' >Set Personal Filter</Button>
             </ButtonGroup>
             <ButtonGroup className="my-1" aria-label="Second group">
               <OverlayTrigger placement="right" delay={{ show: 250, hide: 400 }} overlay={renderTooltip} >
@@ -293,11 +294,11 @@ function MyModal(props) {
                         <h4>Select the maximum distance from the point</h4>
                         <h5 className="text-center">Radius of {tempHikesRadius} km</h5>
                         <Row>
-                          <Col className='slider-label'>1 km</Col>
+                          <Col xs={1} className='slider-label'>1 km</Col>
                           <Col xs={10}>
                             <input type='range' value={tempHikesRadius} min={1} max={5} step={1} onChange={event => setTempHikesRadius(event.target.value)} className='my-slider' />
                           </Col>
-                          <Col className='slider-label'>5 km</Col>
+                          <Col xs={1} className='slider-label'>5 km</Col>
                         </Row>
                       </> : 'false'
 

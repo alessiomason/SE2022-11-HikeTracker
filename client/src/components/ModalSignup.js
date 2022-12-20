@@ -3,6 +3,7 @@ import { Button, Col, Form, Row, Container, Alert, Modal } from "react-bootstrap
 import { default as UserLogin } from "../icons/user-login.svg";
 import { default as Password } from "../icons/password.svg";
 import { default as UserKind } from "../icons/user_kind.svg";
+import { default as Hut } from "../icons/hut.svg";
 import '../styles/SignInSignUp.css';
 
 function MyModalSignup(props) {
@@ -96,15 +97,32 @@ function MyModalSignup(props) {
                   <img src={UserKind} alt="user" />
                 </Col>
                 <Col md="auto" sm="auto" xs="auto">
-                  <Form.Select aria-label="Default select example" value={accessRight} onChange={ev => setAccessRight(ev.target.value)}>
+                  <Form.Select aria-label="Default select example" value={accessRight} onChange={ev => setAccessRight(ev.target.value)} className="form-sel">
+                    <option>- Choose a role -</option>
                     <option value="hiker">Hiker</option>
                     <option value="local-guide">Local guide</option>
-                    <option value="platform-manager">Platform manager</option>
+                    {/*<option value="platform-manager">Platform manager</option>*/}
                     <option value="hut-worker">Hut worker</option>
-                    <option value="emergency-operator">Emergency operator</option>
+                    {/*<option value="emergency-operator">Emergency operator</option>*/}
                   </Form.Select>
                 </Col>
               </Row>
+              {(accessRight == "hut-worker") ? <Row className='mb-3 box_center'>
+                <Col md="auto" sm="auto" xs="auto" className='box_center'>
+                  <img src={Hut} alt="hut" className='log-hut-icon'/>
+                </Col>
+                <Col md="auto" sm="auto" xs="auto"> {/* it appear only when hut worker is selected */}
+                  <Form.Select aria-label="Default select example" value={accessRight} onChange={ev => setAccessRight(ev.target.value)} className="form-sel">
+                    <option>- Choose an hut -</option>
+                    <option value="r1">Rifugio1</option>
+                    <option value="r2">Rifugio2</option>
+                    {/*<option value="platform-manager">Platform manager</option>*/}
+                    <option value="r3">Rifugio3</option>
+                    {/*<option value="emergency-operator">Emergency operator</option>*/}
+                  </Form.Select>
+                </Col>
+              </Row> : false}
+              
               <Row className="my-5 box_center">
                 <Button variant="primary signup_btn" type="submit" > Sign Up </Button>
               </Row>

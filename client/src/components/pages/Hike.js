@@ -3,7 +3,7 @@ import { Container, Row, Col, OverlayTrigger, Tooltip, Button, Tabs, Tab, Modal 
 import { useParams, useNavigate } from 'react-router-dom';
 import HikeMap from '../HikeMap';
 import API from '../../API';
-import '../../styles/singlePageHike.css';
+import '../../styles/SinglePageHike.css';
 import { default as Hiking } from '../../icons/hiking.svg';
 import { default as Location } from "../../icons/map.svg";
 import { default as Length } from "../../icons/location-on-road.svg";
@@ -132,7 +132,7 @@ function HikePage(props) {
               <h6 className='side-title'>Author:</h6>
             </Row>
             <Row className="info-row">
-              <Col lg={6} md={12} sm={6} xs={6} className='mb-3 align'>
+              <Col md={12} className='mb-4 align'>
                 <OverlayTrigger placement="bottom" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip-2">Author</Tooltip>}>
                   <img src={User} alt="time_image" className='me-3 single-hike-icon bigger-icon' />
                 </OverlayTrigger>

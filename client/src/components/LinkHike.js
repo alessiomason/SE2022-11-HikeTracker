@@ -4,7 +4,7 @@ import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet'
 import { Container, Row, Col, OverlayTrigger, Tooltip, Button, Tabs, Tab, Modal } from 'react-bootstrap';
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import '..//styles/singlePageHike.css';
+import '..//styles/SinglePageHike.css';
 import '..//styles/LinkHike.css';
 import '../styles/Map.css';
 import 'leaflet/dist/leaflet.css';

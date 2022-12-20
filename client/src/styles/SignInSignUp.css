@@ -45,3 +45,13 @@
     font-weight: bold;
     box-shadow: inset 160px 0 0 0 var(--hover);
 }
+
+.form-sel{
+    width: 210px;
+    cursor: pointer;
+}
+
+.log-hut-icon{
+    width: 24px;
+    height: 24px;
+}

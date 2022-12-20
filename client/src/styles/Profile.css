@@ -1,0 +1,276 @@
+.external-box-profile {
+  background-image: url(../images/image4.jpg);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+  box-shadow: inset 0 0 0 1000px rgba(0, 0, 0, 0.2);
+  padding-bottom: 8vh;
+  padding-top: 34vh;
+  padding-left: 8vh;
+  padding-right: 8vh;
+  min-height: 100vh;
+}
+
+.internal-box-profile {
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 253);
+  background-color: white;
+  border-radius: 12px;
+  padding-top: 6vh;
+
+}
+
+.profile-img {
+  border-radius: 50%;
+  border: solid 4px #212529;
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+  cursor: pointer;
+}
+
+.overflow-profile {
+  overflow: hidden;
+  width: fit-content;
+  position: relative;
+}
+
+.center-top {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  top: -140px;
+}
+
+.profile-role {
+  color: #494681;
+  font-weight: bold;
+  font-size: 50px;
+  font-style: italic;
+  margin-top: 10px;
+}
+
+.center-top-side {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  top: -280px;
+  height: fit-content;
+}
+
+.profile-img-btn {
+  border-radius: 0px !important;
+  width: 148px !important;
+  font-weight: bold;
+  border: 2px solid #494681 !important;
+  background-color: #494681 !important;
+  --hover: #494681;
+  color: #000 !important;
+}
+
+.profile-img-btn:hover,
+.profile-img-btn:focus {
+  box-shadow: 0 0.6em 0.4em -0.4em var(--hover);
+  transform: translateY(-0.25em);
+}
+
+
+.logout-btn {
+  border-radius: 0px !important;
+  width: 148px !important;
+  font-weight: bold;
+  border: 2px solid #FF0000 !important;
+  background-color: #FF0000 !important;
+  --hover: #FF0000;
+  color: #000 !important;
+}
+
+.logout-btn:hover,
+.profile-img-btn:focus {
+  box-shadow: 0 0.6em 0.4em -0.4em var(--hover);
+  transform: translateY(-0.25em);
+}
+
+.profile-email {
+  color: #494681;
+  font-weight: bold;
+  font-style: italic;
+  margin-bottom: 0px;
+  display: inline;
+}
+
+.email {
+  display: inline;
+}
+
+.end-top-profile {
+  border: solid 1px #494681;
+  margin-left: 100px;
+  margin-right: 100px;
+  border-radius: 20px;
+  position: relative;
+  margin-top: 20px;
+  top: -180px;
+}
+
+.component {
+  position: relative;
+  top: -140px;
+}
+
+@media only screen and (max-width: 1200px) {
+
+  .center-top-side,
+  .end-top-profile {
+    top: -120px;
+  }
+
+  .component {
+    top: -80px;
+  }
+}
+
+.val-user-box2{
+  border-radius: 20px;
+  border: solid 2px #494681;
+}
+
+
+.val-user-box2 label{
+  color: red;
+  font-weight: bold;
+}
+
+
+.val-user-box{
+  border-radius: 20px;
+  border: solid 2px #494681;
+}
+
+
+.val-user-box label{
+  color: green;
+  font-weight: bold;
+}
+
+.box-btn{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin-left: 0px !important;
+  margin-right: 0px !important;
+}
+
+.box-center{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.user-btn {
+  border-radius: 0px !important;
+  width: 160px !important;
+  border: 2px solid #494681 !important;
+  font-weight: bold;
+  background-color: transparent !important;
+  --hover: #494681;
+  color: #494681 !important;
+  transition: 0.5s;
+}
+
+.user-btn:hover,
+.user-btn:focus {
+  color: white !important;
+  font-weight: bold;
+  box-shadow: inset 160px 0 0 0 var(--hover);
+  transition: 0.5s;
+}
+
+.user-btn-fix{
+  border-radius: 0px !important;
+  width: 160px !important;
+  border: 2px solid #494681 !important;
+  font-weight: bold;
+  color: white !important;
+  --hover: #494681;
+  box-shadow: inset 160px 0 0 0 var(--hover);
+}
+
+.map-box{
+  border-radius: 20px;
+  border: solid 2px #494681;
+  height: 300px;
+  width: 500px;
+  background-color: #FF0000;
+}
+
+.profile-icon{
+  filter: invert(28%) sepia(11%) saturate(2739%) hue-rotate(204deg) brightness(94%) contrast(89%);
+}
+
+.desc label{
+  color: #494681;
+  font-weight: bold;
+}
+
+@media only screen and (max-width: 1200px) {
+
+  .box-Alert{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin-left: 0px !important;
+    margin-right: 0px !important;
+  }
+}
+
+.box-Alert input[type=range]::-webkit-slider-thumb {
+  background-color: #494681;
+}
+
+.box-Alert input[type=range]::-webkit-slider-thumb:hover {
+  background-color: #494681;
+}
+
+
+.cancel-btn {
+  border-radius: 0px !important;
+  width: 126px !important;
+  border: 2px solid red !important;
+  font-weight: bold;
+  background-color: red !important;
+  --hover: red;
+  color: white !important;
+
+}
+
+.cancel-btn:hover,
+.cancel-btn:focus {
+  box-shadow: 0 0.6em 0.4em -0.4em var(--hover);
+  transform: translateY(-0.25em);
+}
+
+.save-btn {
+  border-radius: 0px !important;
+  width: 126px !important;
+  border: 2px solid green !important;
+  font-weight: bold;
+  background-color: green !important;
+  --hover: green;
+  color: white !important;
+
+}
+
+.save-btn:hover,
+.save-btn:focus {
+  box-shadow: 0 0.6em 0.4em -0.4em var(--hover);
+  transform: translateY(-0.25em);
+}
+
+

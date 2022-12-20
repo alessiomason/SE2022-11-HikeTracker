@@ -12,8 +12,9 @@
     text-decoration: none !important;
     display: block;
     margin-bottom: 2rem !important;
-    margin-left: 68px !important;
-    margin-right: 68px !important;
+    margin-left: 20px !important;
+    margin-right: 20px !important;
+    width: 340px;
 }
 
 
@@ -30,6 +31,7 @@
     height: 13rem;
     transform: scale(1);
     transition: transform 0.5s ease;
+    object-fit: cover;
 }
 
 .card_img:hover {
@@ -117,4 +119,8 @@
 .align{
     display: flex;
     align-items: center;
+}
+
+.card-icon-map{
+    filter: invert(91%) sepia(23%) saturate(4158%) hue-rotate(160deg) brightness(102%) contrast(92%);
 }
