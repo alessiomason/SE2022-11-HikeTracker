@@ -25,7 +25,7 @@ function HutPage(props) {
 
 
   return (
-    <Container fluid className="external-box">
+    <Container fluid className="external-box-hut">
       <MyImageModal hikeId={1} hikeLabel={"Rifugio Rocciamelone"} show={modalShow} onHide={() => setModalShow(false)} />
       <Container fluid className='internal-box-hut' >
         <Row className="center-box mb-4">
