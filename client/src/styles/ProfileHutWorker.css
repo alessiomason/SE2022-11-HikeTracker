@@ -1,0 +1,93 @@
+.hut-man-title{
+    font-weight: bold;
+    color: #494681;
+    width: fit-content;
+}
+
+.hut-man-box{
+    border: solid 3px #494681;
+    border-radius: 20px;
+    margin-top: 30px !important;
+    background-color: whitesmoke;
+    margin-left: 40px;
+    margin-right: 40px;
+}
+
+@media only screen and (max-width: 800px) {
+
+    .hut-man-box {
+        margin-left: 0px;
+        margin-right: 0px;
+    }
+}
+
+.hut-man-img{
+    border: solid 3px #494681;
+    padding-left: 0px !important;
+    padding-right: 0px !important;
+    cursor: pointer;
+}
+
+.hut-man-box-thumb{
+    width: fit-content;
+    height: fit-content;
+    background-color: transparent !important;
+    border-color: transparent !important;
+    padding: 0%;
+    margin: 1%;
+}
+
+
+.hut-man-box-thumb:hover{
+    border-radius: 0%;
+    box-shadow: 0 0 0 3px #494681;
+}
+
+.hut-man-clicked{
+    box-shadow: 0 0 0 3px #494681;
+  }
+
+.hut-label label{
+    color: #494681;
+    font-weight: bold;
+}
+
+.man-hut-page-modal-header {
+    border-top: 2px solid #494681;
+    border-left: 2px solid #494681;
+    border-right: 2px solid #494681;
+  }
+  
+  .man-hut-page-modal-body {
+    border-radius: 0px 0px 8px 8px !important;
+    border-left: 2px solid #494681;
+    border-right: 2px solid #494681;
+    border-bottom: 2px solid #494681;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .val-user-box3 {
+    border-radius: 20px;
+    border: solid 2px #494681;
+    background-color: whitesmoke;
+}
+
+
+.val-user-box3 label {
+    color: #494681;
+    font-weight: bold;
+}
+
+.form-sel2{
+    width: 100% !important;
+    cursor: pointer;
+}
+
+.form-desc{
+    width: 90% !important;
+}
+
+

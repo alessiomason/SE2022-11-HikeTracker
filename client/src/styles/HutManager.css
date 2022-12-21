@@ -44,9 +44,10 @@
 }
 
 .main_img{
-    width: auto;
-    max-height: 40vh;
-    overflow: hidden;
+    width: 100%;
+    height: 40vh;
+    border-radius: 8px;
+    object-fit: cover;
 }
 
 .box_img{
@@ -54,6 +55,7 @@
     flex-direction: row;
     justify-content: center;
     align-items: center;
+    overflow: hidden;
   }
 
 .thumb_img{
@@ -96,8 +98,8 @@
     border-color: transparent;
     padding: 0px;
     position: relative;
-    left: -3rem;
-    top: -7rem;
+    left: 42%;
+    top: -14.5em;
 
 }
 
@@ -105,6 +107,23 @@
   background-color: red;
   border-color: red;
 }
+
+.x-img{
+  filter: invert(11%) sepia(82%) saturate(7355%) hue-rotate(15deg) brightness(103%) contrast(125%);
+}
+
+.x-img:hover{
+  filter: invert(98%) sepia(28%) saturate(0%) hue-rotate(308deg) brightness(120%) contrast(100%);
+}
+
+
+@media only screen and (max-width: 1300px) {
+
+  .close_btn {
+      
+  }
+}
+
 
 .updateImageHut{
   margin-left: 90px;

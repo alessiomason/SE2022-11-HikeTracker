@@ -1,0 +1,55 @@
+
+.manage-btn{
+    width: 300px;
+    height: 200px;
+    border-radius: 50px 0px 50px 0px;
+}
+
+@media only screen and (max-width: 1024px) {
+
+    .manage-btn {
+        width: 98%;
+    
+    }
+}
+
+
+.man-park-icon{
+    filter: invert(100%) sepia(0%) saturate(7437%) hue-rotate(142deg) brightness(113%) contrast(107%);
+}
+
+.man-hike-btn{
+    background-color: #16a085;
+    border-color: #16a085;
+}
+
+.man-hut-btn{
+    background-color: #FF6700;
+    border-color: #FF6700;
+}
+
+.man-park-btn{
+    background-color: #4D4DFF;
+    border-color: #4D4DFF;
+}
+
+.man-park-btn:hover {
+    color: #000;
+    background: #4D4DFF;
+    border-color: #494681;
+    box-shadow: 0 0 10px #4D4DFF, 0 0 40px #4D4DFF, 0 0 80px #4D4DFF;
+}
+
+.man-hike-btn:hover {
+    color: #000;
+    background: #16a085;
+    border-color: #05725c;
+    box-shadow: 0 0 10px #16a085, 0 0 40px #16a085, 0 0 80px #16a085;
+}
+
+.man-hut-btn:hover {
+    color: #000;
+    background: #FF6700;
+    border-color: #c75205;
+    box-shadow: 0 0 10px #FF6700, 0 0 40px #FF6700, 0 0 80px #FF6700;
+}

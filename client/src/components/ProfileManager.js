@@ -6,6 +6,7 @@ import { default as Location } from "../icons/map.svg";
 import { default as Radius } from "../icons/radius.svg";
 import { default as Delete } from "../icons/delete.svg";
 
+import { default as Alert1 } from "../icons/alert.svg";
 
 function ProfileManager(props) {
 
@@ -103,6 +104,9 @@ function WeatherAlert(props){
     </Row>
 
     <Row className="val-user-box mx-5 mb-4 p-4 mt-5">
+    <Col md={1} className="box-center margin-bottom">
+          <img src={Alert1} alt="user_image" />
+        </Col>
         <Col md={4} className="align margin-bottom">
         <OverlayTrigger placement="bottom" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip-2">Location</Tooltip>}>
                   <img src={Location} alt="location_image" className='me-3 profile-icon' />
@@ -118,7 +122,7 @@ function WeatherAlert(props){
         <Col md={4} className="align margin-bottom">
           <Form.Control placeholder="Description" as="textarea" rows={2} />
         </Col>
-        <Col md={{offset:1, span:1}} className="box-center">
+        <Col md={1} className="box-center">
         <OverlayTrigger placement="bottom" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip-2">Delete</Tooltip>}>
                 <Button className="delete-btn"><img src={Delete} alt="delete_image" className='' /></Button>
               </OverlayTrigger>
