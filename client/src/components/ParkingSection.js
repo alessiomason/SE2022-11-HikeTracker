@@ -4,10 +4,7 @@ import { Container, Row, Col } from "react-bootstrap";
 import { default as Parking } from '../icons/parking.svg';
 import { default as arrowRight } from '../icons/arrow-next-park.svg';
 import { default as arrowLeft } from '../icons/arrow-prev-park.svg';
-import { FaParking } from "react-icons/fa";
-import { FaLocationArrow } from "react-icons/fa";
-import { FaMountain } from "react-icons/fa";
-import { ImPriceTag } from "react-icons/im";
+import { FaLocationArrow,FaMountain,FaParking } from "react-icons/fa";
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
@@ -31,7 +28,7 @@ function MyParkingSection() {
     <>
       <Container fluid className="parkingSection" id="parkSec">
         <Row>
-          <h2 className="background double parking-title"><span><img src={Parking} alt="hut_image" className='me-2 hike-img' />PARKINGS</span></h2>
+          <h2 className="background double parking-title"><span><img src={Parking} alt="hut_image" className='me-2 park-img' />PARKINGS</span></h2>
         </Row>
       </Container>
       <Container fluid className="parkingCardSection">
@@ -119,23 +116,23 @@ function ParkingCards(props) {
               <div>
                 <h1 className="hut-card-title-park">{parking.label}</h1>
               </div>
-              <Row >
-                <Col xs={2} className="mb-1">
+              <Row className="mb-2" >
+                <Col xs={2}>
                   <FaLocationArrow className="card-symbol-park me-3" />
                 </Col>
                 <Col>
                   <h6 className="card-details">{locationsArray.join(", ")}</h6>
                 </Col>
               </Row>
-              <Row >
-                <Col xs={2} className="mb-1">
+              <Row className="mb-2">
+                <Col xs={2} >
                   <FaParking className="card-symbol-park me-3" />
                 </Col>
                 <Col>
                   <h6 className="card-details">{parking.occupied} / {parking.total} occupied {parking.occupied === 1 ? 'slot' : 'slots'}</h6>
                 </Col>
               </Row>
-              <Row >
+              <Row className="mb-2" >
                 <Col xs={2}>
                   <FaMountain className="card-symbol-park me-3" />
                 </Col>

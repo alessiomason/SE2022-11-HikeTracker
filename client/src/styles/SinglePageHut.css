@@ -1,0 +1,123 @@
+.external-box-hut {
+  background-image: url(../images/image5.jpg);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+  box-shadow: inset 0 0 0 1000px rgba(0, 0, 0, 0.2);
+  padding-bottom: 8vh;
+  padding-top: 20vh;
+  padding-left: 8vh;
+  padding-right: 8vh;
+  min-height: 100vh;
+}
+
+.internal-box-hut {
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 253);
+    background-color: white;
+    border-radius: 12px;
+    padding-top: 6vh;
+  }
+
+  
+.single-hut-title {
+    width: 800px !important;
+    font-weight: bold;
+    font-size: 50px;
+    font-style: italic;
+    color: #FF6700;
+    text-align: center;
+    text-transform: uppercase;
+  }
+  
+  .single-hut-title.background {
+    position: relative;
+    z-index: 1;
+  }
+  
+  .single-hut-title.background span {
+    background: white;
+    padding: 0 15px;
+  }
+  
+  .single-hut-title.double:before {
+    border-top: none;
+  }
+  
+  .single-hut-title.double:after {
+    border-bottom: 2px solid #FF6700;
+    content: "";
+    margin: 0 auto;
+    /* this centers the line to the full width specified */
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    width: 100%;
+    z-index: -1;
+  }
+
+ 
+
+  .side-hut-img {
+    border: 2px solid #FF6700;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+
+  .info-row-hut {
+    padding-bottom: 4px;
+    border-bottom: 2px solid #FF6700;
+    margin-bottom: 20px;
+  }
+  
+  .side-title-hut {
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 20px;
+    font-style: italic;
+    color: #FF6700;
+    margin-bottom: 20px;
+  }
+
+  .hut-page-modal-header {
+    border-top: 2px solid #FF6700;
+    border-left: 2px solid #FF6700;
+    border-right: 2px solid #FF6700;
+  }
+  
+  .hut-page-modal-body {
+    border-radius: 0px 0px 8px 8px !important;
+    border-left: 2px solid #FF6700;
+    border-right: 2px solid #FF6700;
+    border-bottom: 2px solid #FF6700;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .hut-page-container {
+    position: relative;
+    background-color: #212529;
+    border: 2px solid #FF6700;
+    border-radius: 10px;
+    padding-left: 0px !important;
+    padding-right: 0px !important;
+  }
+
+  .hut-tab-box{
+    border: 2px solid #FF6700;
+    border-radius: 8px;
+    margin-bottom: 30px;
+  }
+  
+  .hut-tab-box .nav-link{
+    color: #FF6700 !important;
+    font-weight: bold !important;
+  }
+  
+  .hut-tab-box .nav-link.active{
+    background-color: #FF6700 !important;
+    color: #212529 !important;
+    font-weight: bold !important;
+  }

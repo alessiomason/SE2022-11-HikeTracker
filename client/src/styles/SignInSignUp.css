@@ -45,3 +45,18 @@
     font-weight: bold;
     box-shadow: inset 160px 0 0 0 var(--hover);
 }
+
+.form-sel{
+    width: 210px;
+    cursor: pointer;
+}
+
+.log-hut-icon{
+    width: 24px;
+    height: 24px;
+    filter: invert(48%) sepia(24%) saturate(7470%) hue-rotate(0deg) brightness(102%) contrast(104%);
+}
+
+.fit{
+    padding-right: 8px;
+}

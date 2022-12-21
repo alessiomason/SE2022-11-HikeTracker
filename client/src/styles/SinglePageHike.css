@@ -106,7 +106,8 @@ tr {
  }
 
 .single-hike-icon {
-  filter: invert(55%) sepia(51%) saturate(593%) hue-rotate(89deg) brightness(98%) contrast(85%);
+  vertical-align: baseline;
+  filter: invert(54%) sepia(70%) saturate(545%) hue-rotate(77deg) brightness(89%) contrast(80%)
 }
 
 .bigger-icon {
@@ -186,12 +187,12 @@ tr {
   margin-bottom: 30px;
 }
 
-.nav-link{
+.tab-box .nav-link{
   color: #30AC42 !important;
   font-weight: bold !important;
 }
 
-.nav-link.active{
+.tab-box .nav-link.active{
   background-color: #30AC42 !important;
   color: #212529 !important;
   font-weight: bold !important;
@@ -208,6 +209,10 @@ tr {
   border-left: 2px solid #30AC42;
   border-right: 2px solid #30AC42;
   border-bottom: 2px solid #30AC42;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .hike-page-container {

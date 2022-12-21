@@ -3,8 +3,9 @@ import { Icon } from 'leaflet';
 import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet';
 import { Alert ,Container, Row, Col, Button} from 'react-bootstrap';
 import { useState, useEffect } from 'react';
+
 import { useParams } from 'react-router-dom';
-import '..//styles/singlePageHike.css';
+import '../styles/SinglePageHike.css';
 import '..//styles/LinkHike.css';
 import '../styles/Map.css';
 import 'leaflet/dist/leaflet.css';

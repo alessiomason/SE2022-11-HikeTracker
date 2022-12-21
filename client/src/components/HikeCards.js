@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { Row, Col, Container, Button } from "react-bootstrap";
 import SingleHikeCard from './SingleHikeCard';
-import { default as Arrow } from "../icons/arrow-down.svg";
+import { default as ArrowDown } from "../icons/arrow-down.svg";
+import { default as ArrowUp } from "../icons/arrow-up.svg";
 import '../styles/Cards.css';
 
 // from https://stackoverflow.com/questions/639695/how-to-convert-latitude-or-longitude-to-meters
@@ -50,17 +51,12 @@ function HikesCards(props) {
                 })}
             </Row>
             <Row className="box_centered">
-                {!showingAll && <Button variant="primary" className="btn_show my-3" onClick={() => setShowingAll(true)}>
-                    Show more <img className="ms-2 " src={Arrow} alt="arrow_image" />
+                {!showingAll && <Button variant="primary" className="btn_show my-3 log_btn" onClick={() => setShowingAll(true)}>
+                    Show more <img className="ms-2 mt-1 " src={ArrowDown} alt="arrow_image" />
                 </Button>}
-                {/*<div id="container">
-                    <button class=" learn-more">
-                        <span class="circle" aria-hidden="true">
-                            <span class="icon arrow"></span>
-                        </span>
-                        <span class="button-text">Learn More</span>
-                    </button>
-            </div>*/}
+                {showingAll && <Button variant="primary" className="btn_show my-3 log_btn" onClick={() => setShowingAll(false)}>
+                    Show less <img className="ms-2 mt-1 " src={ArrowUp} alt="arrow_image" />
+                </Button>}
             </Row>
         </Container>
     );

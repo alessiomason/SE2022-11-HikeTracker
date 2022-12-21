@@ -10,6 +10,7 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import { default as image4 } from "../images/image4.jpg";
 import API from './../API.js';
+import { useNavigate } from "react-router-dom";
 
 function MyHutSection() {
   const [huts, setHuts] = useState([]);
@@ -17,6 +18,7 @@ function MyHutSection() {
   const [search, setSearch] = useState(true);
   const [tempName1, setTempName1] = useState('');
   const [tempName2, setTempName2] = useState('');
+
 
   const clearHuts = () => {
     setSearch(true);
@@ -43,7 +45,7 @@ function MyHutSection() {
     <>
       <Container fluid className="hutSection" id="hutSec">
         <Row>
-          <h2 className="background double hut-title"><span><img src={Hut} alt="hut_image" className='me-2 hike-img' />HUTS</span></h2>
+          <h2 className="background double hut-title"><span><img src={Hut} alt="hut_image" className='me-2 hut-img' />HUTS</span></h2>
         </Row>
         <Row className='mt-5'>
           <div className="search-box">
@@ -65,6 +67,9 @@ function MyHutSection() {
 }
 
 function HutCards(props) {
+
+  const navigate = useNavigate();
+
 
   function SampleNextArrow(props) {
     const { onClick } = props;
@@ -131,7 +136,9 @@ function HutCards(props) {
           if (hut.state) locationsArray.push(hut.state);
 
           if (props.search || (props.search === false && (hut.name.toLowerCase().match(props.tempName.toLowerCase()) || hut.description.toLowerCase().match(props.tempName.toLowerCase())))) {
-            return (<div className="hut-card" key={hut.id}>
+            return (
+            
+            <div className="hut-card" key={hut.id} onClick={() => {navigate("/hut0")}}>
               <div className="card-top">
                 <img src={`http://localhost:3001/images/hut-${hut.id}.jpg`}
                   onError={({ currentTarget }) => {
@@ -143,24 +150,24 @@ function HutCards(props) {
                 <div>
                   <h1 className="hut-card-title">{hut.name}</h1>
                 </div>
-                <Row >
-                  <Col xs={2}>
+                <Row className="mb-2">
+                  <Col xs={2} >
                     <FaLocationArrow className="card-symbol me-3" />
                   </Col>
                   <Col>
                     <h6 className="card-details">{locationsArray.join(", ")}</h6>
                   </Col>
                 </Row>
-                <Row >
-                  <Col xs={2}>
+                <Row className="mb-2">
+                  <Col xs={2} >
                     <FaMountain className="card-symbol me-3" />
                   </Col>
                   <Col>
                     <h6 className="card-details">{hut.altitude} m</h6>
                   </Col>
                 </Row>
-                <Row >
-                  <Col xs={2}>
+                <Row className="mb-2">
+                  <Col xs={2} >
                     <FaBed className="card-symbol me-3" />
                   </Col>
                   <Col>

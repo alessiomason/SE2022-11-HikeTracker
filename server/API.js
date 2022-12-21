@@ -133,10 +133,8 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
                 let rp_desc = refPointsArray[i].properties.desc;
                 await dao.addPoint(hikeID, pointsArray[1], pointsArray[0], pointsArray[2], 0, 0, 1, rp_desc);
             }
-            // let startPoint = await dao.getStartPointOfHike(hikeID);
-            // let endPoint = await dao.getEndPointOfHike(hikeID);
+          
             let ascent = endPointElev - startPointElev;
-            // const length = measure(startPoint.lat, startPoint.lon, endPoint.lat, endPoint.lon);
             await dao.addHike(label, length, null, ascent, null, desc, state, region, province, municipality, req.user.id);
             let hike = await dao.getHike(hikeID)
             res.status(201).json(hike).end();
@@ -404,7 +402,7 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
     // GET a specific parking lot
     app.get('/api/parkingLots/:id', async (req, res) => {
         try {
-            id = req.params.id;
+            let id = req.params.id;
             const parking = await dao.getParkingById(id);
             res.status(200).json(parking);
         }

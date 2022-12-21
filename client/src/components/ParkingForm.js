@@ -1,6 +1,5 @@
-import { Alert, Form } from 'react-bootstrap';
-import { Container, Row, Col, Button } from 'react-bootstrap';
-import { useState, useEffect } from 'react';
+import { Container, Row, Col, Button,Alert, Form  } from 'react-bootstrap';
+import { useState } from 'react';
 import { default as Img1 } from "../images/img1.jpg";
 import { useNavigate } from 'react-router-dom';
 import { Icon } from 'leaflet';
@@ -54,7 +53,6 @@ function ParkingForm(props) {
                 .then(async (pl) => { setNewParkingLotID((pl)); await API.uploadParkingLotImage(pl, image) })
                 .catch(err => console.log(err));
 
-            // props.addParkingLot(newParkingLot);
             props.setDirty(true);
             navigate('/parkingManager');
         }

@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { Card, Tooltip, OverlayTrigger, Button, Image, Row, Col } from "react-bootstrap";
+import { Card, Tooltip, OverlayTrigger, Row, Col } from "react-bootstrap";
 import { default as Img1 } from "../images/img1.jpg";
 import '../styles/Cards.css';
 import { default as Location } from "../icons/map.svg";
@@ -63,7 +63,7 @@ function SingleHikeCard(props) {
         <Row>
           <Col md={12}  className='mb-4 align'>
           <OverlayTrigger placement="bottom" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip-2">Location</Tooltip>}>
-            <img src={Location} alt="location_image"   className='me-3'/>
+            <img src={Location} alt="location_image"   className='me-3 card-icon-map'/>
           </OverlayTrigger>
           <Card.Text className="card-text p-card">{locationsArray.join(", ")}</Card.Text>
           </Col>
