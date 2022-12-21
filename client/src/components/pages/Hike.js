@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Container, Row, Col, OverlayTrigger, Tooltip, Button, Tabs, Tab, Modal } from 'react-bootstrap';
+import { Container, Row, Col, OverlayTrigger, Tooltip, Button, Tabs, Tab, Modal, Table } from 'react-bootstrap';
 import { useParams, useNavigate } from 'react-router-dom';
 import HikeMap from '../HikeMap';
 import API from '../../API';
@@ -13,6 +13,9 @@ import { default as User } from "../../icons/user-login.svg";
 import { default as Difficulty } from "../../icons/volume.svg";
 import { default as Img1 } from "../../images/image3.jpg";
 import { default as FakeMap } from "../../images/fakeMap.jpg";
+const dayjs = require('dayjs');
+const duration = require('dayjs/plugin/duration');
+dayjs.extend(duration);
 
 // from https://stackoverflow.com/questions/639695/how-to-convert-latitude-or-longitude-to-meters
 function coordinatesDistanceInMeter(lat1, lon1, lat2, lon2) {  // generally used geo measurement function
@@ -35,6 +38,7 @@ function HikePage(props) {
   const [dirty, setDirty] = useState(true);
   const [alreadyLinkedHut, setAlreadyLinkedHut] = useState([]);
   const radiusDistance = 5000; // 5km
+  const [trackedHikes, setTrackedHikes] = useState([]);
 
   let { hikeId } = useParams();
   hikeId = parseInt(hikeId);
@@ -43,18 +47,43 @@ function HikePage(props) {
     if (dirty) {
       API.getHike(hikeId)
         .then((hike) => {
-          setHike(hike); 
+          setHike(hike);
           let tempAlreadyLinkedHut = hike.points.filter((h) => (h.startPoint === 0 && h.endPoint === 0 && h.referencePoint === 0 && h.hutID));
-          for(let i=0;i<hike.points?.length;i=i+25){
+          for (let i = 0; i < hike.points?.length; i = i + 25) {
             // per ogni punto dell'hike verifico la distanza dall'hut linkato
             tempAlreadyLinkedHut.concat(tempAlreadyLinkedHut?.filter((h) => coordinatesDistanceInMeter(hike.points[i].latitude, hike.points[i].longitude, h.latitude, h.longitude) < radiusDistance));
           }
           setAlreadyLinkedHut(tempAlreadyLinkedHut);
         })
-        .catch(err => console.log(err))
+        .catch(err => console.log(err));
+
+      if (props.loggedIn) {
+        API.getTrackedHikesByHikeIDAndUserID(hikeId)
+          .then((trackedHikes) => setTrackedHikes(trackedHikes))
+          .catch(err => console.log(err));
+      }
       setDirty(false);
     }
   }, [dirty, hikeId]);
+
+  const startHike = async () => {
+    API.startHike(hikeId)
+      .then(() => setDirty(true))
+      .catch(err => console.log(err));
+  }
+
+  const terminateHike = async () => {
+    if (trackedHikes.filter(th => th.endTime === null || th.endTime === undefined).length !== 1) {
+      console.log('More than one ongoing hike found: impossible to terminate.');
+      return;
+    }
+
+    const trackedHikeID = trackedHikes.filter(th => th.endTime === null || th.endTime === undefined).pop().id;
+
+    API.terminateHike(trackedHikeID)
+      .then(() => setDirty(true))
+      .catch(err => console.log(err));
+  }
 
   const difficultiesNames = ['Tourist', 'Hiker', 'Pro Hiker'];
   let locationsArray = [];
@@ -149,14 +178,16 @@ function HikePage(props) {
                     <h3 className='mb-5 text'> Sign In to look the Map!</h3>
                     <Button variant="primary log_btn slide" type="submit" onClick={() => { props.setShowLogin(true); navigate("/"); }} > Sign In </Button>
                   </div>
-                </div> : hike.id && <HikeMap length={hike.length} points={hike.points} alreadyLinkedHut={alreadyLinkedHut}/>}
-                {/* hike.id ensures that the map is rendered only when the hike is loaded  */}
+                </div> : hike.id && <HikeMap length={hike.length} points={hike.points} alreadyLinkedHut={alreadyLinkedHut}
+                  showStartHike={trackedHikes.filter(th => th.endTime === null || th.endTime === undefined).length === 0} startHike={startHike}
+                  showTerminateHike={trackedHikes.filter(th => th.endTime === null || th.endTime === undefined).length === 1} terminateHike={terminateHike} />}
+              {/* hike.id ensures that the map is rendered only when the hike is loaded  */}
             </Row>
             <Row className='btn-row'>
-              <Button className="mx-1 mt-2 share_btn slide" type="submit" > Share Track </Button>
-              <Button className="mx-1 mt-2 terminate_btn slide" type="submit" > Terminate  </Button>
-              <Button className="mx-1 mt-2 start_btn slide" type="submit" > Start Track </Button>
+              {trackedHikes.filter(th => th.endTime === null || th.endTime === undefined).length === 0 && <Button className="mx-1 mt-2 start_btn slide" type="submit" onClick={startHike}>Start hike</Button>}
+              {trackedHikes.filter(th => th.endTime === null || th.endTime === undefined).length === 1 && <Button className="mx-1 mt-2 terminate_btn slide" type="submit" onClick={terminateHike}>Terminate hike</Button>}
             </Row>
+            {props.loggedIn && <TrackedHikes hike={hike} trackedHikes={trackedHikes} />}
             <Row className="tab-box">
               <Tabs defaultActiveKey="description" id="justify-tab-example" className="mb-3 " justify >
                 <Tab eventKey="description" title="Description" >
@@ -194,6 +225,70 @@ function MyImageModal(props) {
       </Modal.Body>
 
     </Modal>
+  );
+}
+
+function TrackedHikes(props) {
+  const ongoingHike = props.trackedHikes.filter(th => th.endTime === null || th.endTime === undefined).pop();
+  const [ongoingHikeElapsedTime, setOngoingHikeElapsedTime] = useState(ongoingHike ? dayjs.duration(dayjs() - dayjs(ongoingHike.startTime)) : undefined);
+  const completedHikes = props.trackedHikes.filter(th => th.endTime !== null && th.endTime !== undefined);
+
+  let setIntervalsToUpdateElapsedTime = [];
+
+  useEffect(() => {
+    if (ongoingHike) {
+      setOngoingHikeElapsedTime(dayjs.duration(dayjs() - dayjs(ongoingHike.startTime)));
+
+      const setIntervalToUpdateElapsedTime = setInterval(() => {		// update the elapsed time every second
+        setOngoingHikeElapsedTime(dayjs.duration(dayjs() - dayjs(ongoingHike.startTime)));
+      }, 1000);
+
+      setIntervalsToUpdateElapsedTime.push(setIntervalToUpdateElapsedTime);
+    }
+
+    return () => {		// stop setInterval on page leave
+      setIntervalsToUpdateElapsedTime.forEach(s => clearInterval(s));
+    };
+  }, [ongoingHike])
+
+  return (
+    <>
+      {ongoingHike && <Row className='tracked-hikes-row'>
+        <h3 className='sub-title'>Ongoing hike</h3>
+        <p>Start time: {dayjs(ongoingHike.startTime).format('MMM DD, YYYY h:mm a')}</p>
+        <p>Elapsed time: {ongoingHikeElapsedTime?.format('H [h] mm [m] ss [s]')}</p>
+      </Row>}
+      {completedHikes.length > 0 &&
+        <Row className='tracked-hikes-row'>
+          <h3 className='sub-title'>Completed hikes</h3>
+          <Table striped>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Start time</th>
+                <th>End time</th>
+                <th>Time</th>
+                <th>Pace</th>
+                <th>Ascent speed</th>
+              </tr>
+            </thead>
+            <tbody>
+              {completedHikes.map((ch, i) => {
+                return (
+                  <tr key={ch.id}>
+                    <td>{i + 1}</td>
+                    <td>{dayjs(ch.startTime).format('MMM DD, YYYY h:mm a')}</td>
+                    <td>{dayjs(ch.endTime).format('MMM DD, YYYY h:mm a')}</td>
+                    <td>{dayjs.duration(dayjs(ch.endTime) - dayjs(ch.startTime)).format('H [h] mm [m]')}</td>
+                    <td>{(dayjs.duration(dayjs(ch.endTime) - dayjs(ch.startTime)).asMinutes() / props.hike.length * 1000).toFixed(2)} min/km</td>
+                    <td>{(props.hike.ascent / dayjs.duration(dayjs(ch.endTime) - dayjs(ch.startTime)).asHours()).toFixed(2)} m/hour</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </Table>
+        </Row>}
+    </>
   );
 }
 
