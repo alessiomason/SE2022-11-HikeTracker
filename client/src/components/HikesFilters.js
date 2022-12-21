@@ -205,7 +205,7 @@ function MyModal(props) {
 
       <Modal.Body >
         <Container>
-          {(props.title == "Difficulty") ?
+          {(props.title === "Difficulty") ?
             <Form>
               {tempHikesDifficulties.map((tempHikesDifficulty) => (
                 <div key={`difficulty-${tempHikesDifficulty.level}`} className="mb-3">
@@ -240,7 +240,7 @@ function MyModal(props) {
                   <Form.Control type="number" placeholder="Max"
                     value={tempHikesMaxTime} onChange={event => setTempHikesMaxTime(event.target.value)} />
                 </Row> :
-                (props.title == 'Ascent (meters)') ?
+                (props.title === 'Ascent (meters)') ?
                   <Row className="mb-2 modal_label">
                     <Form.Label>Enter min ascent (in meters)</Form.Label>
                     <Form.Control type="number" placeholder="Min"
@@ -249,7 +249,7 @@ function MyModal(props) {
                     <Form.Control type="number" placeholder="Max"
                       value={tempHikesMaxAscent} onChange={event => setTempHikesMaxAscent(event.target.value)} />
                   </Row> :
-                  (props.title == 'Location') ?
+                  (props.title === 'Location') ?
                     <>
                       <Row className="align-items-center">
                         <Col md={3} ><Form.Label>State</Form.Label></Col>
@@ -288,7 +288,7 @@ function MyModal(props) {
                         </Col>
                       </Row>
                     </> :
-                    (props.title == 'Point from map') ?
+                    (props.title === 'Point from map') ?
                       <>
                         <HikesFiltersMap hikes={props.hikes} tempHikesLatitude={tempHikesLatitude} setTempHikesLatitude={setTempHikesLatitude} tempHikesLongitude={tempHikesLongitude} setTempHikesLongitude={setTempHikesLongitude} tempHikesRadius={tempHikesRadius} setTempHikesRadius={setTempHikesRadius} />
                         <h4>Select the maximum distance from the point</h4>

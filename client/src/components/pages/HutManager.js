@@ -102,7 +102,7 @@ function SingleUpdateHutCard(props) {
     }
   }
     
-    if(props.name == '' ||  name.toLowerCase().match(props.name.toLowerCase()) || description.toLowerCase().match(props.name.toLowerCase())){
+    if(props.name === '' ||  name.toLowerCase().match(props.name.toLowerCase()) || description.toLowerCase().match(props.name.toLowerCase())){
   return (
       
     

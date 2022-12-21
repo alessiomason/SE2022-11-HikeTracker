@@ -107,7 +107,7 @@ function MyModalSignup(props) {
                   </Form.Select>
                 </Col>
               </Row>
-              {(accessRight == "hut-worker") ? <Row className='mb-3 box_center'>
+              {(accessRight === "hut-worker") ? <Row className='mb-3 box_center'>
                 <Col md="auto" sm="auto" xs="auto" className='box_center'>
                   <img src={Hut} alt="hut" className='log-hut-icon'/>
                 </Col>
