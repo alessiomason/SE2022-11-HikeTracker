@@ -211,7 +211,7 @@ function App2() {
                  <Route path="linkHike/:hikeId/" element={loggedIn && user.access_right === 'local-guide' ? <LinkHike /> : <Navigate to='/' />} ></Route>
                  <Route path="refPoints/:hikeId/" element={loggedIn && user.access_right === 'local-guide' ? <ReferencePoints /> : <Navigate to='/' />} ></Route>
                  <Route path="hut0" element={<HutPage/>}/>
-                 <Route path="profile1" element={<ProfilePage/>}/>
+                 <Route path="profile1" element={<ProfilePage doLogout={doLogout} />} />
 
             </Route>
         </Routes>

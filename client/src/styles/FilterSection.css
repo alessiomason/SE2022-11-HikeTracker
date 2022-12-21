@@ -51,6 +51,7 @@ input[type=checkbox]:hover,
 
 .hike-img {
     vertical-align: baseline;
+    filter: invert(54%) sepia(42%) saturate(6891%) hue-rotate(141deg) brightness(93%) contrast(83%);
 }
 
 .filter-title {

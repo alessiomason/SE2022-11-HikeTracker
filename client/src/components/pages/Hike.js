@@ -70,7 +70,7 @@ function HikePage(props) {
       <MyImageModal hikeId={hike.id} hikeLabel={hike.label} show={modalShow} onHide={() => setModalShow(false)} />
       <Container fluid className='internal-box' >
         <Row className="center-box mb-4">
-          <h2 className="background double single-hike-title "><span><img src={Hiking} alt="hiking_image" className='me-2 hike-img single-hike-icon' />{hike.label}</span></h2>
+          <h2 className="background double single-hike-title "><span><img src={Hiking} alt="hiking_image" className='me-2 single-hike-icon' />{hike.label}</span></h2>
         </Row>
         <Row className="mx-4">
           <Col md={3} >

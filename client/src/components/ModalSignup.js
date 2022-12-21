@@ -92,7 +92,7 @@ function MyModalSignup(props) {
                   </Form.Group>
                 </Col>
               </Row>
-              <Row className='mb-3 box_center'>
+              <Row className='mb-4 box_center'>
                 <Col md="auto" sm="auto" xs="auto" className='box_center'>
                   <img src={UserKind} alt="user" />
                 </Col>
@@ -108,7 +108,7 @@ function MyModalSignup(props) {
                 </Col>
               </Row>
               {(accessRight == "hut-worker") ? <Row className='mb-3 box_center'>
-                <Col md="auto" sm="auto" xs="auto" className='box_center'>
+                <Col md="auto" sm="auto" xs="auto" className='box_center fit'>
                   <img src={Hut} alt="hut" className='log-hut-icon'/>
                 </Col>
                 <Col md="auto" sm="auto" xs="auto"> {/* it appear only when hut worker is selected */}

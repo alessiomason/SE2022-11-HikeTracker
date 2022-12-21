@@ -7,7 +7,8 @@ import { default as Img1 } from '../../images/img1.jpg';
 import { default as Hut } from "../../icons/hut.svg";
 import { default as Email } from "../../icons/email.svg";
 
-import ProfileManager1 from '../ProfileManager1';
+import ProfileManager from '../ProfileManager';
+import ProfileLocalGuide from '../ProfileLocalGuide';
 
 function Profile(props) {
 
@@ -38,7 +39,8 @@ function Profile(props) {
         </Row>
         <Row className="end-top-profile" />
         <Row className="component">
-          <ProfileManager1 />
+           <ProfileLocalGuide /> 
+          {/*<ProfileManager />*/} 
         </Row>
       </Container>
     </Container>

@@ -265,3 +265,8 @@
   background-color: transparent;
   border-color: transparent;
 }
+
+.hut-img{
+  filter: invert(48%) sepia(24%) saturate(7470%) hue-rotate(0deg) brightness(102%) contrast(104%);
+  vertical-align: baseline;
+}

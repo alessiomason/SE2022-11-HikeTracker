@@ -56,9 +56,7 @@
     z-index: -1;
   }
 
-  .single-hut-icon {
-    filter: invert(48%) sepia(82%) saturate(3200%) hue-rotate(359deg) brightness(101%) contrast(107%);
-  }
+ 
 
   .side-hut-img {
     border: 2px solid #FF6700;

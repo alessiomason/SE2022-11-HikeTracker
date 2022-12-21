@@ -45,7 +45,7 @@ function MyHutSection() {
     <>
       <Container fluid className="hutSection" id="hutSec">
         <Row>
-          <h2 className="background double hut-title"><span><img src={Hut} alt="hut_image" className='me-2 hike-img' />HUTS</span></h2>
+          <h2 className="background double hut-title"><span><img src={Hut} alt="hut_image" className='me-2 hut-img' />HUTS</span></h2>
         </Row>
         <Row className='mt-5'>
           <div className="search-box">

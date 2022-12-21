@@ -83,7 +83,8 @@
 }
 
 .single-hike-icon {
-  filter: invert(55%) sepia(51%) saturate(593%) hue-rotate(89deg) brightness(98%) contrast(85%);
+  vertical-align: baseline;
+  filter: invert(54%) sepia(70%) saturate(545%) hue-rotate(77deg) brightness(89%) contrast(80%)
 }
 
 .bigger-icon {

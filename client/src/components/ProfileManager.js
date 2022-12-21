@@ -11,7 +11,7 @@ import { default as Radius } from "../icons/radius.svg";
 import { default as Delete } from "../icons/delete.svg";
 
 
-function ProfileManager1(props) {
+function ProfileManager(props) {
 
   const navigate = useNavigate();
 
@@ -121,7 +121,7 @@ function WeatherAlert(props){
                 <h6 className="card-text p-card">{"400 km"}</h6>
         </Col>
         <Col md={4} className="align margin-bottom">
-<Form.Control placeholder="Description" as="textarea" rows={2} />
+          <Form.Control placeholder="Description" as="textarea" rows={2} />
         </Col>
         <Col md={{offset:1, span:1}} className="box-center">
         <OverlayTrigger placement="bottom" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip-2">Delete</Tooltip>}>
@@ -135,4 +135,4 @@ function WeatherAlert(props){
 
 
 
-export default ProfileManager1;
+export default ProfileManager;
