@@ -1,5 +1,5 @@
-import { Alert, Form } from 'react-bootstrap';
-import { Icon, point } from 'leaflet';
+
+import { Icon } from 'leaflet';
 import { MapContainer, TileLayer, Marker, Popup, Polyline, useMapEvents } from 'react-leaflet';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import { useState, useEffect } from 'react';
@@ -27,7 +27,6 @@ function ReferencePoints() {
   const [newRefPointID, setNewRefPointId] = useState (0);  
   const [validPoint, setValidPoint] = useState(false);
   const [marker, setMarker] = useState([0, 0]);
-  const [disable,setDisable] = useState(true);
 
 
 
@@ -207,7 +206,7 @@ function LocationMarker(props) {
       popupAnchor: [1, -34],
       shadowSize: [41, 41]
   });
-  // const [marker, setMarker] = useState([0, 0]);
+  
 
   useMapEvents({
       click(e) {

@@ -1,8 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState} from 'react';
 import { Container, Row, Col, OverlayTrigger, Tooltip, Button, Tabs, Tab, Modal } from 'react-bootstrap';
-import { useParams, useNavigate } from 'react-router-dom';
-import HikeMap from '../HikeMap';
-import API from '../../API';
+import {  useNavigate } from 'react-router-dom';
+
 import '../../styles/SinglePageHut.css';
 import { default as Hut } from '../../icons/hut.svg';
 import { default as Location } from "../../icons/map.svg";
@@ -11,7 +10,6 @@ import { default as Bed } from "../../icons/bed.svg";
 import { default as Phone } from "../../icons/phone.svg";
 import { default as Email } from "../../icons/email.svg";
 import { default as Website } from "../../icons/website.svg";
-import { default as Difficulty } from "../../icons/volume.svg";
 import { default as Img1 } from "../../images/image3.jpg";
 import { default as FakeMap } from "../../images/fakeMap.jpg";
 

@@ -3,7 +3,7 @@ import { Button, Navbar, Nav, Container } from "react-bootstrap";
 import { default as Logo } from "../icons/logo.svg";
 import { default as User } from '../icons/user.svg';
 import '../styles/Navbar.css';
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 
 
 function MyNavbar(props) {

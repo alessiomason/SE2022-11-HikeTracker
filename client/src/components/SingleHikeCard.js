@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { Card, Tooltip, OverlayTrigger, Button, Image, Row, Col } from "react-bootstrap";
+import { Card, Tooltip, OverlayTrigger, Row, Col } from "react-bootstrap";
 import { default as Img1 } from "../images/img1.jpg";
 import '../styles/Cards.css';
 import { default as Location } from "../icons/map.svg";

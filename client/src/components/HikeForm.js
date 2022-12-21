@@ -1,5 +1,4 @@
-import { Alert, Form } from 'react-bootstrap';
-import { Container, Row, Col, Button } from 'react-bootstrap';
+import { Container, Row, Col, Button,Alert, Form  } from 'react-bootstrap';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/HikeForm.css';
@@ -9,14 +8,6 @@ function HikeForm(props) {
 
     const navigate = useNavigate();
 
-    /*
-  const [label, setLabel] = useState('');
-  const [length, setLength] = useState('');
-  const [expTime, setExpTime] = useState('');
-  const [ascent, setAscent] = useState('');
-  const [difficulty, setDifficulty] = useState('');
-  const [description, setDescription] = useState('');
-  */
     const [file, setFile] = useState();
     const [errorMsg, setErrorMsg] = useState('');
 
@@ -24,7 +15,7 @@ function HikeForm(props) {
         event.preventDefault();
         props.setInitialLoading(true);
 
-        var gpx = new gpxParser(); //Create gpxParser Object
+        let gpx = new gpxParser(); //Create gpxParser Object
         const reader = new FileReader();
         reader.readAsText(file);
 

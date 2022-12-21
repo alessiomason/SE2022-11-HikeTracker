@@ -1,17 +1,14 @@
 import { useNavigate } from "react-router-dom";
-import { Button, Navbar, Nav, Container, Row, Col } from "react-bootstrap";
+import { Button, Container, Row, Col } from "react-bootstrap";
 
 import '../../styles/Profile.css';
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { default as Img1 } from '../../images/img1.jpg';
-import { default as Hut } from "../../icons/hut.svg";
-import { default as Email } from "../../icons/email.svg";
 
 import ProfileManager1 from '../ProfileManager1';
 
 function Profile(props) {
 
-  const navigate = useNavigate();
 
   return (
     <Container fluid className="external-box-profile">
