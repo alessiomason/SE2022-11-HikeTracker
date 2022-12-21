@@ -35,7 +35,7 @@ const storage = multer.diskStorage(
     }
 );
 
-const upload = multer({ storage: storage, limits: {fileSize : maxSize} });
+const upload = multer({ storage: storage, limits: { fileSize: maxSize } });
 
 // from https://stackoverflow.com/questions/639695/how-to-convert-latitude-or-longitude-to-meters
 function coordinatesDistanceInMeter(lat1, lon1, lat2, lon2) {  // generally used geo measurement function
@@ -305,11 +305,11 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
         try {
             // verifico la presenza dell'hut nella tabella Points
             const hutPoints = await dao.getHutPoints(hutID);
-            if(hutPoints.length !== 0){
-                    // se sono start point/end point --> ERRORE
-                if(hutPoints.filter((p) => p.startPoint === 1 || p.endPoint === 1).length !== 0){
+            if (hutPoints.length !== 0) {
+                // se sono start point/end point --> ERRORE
+                if (hutPoints.filter((p) => p.startPoint === 1 || p.endPoint === 1).length !== 0) {
                     res.status(500).json({ error: 'The hut could not be deleted, it is a start/end point!' })
-                }else{
+                } else {
                     // ci sono degli hut linkati, possono essere cancellati sempre problemi -> CANCELLO
                     await dao.deletePointsByHutID(hutID);
                     await dao.deleteHut(hutID);
@@ -320,7 +320,7 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
                     }
                     res.status(200).end();
                 }
-            }else {
+            } else {
                 // non ci sono né hut linkati, né hut settati come start/end point -> CANCELLO
                 await dao.deleteHut(hutID);
                 // cancello l'eventuale immagine associata
@@ -481,7 +481,7 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
         try {
             // verifico la presenza del parking lot nella tabella Points
             const parkingPoints = await dao.getParkingPoints(ParkingID);
-            if (parkingPoints.length !== 0){
+            if (parkingPoints.length !== 0) {
                 // se ci sono --> ERRORE
                 res.status(500).json({ error: 'The parking lot could not be deleted, it is a start/end point' });
             } else {
@@ -754,10 +754,10 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
         const pointID = req.params.id;
 
         try {
-            
-                await dao.setNewReferencePoint(pointID);
-                res.status(201).json().end();
-            
+
+            await dao.setNewReferencePoint(pointID);
+            res.status(201).json().end();
+
         } catch (err) {
             res.status(500).json({ error: `Database error during update of the hut` });
         }
@@ -773,10 +773,10 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
         const pointID = req.params.id;
 
         try {
-            
-                await dao.clearReferencePoint(pointID);
-                res.status(201).json().end();
-            
+
+            await dao.clearReferencePoint(pointID);
+            res.status(201).json().end();
+
         } catch (err) {
             res.status(500).json({ error: `Database error during update of the hut` });
         }
@@ -837,11 +837,55 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
             return res.status(422).json({ errors: errors.array() });
 
         const trackedHikeID = req.params.id;
+        const userID = req.user.id;
+        console.log(req.user)
 
         const endTime = dayjs().format();
 
         try {
             await dao.terminateHike(trackedHikeID, endTime);
+
+            const hike = await dao.getHikeByTrackedHikeId(trackedHikeID);
+            const hikePoints = await dao.getHikePoints(hike.id);
+            const hikePointsAltitudes = hikePoints.map(p => p.altitude);
+            let hikeHighestAltitude = null;
+            if (hikePointsAltitudes.length > 0) // to avoid using Math.max() on empty array, which returns Infinity
+                hikeHighestAltitude = Math.max(...hikePointsAltitudes);
+
+            const userStats = await dao.getUserStats(userID);
+
+            const hikeTime = dayjs.duration(dayjs(hike.endTime) - dayjs(hike.startTime)).asHours();
+            const hikePace = dayjs.duration(dayjs(hike.endTime) - dayjs(hike.startTime)).asMinutes() / hike.length * 1000;
+            userStats.hikesFinished += 1;
+            userStats.walkedLength += hike.length;
+            userStats.totalHikeTime += hikeTime;
+            userStats.totalAscent += hike.ascent;
+            if (userStats.highestAltitude === null || hikeHighestAltitude > userStats.highestAltitude)
+                userStats.highestAltitude = hikeHighestAltitude;
+            if (userStats.highestAltitudeRange === null || hike.ascent > userStats.highestAltitudeRange)
+                userStats.highestAltitudeRange = hike.ascent;
+            if (userStats.longestHikeByKmID === null || hike.length > userStats.longestHikeByKmLength) {
+                userStats.longestHikeByKmID = hike.id;
+                userStats.longestHikeByKmLength = hike.length;
+            }
+            if (userStats.longestHikeByHoursID === null || hikeTime > userStats.longestHikeByHoursTime) {
+                userStats.longestHikeByHoursID = hike.id;
+                userStats.longestHikeByHoursTime = hikeTime;
+            }
+            if (userStats.shortestHikeByKmID === null || hike.length < userStats.shortestHikeByKmLength) {
+                userStats.shortestHikeByKmID = hike.id;
+                userStats.shortestHikeByKmLength = hike.length;
+            }
+            if (userStats.shortestHikeByHoursID === null || hikeTime < userStats.shortestHikeByHoursTime) {
+                userStats.shortestHikeByHoursID = hike.id;
+                userStats.shortestHikeByHoursTime = hikeTime;
+            }
+            if (userStats.fastestPacedHikeID === null || hikePace < userStats.fastestPacedHikePace) {
+                userStats.fastestPacedHikeID = hike.id;
+                userStats.fastestPacedHikePace = hikePace;
+            }
+
+            await dao.updateUserStats(userID, userStats);
             res.status(200).json().end();
         } catch (err) {
             res.status(500).json({ error: `Database error while terminating the hike.` });

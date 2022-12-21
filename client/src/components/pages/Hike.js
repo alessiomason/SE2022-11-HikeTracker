@@ -280,7 +280,7 @@ function TrackedHikes(props) {
                     <td>{dayjs(ch.startTime).format('MMM DD, YYYY h:mm a')}</td>
                     <td>{dayjs(ch.endTime).format('MMM DD, YYYY h:mm a')}</td>
                     <td>{dayjs.duration(dayjs(ch.endTime) - dayjs(ch.startTime)).format('H [h] mm [m]')}</td>
-                    <td>{(dayjs.duration(dayjs(ch.endTime) - dayjs(ch.startTime)).asMinutes() / props.hike.length).toFixed(2)} min/km</td>
+                    <td>{(dayjs.duration(dayjs(ch.endTime) - dayjs(ch.startTime)).asMinutes() / props.hike.length * 1000).toFixed(2)} min/km</td>
                     <td>{(props.hike.ascent / dayjs.duration(dayjs(ch.endTime) - dayjs(ch.startTime)).asHours()).toFixed(2)} m/hour</td>
                   </tr>
                 );
