@@ -46,9 +46,9 @@ function terminateHikeTest() {
 		const endTime = dayjs().format();
 
 		await dao.startHike(1, 3, startTime);
-        let res = await dao.terminateHike(1, endTime);
+        await dao.terminateHike(1, endTime);
 		
-		res = await dao.getTrackedHikesByHikeIDAndUserID(1, 3);
+		let res = await dao.getTrackedHikesByHikeIDAndUserID(1, 3);
         expect(res.length).toStrictEqual(1);
 		expect(res[0].hikeID).toStrictEqual(1);
 		expect(res[0].startTime).toStrictEqual(startTime);
