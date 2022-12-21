@@ -783,6 +783,7 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
 
     });
 
+    // start hike
     app.post('/api/startHike/:id', async (req, res) => {
         const errors = validationResult(req);
         if (!errors.isEmpty())
@@ -802,6 +803,7 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
 
     });
 
+    // get tracked hikes by hikeID and userID
     app.get('/api/trackedHikes/:id', async (req, res) => {
         const hikeID = req.params.id;
         const userID = req.user.id;
@@ -815,6 +817,7 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
         }
     });
 
+    // get tracked hikes by userID
     app.get('/api/trackedHikes', async (req, res) => {
         const userID = req.user.id;
 
@@ -825,6 +828,25 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
         catch (err) {
             res.status(500).end();
         }
+    });
+
+    // terminate hike
+    app.put('/api/terminateHike/:id', async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty())
+            return res.status(422).json({ errors: errors.array() });
+
+        const trackedHikeID = req.params.id;
+
+        const endTime = dayjs().format();
+
+        try {
+            await dao.terminateHike(trackedHikeID, endTime);
+            res.status(200).json().end();
+        } catch (err) {
+            res.status(500).json({ error: `Database error while starting the hike.` });
+        }
+
     });
 
 

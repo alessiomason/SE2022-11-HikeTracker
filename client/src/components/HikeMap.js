@@ -84,10 +84,10 @@ function HikeMap(props) {
             </Marker>}
             {endPoint && <Marker position={endPoint} icon={iconEndPoint}>
                 {endPointLabel && <Popup>{endPointLabel}</Popup>}
-                {endPointLabel || props.showEndHike &&
+                {endPointLabel || props.showTerminateHike &&
                 <Popup>
                     {endPointLabel}
-                    {props.showEndHike && <Button variant='success' onClick={props.terminateHike}>Terminate hike</Button>}
+                    {props.showTerminateHike && <Button variant='success' onClick={props.terminateHike}>Terminate hike</Button>}
                 </Popup>}
             </Marker>}
             {props.points?.filter(p => p.referencePoint).map(p => {

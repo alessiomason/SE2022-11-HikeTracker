@@ -72,6 +72,19 @@ function HikePage(props) {
       .catch(err => console.log(err));
   }
 
+  const terminateHike = async () => {
+    if (trackedHikes.filter(th => th.endTime === null || th.endTime === undefined).length !== 1) {
+      console.log('More than one ongoing hike found: impossible to terminate.');
+      return;
+    }
+
+    const trackedHikeID = trackedHikes.filter(th => th.endTime === null || th.endTime === undefined).pop().id;
+
+    API.terminateHike(trackedHikeID)
+      .then(() => setDirty(true))
+      .catch(err => console.log(err));
+  }
+
   const difficultiesNames = ['Tourist', 'Hiker', 'Pro Hiker'];
   let locationsArray = [];
   if (hike.municipality) locationsArray.push(hike.municipality);
@@ -165,12 +178,14 @@ function HikePage(props) {
                     <h3 className='mb-5 text'> Sign In to look the Map!</h3>
                     <Button variant="primary log_btn slide" type="submit" onClick={() => { props.setShowLogin(true); navigate("/"); }} > Sign In </Button>
                   </div>
-                </div> : hike.id && <HikeMap length={hike.length} points={hike.points} alreadyLinkedHut={alreadyLinkedHut} showStartHike={trackedHikes.filter(th => th.endTime === null || th.endTime === undefined).length === 0} startHike={startHike} />}
+                </div> : hike.id && <HikeMap length={hike.length} points={hike.points} alreadyLinkedHut={alreadyLinkedHut}
+                  showStartHike={trackedHikes.filter(th => th.endTime === null || th.endTime === undefined).length === 0} startHike={startHike}
+                  showTerminateHike={trackedHikes.filter(th => th.endTime === null || th.endTime === undefined).length === 1} terminateHike={terminateHike} />}
               {/* hike.id ensures that the map is rendered only when the hike is loaded  */}
             </Row>
             <Row className='btn-row'>
               {trackedHikes.filter(th => th.endTime === null || th.endTime === undefined).length === 0 && <Button className="mx-1 mt-2 start_btn slide" type="submit" onClick={startHike}>Start hike</Button>}
-              {trackedHikes.filter(th => th.endTime === null || th.endTime === undefined).length === 1 && <Button className="mx-1 mt-2 terminate_btn slide" type="submit">Terminate hike</Button>}
+              {trackedHikes.filter(th => th.endTime === null || th.endTime === undefined).length === 1 && <Button className="mx-1 mt-2 terminate_btn slide" type="submit" onClick={terminateHike}>Terminate hike</Button>}
             </Row>
             {props.loggedIn && <TrackedHikes trackedHikes={trackedHikes} />}
             <Row className="tab-box">
