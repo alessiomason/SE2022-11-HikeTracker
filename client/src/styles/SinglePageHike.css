@@ -82,6 +82,29 @@
   cursor: pointer;
 }
 
+.sub-title {
+  text-transform: uppercase;
+  font-weight: bold;
+  font-style: italic;
+  color: #30AC42;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #30AC42;
+}
+
+th {
+  color: #30AC42;
+}
+
+tr {
+  border-color: rgba(48, 172, 66, 0.1);
+}
+
+.table-striped>tbody>tr:nth-child(odd)>td, 
+.table-striped>tbody>tr:nth-child(odd)>th {
+   background-color: rgba(48, 172, 66, 0.1);
+   box-shadow: none;
+ }
+
 .single-hike-icon {
   vertical-align: baseline;
   filter: invert(54%) sepia(70%) saturate(545%) hue-rotate(77deg) brightness(89%) contrast(80%)
@@ -106,6 +129,9 @@
   margin-bottom: 30px;
 }
 
+.tracked-hikes-row {
+  margin-bottom: 30px;
+}
 
 .share_btn {
   border-radius: 0px !important;

@@ -424,10 +424,21 @@ exports.getHike = (hikeID) => {
 
 exports.getHikePoints = (hikeID) => {
     return new Promise((resolve, reject) => {
-        const sql = 'SELECT * FROM POINTS WHERE HikeID = ?';
+        const sql = 'SELECT * FROM Points WHERE HikeID = ?';
         db.all(sql, [hikeID], (err, rows) => {
             if (err) reject(err);
-            const points = rows.map((p) => ({ pointID: p.PointID, label: p.Label, latitude: p.Lat, longitude: p.Lon, startPoint: p.SP, endPoint: p.EP, referencePoint: p.RP, hutID: p.HutID, parkingID: p.ParkingID }));
+            const points = rows.map((r) => ({
+                pointID: r.PointID,
+                label: r.Label,
+                latitude: r.Lat,
+                longitude: r.Lon,
+                altitude: r.Altitude,
+                startPoint: r.SP,
+                endPoint: r.EP,
+                referencePoint: r.RP,
+                hutID: r.HutID,
+                parkingID: r.ParkingID
+            }));
             resolve(points);
         });
     });
@@ -510,7 +521,7 @@ exports.getReferencePointID = (pointID) => {
         const sql = 'SELECT * FROM POINTS WHERE PointID = ?';
         db.get(sql, [pointID], (err, row) => {
             if (err) reject(err);
-            const point = row.map((p) => ({ pointID: p.PointID, latitude: p.Lat, longitude: p.Lon, referencePoint: p.RP, hikeID:p.HikeID }));
+            const point = row.map((p) => ({ pointID: p.PointID, latitude: p.Lat, longitude: p.Lon, referencePoint: p.RP, hikeID: p.HikeID }));
             resolve(point);
         });
     });
@@ -554,6 +565,166 @@ exports.getParkingPoints = (parkingID) => {
             if (err) reject(err);
             const points = rows.map((p) => ({ pointID: p.PointID, label: p.Label, latitude: p.Lat, longitude: p.Lon, startPoint: p.SP, endPoint: p.EP, referencePoint: p.RP, hutID: p.HutID, parkingID: p.ParkingID }));
             resolve(points);
+        });
+    });
+}
+
+exports.startHike = (hikeID, userID, startTime) => {
+    return new Promise((resolve, reject) => {
+        const sql = 'INSERT INTO TrackedHikes(HikeID, UserID, StartTime) VALUES(?, ?, ?)'
+        db.run(sql, [hikeID, userID, startTime], function (err) {
+            if (err) reject(err);
+            resolve();
+        });
+    });
+}
+
+exports.getTrackedHikesByHikeIDAndUserID = (hikeID, userID) => {
+    return new Promise((resolve, reject) => {
+        const sql = 'SELECT * FROM TrackedHikes WHERE HikeID = ? AND UserID = ?';
+        db.all(sql, [hikeID, userID], (err, rows) => {
+            if (err) reject(err);
+            const points = rows.map((r) => ({ id: r.TrackedHikeID, hikeID: r.HikeID, startTime: r.StartTime, endTime: r.EndTime }));
+            resolve(points);
+        });
+    });
+}
+
+exports.getTrackedHikesByUserID = (userID) => {
+    return new Promise((resolve, reject) => {
+        const sql = 'SELECT * FROM TrackedHikes WHERE UserID = ?';
+        db.all(sql, [userID], (err, rows) => {
+            if (err) reject(err);
+            const points = rows.map((r) => ({ id: r.TrackedHikeID, hikeID: r.HikeID, startTime: r.StartTime, endTime: r.EndTime }));
+            resolve(points);
+        });
+    });
+}
+
+exports.terminateHike = (trackedHikeID, endTime) => {
+    return new Promise((resolve, reject) => {
+        const sql = 'UPDATE TrackedHikes SET EndTime=? WHERE TrackedHikeID=?'
+        db.run(sql, [endTime, trackedHikeID], function (err) {
+            if (err) reject(err);
+            resolve();
+        });
+    });
+}
+
+exports.getHikeByTrackedHikeId = (trackedHikeID) => {
+    return new Promise((resolve, reject) => {
+        const sql = `SELECT *
+                     FROM Hikes H, TrackedHikes TH
+                     WHERE H.HikeID = TH.HikeID
+                     AND TH.TrackedHikeID = ?`;
+        db.get(sql, [trackedHikeID], (err, row) => {
+            if (err) reject(err);
+            else {
+                const hike = {
+                    id: row.HikeID,
+                    label: row.Label,
+                    length: row.Length,
+                    expTime: row.ExpTime,
+                    ascent: row.Ascent,
+                    difficulty: row.Difficulty,
+                    description: row.Description,
+                    state: row.State,
+                    region: row.Region,
+                    province: row.Province,
+                    municipality: row.Municipality,
+                    startTime: row.StartTime,
+                    endTime: row.EndTime
+                };
+
+                resolve(hike);
+            }
+        });
+    });
+};
+
+exports.getUserStats = (userID) => {
+    return new Promise((resolve, reject) => {
+        const sql = 'SELECT * FROM Users WHERE UserId = ?';
+        db.get(sql, [userID], (err, row) => {
+            if (err) reject(err);
+            else {
+                const userStats = {
+                    userID: row.UserId,
+                    hikesFinished: row.HikesFinished,
+                    walkedLength: row.WalkedLength,
+                    totalHikeTime: row.TotalHikeTime,
+                    totalAscent: row.TotalAscent,
+                    highestAltitude: row.HighestAltitude,
+                    highestAltitudeRange: row.HighestAltitudeRange,
+                    longestHikeByKmID: row.LongestHikeByKmID,
+                    longestHikeByKmLength: row.LongestHikeByKmLength,
+                    longestHikeByHoursID: row.LongestHikeByHoursID,
+                    longestHikeByHoursTime: row.LongestHikeByHoursTime,
+                    shortestHikeByKmID: row.ShortestHikeByKmID,
+                    shortestHikeByKmLength: row.ShortestHikeByKmLength,
+                    shortestHikeByHoursID: row.ShortestHikeByHoursID,
+                    shortestHikeByHoursTime: row.ShortestHikeByHoursTime,
+                    fastestPacedHikeID: row.FastestPacedHikeID,
+                    fastestPacedHikePace: row.FastestPacedHikePace
+                };
+
+                resolve(userStats);
+            }
+        });
+    });
+};
+
+exports.updateUserStats = (userID, userStats) => {
+    return new Promise((resolve, reject) => {
+        const sql = `UPDATE Users
+                     SET HikesFinished = ?,
+                         WalkedLength = ?,
+                         TotalHikeTime = ?,
+                         TotalAscent = ?,
+                         HighestAltitude = ?,
+                         HighestAltitudeRange = ?,
+                         LongestHikeByKmID = ?,
+                         LongestHikeByKmLength = ?,
+                         LongestHikeByHoursID = ?,
+                         LongestHikeByHoursTime = ?,
+                         ShortestHikeByKmID = ?,
+                         ShortestHikeByKmLength = ?,
+                         ShortestHikeByHoursID = ?,
+                         ShortestHikeByHoursTime = ?,
+                         FastestPacedHikeID = ?,
+                         FastestPacedHikePace = ?
+                     WHERE UserId = ?`
+        db.run(sql, [
+            userStats.hikesFinished,
+            userStats.walkedLength,
+            userStats.totalHikeTime,
+            userStats.totalAscent,
+            userStats.highestAltitude,
+            userStats.highestAltitudeRange,
+            userStats.longestHikeByKmID,
+            userStats.longestHikeByKmLength,
+            userStats.longestHikeByHoursID,
+            userStats.longestHikeByHoursTime,
+            userStats.shortestHikeByKmID,
+            userStats.shortestHikeByKmLength,
+            userStats.shortestHikeByHoursID,
+            userStats.shortestHikeByHoursTime,
+            userStats.fastestPacedHikeID,
+            userStats.fastestPacedHikePace,
+            userID
+        ], function (err) {
+            if (err) reject(err);
+            resolve();
+        });
+    });
+}
+
+exports.deleteAllTrackedHikes = () => {
+    return new Promise((resolve, reject) => {
+        const sql = 'DELETE FROM TrackedHikes';
+        db.all(sql, (err) => {
+            if (err) reject(err);
+            resolve();
         });
     });
 }
