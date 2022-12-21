@@ -611,7 +611,6 @@ exports.terminateHike = (trackedHikeID, endTime) => {
     });
 }
 
-// get an hike by the tracked hike id
 exports.getHikeByTrackedHikeId = (trackedHikeID) => {
     return new Promise((resolve, reject) => {
         const sql = `SELECT *
@@ -643,10 +642,9 @@ exports.getHikeByTrackedHikeId = (trackedHikeID) => {
     });
 };
 
-// get the stats of the user
 exports.getUserStats = (userID) => {
     return new Promise((resolve, reject) => {
-        const sql = 'SELECT * FROM Users WHERE UserID = ?';
+        const sql = 'SELECT * FROM Users WHERE UserId = ?';
         db.get(sql, [userID], (err, row) => {
             if (err) reject(err);
             else {
@@ -676,10 +674,8 @@ exports.getUserStats = (userID) => {
     });
 };
 
-// update the stats of the user
 exports.updateUserStats = (userID, userStats) => {
     return new Promise((resolve, reject) => {
-        //console.log(userStats)
         const sql = `UPDATE Users
                      SET HikesFinished = ?,
                          WalkedLength = ?,
@@ -723,7 +719,6 @@ exports.updateUserStats = (userID, userStats) => {
     });
 }
 
-// delete all the tracked hikes
 exports.deleteAllTrackedHikes = () => {
     return new Promise((resolve, reject) => {
         const sql = 'DELETE FROM TrackedHikes';
