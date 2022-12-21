@@ -187,7 +187,7 @@ function HikePage(props) {
               {trackedHikes.filter(th => th.endTime === null || th.endTime === undefined).length === 0 && <Button className="mx-1 mt-2 start_btn slide" type="submit" onClick={startHike}>Start hike</Button>}
               {trackedHikes.filter(th => th.endTime === null || th.endTime === undefined).length === 1 && <Button className="mx-1 mt-2 terminate_btn slide" type="submit" onClick={terminateHike}>Terminate hike</Button>}
             </Row>
-            {props.loggedIn && <TrackedHikes trackedHikes={trackedHikes} />}
+            {props.loggedIn && <TrackedHikes hike={hike} trackedHikes={trackedHikes} />}
             <Row className="tab-box">
               <Tabs defaultActiveKey="description" id="justify-tab-example" className="mb-3 " justify >
                 <Tab eventKey="description" title="Description" >
@@ -268,6 +268,8 @@ function TrackedHikes(props) {
                 <th>Start time</th>
                 <th>End time</th>
                 <th>Time</th>
+                <th>Pace</th>
+                <th>Ascent speed</th>
               </tr>
             </thead>
             <tbody>
@@ -278,6 +280,8 @@ function TrackedHikes(props) {
                     <td>{dayjs(ch.startTime).format('MMM DD, YYYY h:mm a')}</td>
                     <td>{dayjs(ch.endTime).format('MMM DD, YYYY h:mm a')}</td>
                     <td>{dayjs.duration(dayjs(ch.endTime) - dayjs(ch.startTime)).format('H [h] mm [m]')}</td>
+                    <td>{(dayjs.duration(dayjs(ch.endTime) - dayjs(ch.startTime)).asMinutes() / props.hike.length).toFixed(2)} min/km</td>
+                    <td>{(props.hike.ascent / dayjs.duration(dayjs(ch.endTime) - dayjs(ch.startTime)).asHours()).toFixed(2)} m/hour</td>
                   </tr>
                 );
               })}

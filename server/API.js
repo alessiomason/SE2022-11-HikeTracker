@@ -844,7 +844,7 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
             await dao.terminateHike(trackedHikeID, endTime);
             res.status(200).json().end();
         } catch (err) {
-            res.status(500).json({ error: `Database error while starting the hike.` });
+            res.status(500).json({ error: `Database error while terminating the hike.` });
         }
 
     });
