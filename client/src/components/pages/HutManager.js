@@ -1,8 +1,7 @@
 import '../../styles/HutManager.css';
-import { Container, Row, Col, InputGroup, Form, Button, Carousel, Alert } from 'react-bootstrap';
+import { Container, Row, Col, InputGroup, Form, Button, Alert } from 'react-bootstrap';
 import { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import MyHutImages from "../HutImages";
+import { useNavigate } from 'react-router-dom';
 import API from '../../API.js';
 import { default as Img1 } from "../../images/img1.jpg";
 
@@ -56,7 +55,6 @@ function MyHutManager(props) {
 
 function SingleUpdateHutCard(props) { 
 
-  const navigate = useNavigate();
 
   let hutID = props.hut.id;
   const hutToEdit = props.hut;
@@ -101,11 +99,10 @@ function SingleUpdateHutCard(props) {
       props.setDirty(true);
       props.setShowUpdateBanner(true);
       props.setMessage(`Hut #${hutID} ${name} has been updated successfully!`);
-      // navigate('/');
     }
   }
     
-    if(props.name == '' ||  name.toLowerCase().match(props.name.toLowerCase()) || description.toLowerCase().match(props.name.toLowerCase())){
+    if(props.name === '' ||  name.toLowerCase().match(props.name.toLowerCase()) || description.toLowerCase().match(props.name.toLowerCase())){
   return (
       
     

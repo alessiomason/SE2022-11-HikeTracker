@@ -1,5 +1,5 @@
-import { Alert, Form } from 'react-bootstrap';
-import { Icon, point } from 'leaflet';
+
+import { Icon } from 'leaflet';
 import { MapContainer, TileLayer, Marker, Popup, Polyline, useMapEvents } from 'react-leaflet';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import { useState, useEffect } from 'react';
@@ -27,7 +27,6 @@ function ReferencePoints() {
   const [newRefPointID, setNewRefPointId] = useState (0);  
   const [validPoint, setValidPoint] = useState(false);
   const [marker, setMarker] = useState([0, 0]);
-  const [disable,setDisable] = useState(true);
 
 
 
@@ -48,14 +47,14 @@ function ReferencePoints() {
 
   const confirmationButton = async (pointID) => {
 
-    if (adding && pointID != 0 && validPoint ) {
+    if (adding && pointID !== 0 && validPoint ) {
     await API.setNewReferencePoint(newRefPointID)
     .then( )
     .catch( err => console.log("error " + err));
     navigate('/hikeManager');
     };
     console.log("deleting: " + deleting + "  point: " + pointID);
-    if (pointID != 0 ){
+    if (pointID !== 0 ){
       await API.clearReferencePoint(pointID)
       .then( )
       .catch( err => console.log(err));
@@ -207,7 +206,7 @@ function LocationMarker(props) {
       popupAnchor: [1, -34],
       shadowSize: [41, 41]
   });
-  // const [marker, setMarker] = useState([0, 0]);
+  
 
   useMapEvents({
       click(e) {
@@ -221,7 +220,7 @@ function LocationMarker(props) {
     let lat = p.latitude.toString();
     let lon = p.longitude.toString();
 
-    if( props.marker[0]!=0 &&props.marker[1]!=0 && props.adding && lat.match(props.marker[0].toString().slice(0,6)) && lon.match(props.marker[1].toString().slice(0,6))){
+    if( props.marker[0]!==0 &&props.marker[1]!==0 && props.adding && lat.match(props.marker[0].toString().slice(0,6)) && lon.match(props.marker[1].toString().slice(0,6))){
         props.setNewRefPointId(p.pointID);
         props.setValidPoint(true);
 

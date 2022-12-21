@@ -2,7 +2,7 @@
 import '../../styles/HikeManager.css';
 import { Container, Row, Col, InputGroup, Form, Button, Alert } from 'react-bootstrap';
 import { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import API from '../../API.js';
 
 import { default as Img1 } from "../../images/img1.jpg";
@@ -56,7 +56,6 @@ function MyParkingManager(props) {
 
 function SingleUpdateParkingCard(props) {
 
-  const navigate = useNavigate();
 
   let plId = props.parking.id;
   const plToEdit = props.parking;
@@ -102,7 +101,6 @@ function SingleUpdateParkingCard(props) {
       props.setDirty(true);
       props.setShowUpdateBanner(true);
       props.setMessage(`Parking Lot #${plId} ${label} has been updated successfully!`);
-      // navigate('/');
     }
   }
 

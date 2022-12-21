@@ -1,11 +1,7 @@
-import { useNavigate } from "react-router-dom";
-import { Button, Navbar, Nav, Container, Row, Col, Form, OverlayTrigger, Tooltip, FloatingLabel } from "react-bootstrap";
+import { Button, Container, Row, Col, Form, OverlayTrigger, Tooltip } from "react-bootstrap";
 
 import '../styles/ProfileManager.css';
-import React, { useState, useEffect } from 'react';
-import { default as Img1 } from '../images/img1.jpg';
-import { default as Hut } from "../icons/hut.svg";
-import { default as Email } from "../icons/email.svg";
+import React, { useState } from 'react';
 import { default as Location } from "../icons/map.svg";
 import { default as Radius } from "../icons/radius.svg";
 import { default as Delete } from "../icons/delete.svg";
@@ -13,7 +9,6 @@ import { default as Delete } from "../icons/delete.svg";
 
 function ProfileManager(props) {
 
-  const navigate = useNavigate();
 
   const [task1, setTask1] = useState(true);
 

@@ -2,7 +2,7 @@ import '../../styles/HikeManager.css';
 import { Container, Row, Col, InputGroup, Form, Button, Alert } from 'react-bootstrap';
 import { useState, useEffect } from 'react';
 import { default as Img1 } from "../../images/img1.jpg";
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import API from '../../API.js';
 
 function MyHikeManager(props) {
@@ -58,11 +58,11 @@ function SingleUpdateHikeCard(props) {
   const hikeToEdit = props.hike;
   let difficulty_text;
 
-  if (props.hike.difficulty == 1)
+  if (props.hike.difficulty === 1)
     difficulty_text = "Tourist";
-  else if (props.hike.difficulty == 2)
+  else if (props.hike.difficulty === 2)
     difficulty_text = "Hiker";
-  else if (props.hike.difficulty == 3)
+  else if (props.hike.difficulty === 3)
     difficulty_text = "Professional hiker";
 
 
@@ -70,7 +70,6 @@ function SingleUpdateHikeCard(props) {
   const [length, setLength] = useState(hikeToEdit ? hikeToEdit.length : 0);
   const [expTime, setExpTime] = useState(hikeToEdit ? hikeToEdit.expTime : 0);
   const [ascent, setAscent] = useState(hikeToEdit ? hikeToEdit.ascent : 0);
-  const [difficulty, setDifficulty] = useState(hikeToEdit ? hikeToEdit.text : '');
   const [difficultyText, setDifficultyText] = useState(difficulty_text);
   const [description, setDescription] = useState(hikeToEdit ? hikeToEdit.description : '');
   const [state, setState] = useState(hikeToEdit ? hikeToEdit.state : '');
@@ -106,7 +105,6 @@ function SingleUpdateHikeCard(props) {
       props.setDirty(true);
       props.setShowUpdateBanner(true);
       props.setMessage(`Hike #${hikeId} ${label} has been updated successfully!`);
-      // navigate('/');
     }
   }
 
