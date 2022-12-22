@@ -68,15 +68,20 @@ function HikePage(props) {
   }, [dirty, hikeId]);
 
   const startHike = async (startTime) => {
+    if (trackedHikes.filter(th => th.endTime === null || th.endTime === undefined).length !== 0) {
+      console.log('There is already an ongoing hike: impossible to start a new one.');
+      return;
+    }
+
     API.startHike(hikeId, startTime)
       .then(() => {
         setDirty(true);
-        setStartHikeModalShow(false);
+        setTrackedHikeModalShow(false);
       })
       .catch(err => console.log(err));
   }
 
-  const terminateHike = async () => {
+  const terminateHike = async (endTime) => {
     if (trackedHikes.filter(th => th.endTime === null || th.endTime === undefined).length !== 1) {
       console.log('More than one ongoing hike found: impossible to terminate.');
       return;
@@ -84,8 +89,11 @@ function HikePage(props) {
 
     const trackedHikeID = trackedHikes.filter(th => th.endTime === null || th.endTime === undefined).pop().id;
 
-    API.terminateHike(trackedHikeID)
-      .then(() => setDirty(true))
+    API.terminateHike(trackedHikeID, endTime)
+      .then(() => {
+        setDirty(true);
+        setTrackedHikeModalShow(false);
+      })
       .catch(err => console.log(err));
   }
 
@@ -110,16 +118,12 @@ function HikePage(props) {
   if (hike.state) locationsArray.push(hike.state);
 
   const [imageModalShow, setImageModalShow] = useState(false);
-  const [startHikeModalShow, setStartHikeModalShow] = useState(false);
-  const [cancelHikeModalShow, setCancelHikeModalShow] = useState(false);
-  const [terminateHikeModalShow, setTerminateHikeModalShow] = useState(false);
+  const [trackedHikeModalShow, setTrackedHikeModalShow] = useState(false);
 
   return (
     <Container fluid className="external-box">
       <MyImageModal hikeId={hike.id} hikeLabel={hike.label} show={imageModalShow} onHide={() => setImageModalShow(false)} />
-      <StartHikeModal startHike={startHike} show={startHikeModalShow} onHide={() => setStartHikeModalShow(false)} />
-      <CancelHikeModal cancelHike={cancelHike} show={cancelHikeModalShow} onHide={() => setCancelHikeModalShow(false)} />
-      <TerminateHikeModal terminateHike={terminateHike} show={terminateHikeModalShow} onHide={() => setTerminateHikeModalShow(false)} />
+      <TrackedHikeModal startHike={startHike} terminateHike={terminateHike} show={trackedHikeModalShow} onHide={() => setTrackedHikeModalShow(false)} />
       <Container fluid className='internal-box' >
         <Row className="center-box mb-4">
           <h2 className="background double single-hike-title "><span><img src={Hiking} alt="hiking_image" className='me-2 single-hike-icon' />{hike.label}</span></h2>
@@ -207,9 +211,9 @@ function HikePage(props) {
               {/* hike.id ensures that the map is rendered only when the hike is loaded  */}
             </Row>
             <Row className='btn-row'>
-              {trackedHikes.filter(th => th.endTime === null || th.endTime === undefined).length === 0 && <Button className="mx-1 mt-2 start_btn slide" type="submit" onClick={() => setStartHikeModalShow(true)}>Start hike</Button>}
-              {trackedHikes.filter(th => th.endTime === null || th.endTime === undefined).length === 1 && <Button className="mx-1 mt-2 cancel_btn slide" type="submit" onClick={() => setCancelHikeModalShow(true)}>Cancel hike</Button>}
-              {trackedHikes.filter(th => th.endTime === null || th.endTime === undefined).length === 1 && <Button className="mx-1 mt-2 terminate_btn slide" type="submit" onClick={() => setTerminateHikeModalShow(true)}>Terminate hike</Button>}
+              {trackedHikes.filter(th => th.endTime === null || th.endTime === undefined).length === 0 && <Button className="mx-1 mt-2 start_btn slide" type="submit" onClick={() => setTrackedHikeModalShow('start')}>Start hike</Button>}
+              {trackedHikes.filter(th => th.endTime === null || th.endTime === undefined).length === 1 && <Button className="mx-1 mt-2 cancel_btn slide" type="submit" onClick={cancelHike}>Cancel hike</Button>}
+              {trackedHikes.filter(th => th.endTime === null || th.endTime === undefined).length === 1 && <Button className="mx-1 mt-2 terminate_btn slide" type="submit" onClick={() => setTrackedHikeModalShow('terminate')}>Terminate hike</Button>}
             </Row>
             {props.loggedIn && <TrackedHikes hike={hike} trackedHikes={trackedHikes} />}
             <Row className="tab-box">
@@ -252,7 +256,8 @@ function MyImageModal(props) {
   );
 }
 
-function StartHikeModal(props) {
+function TrackedHikeModal(props) {
+  const [startTerminateLabel, setStartTerminateLabel] = useState(props.show); // copied into a state only on modal show, this avoids erratic behaviour on modal hide
   const [currentTime, setCurrentTime] = useState(dayjs());
   const [adjustedTime, setAdjustedTime] = useState(new Date());
   const [currentTimeClassName, setCurrentTimeClassName] = useState('selected-card');
@@ -271,11 +276,18 @@ function StartHikeModal(props) {
     }
   }
 
-  const handleStartHike = () => {
-    if (selectedTime === 'adjusted')
-      props.startHike(dayjs(adjustedTime).format());
-    else
-      props.startHike();
+  const handleStartTerminateHike = () => {
+    if (props.show === 'start') {
+      if (selectedTime === 'adjusted')
+        props.startHike(dayjs(adjustedTime).format());
+      else
+        props.startHike();
+    } else if (props.show === 'terminate') {
+      if (selectedTime === 'adjusted')
+        props.terminateHike(dayjs(adjustedTime).format());
+      else
+        props.terminateHike();
+    }
   }
 
   let setIntervalsToUpdateCurrentTime = [];
@@ -297,9 +309,9 @@ function StartHikeModal(props) {
   }, [props.show])
 
   return (
-    <Modal show={props.show} onHide={props.onHide} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
+    <Modal show={props.show} onShow={() => setStartTerminateLabel(props.show)} onHide={props.onHide} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
       <Modal.Header closeButton className='box-modal hike-page-modal-header'>
-        <Modal.Title id="contained-modal-title-vcenter">Start hike</Modal.Title>
+        <Modal.Title id="contained-modal-title-vcenter">{startTerminateLabel === 'start' ? 'Start' : 'Terminate'} hike</Modal.Title>
       </Modal.Header>
       <Modal.Body className='box-modal hike-page-modal-body'>
         <Container>
@@ -308,7 +320,7 @@ function StartHikeModal(props) {
               <Card className={'tracked-hikes-card ' + currentTimeClassName} onClick={() => handleSelection('current')}>
                 <Card.Body className='tracked-hikes-card-body'>
                   <Card.Title className='tracked-hikes-card-title text-center'>
-                    Start with current time
+                    {startTerminateLabel === 'start' ? 'Start' : 'Terminate'} with current time
                   </Card.Title>
                   <Card.Text className='text-center'>
                     {currentTime.format('MMM DD, YYYY h:mm:ss a')}
@@ -320,47 +332,19 @@ function StartHikeModal(props) {
               <Card className={'tracked-hikes-card ' + adjustedTimeClassName} onClick={() => handleSelection('adjusted')}>
                 <Card.Body className='tracked-hikes-card-body'>
                   <Card.Title className='tracked-hikes-card-title text-center'>
-                    Adjust start time
+                    Adjust {startTerminateLabel === 'start' ? 'start' : 'termination'} time
                   </Card.Title>
-                  <Card.Text className='d-flex justify-content-center'>
+                  <div className='d-flex justify-content-center'>
                     <DateTimePicker format='MM/dd/y h:mm:ss a' value={adjustedTime} onChange={setAdjustedTime} disabled={selectedTime !== 'adjusted'} />
-                  </Card.Text>
+                  </div>
                 </Card.Body>
               </Card>
             </Col>
           </Row>
           <Row className='btn-row'>
-            <Button className="mx-1 mt-2 start_btn slide" type="submit" onClick={handleStartHike}>Start hike</Button>
+            <Button className={"mx-1 mt-2 slide " + (startTerminateLabel === 'start' ? 'start_btn' : 'terminate_btn')} type="submit" onClick={handleStartTerminateHike}>{startTerminateLabel === 'start' ? 'Start' : 'Terminate'} hike</Button>
           </Row>
         </Container>
-      </Modal.Body>
-
-    </Modal>
-  );
-}
-
-function CancelHikeModal(props) {
-  return (
-    <Modal show={props.show} onHide={props.onHide} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
-      <Modal.Header closeButton className='box-modal hike-page-modal-header'>
-        <Modal.Title id="contained-modal-title-vcenter">Cancel hike</Modal.Title>
-      </Modal.Header>
-      <Modal.Body className='box-modal hike-page-modal-body'>
-
-      </Modal.Body>
-
-    </Modal>
-  );
-}
-
-function TerminateHikeModal(props) {
-  return (
-    <Modal show={props.show} onHide={props.onHide} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
-      <Modal.Header closeButton className='box-modal hike-page-modal-header'>
-        <Modal.Title id="contained-modal-title-vcenter">Terminate hike</Modal.Title>
-      </Modal.Header>
-      <Modal.Body className='box-modal hike-page-modal-body'>
-
       </Modal.Body>
 
     </Modal>

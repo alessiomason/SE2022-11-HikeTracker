@@ -838,7 +838,8 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
         const trackedHikeID = req.params.id;
         const userID = req.user.id;
 
-        const endTime = dayjs().format();
+        // if endTime is undefined, current time is retrieved
+        const endTime = dayjs(req.body.endTime).format();
 
         try {
             await dao.terminateHike(trackedHikeID, endTime);
