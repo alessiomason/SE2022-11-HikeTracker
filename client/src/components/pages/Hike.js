@@ -85,6 +85,19 @@ function HikePage(props) {
       .catch(err => console.log(err));
   }
 
+  const cancelHike = async () => {
+    if (trackedHikes.filter(th => th.endTime === null || th.endTime === undefined).length !== 1) {
+      console.log('More than one ongoing hike found: impossible to cancel.');
+      return;
+    }
+
+    const trackedHikeID = trackedHikes.filter(th => th.endTime === null || th.endTime === undefined).pop().id;
+
+    API.cancelHike(trackedHikeID)
+      .then(() => setDirty(true))
+      .catch(err => console.log(err));
+  }
+
   const difficultiesNames = ['Tourist', 'Hiker', 'Pro Hiker'];
   let locationsArray = [];
   if (hike.municipality) locationsArray.push(hike.municipality);
@@ -185,6 +198,7 @@ function HikePage(props) {
             </Row>
             <Row className='btn-row'>
               {trackedHikes.filter(th => th.endTime === null || th.endTime === undefined).length === 0 && <Button className="mx-1 mt-2 start_btn slide" type="submit" onClick={startHike}>Start hike</Button>}
+              {trackedHikes.filter(th => th.endTime === null || th.endTime === undefined).length === 1 && <Button className="mx-1 mt-2 cancel_btn slide" type="submit" onClick={cancelHike}>Cancel hike</Button>}
               {trackedHikes.filter(th => th.endTime === null || th.endTime === undefined).length === 1 && <Button className="mx-1 mt-2 terminate_btn slide" type="submit" onClick={terminateHike}>Terminate hike</Button>}
             </Row>
             {props.loggedIn && <TrackedHikes hike={hike} trackedHikes={trackedHikes} />}

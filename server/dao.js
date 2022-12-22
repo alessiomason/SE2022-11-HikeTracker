@@ -719,10 +719,30 @@ exports.updateUserStats = (userID, userStats) => {
     });
 }
 
+exports.deleteTrackedHikePoints = (trackedHikeID) => {
+    return new Promise((resolve, reject) => {
+        const sql = 'DELETE FROM TrackedHikesPoints WHERE TrackedHikeID = ?';
+        db.run(sql, [trackedHikeID], (err) => {
+            if (err) reject(err);
+            resolve();
+        });
+    });
+}
+
+exports.deleteTrackedHike = (trackedHikeID) => {
+    return new Promise((resolve, reject) => {
+        const sql = 'DELETE FROM TrackedHikes WHERE TrackedHikeID = ?';
+        db.run(sql, [trackedHikeID], (err) => {
+            if (err) reject(err);
+            resolve();
+        });
+    });
+}
+
 exports.deleteAllTrackedHikes = () => {
     return new Promise((resolve, reject) => {
         const sql = 'DELETE FROM TrackedHikes';
-        db.all(sql, (err) => {
+        db.run(sql, (err) => {
             if (err) reject(err);
             resolve();
         });
