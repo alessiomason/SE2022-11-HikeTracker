@@ -144,7 +144,7 @@ function HutPage(props) {
 
 function MyImageModal(props) {
   return (
-    <Modal {...props} size="lg" aria-labelledby="contained-modal-title-vcenter" centered >
+    <Modal show={props.show} onHide={props.onHide} size="lg" aria-labelledby="contained-modal-title-vcenter" centered >
       <Modal.Header closeButton className='box-modal hut-page-modal-header'>
         <Modal.Title id="contained-modal-title-vcenter">
           {props.hikeLabel}
