@@ -790,7 +790,8 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
         const hikeID = req.params.hikeID;
         const userID = req.user.id;
 
-        const startTime = dayjs().format();
+        // if startTime is undefined, current time is retrieved
+        const startTime = dayjs(req.body.startTime).format();
 
         try {
             await dao.startHike(hikeID, userID, startTime);
