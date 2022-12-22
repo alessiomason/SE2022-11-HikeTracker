@@ -90,4 +90,84 @@
     width: 90% !important;
 }
 
+.main_img{
+    width: 100%;
+    height: 40vh;
+    border-radius: 8px;
+    object-fit: cover;
+}
 
+.box_img{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+  }
+
+.thumb_img{
+    width: 80px;
+    height: 80px;
+    object-fit: fill;
+    overflow: hidden;
+}
+/*
+.box_thumb{
+    width: fit-content;
+    height: fit-content;
+    background-color: transparent !important;
+    border-color: transparent !important;
+    padding: 0%;
+    margin: 1%;
+}
+
+.box_thumb:hover{
+    border-radius: 0%;
+    box-shadow: 0 0 0 3px #0be2f6;
+}
+
+.clicked{
+    box-shadow: 0 0 0 3px #0be2f6;
+  }
+*/
+
+.thumb_row{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.close_btn{
+    width: fit-content;
+    height: fit-content;
+    border-radius: 50%;
+    background-color: transparent;
+    border-color: transparent;
+    padding: 0px;
+    position: relative;
+    left: 42%;
+    top: -14.5em;
+
+}
+
+.close_btn:hover{
+  background-color: red;
+  border-color: red;
+}
+
+.x-img{
+  filter: invert(11%) sepia(82%) saturate(7355%) hue-rotate(15deg) brightness(103%) contrast(125%);
+}
+
+.x-img:hover{
+  filter: invert(98%) sepia(28%) saturate(0%) hue-rotate(308deg) brightness(120%) contrast(100%);
+}
+
+.hut-man-box .form-control{
+    border: 1px solid #494681;
+}
+
+.val-user-box3 .form-control, .val-user-box3 .form-select{
+    border: 1px solid #494681;
+}
