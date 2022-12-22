@@ -97,6 +97,8 @@
   overflow: hidden;
   object-fit: cover;
   border: 2px solid #0be2f6;
+  max-width: 100%;
+  height: auto;
 }
 
 

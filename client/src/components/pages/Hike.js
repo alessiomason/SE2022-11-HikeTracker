@@ -217,11 +217,16 @@ function MyImageModal(props) {
         </Modal.Title>
       </Modal.Header>
       <Modal.Body className='box-modal hike-page-modal-body'>
-        <img src={`http://localhost:3001/images/hike-${props.hikeId}.jpg`}
+        <Row>
+          <Col md={12} className="modal-img-box">
+            <img src={`http://localhost:3001/images/hike-${props.hikeId}.jpg`}
           onError={({ currentTarget }) => {
             currentTarget.onerror = null; // prevents looping
             currentTarget.src = Img1;
-          }} alt="photo" className="" />
+          }} alt="photo" className="modal-imgs" />
+          </Col>
+        </Row>
+        
       </Modal.Body>
 
     </Modal>

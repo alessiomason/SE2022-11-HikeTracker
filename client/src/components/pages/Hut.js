@@ -155,7 +155,7 @@ function MyImageModal(props) {
           onError={({ currentTarget }) => {
             currentTarget.onerror = null; // prevents looping
             currentTarget.src = Img1;
-          }} alt="photo" className="" />
+          }} alt="photo" className="modal-imgs" />
       </Modal.Body>
 
     </Modal>
