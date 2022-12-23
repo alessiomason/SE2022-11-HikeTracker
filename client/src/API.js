@@ -340,7 +340,8 @@ async function getHikes() {
             province: h.province,
             municipality: h.municipality,
             startPoint: h.startPoint,
-            author: h.author
+            author: h.author,
+            authorId: h.authorId
         }))
     else throw hikes;
 }
@@ -354,7 +355,7 @@ async function getParkingLots() {
             id: pl.id, label: pl.label,
             description: pl.description, state: pl.state, region: pl.region, province: pl.province, municipality: pl.municipality,
             lat: pl.lat, lon: pl.lon, altitude: pl.altitude,
-            total: pl.total, occupied: pl.occupied, author: pl.author
+            total: pl.total, occupied: pl.occupied, author: pl.author,authorId: pl.authorId
         }))
     else throw pls;
 }
@@ -376,7 +377,8 @@ async function getHuts() {
             region: h.region,
             province: h.province,
             municipality: h.municipality,
-            author: h.author
+            author: h.author,
+            authorId: h.authorId
         }))
     else throw huts;
 }

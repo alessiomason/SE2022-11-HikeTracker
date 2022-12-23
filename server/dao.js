@@ -111,7 +111,8 @@ exports.getHuts = () => {
                 region: r.Region,
                 province: r.Province,
                 municipality: r.Municipality,
-                author: r.FullName
+                author: r.FullName,
+                authorId: r.Author
             }));
             resolve(huts);
         });
@@ -162,7 +163,8 @@ exports.getHut = (hutID) => {
                         region: r.Region,
                         province: r.Province,
                         municipality: r.Municipality,
-                        author: r.FullName
+                        author: r.FullName,
+                        authorId: r.Author
                     }));
                     resolve(hut);
                 }
@@ -238,7 +240,7 @@ exports.getEndPointOfHike = (hikeID) => {
 exports.getHikes = () => {
     return new Promise((resolve, reject) => {
         const sql = `SELECT H.HikeID, H.Label, H.Length, H.ExpTime, H.Ascent, H.Difficulty, H.Description,
-                        H.State, H.Region, H. Province, H.Municipality, P.Lat, P.Lon, P.Label AS StartPointLabel, U.FullName
+                        H.State, H.Region, H. Province, H.Municipality,H.Author, P.Lat, P.Lon, P.Label AS StartPointLabel, U.FullName
                      FROM Hikes H, Points P, Users U
                      WHERE H.HikeID = P.HikeID AND P.SP = 1
                      AND H.Author = U.UserId`;
@@ -261,7 +263,8 @@ exports.getHikes = () => {
                     longitude: r.Lon,
                     label: r.StartPointLabel
                 },
-                author: r.FullName
+                author: r.FullName,
+                authorId: r.Author
             }));
             resolve(hikes);
         });
@@ -278,7 +281,7 @@ exports.getParkingLots = () => {
             const pls = rows.map((r) => ({
                 id: r.ParkingID, label: r.Label,
                 description: r.Description, state: r.State, region: r.Region, province: r.Province, municipality: r.Municipality,
-                lat: r.Lat, lon: r.Lon, altitude: r.Altitude, total: r.Total, occupied: r.Occupied, author: r.FullName
+                lat: r.Lat, lon: r.Lon, altitude: r.Altitude, total: r.Total, occupied: r.Occupied, author: r.FullName,authorId: r.Author
             }));
             resolve(pls);
         });

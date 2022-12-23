@@ -24,8 +24,7 @@ function MyHutManager(props) {
       setDirty(false);
     }
   }, [dirty]);
-
-
+  
 
   return (
 
@@ -45,7 +44,8 @@ function MyHutManager(props) {
         </Col>
       </Row>
       {showUpdateBanner && <Alert variant='success' onClose={() => { setShowUpdateBanner(false); setMessage('') }} dismissible>{message}</Alert>}
-      {huts.sort((a, b) => (a.id > b.id) ? 1 : -1).map(h => <SingleUpdateHutCard key={h.id} hut={h} user={props.user}
+      {huts.filter((h)=> h.authorId===props.user.id).sort((a, b) => (a.id > b.id) ? 1 : -1)
+      .map(h => <SingleUpdateHutCard key={h.id} hut={h} user={props.user}
         updateHut={props.updateHut} deleteHut={props.deleteHut} setDirty={setDirty}
         setShowUpdateBanner={setShowUpdateBanner} setMessage={setMessage} name={name} />)}
     </Container>
