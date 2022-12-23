@@ -148,38 +148,6 @@ tr {
   margin-bottom: 30px;
 }
 
-.share_btn {
-  border-radius: 0px !important;
-  width: 148px !important;
-  font-weight: bold;
-  border: 2px solid #a972cb !important;
-  background-color: #a972cb !important;
-  --hover: #a972cb;
-  color: #fff !important;
-}
-
-.share_btn:hover,
-.share_btn:focus {
-  box-shadow: 0 0.6em 0.4em -0.4em var(--hover);
-  transform: translateY(-0.25em);
-}
-
-.terminate_btn {
-  border-radius: 0px !important;
-  width: 148px !important;
-  font-weight: bold;
-  border: 2px solid #212529 !important;
-  background-color: #212529 !important;
-  --hover: #212529;
-  color: #fff !important;
-}
-
-.terminate_btn:hover,
-.terminate_btn:focus {
-  box-shadow: 0 0.6em 0.4em -0.4em var(--hover);
-  transform: translateY(-0.25em);
-}
-
 .start_btn {
   border-radius: 0px !important;
   width: 148px !important;
@@ -188,15 +156,55 @@ tr {
   background-color: #30AC42 !important;
   --hover: #30AC42;
   color: #fff !important;
+  transition: all .2s ease-out;
+}
+
+.reach_ref_point_btn {
+  border-radius: 0px !important;
+  width: 158px !important;
+  font-weight: bold;
+  border: 2px solid #ffd326 !important;
+  background-color: #ffd326 !important;
+  --hover: #ffd326;
+  color: #373737 !important;
+  transition: all .2s ease-out;
+}
+
+.terminate_btn {
+  border-radius: 0px !important;
+  width: 148px !important;
+  font-weight: bold;
+  border: 2px solid #a972cb !important;
+  background-color: #a972cb !important;
+  --hover: #a972cb;
+  color: #fff !important;
+  transition: all .2s ease-out;
+}
+
+.cancel_btn {
+  border-radius: 0px !important;
+  width: 148px !important;
+  font-weight: bold;
+  border: 2px solid #212529 !important;
+  background-color: #212529 !important;
+  --hover: #212529;
+  color: #fff !important;
+  transition: all .2s ease-out;
 }
 
 .start_btn:hover,
-.start_btn:focus {
+.start_btn:focus,
+.terminate_btn:hover,
+.terminate_btn:focus,
+.cancel_btn:hover,
+.cancel_btn:focus,
+.reach_ref_point_btn:hover,
+.reach_ref_point_btn:focus {
   box-shadow: 0 0.6em 0.4em -0.4em var(--hover);
   transform: translateY(-0.25em);
 }
 
-.tab-box{
+.tab-box {
   border: 2px solid #30AC42;
   border-radius: 8px;
   margin-bottom: 30px;
@@ -278,4 +286,24 @@ tr {
 .log_btn:focus {
   box-shadow: 0 0.6em 0.4em -0.4em var(--hover);
   transform: translateY(-0.25em);
+}
+
+.tracked-hikes-card {
+  width: 330px;
+  margin-bottom: 30px;
+  background-color: white;
+  color: black;
+  transition: all .25s ease;
+}
+
+.tracked-hikes-card:hover {
+  cursor: pointer;
+}
+
+.tracked-hikes-card.selected-card {
+  background-color: rgba(48, 172, 66, 0.1);
+}
+
+.tracked-hikes-card.deselected-card {
+  color: rgba(128, 128, 128, 0.7);
 }

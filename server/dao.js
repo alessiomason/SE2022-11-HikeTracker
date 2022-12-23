@@ -719,10 +719,61 @@ exports.updateUserStats = (userID, userStats) => {
     });
 }
 
+exports.recordReferencePointReached = (trackedHikeID, pointID, time) => {
+    return new Promise((resolve, reject) => {
+        const sql = 'INSERT INTO TrackedHikesPoints(TrackedHikeID, PointID, Time) VALUES(?, ?, ?)'
+        db.run(sql, [trackedHikeID, pointID, time], function (err) {
+            if (err) reject(err);
+            resolve();
+        });
+    });
+}
+
+exports.getTrackedHikePoints = (trackedHikeID) => {
+    return new Promise((resolve, reject) => {
+        const sql = `SELECT *
+                     FROM TrackedHikesPoints THP, Points P
+                     WHERE THP.PointID = P.PointID
+                     AND TrackedHikeID = ?`;
+        db.all(sql, [trackedHikeID], (err, rows) => {
+            if (err) reject(err);
+            const points = rows.map((r) => ({
+                pointID: r.PointID,
+                label: r.Label,
+                latitude: r.Lat,
+                longitude: r.Lon,
+                altitude: r.Altitude,
+                timeOfReach: r.Time
+            }));
+            resolve(points);
+        });
+    });
+}
+
+exports.deleteTrackedHikePoints = (trackedHikeID) => {
+    return new Promise((resolve, reject) => {
+        const sql = 'DELETE FROM TrackedHikesPoints WHERE TrackedHikeID = ?';
+        db.run(sql, [trackedHikeID], (err) => {
+            if (err) reject(err);
+            resolve();
+        });
+    });
+}
+
+exports.deleteTrackedHike = (trackedHikeID) => {
+    return new Promise((resolve, reject) => {
+        const sql = 'DELETE FROM TrackedHikes WHERE TrackedHikeID = ?';
+        db.run(sql, [trackedHikeID], (err) => {
+            if (err) reject(err);
+            resolve();
+        });
+    });
+}
+
 exports.deleteAllTrackedHikes = () => {
     return new Promise((resolve, reject) => {
         const sql = 'DELETE FROM TrackedHikes';
-        db.all(sql, (err) => {
+        db.run(sql, (err) => {
             if (err) reject(err);
             resolve();
         });

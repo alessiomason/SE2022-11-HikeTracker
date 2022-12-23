@@ -2,8 +2,10 @@ import { Icon } from 'leaflet';
 import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet';
 import { Button } from 'react-bootstrap';
 import '../styles/Map.css';
+import '../styles/SinglePageHike.css';
 import 'leaflet/dist/leaflet.css';
-import { default as LinkedHutIcon} from '../images/linked_hut_icon.png';
+import { default as LinkedHutIcon } from '../images/linked_hut_icon.png';
+const dayjs = require('dayjs');
 
 function HikeMap(props) {
 
@@ -25,14 +27,23 @@ function HikeMap(props) {
         shadowSize: [41, 41]
     });
 
-    const iconReferencePoint = new Icon({
+    const iconNotReachedReferencePoint = new Icon({
         iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-gold.png',
         shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
         iconSize: [20, 35],
         iconAnchor: [12, 41],
         popupAnchor: [1, -34],
         shadowSize: [41, 41]
-    })
+    });
+
+    const iconReachedReferencePoint = new Icon({
+        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-yellow.png',
+        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+        iconSize: [20, 35],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+        shadowSize: [41, 41]
+    });
 
     const iconLinkedHut = new Icon({
         iconUrl: LinkedHutIcon,
@@ -41,7 +52,7 @@ function HikeMap(props) {
         iconAnchor: [12, 41],
         popupAnchor: [1, -34],
         shadowSize: [41, 41]
-      })
+    });
 
     const startPoint = props.points?.filter(p => p.startPoint).map(p => [p.latitude, p.longitude]).pop();
     const startPointLabel = props.points?.filter(p => p.startPoint).pop().label;
@@ -66,7 +77,8 @@ function HikeMap(props) {
     else if (props.length && props.length >= 14000)
         zoom = 10;
 
-    const positions = props.points?.filter(p => !p.referencePoint && !p.hutID && !p.parkingID).map(p => [p.latitude, p.longitude]);
+    const reachedPositions = props.points?.filter(p => p.reachedInOngoingHike && !p.referencePoint && !p.hutID && !p.parkingID).map(p => [p.latitude, p.longitude]);
+    const notReachedPositions = props.points?.filter(p => !p.reachedInOngoingHike && !p.referencePoint && !p.hutID && !p.parkingID).map(p => [p.latitude, p.longitude]);
 
     return (
         <MapContainer className='single-hike-map' center={center} zoom={zoom} scrollWheelZoom={false}>
@@ -74,26 +86,35 @@ function HikeMap(props) {
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
-            {positions && <Polyline pathOptions={{ fillColor: 'red', color: 'blue' }} positions={positions} />}
+            {reachedPositions && <Polyline pathOptions={{ color: '#a972cb' }} positions={reachedPositions} />}
+            {notReachedPositions && <Polyline pathOptions={{ color: 'blue' }} positions={notReachedPositions} />}
             {startPoint && <Marker position={startPoint} icon={iconStartPoint}>
                 {startPointLabel || props.showStartHike &&
-                <Popup>
-                    {startPointLabel}
-                    {props.showStartHike && <Button variant='success' onClick={props.startHike}>Start hike</Button>}
-                </Popup>}
+                    <Popup>
+                        {startPointLabel}
+                        {props.showStartHike && <Button className='start_btn' onClick={() => props.setTrackedHikeModalShow('start')}>Start hike</Button>}
+                    </Popup>}
             </Marker>}
             {endPoint && <Marker position={endPoint} icon={iconEndPoint}>
                 {endPointLabel && <Popup>{endPointLabel}</Popup>}
                 {endPointLabel || props.showTerminateHike &&
-                <Popup>
-                    {endPointLabel}
-                    {props.showTerminateHike && <Button variant='success' onClick={props.terminateHike}>Terminate hike</Button>}
-                </Popup>}
+                    <Popup>
+                        {endPointLabel}
+                        {props.showTerminateHike && <Button className='terminate_btn' onClick={() => props.setTrackedHikeModalShow('terminate')}>Terminate hike</Button>}
+                    </Popup>}
             </Marker>}
             {props.points?.filter(p => p.referencePoint).map(p => {
                 return (
-                    <Marker position={[p.latitude, p.longitude]} icon={iconReferencePoint} key={p.pointID} >
-                        {p.label && <Popup>{p.label}</Popup>}
+                    <Marker position={[p.latitude, p.longitude]} icon={p.reachedInOngoingHike ? iconReachedReferencePoint : iconNotReachedReferencePoint} key={p.pointID}>
+                        {p.label || props.showTerminateHike &&
+                            <Popup>
+                                <p><strong>{p.label}</strong></p>
+                                {!p.reachedInOngoingHike && props.showTerminateHike &&  // not shown if hike is not started
+                                    <Button className='reach_ref_point_btn' onClick={() => props.setReferencePointReachedModalShow(p.pointID)}>Mark as reached</Button>}
+                                {p.reachedInOngoingHike && p.timeOfReach && <p>Reached on {dayjs(p.timeOfReach).format('MMM DD, YYYY h:mm:ss a')}</p>}
+                                {p.reachedInOngoingHike && !p.timeOfReach && <p>Point reached, time of reach not marked</p>}
+                            </Popup>
+                        }
                     </Marker>
                 );
             })}

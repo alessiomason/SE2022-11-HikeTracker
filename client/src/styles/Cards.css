@@ -3,7 +3,7 @@
     border-bottom: 2px solid #FF6700 ;
 }
 
-.card {
+.card:not(.tracked-hikes-card) {
     border: 2px solid #62DDF5;
     box-shadow: 0 6px 20px rgba(56, 125, 255, 0.17) !important;
     -webkit-filter: drop-shadow(0 6px 20px rgba(56, 125, 255, 0.017)) !important;
@@ -15,10 +15,11 @@
     margin-left: 20px !important;
     margin-right: 20px !important;
     width: 340px;
+    transition: all .5s ease;
 }
 
 
-.card:hover {
+.card:not(.tracked-hikes-card):hover {
     box-shadow: 5px 10px 20px 1px rgba(0, 0, 0, 253) !important;
 }
 
@@ -60,7 +61,7 @@
     max-width: fit-content;
 }
 
-.card_link{
+.card_link {
     text-decoration: none;
     color: black;
 }
@@ -69,7 +70,7 @@
     cursor: pointer;
 }
 
-.card-title-box{
+.card-title-box {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -77,7 +78,7 @@
 
 }
 
-.card-title{
+.card-title:not(.tracked-hikes-card-title) {
     font-style: italic;
     font-size: 24px;
     margin-bottom: 20px;
@@ -85,18 +86,18 @@
     width: fit-content;
 }
 
-.card-credit{
+.card-credit {
     font-style: italic;
     font-size: 14px;
     margin-bottom: 0px;
     text-align: end;
 }
 
-.card-text{
+.card-text {
     margin-bottom: 8px;
 }
 
-.card-body {
+.card-body:not(.tracked-hikes-card-body) {
     height: 17rem;
     overflow-y: scroll;
     overflow-x: hidden;
@@ -116,11 +117,11 @@
     font-weight: bold;
 }
 
-.align{
+.align {
     display: flex;
     align-items: center;
 }
 
-.card-icon-map{
+.card-icon-map {
     filter: invert(91%) sepia(23%) saturate(4158%) hue-rotate(160deg) brightness(102%) contrast(92%);
 }
