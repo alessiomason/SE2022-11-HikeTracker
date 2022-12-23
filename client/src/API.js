@@ -569,7 +569,8 @@ async function getTrackedHikesByHikeIDAndUserID(hikeID) {
             id: th.id,
             hikeID: th.hikeID,
             startTime: th.startTime,
-            endTime: th.endTime
+            endTime: th.endTime,
+            pointsReached: th.pointsReached
         }))
     else throw trackedHikes;
 }
@@ -583,9 +584,35 @@ async function getTrackedHikesByUserID() {
             id: th.id,
             hikeID: th.hikeID,
             startTime: th.startTime,
-            endTime: th.endTime
+            endTime: th.endTime,
+            pointsReached: th.pointsReached
         }))
     else throw trackedHikes;
+}
+
+function recordReferencePointReached(trackedHikeID, pointID, time) {
+    // call: POST /api/trackedHikes/:trackedHikeID/refPoints/:pointID
+    return new Promise((resolve, reject) => {
+        fetch(new URL('trackedHikes/' + trackedHikeID + '/refPoints/' + pointID, APIURL), {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+
+            body: JSON.stringify({ time }),
+
+        }).then((response) => {
+            if (response.ok)
+                resolve();
+            else {
+                // analyze the cause of error
+                response.json()
+                    .then((message) => { reject(message); }) // error message in the response body
+                    .catch(() => { reject({ error: "Cannot parse server response." }) }); // something else
+            }
+        }).catch(() => { reject({ error: "Cannot communicate with the server." }) }); // connection errors
+    });
 }
 
 function terminateHike(trackedHikeID, endTime) {
@@ -718,6 +745,6 @@ const API = {
     addGPXTrack, addParkingLot, AddPoint, deleteParkingLot, updateParkingLot, deleteHike, getHikes, getParkingLots, addHut, updateHut, uploadHutImage,
     uploadParkingLotImage, getHuts, deletHut, getHike, addHike, updateHike, signup, verifyEmail, login, logout, getUserInfo, getUserAccessRight, getHikesRefPoints,
     getStartPoint, getEndPoint, getReferencePoint, reverseNominatim, setNewReferencePoint, clearReferencePoint, startHike, getTrackedHikesByHikeIDAndUserID,
-    getTrackedHikesByUserID, terminateHike, cancelHike
+    getTrackedHikesByUserID, recordReferencePointReached, terminateHike, cancelHike
 };
 export default API;

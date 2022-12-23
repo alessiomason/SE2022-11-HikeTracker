@@ -49,20 +49,40 @@ function HikePage(props) {
       API.getHike(hikeId)
         .then((hike) => {
           setHike(hike);
+
           let tempAlreadyLinkedHut = hike.points.filter((h) => (h.startPoint === 0 && h.endPoint === 0 && h.referencePoint === 0 && h.hutID));
           for (let i = 0; i < hike.points?.length; i = i + 25) {
             // per ogni punto dell'hike verifico la distanza dall'hut linkato
             tempAlreadyLinkedHut.concat(tempAlreadyLinkedHut?.filter((h) => coordinatesDistanceInMeter(hike.points[i].latitude, hike.points[i].longitude, h.latitude, h.longitude) < radiusDistance));
           }
           setAlreadyLinkedHut(tempAlreadyLinkedHut);
+
+          if (props.loggedIn) {
+            API.getTrackedHikesByHikeIDAndUserID(hikeId)
+              .then((trackedHikes) => {
+                setTrackedHikes(trackedHikes);
+
+                if (trackedHikes.filter(th => th.endTime === null || th.endTime === undefined).length === 1) {   // there is an ongoing hike
+                  const refPointsReachedInOngoingHike = trackedHikes.filter(th => th.endTime === null || th.endTime === undefined).pop().pointsReached?.sort((a, b) => (a.pointID > b.pointID) ? 1 : -1);
+
+                  if (refPointsReachedInOngoingHike.length > 0) {
+                    const maxRefPointReachedInOngoingHike = refPointsReachedInOngoingHike[refPointsReachedInOngoingHike.length - 1];
+
+                    for (let point of hike.points) {
+                      point.reachedInOngoingHike = point.pointID <= maxRefPointReachedInOngoingHike.pointID;    // generic point is before latest reached point
+
+                      const refPointReached = refPointsReachedInOngoingHike.find(refPointReached => point.pointID === refPointReached.pointID);
+                      if (refPointReached)    // look for previously reached reference point
+                        point.timeOfReach = refPointReached.timeOfReach;
+                    }
+                  }
+                }
+              })
+              .catch(err => console.log(err));
+          }
         })
         .catch(err => console.log(err));
 
-      if (props.loggedIn) {
-        API.getTrackedHikesByHikeIDAndUserID(hikeId)
-          .then((trackedHikes) => setTrackedHikes(trackedHikes))
-          .catch(err => console.log(err));
-      }
       setDirty(false);
     }
   }, [dirty, hikeId]);
@@ -77,6 +97,22 @@ function HikePage(props) {
       .then(() => {
         setDirty(true);
         setTrackedHikeModalShow(false);
+      })
+      .catch(err => console.log(err));
+  }
+
+  const recordReferencePointReached = async (pointID, time) => {
+    if (trackedHikes.filter(th => th.endTime === null || th.endTime === undefined).length !== 1) {
+      console.log('More than one ongoing hike found: impossible to record a reference point as reached.');
+      return;
+    }
+
+    const trackedHikeID = trackedHikes.filter(th => th.endTime === null || th.endTime === undefined).pop().id;
+
+    API.recordReferencePointReached(trackedHikeID, pointID, time)
+      .then(() => {
+        setDirty(true);
+        setReferencePointReachedModalShow(false);
       })
       .catch(err => console.log(err));
   }
@@ -119,11 +155,13 @@ function HikePage(props) {
 
   const [imageModalShow, setImageModalShow] = useState(false);
   const [trackedHikeModalShow, setTrackedHikeModalShow] = useState(false);
+  const [referencePointReachedModalShow, setReferencePointReachedModalShow] = useState(false);
 
   return (
     <Container fluid className="external-box">
       <MyImageModal hikeId={hike.id} hikeLabel={hike.label} show={imageModalShow} onHide={() => setImageModalShow(false)} />
       <TrackedHikeModal startHike={startHike} terminateHike={terminateHike} show={trackedHikeModalShow} onHide={() => setTrackedHikeModalShow(false)} />
+      <ReferencePointReachedModal recordReferencePointReached={recordReferencePointReached} show={referencePointReachedModalShow} onHide={() => setReferencePointReachedModalShow(false)} />
       <Container fluid className='internal-box' >
         <Row className="center-box mb-4">
           <h2 className="background double single-hike-title "><span><img src={Hiking} alt="hiking_image" className='me-2 single-hike-icon' />{hike.label}</span></h2>
@@ -202,20 +240,20 @@ function HikePage(props) {
                 <div className="hike-page-container">
                   <img src={FakeMap} alt="fake_map" className="fake-image" />
                   <div className="middle">
-                    <h3 className='mb-5 text'> Sign In to look the Map!</h3>
+                    <h3 className='mb-5 text'>Sign In to look the Map!</h3>
                     <Button variant="primary log_btn slide" type="submit" onClick={() => { props.setShowLogin(true); navigate("/"); }} > Sign In </Button>
                   </div>
                 </div> : hike.id && <HikeMap length={hike.length} points={hike.points} alreadyLinkedHut={alreadyLinkedHut}
-                  showStartHike={trackedHikes.filter(th => th.endTime === null || th.endTime === undefined).length === 0} startHike={startHike}
-                  showTerminateHike={trackedHikes.filter(th => th.endTime === null || th.endTime === undefined).length === 1} terminateHike={terminateHike} />}
+                  showStartHike={trackedHikes.filter(th => th.endTime === null || th.endTime === undefined).length === 0} setTrackedHikeModalShow={setTrackedHikeModalShow}
+                  showTerminateHike={trackedHikes.filter(th => th.endTime === null || th.endTime === undefined).length === 1} setReferencePointReachedModalShow={setReferencePointReachedModalShow} />}
               {/* hike.id ensures that the map is rendered only when the hike is loaded  */}
             </Row>
             <Row className='btn-row'>
-              {trackedHikes.filter(th => th.endTime === null || th.endTime === undefined).length === 0 && <Button className="mx-1 mt-2 start_btn slide" type="submit" onClick={() => setTrackedHikeModalShow('start')}>Start hike</Button>}
-              {trackedHikes.filter(th => th.endTime === null || th.endTime === undefined).length === 1 && <Button className="mx-1 mt-2 cancel_btn slide" type="submit" onClick={cancelHike}>Cancel hike</Button>}
-              {trackedHikes.filter(th => th.endTime === null || th.endTime === undefined).length === 1 && <Button className="mx-1 mt-2 terminate_btn slide" type="submit" onClick={() => setTrackedHikeModalShow('terminate')}>Terminate hike</Button>}
+              {props.loggedIn && trackedHikes.filter(th => th.endTime === null || th.endTime === undefined).length === 0 && <Button className="mx-1 mt-2 start_btn slide" type="submit" onClick={() => setTrackedHikeModalShow('start')}>Start hike</Button>}
+              {props.loggedIn && trackedHikes.filter(th => th.endTime === null || th.endTime === undefined).length === 1 && <Button className="mx-1 mt-2 cancel_btn slide" type="submit" onClick={cancelHike}>Cancel hike</Button>}
+              {props.loggedIn && trackedHikes.filter(th => th.endTime === null || th.endTime === undefined).length === 1 && <Button className="mx-1 mt-2 terminate_btn slide" type="submit" onClick={() => setTrackedHikeModalShow('terminate')}>Terminate hike</Button>}
             </Row>
-            {props.loggedIn && <TrackedHikes hike={hike} trackedHikes={trackedHikes} />}
+            {props.loggedIn && <TrackedHikesInfo hike={hike} trackedHikes={trackedHikes} />}
             <Row className="tab-box">
               <Tabs defaultActiveKey="description" id="justify-tab-example" className="mb-3 " justify >
                 <Tab eventKey="description" title="Description" >
@@ -351,7 +389,95 @@ function TrackedHikeModal(props) {
   );
 }
 
-function TrackedHikes(props) {
+function ReferencePointReachedModal(props) {
+  const pointID = props.show;
+  const [currentTime, setCurrentTime] = useState(dayjs());
+  const [adjustedTime, setAdjustedTime] = useState(new Date());
+  const [currentTimeClassName, setCurrentTimeClassName] = useState('selected-card');
+  const [adjustedTimeClassName, setAdjustedTimeClassName] = useState('deselected-card');
+  const [selectedTime, setSelectedTime] = useState('current');
+
+  const handleSelection = (selected) => {
+    if (selected === 'current') {
+      setCurrentTimeClassName('selected-card');
+      setAdjustedTimeClassName('deselected-card');
+      setSelectedTime('current');
+    } else if (selected === 'adjusted') {
+      setCurrentTimeClassName('deselected-card');
+      setAdjustedTimeClassName('selected-card');
+      setSelectedTime('adjusted');
+    }
+  }
+
+  const handleRefPointReached = () => {
+    if (selectedTime === 'adjusted')
+      props.recordReferencePointReached(pointID, dayjs(adjustedTime).format());
+    else
+      props.recordReferencePointReached(pointID);
+  }
+
+  let setIntervalsToUpdateCurrentTime = [];
+
+  useEffect(() => {
+    if (props.show) {
+      setCurrentTime(dayjs());
+
+      const setIntervalToUpdateCurrentTime = setInterval(() => {		// update the elapsed time every second
+        setCurrentTime(dayjs());
+      }, 1000);
+
+      setIntervalsToUpdateCurrentTime.push(setIntervalToUpdateCurrentTime);
+    }
+
+    return () => {		// stop setInterval on page leave
+      setIntervalsToUpdateCurrentTime.forEach(s => clearInterval(s));
+    };
+  }, [props.show])
+
+  return (
+    <Modal show={props.show} onHide={props.onHide} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
+      <Modal.Header closeButton className='box-modal hike-page-modal-header'>
+        <Modal.Title id="contained-modal-title-vcenter">Record reference point reached</Modal.Title>
+      </Modal.Header>
+      <Modal.Body className='box-modal hike-page-modal-body'>
+        <Container>
+          <Row>
+            <Col md={6} className='d-flex justify-content-center'>
+              <Card className={'tracked-hikes-card ' + currentTimeClassName} onClick={() => handleSelection('current')}>
+                <Card.Body className='tracked-hikes-card-body'>
+                  <Card.Title className='tracked-hikes-card-title text-center'>
+                    Record reference point reached with current time
+                  </Card.Title>
+                  <Card.Text className='text-center'>
+                    {currentTime.format('MMM DD, YYYY h:mm:ss a')}
+                  </Card.Text>
+                </Card.Body>
+              </Card>
+            </Col>
+            <Col md={6} className='d-flex justify-content-center'>
+              <Card className={'tracked-hikes-card ' + adjustedTimeClassName} onClick={() => handleSelection('adjusted')}>
+                <Card.Body className='tracked-hikes-card-body'>
+                  <Card.Title className='tracked-hikes-card-title text-center'>
+                    Adjust reach time
+                  </Card.Title>
+                  <div className='d-flex justify-content-center'>
+                    <DateTimePicker format='MM/dd/y h:mm:ss a' value={adjustedTime} onChange={setAdjustedTime} disabled={selectedTime !== 'adjusted'} />
+                  </div>
+                </Card.Body>
+              </Card>
+            </Col>
+          </Row>
+          <Row className='btn-row'>
+            <Button className={"mx-1 mt-2 slide terminate_btn"} type="submit" onClick={handleRefPointReached}>Record reference point as reached</Button>
+          </Row>
+        </Container>
+      </Modal.Body>
+
+    </Modal>
+  );
+}
+
+function TrackedHikesInfo(props) {
   const ongoingHike = props.trackedHikes.filter(th => th.endTime === null || th.endTime === undefined).pop();
   const [ongoingHikeElapsedTime, setOngoingHikeElapsedTime] = useState(ongoingHike ? dayjs.duration(dayjs() - dayjs(ongoingHike.startTime)) : undefined);
   const completedHikes = props.trackedHikes.filter(th => th.endTime !== null && th.endTime !== undefined);

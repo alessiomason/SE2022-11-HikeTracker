@@ -809,6 +809,8 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
 
         try {
             const trackedHikes = await dao.getTrackedHikesByHikeIDAndUserID(hikeID, userID);
+            for (const trackedHike of trackedHikes)
+                trackedHike.pointsReached = await dao.getTrackedHikePoints(trackedHike.id);
             res.status(200).json(trackedHikes);
         }
         catch (err) {
@@ -822,11 +824,35 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
 
         try {
             const trackedHikes = await dao.getTrackedHikesByUserID(userID);
+            for (const trackedHike of trackedHikes)
+                trackedHike.pointsReached = await dao.getTrackedHikePoints(trackedHike.id);
             res.status(200).json(trackedHikes);
         }
         catch (err) {
             res.status(500).end();
         }
+    });
+
+    // record reference point reached
+    app.post('/api/trackedHikes/:trackedHikeID/refPoints/:pointID', async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty())
+            return res.status(422).json({ errors: errors.array() });
+
+        const trackedHikeID = req.params.trackedHikeID;
+        const pointID = req.params.pointID;
+
+        // if time is undefined, current time is retrieved
+        const time = dayjs(req.body.time).format();
+
+        try {
+            await dao.recordReferencePointReached(trackedHikeID, pointID, time);
+
+            res.status(200).json().end();
+        } catch (err) {
+            res.status(500).json({ error: `Database error while record the reference point as reached.` });
+        }
+
     });
 
     // terminate hike
