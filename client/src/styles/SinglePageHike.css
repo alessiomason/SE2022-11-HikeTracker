@@ -141,6 +141,18 @@ tr {
   background-color: #30AC42 !important;
   --hover: #30AC42;
   color: #fff !important;
+  transition: all .2s ease-out;
+}
+
+.reach_ref_point_btn {
+  border-radius: 0px !important;
+  width: 158px !important;
+  font-weight: bold;
+  border: 2px solid #ffd326 !important;
+  background-color: #ffd326 !important;
+  --hover: #ffd326;
+  color: #373737 !important;
+  transition: all .2s ease-out;
 }
 
 .terminate_btn {
@@ -151,6 +163,7 @@ tr {
   background-color: #a972cb !important;
   --hover: #a972cb;
   color: #fff !important;
+  transition: all .2s ease-out;
 }
 
 .cancel_btn {
@@ -161,6 +174,7 @@ tr {
   background-color: #212529 !important;
   --hover: #212529;
   color: #fff !important;
+  transition: all .2s ease-out;
 }
 
 .start_btn:hover,
@@ -168,7 +182,9 @@ tr {
 .terminate_btn:hover,
 .terminate_btn:focus,
 .cancel_btn:hover,
-.cancel_btn:focus {
+.cancel_btn:focus,
+.reach_ref_point_btn:hover,
+.reach_ref_point_btn:focus {
   box-shadow: 0 0.6em 0.4em -0.4em var(--hover);
   transform: translateY(-0.25em);
 }

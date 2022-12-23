@@ -2,6 +2,7 @@ import { Icon } from 'leaflet';
 import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet';
 import { Button } from 'react-bootstrap';
 import '../styles/Map.css';
+import '../styles/SinglePageHike.css';
 import 'leaflet/dist/leaflet.css';
 import { default as LinkedHutIcon } from '../images/linked_hut_icon.png';
 const dayjs = require('dayjs');
@@ -91,7 +92,7 @@ function HikeMap(props) {
                 {startPointLabel || props.showStartHike &&
                     <Popup>
                         {startPointLabel}
-                        {props.showStartHike && <Button variant='success' onClick={() => props.setTrackedHikeModalShow('start')}>Start hike</Button>}
+                        {props.showStartHike && <Button className='start_btn' onClick={() => props.setTrackedHikeModalShow('start')}>Start hike</Button>}
                     </Popup>}
             </Marker>}
             {endPoint && <Marker position={endPoint} icon={iconEndPoint}>
@@ -99,7 +100,7 @@ function HikeMap(props) {
                 {endPointLabel || props.showTerminateHike &&
                     <Popup>
                         {endPointLabel}
-                        {props.showTerminateHike && <Button variant='success' onClick={() => props.setTrackedHikeModalShow('terminate')}>Terminate hike</Button>}
+                        {props.showTerminateHike && <Button className='terminate_btn' onClick={() => props.setTrackedHikeModalShow('terminate')}>Terminate hike</Button>}
                     </Popup>}
             </Marker>}
             {props.points?.filter(p => p.referencePoint).map(p => {
@@ -109,7 +110,7 @@ function HikeMap(props) {
                             <Popup>
                                 <p><strong>{p.label}</strong></p>
                                 {!p.reachedInOngoingHike && props.showTerminateHike &&  // not shown if hike is not started
-                                    <Button variant='warning' onClick={() => props.setReferencePointReachedModalShow(p.pointID)}>Mark as reached</Button>}
+                                    <Button className='reach_ref_point_btn' onClick={() => props.setReferencePointReachedModalShow(p.pointID)}>Mark as reached</Button>}
                                 {p.reachedInOngoingHike && p.timeOfReach && <p>Reached on {dayjs(p.timeOfReach).format('MMM DD, YYYY h:mm:ss a')}</p>}
                                 {p.reachedInOngoingHike && !p.timeOfReach && <p>Point reached, time of reach not marked</p>}
                             </Popup>

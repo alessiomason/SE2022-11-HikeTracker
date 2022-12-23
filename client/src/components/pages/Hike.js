@@ -437,7 +437,7 @@ function ReferencePointReachedModal(props) {
   return (
     <Modal show={props.show} onHide={props.onHide} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
       <Modal.Header closeButton className='box-modal hike-page-modal-header'>
-        <Modal.Title id="contained-modal-title-vcenter">Record reference point reached</Modal.Title>
+        <Modal.Title id="contained-modal-title-vcenter">Mark reference point as reached</Modal.Title>
       </Modal.Header>
       <Modal.Body className='box-modal hike-page-modal-body'>
         <Container>
@@ -446,7 +446,7 @@ function ReferencePointReachedModal(props) {
               <Card className={'tracked-hikes-card ' + currentTimeClassName} onClick={() => handleSelection('current')}>
                 <Card.Body className='tracked-hikes-card-body'>
                   <Card.Title className='tracked-hikes-card-title text-center'>
-                    Record reference point reached with current time
+                    Mark with current time
                   </Card.Title>
                   <Card.Text className='text-center'>
                     {currentTime.format('MMM DD, YYYY h:mm:ss a')}
@@ -458,7 +458,7 @@ function ReferencePointReachedModal(props) {
               <Card className={'tracked-hikes-card ' + adjustedTimeClassName} onClick={() => handleSelection('adjusted')}>
                 <Card.Body className='tracked-hikes-card-body'>
                   <Card.Title className='tracked-hikes-card-title text-center'>
-                    Adjust reach time
+                    Adjust time of reach
                   </Card.Title>
                   <div className='d-flex justify-content-center'>
                     <DateTimePicker format='MM/dd/y h:mm:ss a' value={adjustedTime} onChange={setAdjustedTime} disabled={selectedTime !== 'adjusted'} />
@@ -468,7 +468,7 @@ function ReferencePointReachedModal(props) {
             </Col>
           </Row>
           <Row className='btn-row'>
-            <Button className={"mx-1 mt-2 slide terminate_btn"} type="submit" onClick={handleRefPointReached}>Record reference point as reached</Button>
+            <Button className={"mx-1 mt-2 slide reach_ref_point_btn"} type="submit" onClick={handleRefPointReached}>Mark as reached</Button>
           </Row>
         </Container>
       </Modal.Body>
