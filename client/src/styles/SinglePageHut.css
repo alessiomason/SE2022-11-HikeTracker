@@ -62,6 +62,7 @@
     border: 2px solid #FF6700;
     border-radius: 8px;
     cursor: pointer;
+    padding: 0px;
   }
 
   .info-row-hut {
@@ -120,4 +121,27 @@
     background-color: #FF6700 !important;
     color: #212529 !important;
     font-weight: bold !important;
+  }
+
+  .hut-box-thumb{
+    width: fit-content;
+    height: fit-content;
+    background-color: transparent !important;
+    border-color: transparent !important;
+    padding: 0%;
+    margin: 1%;
+}
+
+
+.hut-box-thumb:hover{
+    border-radius: 0%;
+    box-shadow: 0 0 0 3px #FF6700;
+}
+
+.hut-clicked{
+    box-shadow: 0 0 0 3px #FF6700;
+  }
+
+  .icon-hut-filter{
+    filter: invert(63%) sepia(57%) saturate(6590%) hue-rotate(360deg) brightness(99%) contrast(107%);
   }

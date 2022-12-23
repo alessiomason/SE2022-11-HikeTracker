@@ -196,7 +196,7 @@ function MyModal(props) {
 
   return (
 
-    <Modal {...props} onShow={clearTempStates} onHide={props.onHide} aria-labelledby="contained-modal-title-vcenter" centered>
+    <Modal show={props.show} className={props.className} onShow={clearTempStates} onHide={props.onHide} aria-labelledby="contained-modal-title-vcenter" centered>
       <Modal.Header closeButton>
         <Modal.Title id="contained-modal-title-vcenter">
           {props.title}

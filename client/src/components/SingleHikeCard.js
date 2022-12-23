@@ -49,7 +49,7 @@ function SingleHikeCard(props) {
         <Row>
           <Col md={6} sm={6} xs={6} className='mb-3 align'>
           <OverlayTrigger placement="bottom" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip-2">Ascent</Tooltip>}>
-            <img src={Ascent} alt="ascent_image"  className='me-3' />
+            <img src={Ascent} alt="ascent_image"  className='me-3 card-icon-map' />
           </OverlayTrigger>
           {props.hike.ascent && <Card.Text className="card-text p-card"> {Math.round(props.hike.ascent)} m</Card.Text>}
           </Col>

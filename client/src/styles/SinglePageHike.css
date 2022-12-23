@@ -80,6 +80,21 @@
   border: 2px solid #30AC42;
   border-radius: 8px;
   cursor: pointer;
+  object-fit: cover;
+  overflow: hidden;
+}
+
+.modal-img-box{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.modal-imgs{
+  object-fit: cover;
+  max-width: 100%
 }
 
 .sub-title {

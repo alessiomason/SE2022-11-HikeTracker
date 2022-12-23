@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { Button, Navbar, Nav, Container, Row, Col, Form, OverlayTrigger, Tooltip, FloatingLabel, Image } from "react-bootstrap";
 
-import '../styles/ProfileManager.css';
+import '../styles/ProfileLocalGuide.css';
 import React, { useState, useEffect } from 'react';
 
 import { default as Img1 } from '../images/img1.jpg';
@@ -44,16 +44,3 @@ function ProfileLocalGuide(props) {
 
 
 export default ProfileLocalGuide;
-
-/*
-          <Col md={3} xs={12} className="box-center prova m-2">
-           <img src={Hike} alt="user_image" className="me-2" /> Manage Hikes
-        </Col>
-        <Col md={3} className="box-center prova m-5">
-           <img src={Hike} alt="user_image" className="me-2" /> Manage Hikes
-        </Col>
-        <Col md={3} className="box-center prova m-5">
-           <img src={Hike} alt="user_image" className="me-2" /> Manage Hikes
-        </Col>
-        
-        </Row> */
