@@ -61,7 +61,7 @@ function YourHut() {
               <img className=" main_img  hut-man-img" src={mainImg.value} alt="main_image" onClick={() => setModalShow(true)} />
               <Button variant="danger" className="close_btn">
                 <OverlayTrigger placement="bottom" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip-2">Delete</Tooltip>}>
-                  <img src={Close2} alt="user_image" className="x-img" />
+                  <img src={Close2} alt="user_image" className="x-img " />
                 </OverlayTrigger>
               </Button>
             </Row>
@@ -167,7 +167,7 @@ function MyImageModal(props) {
         </Modal.Title>
       </Modal.Header>
       <Modal.Body className='box-modal man-hut-page-modal-body'>
-        <img src={Img1} alt="photo" className="" />
+        <img src={Img1} alt="photo" className="modal-imgs" />
       </Modal.Body>
 
     </Modal>
@@ -189,14 +189,14 @@ function HikeCondition() {
         </Col>
       </Row> : false}
 
-      <Row className=" val-user-box3 mx-5 mb-4 p-4">
+      <Row className=" val-user-box3 mx-5 p-4">
         <Col md={2} className="box-center margin-bottom">
           <img src={Alert1} alt="user_image" />
         </Col>
         <Col md={3} className="align margin-bottom box-center">
           <FloatingLabel controlId="floatingSelect" label="Hike Condition" className="form-sel2">
             <Form.Select aria-label="Floating label select example" placeholder="Select an Hike Condition">
-              <option>- Choose a Condition -</option>
+              <option>~ Choose a Condition ~</option>
               <option value="1"> Open</option>
               <option value="2">Close</option>
               <option value="3">Partly blocked</option>

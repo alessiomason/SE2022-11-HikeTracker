@@ -113,7 +113,7 @@ function MyModalSignup(props) {
                 </Col>
                 <Col md="auto" sm="auto" xs="auto"> {/* it appear only when hut worker is selected */}
                   <Form.Select aria-label="Default select example" value={accessRight} onChange={ev => setAccessRight(ev.target.value)} className="form-sel">
-                    <option>- Choose an hut -</option>
+                    <option>~ Choose an hut ~</option>
                     <option value="r1">Rifugio1</option>
                     <option value="r2">Rifugio2</option>
                     {/*<option value="platform-manager">Platform manager</option>*/}

@@ -8,6 +8,7 @@ import { default as Img1 } from '../../images/img1.jpg';
 import ProfileManager from '../ProfileManager';
 import ProfileLocalGuide from '../ProfileLocalGuide';
 import ProfileHutWorker from "../ProfileHutWorker";
+import ProfileHiker from "../ProfileHiker";
 
 function Profile(props) {
 
@@ -37,10 +38,10 @@ function Profile(props) {
         </Row>
         <Row className="end-top-profile" />
         <Row className="component">
-           {<ProfileLocalGuide />}
+           {/*<ProfileLocalGuide />*/}
           {/*<ProfileManager />*/} 
-          {/*<ProfileHutWorker />*/ }
-          {/*<ProfileHiker /> */}
+          {/*<ProfileHutWorker />*/}
+          {<ProfileHiker hikes={props.hikes} />}
         </Row>
       </Container>
     </Container>

@@ -114,6 +114,20 @@
     background-color: #494681;
 }
 
+.box-Alert input[type=range]::-webkit-slider-thumb:hover {
+    background-color: #494681;
+    border: 2px solid black;
+}
+
+.box-Alert input[type=range].my-slider:active::-webkit-slider-runnable-track {
+    background: #494681;
+    border-color: #494681;
+}
+
+.box-Alert input[type=range].my-slider:hover::-webkit-slider-runnable-track {
+    background: #f5f5f5;
+    border-color: #494681;
+}
 
 
 .cancel-btn {

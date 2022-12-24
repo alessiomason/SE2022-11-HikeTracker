@@ -35,13 +35,13 @@ function SingleHikeCard(props) {
         <Row>
           <Col md={6} sm={6} xs={6} className='mb-3 align'>
           <OverlayTrigger placement="bottom" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip-2">Length</Tooltip>}>
-            <img src={Length} alt="length_image" className='me-3' />
+            <img src={Length} alt="length_image" className='me-3 card-icon-map' />
           </OverlayTrigger>
           {props.hike.length && <Card.Text className="card-text p-card"> {Math.round(props.hike.length)} m</Card.Text>}
           </Col>
           <Col md={6} sm={6} xs={6} className='mb-3 align'>
           <OverlayTrigger placement="bottom" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip-2">Expected time</Tooltip>}>
-            <img src={Time} alt="time_image"  className='me-3' />
+            <img src={Time} alt="time_image"  className='me-3 card-icon-map' />
           </OverlayTrigger>
           {props.hike.expTime && <Card.Text className="card-text p-card"> {props.hike.expTime} hours</Card.Text>}
           </Col>
@@ -55,7 +55,7 @@ function SingleHikeCard(props) {
           </Col>
           <Col md={6} sm={6} xs={6} className='mb-3 align'>
           <OverlayTrigger placement="bottom" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip-2">Difficulty</Tooltip>}>
-            <img src={Difficulty} alt="difficulty_image"   className='me-3'/>
+            <img src={Difficulty} alt="difficulty_image"   className='me-3 card-icon-map'/>
           </OverlayTrigger>
           {props.hike.difficulty && <Card.Text className="card-text p-card"> {difficultiesNames[props.hike.difficulty - 1]}</Card.Text>}
           </Col>

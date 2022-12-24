@@ -1,0 +1,540 @@
+import { useNavigate } from "react-router-dom";
+import { Button, Navbar, Nav, Container, Card, Row, Col, Form, OverlayTrigger, Tooltip, FloatingLabel, Image, Modal, Alert } from "react-bootstrap";
+
+import '../styles/ProfileHiker.css';
+import React, { useState, useEffect } from 'react';
+
+import { default as Img1 } from '../images/img1.jpg';
+import { default as Email } from "../icons/email.svg";
+import { default as Parking } from "../icons/parking.svg";
+import { default as Hut } from "../icons/hut.svg";
+import { default as Hike } from "../icons/hiking.svg";
+import { default as Alert1 } from "../icons/alert.svg";
+import { default as User } from '../icons/user.svg';
+
+import { default as Location } from "../icons/map.svg";
+import { default as Length } from "../icons/location-on-road.svg";
+import { default as Time } from "../icons/stopwatch.svg";
+import { default as Ascent } from "../icons/mountain.svg";
+import { default as Difficulty } from "../icons/volume.svg";
+
+import { default as Close2 } from '../icons/close2.svg';
+import '../styles/ProfileHutWorker.css';
+
+import { default as Params } from '../icons/equalizer.svg';
+import { func } from "prop-types";
+
+function ProfileHiker(props) {
+
+  const [task1, setTask1] = useState("hike");
+
+  return (
+    <Container fluid className="">
+      <Row className="box-btn mb-5">
+        <Button className={(task1 == "hike") ? 'user-btn-fix me-2 margin-bottom2' : 'user-btn me-2 margin-bottom2'} onClick={() => setTask1("hike")}> Your Hikes </Button>
+        <Button className={(task1 == "filter") ? 'user-btn-fix mx-2 margin-bottom2' : 'user-btn mx-2 margin-bottom2'} onClick={() => setTask1("filter")}> Your Filters </Button>
+        <Button className={(task1 == "param") ? 'user-btn-fix ms-2' : 'user-btn ms-2 '} onClick={() => setTask1("param")}> Your Parameters </Button>
+      </Row>
+      {(task1 == "hike") ? <YourHike /> : (task1 == "filter") ? <YourFilter /> : <YourParameter />}
+
+    </Container>
+  );
+}
+
+function YourHike(props) {
+
+  const navigate = useNavigate();
+
+
+  return (
+    <Row className="margin-x ">
+
+      <Col xl={3} lg={4} md={6} sm={12} xs={12} className="box-center">
+        <Card className='your-card mb-3 mx-1 hike-list-card'>
+          <div className='overflow'>
+            <Card.Img variant="top" src={Img1} className="your-card_img" />
+            <h6 className="your-card-status"> In progress </h6>
+          </div>
+          <Card.Body className='card-body y-top'>
+            <Row className='card-title-box'>
+              <Card.Title className='your-card-title'>"Titolo carta"</Card.Title>
+            </Row>
+            <Row>
+              <Col md={6} sm={6} xs={6} className='mb-3 align'>
+                <OverlayTrigger placement="bottom" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip-2">Length</Tooltip>}>
+                  <img src={Length} alt="length_image" className='me-3 your-card-icon' />
+                </OverlayTrigger>
+                <Card.Text className="card-text p-card"> 250 m</Card.Text>
+              </Col>
+              <Col md={6} sm={6} xs={6} className='mb-3 align'>
+                <OverlayTrigger placement="bottom" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip-2">Expected time</Tooltip>}>
+                  <img src={Time} alt="time_image" className='me-3 your-card-icon' />
+                </OverlayTrigger>
+                <Card.Text className="card-text p-card"> 4 hours</Card.Text>
+              </Col>
+            </Row>
+            <Row>
+              <Col md={6} sm={6} xs={6} className='mb-3 align'>
+                <OverlayTrigger placement="bottom" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip-2">Ascent</Tooltip>}>
+                  <img src={Ascent} alt="ascent_image" className='me-3 your-card-icon' />
+                </OverlayTrigger>
+                <Card.Text className="card-text p-card"> 300 m</Card.Text>
+              </Col>
+              <Col md={6} sm={6} xs={6} className='mb-3 align'>
+                <OverlayTrigger placement="bottom" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip-2">Difficulty</Tooltip>}>
+                  <img src={Difficulty} alt="difficulty_image" className='me-3 your-card-icon' />
+                </OverlayTrigger>
+                <Card.Text className="card-text p-card"> Pro hiker</Card.Text>
+              </Col>
+            </Row>
+            <Row>
+              <Col md={12} className='mb-4 align'>
+                <OverlayTrigger placement="bottom" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip-2">Location</Tooltip>}>
+                  <img src={Location} alt="location_image" className='me-3 your-card-icon' />
+                </OverlayTrigger>
+                <Card.Text className="card-text p-card">{"Torino, Torino, Piemonte, Italia"}</Card.Text>
+              </Col>
+            </Row>
+          </Card.Body>
+        </Card>
+      </Col>
+     
+      <Col xl={3} lg={4} md={6} sm={12} xs={12} className="box-center">
+        <Card className='your-card mb-3 mx-1 hike-list-card'>
+          <div className='overflow'>
+            <Card.Img variant="top" src={Img1} className="your-card_img" />
+            <h6 className="your-card-status-terminate"> Terminate </h6>
+          </div>
+          <Card.Body className='card-body y-top'>
+            <Row className='card-title-box'>
+              <Card.Title className='your-card-title'>"Titolo carta"</Card.Title>
+            </Row>
+            <Row>
+              <Col md={6} sm={6} xs={6} className='mb-3 align'>
+                <OverlayTrigger placement="bottom" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip-2">Length</Tooltip>}>
+                  <img src={Length} alt="length_image" className='me-3 your-card-icon' />
+                </OverlayTrigger>
+                <Card.Text className="card-text p-card"> 250 m</Card.Text>
+              </Col>
+              <Col md={6} sm={6} xs={6} className='mb-3 align'>
+                <OverlayTrigger placement="bottom" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip-2">Expected time</Tooltip>}>
+                  <img src={Time} alt="time_image" className='me-3 your-card-icon' />
+                </OverlayTrigger>
+                <Card.Text className="card-text p-card"> 4 hours</Card.Text>
+              </Col>
+            </Row>
+            <Row>
+              <Col md={6} sm={6} xs={6} className='mb-3 align'>
+                <OverlayTrigger placement="bottom" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip-2">Ascent</Tooltip>}>
+                  <img src={Ascent} alt="ascent_image" className='me-3 your-card-icon' />
+                </OverlayTrigger>
+                <Card.Text className="card-text p-card"> 300 m</Card.Text>
+              </Col>
+              <Col md={6} sm={6} xs={6} className='mb-3 align'>
+                <OverlayTrigger placement="bottom" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip-2">Difficulty</Tooltip>}>
+                  <img src={Difficulty} alt="difficulty_image" className='me-3 your-card-icon' />
+                </OverlayTrigger>
+                <Card.Text className="card-text p-card"> Pro hiker</Card.Text>
+              </Col>
+            </Row>
+            <Row>
+              <Col md={12} className='mb-4 align'>
+                <OverlayTrigger placement="bottom" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip-2">Location</Tooltip>}>
+                  <img src={Location} alt="location_image" className='me-3 your-card-icon' />
+                </OverlayTrigger>
+                <Card.Text className="card-text p-card">{"Torino, Torino, Piemonte, Italia"}</Card.Text>
+              </Col>
+            </Row>
+          </Card.Body>
+        </Card>
+      </Col>
+
+      <Col xl={3} lg={4} md={6} sm={12} xs={12} className="box-center">
+        <Card className='your-card mb-3 mx-1 hike-list-card'>
+          <div className='overflow'>
+            <Card.Img variant="top" src={Img1} className="your-card_img" />
+          </div>
+          <Card.Body className='card-body'>
+            <Row className='card-title-box'>
+              <Card.Title className='your-card-title'>"Titolo carta"</Card.Title>
+            </Row>
+            <Row>
+              <Col md={6} sm={6} xs={6} className='mb-3 align'>
+                <OverlayTrigger placement="bottom" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip-2">Length</Tooltip>}>
+                  <img src={Length} alt="length_image" className='me-3 your-card-icon' />
+                </OverlayTrigger>
+                <Card.Text className="card-text p-card"> 250 m</Card.Text>
+              </Col>
+              <Col md={6} sm={6} xs={6} className='mb-3 align'>
+                <OverlayTrigger placement="bottom" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip-2">Expected time</Tooltip>}>
+                  <img src={Time} alt="time_image" className='me-3 your-card-icon' />
+                </OverlayTrigger>
+                <Card.Text className="card-text p-card"> 4 hours</Card.Text>
+              </Col>
+            </Row>
+            <Row>
+              <Col md={6} sm={6} xs={6} className='mb-3 align'>
+                <OverlayTrigger placement="bottom" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip-2">Ascent</Tooltip>}>
+                  <img src={Ascent} alt="ascent_image" className='me-3 your-card-icon' />
+                </OverlayTrigger>
+                <Card.Text className="card-text p-card"> 300 m</Card.Text>
+              </Col>
+              <Col md={6} sm={6} xs={6} className='mb-3 align'>
+                <OverlayTrigger placement="bottom" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip-2">Difficulty</Tooltip>}>
+                  <img src={Difficulty} alt="difficulty_image" className='me-3 your-card-icon' />
+                </OverlayTrigger>
+                <Card.Text className="card-text p-card"> Pro hiker</Card.Text>
+              </Col>
+            </Row>
+            <Row>
+              <Col md={12} className='mb-4 align'>
+                <OverlayTrigger placement="bottom" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip-2">Location</Tooltip>}>
+                  <img src={Location} alt="location_image" className='me-3 your-card-icon' />
+                </OverlayTrigger>
+                <Card.Text className="card-text p-card">{"Torino, Torino, Piemonte, Italia"}</Card.Text>
+              </Col>
+            </Row>
+          </Card.Body>
+        </Card>
+      </Col>
+
+      <Col xl={3} lg={4} md={6} sm={12} xs={12} className="box-center">
+        <Card className='your-card mb-3 mx-1 hike-list-card'>
+          <div className='overflow'>
+            <Card.Img variant="top" src={Img1} className="your-card_img" />
+          </div>
+          <Card.Body className='card-body'>
+            <Row className='card-title-box'>
+              <Card.Title className='your-card-title'>"Titolo carta"</Card.Title>
+            </Row>
+            <Row>
+              <Col md={6} sm={6} xs={6} className='mb-3 align'>
+                <OverlayTrigger placement="bottom" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip-2">Length</Tooltip>}>
+                  <img src={Length} alt="length_image" className='me-3 your-card-icon' />
+                </OverlayTrigger>
+                <Card.Text className="card-text p-card"> 250 m</Card.Text>
+              </Col>
+              <Col md={6} sm={6} xs={6} className='mb-3 align'>
+                <OverlayTrigger placement="bottom" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip-2">Expected time</Tooltip>}>
+                  <img src={Time} alt="time_image" className='me-3 your-card-icon' />
+                </OverlayTrigger>
+                <Card.Text className="card-text p-card"> 4 hours</Card.Text>
+              </Col>
+            </Row>
+            <Row>
+              <Col md={6} sm={6} xs={6} className='mb-3 align'>
+                <OverlayTrigger placement="bottom" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip-2">Ascent</Tooltip>}>
+                  <img src={Ascent} alt="ascent_image" className='me-3 your-card-icon' />
+                </OverlayTrigger>
+                <Card.Text className="card-text p-card"> 300 m</Card.Text>
+              </Col>
+              <Col md={6} sm={6} xs={6} className='mb-3 align'>
+                <OverlayTrigger placement="bottom" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip-2">Difficulty</Tooltip>}>
+                  <img src={Difficulty} alt="difficulty_image" className='me-3 your-card-icon' />
+                </OverlayTrigger>
+                <Card.Text className="card-text p-card"> Pro hiker</Card.Text>
+              </Col>
+            </Row>
+            <Row>
+              <Col md={12} className='mb-4 align'>
+                <OverlayTrigger placement="bottom" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip-2">Location</Tooltip>}>
+                  <img src={Location} alt="location_image" className='me-3 your-card-icon' />
+                </OverlayTrigger>
+                <Card.Text className="card-text p-card">{"Torino, Torino, Piemonte, Italia"}</Card.Text>
+              </Col>
+            </Row>
+          </Card.Body>
+        </Card>
+      </Col>
+     
+     
+    </Row>
+  );
+}
+
+
+function YourFilter() {
+  return (
+
+    <Row className="margin-x box-center">
+
+      <Row>
+        <Col lg={4} md={6} sm={12} xs={12} className="p-2 ">
+          <Col className="val-user-box3 p-4 ">
+            <Row>
+              <h5 className="filter-hiker-title mb-3"> Length (meters) </h5>
+            </Row>
+            <Row>
+              <Col md={12}>
+                <FloatingLabel controlId="floatingInput" label="Minimum Length" className="mb-3">
+                  <Form.Control required={true} type='number' step="any" min={0} placeholder="#" value={"140"} />
+                </FloatingLabel>
+              </Col>
+            </Row>
+            <Row>
+              <Col md={12}>
+                <FloatingLabel controlId="floatingInput" label="Maximum Length" className="mb-3">
+                  <Form.Control required={true} type='number' step="any" min={0} placeholder="#" />
+                </FloatingLabel>
+              </Col>
+            </Row>
+            <Row className='btn_box'>
+              <Button variant="danger" className="cancel-btn2 mx-2 " >Undo</Button>
+              <Button variant="success" type='submit' className="save-btn2 mx-2 ">Save</Button>
+            </Row>
+          </Col>
+        </Col>
+
+        <Col lg={4} md={6} sm={12} xs={12} className="p-2 ">
+          <Col className="val-user-box3 p-4 ">
+            <Row>
+              <h5 className="filter-hiker-title mb-3"> Ascent (meters) </h5>
+            </Row>
+            <Row>
+              <Col md={12}>
+                <FloatingLabel controlId="floatingInput" label="Minimum Ascent" className="mb-3">
+                  <Form.Control required={true} type='number' step="any" min={0} placeholder="#" value={"140"} />
+                </FloatingLabel>
+              </Col>
+            </Row>
+            <Row>
+              <Col md={12}>
+                <FloatingLabel controlId="floatingInput" label="Maximum Ascent" className="mb-3">
+                  <Form.Control required={true} type='number' step="any" min={0} placeholder="#" />
+                </FloatingLabel>
+              </Col>
+            </Row>
+            <Row className='btn_box'>
+              <Button variant="danger" className="cancel-btn2 mx-2 " >Undo</Button>
+              <Button variant="success" type='submit' className="save-btn2 mx-2 ">Save</Button>
+            </Row>
+          </Col>
+        </Col>
+
+        <Col lg={4} md={12} sm={12} xs={12} className="p-2 ">
+          <Col className="val-user-box3 p-4 ">
+            <Row>
+              <h5 className="filter-hiker-title mb-3"> Expected Time (hours)</h5>
+            </Row>
+            <Row>
+              <Col md={12}>
+                <FloatingLabel controlId="floatingInput" label="Minimum Time" className="mb-3">
+                  <Form.Control required={true} type='number' step="any" min={0} placeholder="#" value={"140"} />
+                </FloatingLabel>
+              </Col>
+            </Row>
+            <Row>
+              <Col md={12}>
+                <FloatingLabel controlId="floatingInput" label="Maximum Time" className="mb-3">
+                  <Form.Control required={true} type='number' step="any" min={0} placeholder="#" />
+                </FloatingLabel>
+              </Col>
+            </Row>
+            <Row className='btn_box'>
+              <Button variant="danger" className="cancel-btn2 mx-2 " >Undo</Button>
+              <Button variant="success" type='submit' className="save-btn2 mx-2 ">Save</Button>
+            </Row>
+          </Col>
+        </Col>
+      </Row>
+
+      <Row>
+        <Col lg={4} md={6} sm={12} xs={12}>
+          <Row>
+            <Col className="p-2 ">
+              <Col className="val-user-box3 p-4 ">
+                <Row>
+                  <h5 className="filter-hiker-title mb-3"> Difficulty </h5>
+                </Row>
+                <Row>
+                  <Col md={12}>
+                    <Form.Check inline label="Tourist" type="checkbox" id="1" className="mb-3" />
+                    <Form.Check inline label="Hiker" type="checkbox" id="2" className="mb-3" />
+                    <Form.Check inline label="Pro Hiker" type="checkbox" id="3" className="mb-3" />
+                  </Col>
+                </Row>
+                <Row className='btn_box'>
+                  <Button variant="danger" className="cancel-btn2 mx-2 " >Undo</Button>
+                  <Button variant="success" type='submit' className="save-btn2 mx-2 ">Save</Button>
+                </Row>
+              </Col>
+            </Col>
+          </Row>
+
+          <Row>
+            <Col className="p-2 ">
+              <Col className="val-user-box3 p-4 ">
+                <Row>
+                  <h5 className="filter-hiker-title mb-3"> Locality </h5>
+                </Row>
+                <Row>
+                  <Col md={12} >
+                    <FloatingLabel controlId="floatingSelect" label="State" className="form-sel2 mb-3">
+                      <Form.Select aria-label="Floating label select example" placeholder="State">
+                        <option>~ Choose a State ~</option>
+                        <option value="1"> Open</option>
+                        <option value="2">Close</option>
+                        <option value="3">Partly blocked</option>
+                        <option value="4">Requires special gear</option>
+                      </Form.Select>
+                    </FloatingLabel>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col md={12} >
+                    <FloatingLabel controlId="floatingSelect" label="Region" className="form-sel2 mb-3">
+                      <Form.Select aria-label="Floating label select example" placeholder="Region">
+                        <option>~ Choose a Region ~</option>
+                        <option value="1"> Open</option>
+                        <option value="2">Close</option>
+                        <option value="3">Partly blocked</option>
+                        <option value="4">Requires special gear</option>
+                      </Form.Select>
+                    </FloatingLabel>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col md={12} >
+                    <FloatingLabel controlId="floatingSelect" label="Province" className="form-sel2 mb-3">
+                      <Form.Select aria-label="Floating label select example" placeholder="Province">
+                        <option>~ Choose a Province ~</option>
+                        <option value="1"> Open</option>
+                        <option value="2">Close</option>
+                        <option value="3">Partly blocked</option>
+                        <option value="4">Requires special gear</option>
+                      </Form.Select>
+                    </FloatingLabel>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col md={12} >
+                    <FloatingLabel controlId="floatingSelect" label="Municipality" className="form-sel2 mb-3">
+                      <Form.Select aria-label="Floating label select example" placeholder="Municipality">
+                        <option>~ Choose a Municipality ~</option>
+                        <option value="1"> Open</option>
+                        <option value="2">Close</option>
+                        <option value="3">Partly blocked</option>
+                        <option value="4">Requires special gear</option>
+                      </Form.Select>
+                    </FloatingLabel>
+                  </Col>
+                </Row>
+                <Row className='btn_box'>
+                  <Button variant="danger" className="cancel-btn2 mx-2 " >Undo</Button>
+                  <Button variant="success" type='submit' className="save-btn2 mx-2 ">Save</Button>
+                </Row>
+              </Col>
+            </Col>
+          </Row>
+        </Col>
+
+        <Col lg={8} md={6} sm={12} xs={12} className="p-2 ">
+          <Col className="val-user-box3 p-4 ">
+            <Row>
+              <h5 className="filter-hiker-title mb-3"> Point on the Map </h5>
+            </Row>
+            <Row className="px-2 mb-4">
+              <Col md={12} className="filter-hike-map-box ">
+
+              </Col>
+            </Row>
+            <Row className="mb-3">
+              <Col md={12}>
+                <h6>Choose a point on the Map and a radius value:</h6>
+              </Col>
+            </Row>
+            <Row className="mb-4 hike-filter-range">
+              <Col md={12} >
+                <Row >
+                  <Col xs={1} className="px-0 mx-0 box-center">1 km</Col>
+                  <Col xs={10} className="box-center " >
+                    <input type='range' min={1} max={5} step={1} className='my-slider back-bar' />
+                  </Col>
+                  <Col xs={1} className="px-0 mx-0 box-center" >5 km</Col>
+                </Row>
+              </Col>
+            </Row>
+            <Row className='btn_box'>
+              <Button variant="danger" className="cancel-btn2 mx-2 " >Undo</Button>
+              <Button variant="success" type='submit' className="save-btn2 mx-2 ">Save</Button>
+            </Row>
+          </Col>
+        </Col>
+      </Row>
+    </Row>
+  );
+}
+
+function YourParameter() {
+
+  return (
+    <Row className=" val-user-box3 mx-5 p-4 box-center">
+      <Row>
+        <Col lg={3} md={6} sm={12} xs={12} className="box-center ">
+          <img src={Params} alt="param_image" className="mb-3" />
+        </Col>
+        <Col lg={3} md={6} sm={12} xs={12} className=" padding-x " >
+          <FloatingLabel controlId="floatingInput" label="Total nr of hikes finished" className="mb-3">
+            <Form.Control required={true} type="text" disabled readOnly value={"12"}></Form.Control>
+          </FloatingLabel>
+        </Col>
+        <Col lg={3} md={6} sm={12} xs={12} className=" padding-x "  >
+          <FloatingLabel controlId="floatingInput" label="Total nr of kms walked" className="mb-3">
+            <Form.Control required={true} type="text" disabled readOnly value={"70"}></Form.Control>
+          </FloatingLabel>
+        </Col>
+        <Col lg={3} md={6} sm={12} xs={12} className=" padding-x " >
+          <FloatingLabel controlId="floatingInput" label="Highest altitude reached" className="mb-3">
+            <Form.Control required={true} type="text" disabled readOnly value={"70"}></Form.Control>
+          </FloatingLabel>
+        </Col>
+      </Row>
+      <Row>
+        <Col lg={3} md={6} sm={12} xs={12} className=" padding-x " >
+          <FloatingLabel controlId="floatingInput" label="Highest altitude range done" className="mb-3">
+            <Form.Control required={true} type="text" disabled readOnly value={"70"}></Form.Control>
+          </FloatingLabel>
+        </Col>
+        <Col lg={3} md={6} sm={12} xs={12} className=" padding-x " >
+          <FloatingLabel controlId="floatingInput" label="Longest (km) hike completed" className="mb-3">
+            <Form.Control required={true} type="text" disabled readOnly value={"12"}></Form.Control>
+          </FloatingLabel>
+        </Col>
+        <Col lg={3} md={6} sm={12} xs={12} className=" padding-x " >
+          <FloatingLabel controlId="floatingInput" label="Longest (hours) hike completed" className="mb-3">
+            <Form.Control required={true} type="text" disabled readOnly value={"70"}></Form.Control>
+          </FloatingLabel>
+        </Col>
+        <Col lg={3} md={6} sm={12} xs={12} className=" padding-x " >
+          <FloatingLabel controlId="floatingInput" label="Shortest (km) hike completed" className="mb-3">
+            <Form.Control required={true} type="text" disabled readOnly value={"70"}></Form.Control>
+          </FloatingLabel>
+        </Col>
+      </Row>
+      <Row>
+        <Col lg={3} md={6} sm={12} xs={12} className=" padding-x " >
+          <FloatingLabel controlId="floatingInput" label="Shortest (hours) hike completed" className="mb-3">
+            <Form.Control required={true} type="text" disabled readOnly value={"70"}></Form.Control>
+          </FloatingLabel>
+        </Col>
+        <Col lg={3} md={6} sm={12} xs={12} className=" padding-x " >
+          <FloatingLabel controlId="floatingInput" label="Average pace (min/km)" className="mb-3">
+            <Form.Control required={true} type="text" disabled readOnly value={"12"}></Form.Control>
+          </FloatingLabel>
+        </Col>
+        <Col lg={3} md={6} sm={12} xs={12} className=" padding-x " >
+          <FloatingLabel controlId="floatingInput" label="Fastest paced hike (min/km)" className="mb-3">
+            <Form.Control required={true} type="text" disabled readOnly value={"70"}></Form.Control>
+          </FloatingLabel>
+        </Col>
+        <Col lg={3} md={6} sm={12} xs={12} className=" padding-x ">
+          <FloatingLabel controlId="floatingInput" label="Average vertical ascent speed (m/hour)" className="mb-3">
+            <Form.Control required={true} type="text" disabled readOnly value={"70"}></Form.Control>
+          </FloatingLabel>
+        </Col>
+      </Row>
+    </Row>
+  );
+}
+export default ProfileHiker;
+
