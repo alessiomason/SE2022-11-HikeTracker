@@ -340,7 +340,8 @@ async function getHikes() {
             province: h.province,
             municipality: h.municipality,
             startPoint: h.startPoint,
-            author: h.author
+            author: h.author,
+            authorId: h.authorId
         }))
     else throw hikes;
 }
@@ -354,7 +355,7 @@ async function getParkingLots() {
             id: pl.id, label: pl.label,
             description: pl.description, state: pl.state, region: pl.region, province: pl.province, municipality: pl.municipality,
             lat: pl.lat, lon: pl.lon, altitude: pl.altitude,
-            total: pl.total, occupied: pl.occupied, author: pl.author
+            total: pl.total, occupied: pl.occupied, author: pl.author,authorId: pl.authorId
         }))
     else throw pls;
 }
@@ -376,7 +377,8 @@ async function getHuts() {
             region: h.region,
             province: h.province,
             municipality: h.municipality,
-            author: h.author
+            author: h.author,
+            authorId: h.authorId
         }))
     else throw huts;
 }
@@ -536,9 +538,9 @@ function deletHut(id) {
 }
 
 function startHike(hikeID, startTime) {
-    // call: POST /api/startHike
+    // call: POST /api/trackedHikes/:hikeID
     return new Promise((resolve, reject) => {
-        fetch(new URL('startHike/' + hikeID, APIURL), {
+        fetch(new URL('trackedHikes/' + hikeID, APIURL), {
             method: 'POST',
             credentials: 'include',
             headers: {
@@ -561,7 +563,7 @@ function startHike(hikeID, startTime) {
 }
 
 async function getTrackedHikesByHikeIDAndUserID(hikeID) {
-    // call /api/trackedHikes/:id
+    // call /api/trackedHikes/:hikeID
     const response = await fetch(new URL('trackedHikes/' + hikeID, APIURL), { credentials: 'include' });
     const trackedHikes = await response.json();
     if (response.ok)
@@ -569,13 +571,14 @@ async function getTrackedHikesByHikeIDAndUserID(hikeID) {
             id: th.id,
             hikeID: th.hikeID,
             startTime: th.startTime,
-            endTime: th.endTime
+            endTime: th.endTime,
+            pointsReached: th.pointsReached
         }))
     else throw trackedHikes;
 }
 
 async function getTrackedHikesByUserID() {
-    // call /api/trackedHikes/:id
+    // call /api/trackedHikes/
     const response = await fetch(new URL('trackedHikes', APIURL), { credentials: 'include' });
     const trackedHikes = await response.json();
     if (response.ok)
@@ -583,15 +586,41 @@ async function getTrackedHikesByUserID() {
             id: th.id,
             hikeID: th.hikeID,
             startTime: th.startTime,
-            endTime: th.endTime
+            endTime: th.endTime,
+            pointsReached: th.pointsReached
         }))
     else throw trackedHikes;
 }
 
-function terminateHike(trackedHikeID, endTime) {
-    // call: PUT /api/terminateHike
+function recordReferencePointReached(trackedHikeID, pointID, time) {
+    // call: POST /api/trackedHikes/:trackedHikeID/refPoints/:pointID
     return new Promise((resolve, reject) => {
-        fetch(new URL('terminateHike/' + trackedHikeID, APIURL), {
+        fetch(new URL('trackedHikes/' + trackedHikeID + '/refPoints/' + pointID, APIURL), {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+
+            body: JSON.stringify({ time }),
+
+        }).then((response) => {
+            if (response.ok)
+                resolve();
+            else {
+                // analyze the cause of error
+                response.json()
+                    .then((message) => { reject(message); }) // error message in the response body
+                    .catch(() => { reject({ error: "Cannot parse server response." }) }); // something else
+            }
+        }).catch(() => { reject({ error: "Cannot communicate with the server." }) }); // connection errors
+    });
+}
+
+function terminateHike(trackedHikeID, endTime) {
+    // call: PUT /api/trackedHikes/:id
+    return new Promise((resolve, reject) => {
+        fetch(new URL('trackedHikes/' + trackedHikeID, APIURL), {
             method: 'PUT',
             credentials: 'include',
             headers: {
@@ -603,6 +632,25 @@ function terminateHike(trackedHikeID, endTime) {
         }).then((response) => {
             if (response.ok)
                 resolve();
+            else {
+                // analyze the cause of error
+                response.json()
+                    .then((message) => { reject(message); }) // error message in the response body
+                    .catch(() => { reject({ error: "Cannot parse server response." }) }); // something else
+            }
+        }).catch(() => { reject({ error: "Cannot communicate with the server." }) }); // connection errors
+    });
+}
+
+function cancelHike(trackedHikeID) {
+    // call: DELETE /api/trackedHikes/:id
+    return new Promise((resolve, reject) => {
+        fetch(new URL('trackedHikes/' + trackedHikeID, APIURL), {
+            method: 'DELETE',
+            credentials: 'include'
+        }).then((response) => {
+            if (response.ok)
+                resolve(null);
             else {
                 // analyze the cause of error
                 response.json()
@@ -699,6 +747,6 @@ const API = {
     addGPXTrack, addParkingLot, AddPoint, deleteParkingLot, updateParkingLot, deleteHike, getHikes, getParkingLots, addHut, updateHut, uploadHutImage,
     uploadParkingLotImage, getHuts, deletHut, getHike, addHike, updateHike, signup, verifyEmail, login, logout, getUserInfo, getUserAccessRight, getHikesRefPoints,
     getStartPoint, getEndPoint, getReferencePoint, reverseNominatim, setNewReferencePoint, clearReferencePoint, startHike, getTrackedHikesByHikeIDAndUserID,
-    getTrackedHikesByUserID, terminateHike
+    getTrackedHikesByUserID, recordReferencePointReached, terminateHike, cancelHike
 };
 export default API;

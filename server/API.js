@@ -782,15 +782,16 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
     });
 
     // start hike
-    app.post('/api/startHike/:id', async (req, res) => {
+    app.post('/api/trackedHikes/:hikeID', async (req, res) => {
         const errors = validationResult(req);
         if (!errors.isEmpty())
             return res.status(422).json({ errors: errors.array() });
 
-        const hikeID = req.params.id;
+        const hikeID = req.params.hikeID;
         const userID = req.user.id;
 
-        const startTime = dayjs().format();
+        // if startTime is undefined, current time is retrieved
+        const startTime = dayjs(req.body.startTime).format();
 
         try {
             await dao.startHike(hikeID, userID, startTime);
@@ -802,12 +803,14 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
     });
 
     // get tracked hikes by hikeID and userID
-    app.get('/api/trackedHikes/:id', async (req, res) => {
-        const hikeID = req.params.id;
+    app.get('/api/trackedHikes/:hikeID', async (req, res) => {
+        const hikeID = req.params.hikeID;
         const userID = req.user.id;
 
         try {
             const trackedHikes = await dao.getTrackedHikesByHikeIDAndUserID(hikeID, userID);
+            for (const trackedHike of trackedHikes)
+                trackedHike.pointsReached = await dao.getTrackedHikePoints(trackedHike.id);
             res.status(200).json(trackedHikes);
         }
         catch (err) {
@@ -821,6 +824,8 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
 
         try {
             const trackedHikes = await dao.getTrackedHikesByUserID(userID);
+            for (const trackedHike of trackedHikes)
+                trackedHike.pointsReached = await dao.getTrackedHikePoints(trackedHike.id);
             res.status(200).json(trackedHikes);
         }
         catch (err) {
@@ -828,17 +833,39 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
         }
     });
 
+    // record reference point reached
+    app.post('/api/trackedHikes/:trackedHikeID/refPoints/:pointID', async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty())
+            return res.status(422).json({ errors: errors.array() });
+
+        const trackedHikeID = req.params.trackedHikeID;
+        const pointID = req.params.pointID;
+
+        // if time is undefined, current time is retrieved
+        const time = dayjs(req.body.time).format();
+
+        try {
+            await dao.recordReferencePointReached(trackedHikeID, pointID, time);
+
+            res.status(200).json().end();
+        } catch (err) {
+            res.status(500).json({ error: `Database error while record the reference point as reached.` });
+        }
+
+    });
+
     // terminate hike
-    app.put('/api/terminateHike/:id', async (req, res) => {
+    app.put('/api/trackedHikes/:id', async (req, res) => {
         const errors = validationResult(req);
         if (!errors.isEmpty())
             return res.status(422).json({ errors: errors.array() });
 
         const trackedHikeID = req.params.id;
         const userID = req.user.id;
-        console.log(req.user)
 
-        const endTime = dayjs().format();
+        // if endTime is undefined, current time is retrieved
+        const endTime = dayjs(req.body.endTime).format();
 
         try {
             await dao.terminateHike(trackedHikeID, endTime);
@@ -887,6 +914,24 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
             res.status(200).json().end();
         } catch (err) {
             res.status(500).json({ error: `Database error while terminating the hike.` });
+        }
+
+    });
+
+    // cancel ongoing hike
+    app.delete('/api/trackedHikes/:id', async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty())
+            return res.status(422).json({ errors: errors.array() });
+
+        const trackedHikeID = req.params.id;
+
+        try {
+            await dao.deleteTrackedHikePoints(trackedHikeID);
+            await dao.deleteTrackedHike(trackedHikeID);
+            res.status(204).json().end();
+        } catch (err) {
+            res.status(500).json({ error: `Database error while canceling the ongoing hike.` });
         }
 
     });
