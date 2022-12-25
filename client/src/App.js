@@ -60,8 +60,6 @@ function App2() {
     const doSignUp = (credentials) => {
         API.signup(credentials)
             .then(() => {
-                navigate('/verify-email');
-                setShowSignup(false);
                 setShowEmailAlert(true);
             })
             .catch(err => setMessage(err))
@@ -90,17 +88,6 @@ function App2() {
         setDirty(true);
         navigate('/');
     }
-/*
-    useEffect(() => {
-        if (showEmailAlert) {
-          const timeId = setTimeout(() => {
-            setShowEmailAlert(() => false);
-          }, 5000)
-          return () => {
-            clearTimeout(timeId)
-          }
-        }
-      }, [showEmailAlert]);*/
 
     const addGPXTrack = async (gpx) => {
         try {

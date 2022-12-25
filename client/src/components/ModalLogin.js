@@ -82,6 +82,10 @@ function MyModalLogin(props) {
             </Form>
           </Col>
         </Row>
+        <Row className='end-signup align'>
+          <p className='p-sign'>Already have an Account?</p>
+          <h6 className='h6-sign-in' onClick={() => {props.setShowSignup(true);props.setShowLogin(false)}}> Sign Up</h6>
+        </Row>
       </Container>
     </Modal>
 
