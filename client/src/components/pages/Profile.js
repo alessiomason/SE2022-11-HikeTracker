@@ -38,10 +38,10 @@ function Profile(props) {
         </Row>
         <Row className="end-top-profile" />
         <Row className="component">
-           {/*<ProfileLocalGuide />*/}
+           {<ProfileLocalGuide />}
           {/*<ProfileManager />*/} 
           {/*<ProfileHutWorker />*/}
-          {<ProfileHiker hikes={props.hikes} />}
+          {/*<ProfileHiker hikes={props.hikes} />*/}
         </Row>
       </Container>
     </Container>

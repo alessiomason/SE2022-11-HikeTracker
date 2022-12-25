@@ -38,11 +38,14 @@ function HutPage(props) {
       <MyImageModal hikeId={1} hikeLabel={"Rifugio Rocciamelone"} show={modalShow} onHide={() => setModalShow(false)} />
       <Container fluid className='internal-box-hut' >
         <Row className="center-box mb-4">
-          <h2 className="background double single-hut-title "><span><img src={Hut} alt="hut_image" className='me-2 hut-img single-hut-icon' />{"Rifugio Rocciamelone"}</span></h2>
+          <Col md={12} className="center-box">
+
+          
+          <h2 className="background double single-hut-title "><span><img src={Hut} alt="hut_image" className='me-2 hut-img' />{"Rifugio Rocciamelone"}</span></h2>
+          </Col>
         </Row>
         <Row className="mx-4">
           <Col md={4} >
-
             <Row>
               <Col md={12} className='mb-4 '>
                 <Row className="box_img mt-3">

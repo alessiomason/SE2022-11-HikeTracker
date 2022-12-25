@@ -1,63 +1,61 @@
-.choose_start {
+.add-ref-btn{
     border-radius: 0px !important;
-    width: 148px !important;
+    width: 240px;
+    border: 2px solid #0B5ED7 !important;
     font-weight: bold;
+    background-color: #0B5ED7 !important;
+    --hover: #0B5ED7;
+    color: white !important;
+  
+  }
+
+  .add-ref-btn:hover, 
+.add-ref-btn:focus {
+  box-shadow: 0 0.6em 0.4em -0.4em var(--hover);
+    transform: translateY(-0.25em);
+}
+
+.single-hike-icon {
+    vertical-align: baseline;
+    filter: invert(54%) sepia(70%) saturate(545%) hue-rotate(77deg) brightness(89%) contrast(80%)
+  }
+
+  .start-point-btn{
+    border-radius: 0px !important;
+    width: 240px;
     border: 2px solid #30AC42 !important;
+    font-weight: bold;
     background-color: #30AC42 !important;
     --hover: #30AC42;
-    color: #fff !important;
-}
+    color: white !important;
+  
+  }
 
-.choose_start:hover,
-.choose_start:focus {
-    box-shadow: 0 0.6em 0.4em -0.4em var(--hover);
+  .start-point-btn:hover, 
+.start-point-btn:focus {
+  box-shadow: 0 0.6em 0.4em -0.4em var(--hover);
     transform: translateY(-0.25em);
 }
 
-.choose_end {
+.end-point-btn{
     border-radius: 0px !important;
-    width: 148px !important;
-    font-weight: bold;
+    width: 240px;
     border: 2px solid #c31e2c !important;
+    font-weight: bold;
     background-color: #c31e2c !important;
     --hover: #c31e2c;
-    color: #fff !important;
-}
+    color: white !important;
+  
+  }
 
-.choose_end:hover,
-.choose_end:focus {
-    box-shadow: 0 0.6em 0.4em -0.4em var(--hover);
+  .end-point-btn:hover, 
+.end-point-btn:focus {
+  box-shadow: 0 0.6em 0.4em -0.4em var(--hover);
     transform: translateY(-0.25em);
 }
 
-.save_refPoint {
-    border-radius: 0px !important;
-    width: 148px !important;
-    font-weight: bold;
-    border: 2px solid #10e414 !important;
-    background-color: #10e414 !important;
-    --hover: #10e414 ;
-    color: #fff !important;
-}
-
-.save_refPint:hover,
-.save_refPoint:focus {
-    box-shadow: 0 0.6em 0.4em -0.4em var(--hover);
-    transform: translateY(-0.25em);
-}
-
-.cancel_refPoint {
-    border-radius: 0px !important;
-    width: 148px !important;
-    font-weight: bold;
-    border: 2px solid #FA8072 !important;
-    background-color: #FA8072 !important;
-    --hover: #FA8072;
-    color: #fff !important;
-}
-
-.cancel_refPoint:hover,
-.cancel_refPoint:focus {
-    box-shadow: 0 0.6em 0.4em -0.4em var(--hover);
-    transform: translateY(-0.25em);
+.fit2{
+    margin-top: 20px;
+    width: fit-content;
+    margin-bottom: 0px;
 }

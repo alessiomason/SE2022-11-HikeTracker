@@ -164,7 +164,9 @@ function HikePage(props) {
       <ReferencePointReachedModal recordReferencePointReached={recordReferencePointReached} show={referencePointReachedModalShow} onHide={() => setReferencePointReachedModalShow(false)} />
       <Container fluid className='internal-box' >
         <Row className="center-box mb-4">
+        <Col md={12} className="center-box">
           <h2 className="background double single-hike-title "><span><img src={Hiking} alt="hiking_image" className='me-2 single-hike-icon' />{hike.label}</span></h2>
+        </Col>
         </Row>
         <Row className="mx-4">
           <Col md={3} >

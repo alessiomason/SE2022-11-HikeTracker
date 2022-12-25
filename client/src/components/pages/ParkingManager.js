@@ -1,6 +1,6 @@
 
 import '../../styles/HikeManager.css';
-import { Container, Row, Col, InputGroup, Form, Button, Alert } from 'react-bootstrap';
+import { Container, Row, Col, InputGroup, Form, Button, Alert, FloatingLabel } from 'react-bootstrap';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import API from '../../API.js';
@@ -41,7 +41,7 @@ function MyParkingManager(props) {
           </InputGroup>
         </Col>
         <Col className='search_row'>
-          <Button variant='primary' size="lg" className='mx-5 my-3' onClick={() => navigate("/newParking")}>Add new Parking Lot</Button>
+          <Button variant='primary' size="lg" className='mx-5 my-3 add-man-btn' onClick={() => navigate("/newParking")}>Add new Parking Lot</Button>
         </Col>
       </Row>
       {showUpdateBanner && <Alert variant='success' onClose={() => { setShowUpdateBanner(false); setMessage('') }} dismissible>{message}</Alert>}
@@ -108,8 +108,8 @@ function SingleUpdateParkingCard(props) {
   return (
 
     <Row className="hike_box mx-5 py-5 px-5 mb-4">
-      <Col md={2} className="box_img_box" >
-        <img className=" img_box mb-3"
+      <Col lg={3} md={6} sm={12} className="box-center"  >
+        <img className=" img_box-park mb-3"
           src={preview}
           onError={({ currentTarget }) => {
             currentTarget.onerror = null; // prevents looping
@@ -122,72 +122,61 @@ function SingleUpdateParkingCard(props) {
             onChange={(e) => { setImage(e.target.files[0]); setPreview(URL.createObjectURL(e.target.files[0])) }} />
         </Form.Group>
       </Col>
-
-      <Col md={10} className="px-4" >
+      <Col Col lg={9} md={6} sm={12}>
         <Form onSubmit={handleSubmit}>
-          <Row>
-            <Col md={4} >
-              <Form.Group>
-                <Form.Label>Label</Form.Label>
-                <Form.Control required={true} value={label} onChange={ev => setLabel(ev.target.value)}></Form.Control>
-              </Form.Group>
+          <Row className='man-park-label'>
+          <Col lg={6} md={12} sm={12} xs={12} >
+              <FloatingLabel controlId="floatingInput" label="Name" className="mb-3">
+                <Form.Control required={true} value={label} onChange={ev => setLabel(ev.target.value)} type="text" placeholder="Rifugio x" />
+              </FloatingLabel>
             </Col>
-            <Col>
-              <Form.Group>
-                <Form.Label>Total Slots</Form.Label>
-                <Form.Control required={true} type='number' step="any" min={0} value={total} onChange={ev => setTotal(ev.target.value)} />
-              </Form.Group>
+            <Col lg={3} md={6} sm={6} xs={12}>
+                <FloatingLabel controlId="floatingInput" label="Total Slots" className="mb-3">
+                  <Form.Control required={true} type='number' step="any" min={0} value={total} onChange={ev => setTotal(ev.target.value)} />
+                </FloatingLabel>
+              </Col>
+              <Col lg={3} md={6} sm={6} xs={12}>
+                <FloatingLabel controlId="floatingInput" label="Occupied Slots" className="mb-3">
+                  <Form.Control required={true} type='number' step="any" min={0} value={occupied} onChange={ev => setOccupied(ev.target.value)} />
+                </FloatingLabel>
+              </Col>
+          </Row>
+          <Row className='man-park-label'>
+            <Col lg={3} md={6} sm={6} xs={12}>
+              <FloatingLabel controlId="floatingInput" label="State" className="mb-3">
+                <Form.Control required={true} value={state} type="text" disabled readOnly></Form.Control>
+              </FloatingLabel>
             </Col>
-            <Col>
-              <Form.Group>
-                <Form.Label>Occupied Slots</Form.Label>
-                <Form.Control required={true} type='number' step="any" min={0} value={occupied} onChange={ev => setOccupied(ev.target.value)} />
-              </Form.Group>
+            <Col lg={3} md={6} sm={6} xs={12}>
+              <FloatingLabel controlId="floatingInput" label="Region" className="mb-3">
+                <Form.Control required={true} value={region} type="text" disabled readOnly ></Form.Control>
+              </FloatingLabel>
+            </Col>
+            <Col lg={3} md={6} sm={6} xs={12}>
+              <FloatingLabel controlId="floatingInput" label="Province" className="mb-3">
+                <Form.Control required={true} value={province} type="text" disabled readOnly></Form.Control>
+              </FloatingLabel>
+            </Col>
+            <Col lg={3} md={6} sm={6} xs={12}>
+              <FloatingLabel controlId="floatingInput" label="Municipality" className="mb-3">
+                <Form.Control required={true} value={municipality} type="text" disabled readOnly></Form.Control>
+              </FloatingLabel>
             </Col>
           </Row>
-
-          <Row>
-            <Col md={3}>
-              <Form.Group>
-                <Form.Label>State</Form.Label>
-                <Form.Control required={true} value={state} disabled readOnly />
-              </Form.Group>
+          <Row className='man-park-label'>
+          <Col lg={6} md={12} sm={12}>
+              <FloatingLabel controlId="floatingTextarea2" label="Description" className="mb-3">
+                <Form.Control required={true} value={description} onChange={ev => setDescription(ev.target.value)} as="textarea" style={{ height: '80px' }} placeholder="description" />
+              </FloatingLabel>
             </Col>
-            <Col md={3} >
-              <Form.Group>
-                <Form.Label>Region</Form.Label>
-                <Form.Control required={true} value={region} disabled readOnly />
-              </Form.Group>
-            </Col>
-            <Col md={3} >
-              <Form.Group>
-                <Form.Label>Province</Form.Label>
-                <Form.Control required={true} value={province} disabled readOnly />
-              </Form.Group>
-            </Col>
-            <Col md={3}>
-              <Form.Group>
-                <Form.Label>Municipality</Form.Label>
-                <Form.Control required={true} value={municipality} disabled readOnly />
-              </Form.Group>
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-              <Form.Group>
-                <Form.Label>Description</Form.Label>
-                <Form.Control required={true} value={description} onChange={ev => setDescription(ev.target.value)} as="textarea" rows={3} />
-              </Form.Group>
-            </Col>
-          </Row>
-          <Row>
-            <Col className="pt-4">
-              <Row>
-                <Button variant="danger" onClick={() => props.deleteParkingLot(plId)} className="btn_box2 mx-2" >Delete</Button>
-                <Button variant="success" type='submit' className="btn_box2 mx-2">Save</Button>
+          <Col lg={6} md={12} sm={12}>
+            <Row className='btn_box mt-3'>
+                <Button variant="danger" onClick={() => props.deleteParkingLot(plId)} className="cancel-btn2 mx-2 mb-2" >Delete</Button>
+                <Button variant="success" type='submit' className="save-btn2 mx-2 mb-2">Save</Button>
               </Row>
-            </Col>
+          </Col>
           </Row>
+          
         </Form>
       </Col>
     </Row>

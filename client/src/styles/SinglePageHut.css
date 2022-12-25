@@ -20,7 +20,7 @@
 
   
 .single-hut-title {
-    width: 800px !important;
+    width: 90%;
     font-weight: bold;
     font-size: 50px;
     font-style: italic;
@@ -56,6 +56,18 @@
     z-index: -1;
   }
 
+
+  @media only screen and (max-width: 576px) {
+
+    .single-hut-title.double:after {
+        display: none;
+    }
+  
+    .single-hut-title {
+      font-size: 44px;
+  }
+
+  }
  
 
   .side-hut-img {

@@ -19,7 +19,7 @@
 }
 
 .single-hike-title {
-  width: 800px !important;
+  width: 90%;
   font-weight: bold;
   font-size: 50px;
   font-style: italic;
@@ -54,6 +54,19 @@
   width: 100%;
   z-index: -1;
 }
+
+@media only screen and (max-width: 576px) {
+
+  .single-hike-title.double:after {
+      display: none;
+  }
+
+  .single-hike-title {
+    font-size: 44px;
+}
+
+}
+
 
 .p-hike {
   margin-bottom: 0px;
