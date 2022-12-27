@@ -1,7 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Container, Row, Col, OverlayTrigger, Tooltip, Button, Tabs, Tab, Modal } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
-
+import { useNavigate, useParams } from 'react-router-dom';
+import { Icon } from 'leaflet';
+import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
+import API from '../../API';
 import '../../styles/SinglePageHut.css';
 import { default as Hut } from '../../icons/hut.svg';
 import { default as Location } from "../../icons/map.svg";
@@ -12,14 +14,27 @@ import { default as Email } from "../../icons/email.svg";
 import { default as Website } from "../../icons/website.svg";
 import { default as Img1 } from "../../images/image3.jpg";
 import { default as FakeMap } from "../../images/fakeMap.jpg";
-
+import { default as HutIcon } from '../../images/linked_hut_icon.png';
 
 
 function HutPage(props) {
-
-  const [modalShow, setModalShow] = useState(false);
-
   const navigate = useNavigate();
+  const [modalShow, setModalShow] = useState(false);
+  const [hut, setHut] = useState({});
+  const [dirty, setDirty] = useState(true);
+
+  let { hutId } = useParams();
+  hutId = parseInt(hutId);
+
+  useEffect(() => {
+    if (dirty) {
+      API.getHut(hutId)
+        .then((hut) => setHut(hut))
+        .catch(err => console.log(err));
+
+      setDirty(false);
+    }
+  }, [dirty, hutId])
 
   const imgs = [
     { id: 0, value: require('../../images/img1.jpg') },
@@ -33,15 +48,21 @@ function HutPage(props) {
 
   const [mainImg, setMainImg] = useState(imgs[0]);
 
+  let locationsArray = [];
+  if (hut.municipality) locationsArray.push(hut.municipality);
+  if (hut.province) locationsArray.push(hut.province);
+  if (hut.region) locationsArray.push(hut.region);
+  if (hut.state) locationsArray.push(hut.state);
+
   return (
     <Container fluid className="external-box-hut">
-      <MyImageModal hikeId={1} hikeLabel={"Rifugio Rocciamelone"} show={modalShow} onHide={() => setModalShow(false)} />
+      <MyImageModal hikeId={1} hikeLabel={hut.name} show={modalShow} onHide={() => setModalShow(false)} />
       <Container fluid className='internal-box-hut' >
         <Row className="center-box mb-4">
           <Col md={12} className="center-box">
 
-          
-          <h2 className="background double single-hut-title "><span><img src={Hut} alt="hut_image" className='me-2 hut-img' />{"Rifugio Rocciamelone"}</span></h2>
+
+            <h2 className="background double single-hut-title "><span><img src={Hut} alt="hut_image" className='me-2 hut-img' />{hut.name}</span></h2>
           </Col>
         </Row>
         <Row className="mx-4">
@@ -69,7 +90,7 @@ function HutPage(props) {
                 <OverlayTrigger placement="bottom" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip-2">Location</Tooltip>}>
                   <img src={Location} alt="location_image" className='me-3 single-hut-icon icon-hut-filter' />
                 </OverlayTrigger>
-                <p className='p-hike'>{"Torino, TO, Piemonte, Italia"}</p>
+                <p className='p-hike'>{locationsArray.join(", ")}</p>
               </Col>
             </Row>
             <Row>
@@ -80,13 +101,13 @@ function HutPage(props) {
                 <OverlayTrigger placement="bottom" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip-2">Ascent</Tooltip>}>
                   <img src={Ascent} alt="ascent_image" className='me-3 single-hut-icon icon-hut-filter' />
                 </OverlayTrigger>
-                <p className='p-hike'>{"2500"} m</p>
+                <p className='p-hike'>{hut.altitude} m</p>
               </Col>
               <Col lg={6} md={12} sm={6} xs={6} className='mb-3 align'>
                 <OverlayTrigger placement="bottom" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip-2">Number of beds</Tooltip>}>
                   <img src={Bed} alt="bed_image" className='me-3 single-hut-icon icon-hut-filter' />
                 </OverlayTrigger>
-                <p className='p-hike'>{"150"} </p>
+                <p className='p-hike'>{hut.beds} beds</p>
               </Col>
             </Row>
             <Row>
@@ -115,20 +136,20 @@ function HutPage(props) {
           </Col>
           <Col md={{ span: 7, offset: 1 }} >
             <Row className='mt-3'>
-              {true ?
+              {!props.loggedIn ?
                 <div className="hut-page-container">
                   <img src={FakeMap} alt="fake_map" className="fake-image" />
                   <div className="middle">
                     <h3 className='mb-5 text'> Sign In to look the Map!</h3>
                     <Button variant="primary log_btn slide" type="submit" onClick={() => { props.setShowLogin(true); navigate("/"); }} > Sign In </Button>
                   </div>
-                </div> : false} {/* Create a correct if with the hut map */}
+                </div> : hut.id && <HutMap coordinates={[hut.lat, hut.lon]} />}
             </Row>
 
             <Row className="hut-tab-box mt-5">
               <Tabs defaultActiveKey="description" id="justify-tab-example" className="mb-3 " /*justify*/ >
                 <Tab eventKey="description" title="Description" >
-                  <p>{"L'itinerario descritto si sviluppa sul versante valsusino del Rocciamelone, percorrendo il classico tragitto che sale da La Riposa fino alla Ca' d'Asti.   Si tenga comunque presente che la salita del Rocciamelone resta un'ascensione abbastanza impegnativa, sia per la quota raggiunta che per il dislivello da superare: inoltre se l'escursione non viene effettuata in piena estate ed in assenza di neve il tratto finale può presentare qualche difficoltà sia nell'attraversamento del versante est, subito dopo La Crocetta, sia per il superamento di un punto un po' esposto collocato appena sotto la vetta, punto dove alcune corde fisse facilitano comunque il passaggio."}</p>
+                  <p>{hut.description}</p>
                 </Tab>
                 {/*<Tab eventKey="condition" title="Condition"  >
                   <p>Function to be implemented</p>
@@ -162,6 +183,29 @@ function MyImageModal(props) {
       </Modal.Body>
 
     </Modal>
+  );
+}
+
+function HutMap(props) {
+
+  const hutIcon = new Icon({
+    iconUrl: HutIcon,
+    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+    iconSize: [30, 30],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41]
+  });
+
+  return (
+    <MapContainer className='single-hut-map' center={props.coordinates} zoom={10}>
+      <TileLayer
+        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+      />
+      <Marker position={props.coordinates} icon={hutIcon} />
+
+    </MapContainer>
   );
 }
 

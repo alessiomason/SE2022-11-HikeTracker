@@ -383,6 +383,29 @@ async function getHuts() {
     else throw huts;
 }
 
+async function getHut(id) {
+    // call /api/hut/:id
+    const response = await fetch(new URL('hut/' + id, APIURL));
+    const hut = await response.json();
+    if (response.ok)
+        return ({
+            id: hut.id,
+            name: hut.hutName,
+            description: hut.hutDescription,
+            lat: hut.lat,
+            lon: hut.lon,
+            altitude: hut.altitude,
+            beds: hut.beds,
+            state: hut.state,
+            region: hut.region,
+            province: hut.province,
+            municipality: hut.municipality,
+            author: hut.author,
+            authorId: hut.authorId
+        });
+    else throw hut;
+}
+
 async function getHikesRefPoints() {
     //this api can be used for the hikes filtering, as the ref points are taken from the points table, so all of them are associated with an hike
     // call:  GET /api/hikesrefpoints
@@ -745,7 +768,7 @@ async function reverseNominatim(latitude, longitude) {
 
 const API = {
     addGPXTrack, addParkingLot, AddPoint, deleteParkingLot, updateParkingLot, deleteHike, getHikes, getParkingLots, addHut, updateHut, uploadHutImage,
-    uploadParkingLotImage, getHuts, deletHut, getHike, addHike, updateHike, signup, verifyEmail, login, logout, getUserInfo, getUserAccessRight, getHikesRefPoints,
+    uploadParkingLotImage, getHuts, getHut, deletHut, getHike, addHike, updateHike, signup, verifyEmail, login, logout, getUserInfo, getUserAccessRight, getHikesRefPoints,
     getStartPoint, getEndPoint, getReferencePoint, reverseNominatim, setNewReferencePoint, clearReferencePoint, startHike, getTrackedHikesByHikeIDAndUserID,
     getTrackedHikesByUserID, recordReferencePointReached, terminateHike, cancelHike
 };

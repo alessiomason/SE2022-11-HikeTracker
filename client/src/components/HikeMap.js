@@ -81,7 +81,7 @@ function HikeMap(props) {
     const notReachedPositions = props.points?.filter(p => !p.reachedInOngoingHike && !p.referencePoint && !p.hutID && !p.parkingID).map(p => [p.latitude, p.longitude]);
 
     return (
-        <MapContainer className='single-hike-map' center={center} zoom={zoom} scrollWheelZoom={false}>
+        <MapContainer className='single-hike-map' center={center} zoom={zoom}>
             <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

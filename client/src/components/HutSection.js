@@ -138,7 +138,7 @@ function HutCards(props) {
           if (props.search || (props.search === false && (hut.name.toLowerCase().match(props.tempName.toLowerCase()) || hut.description.toLowerCase().match(props.tempName.toLowerCase())))) {
             return (
             
-            <div className="hut-card" key={hut.id} onClick={() => {navigate("/hut0")}}>
+            <div className="hut-card" key={hut.id} onClick={() => navigate('/hut/' + hut.id)}>
               <div className="card-top">
                 <img src={`http://localhost:3001/images/hut-${hut.id}.jpg`}
                   onError={({ currentTarget }) => {

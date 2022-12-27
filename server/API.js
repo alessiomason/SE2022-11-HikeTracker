@@ -289,7 +289,7 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
 
         try {
             const huts = await dao.getHut(hutID);
-            res.status(200).json(huts);
+            res.status(200).json(huts[0]);
         }
         catch (err) {
             console.log(err)
