@@ -7,7 +7,7 @@ import HikeForm from './components/HikeForm';
 import ParkingForm from './components/ParkingForm';
 import HutForm from './components/HutForm';
 import EditForm from './components/EditForm';
-import VerifyEmailPage from './components/VerifyEmail(to delete)';
+import VerifyEmailPage from './components/VerifyEmail';
 import MyNavbar from './components/Navbar';
 import MyHikeManager from './components/pages/HikeManager';
 import MyHutManager from './components/pages/HutManager';
@@ -76,8 +76,9 @@ function App2() {
             })
             .catch(err => {
                 if (err.indexOf('not verified') !== -1)
-                    navigate('/verify-email');
-                setMessage(err);
+                    setShowEmailAlert(true);
+                else
+                    setMessage(err);
             })
     }
 
@@ -99,7 +100,7 @@ function App2() {
             handleError(err);
         }
     }
-    
+
     function deleteParkingLot(id) {
         API.deleteParkingLot(id)
             .then(() => { setDirty(true); })
@@ -177,28 +178,28 @@ function App2() {
     return (
         <Routes>
             <Route path="/" element={<Layout />}>
-                <Route index element={ initialLoading ? <Loading/> :  <Home showEmailAlert={showEmailAlert} setShowEmailAlert={setShowEmailAlert} user={user}
-                setShowLogin={setShowLogin} showLogin={showLogin} loggedIn={loggedIn} doLogin={doLogin} message={message} setMessage={setMessage} 
-                showSignup={showSignup} setShowSignup={setShowSignup} doSignUp={doSignUp}/>} />
-                
-                <Route path="hike/:hikeId" element={<HikePage user={user} loggedIn={loggedIn} setShowLogin={setShowLogin} />}/>
-                <Route path="hikeManager" element={<MyHikeManager updateHike={updateHike} deleteHike={deleteHike} user={user} />}/>
-                <Route path="hutManager" element={<MyHutManager updateHut={updateHut} deleteHut={deleteHut} user={user}/>}/>
+                <Route index element={initialLoading ? <Loading /> : <Home showEmailAlert={showEmailAlert} setShowEmailAlert={setShowEmailAlert} user={user}
+                    setShowLogin={setShowLogin} showLogin={showLogin} loggedIn={loggedIn} doLogin={doLogin} message={message} setMessage={setMessage}
+                    showSignup={showSignup} setShowSignup={setShowSignup} doSignUp={doSignUp} />} />
+
+                <Route path="hike/:hikeId" element={<HikePage user={user} loggedIn={loggedIn} setShowLogin={setShowLogin} />} />
+                <Route path="hikeManager" element={<MyHikeManager updateHike={updateHike} deleteHike={deleteHike} user={user} />} />
+                <Route path="hutManager" element={<MyHutManager updateHut={updateHut} deleteHut={deleteHut} user={user} />} />
                 <Route path="parkingManager" element={<MyParkingManager
-                updateParkingLot={updateParkingLot} deleteParkingLot={deleteParkingLot} user={user}/>}/>
-                <Route path='verify-email' element={<VerifyEmailPage />} />
-                <Route path="newHike/" element={loggedIn && user.access_right === 'local-guide' ?  <HikeForm hike={hike} addHike={addHike} 
-                addGPXTrack={addGPXTrack} setDirty={setDirty} setInitialLoading={setInitialLoading}/>  : <Navigate to='/' />} ></Route>
-                <Route path="newHut/" element={loggedIn && user.access_right === 'local-guide' ? 
-                 <HutForm addHut={addHut} setDirty={setDirty}/>  : <Navigate to='/' />} ></Route>
-                <Route path="newParking/" element={loggedIn && user.access_right === 'local-guide' ? 
-                 <ParkingForm  addParkingLot={addParkingLot} setDirty={setDirty}/>  : <Navigate to='/' />} ></Route>
+                    updateParkingLot={updateParkingLot} deleteParkingLot={deleteParkingLot} user={user} />} />
+                <Route path='verify-email' element={<VerifyEmailPage setShowLogin={setShowLogin} />} />
+                <Route path="newHike/" element={loggedIn && user.access_right === 'local-guide' ? <HikeForm hike={hike} addHike={addHike}
+                    addGPXTrack={addGPXTrack} setDirty={setDirty} setInitialLoading={setInitialLoading} /> : <Navigate to='/' />} ></Route>
+                <Route path="newHut/" element={loggedIn && user.access_right === 'local-guide' ?
+                    <HutForm addHut={addHut} setDirty={setDirty} /> : <Navigate to='/' />} ></Route>
+                <Route path="newParking/" element={loggedIn && user.access_right === 'local-guide' ?
+                    <ParkingForm addParkingLot={addParkingLot} setDirty={setDirty} /> : <Navigate to='/' />} ></Route>
                 <Route path="updateHike/:hikeId/" element={loggedIn && user.access_right === 'local-guide' ? <EditForm hike={hike} updateHike={updateHike}
-                 deleteHike={deleteHike} setDirty={setDirty} /> : <Navigate to='/' />} ></Route>
-                 <Route path="linkHike/:hikeId/" element={loggedIn && user.access_right === 'local-guide' ? <LinkHike /> : <Navigate to='/' />} ></Route>
-                 <Route path="refPoints/:hikeId/" element={loggedIn && user.access_right === 'local-guide' ? <ReferencePoints /> : <Navigate to='/' />} ></Route>
-                 <Route path="hut0" element={<HutPage/>}/>
-                 <Route path="profile1" element={<ProfilePage doLogout={doLogout} hikes={hike}/>} />
+                    deleteHike={deleteHike} setDirty={setDirty} /> : <Navigate to='/' />} ></Route>
+                <Route path="linkHike/:hikeId/" element={loggedIn && user.access_right === 'local-guide' ? <LinkHike /> : <Navigate to='/' />} ></Route>
+                <Route path="refPoints/:hikeId/" element={loggedIn && user.access_right === 'local-guide' ? <ReferencePoints /> : <Navigate to='/' />} ></Route>
+                <Route path="hut0" element={<HutPage />} />
+                <Route path="profile1" element={<ProfilePage doLogout={doLogout} hikes={hike} />} />
 
             </Route>
         </Routes>

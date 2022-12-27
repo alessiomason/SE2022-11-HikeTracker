@@ -15,7 +15,7 @@
     width: 50px;
     color: #fff;
     cursor: pointer;
-    animation: movebtn 3s ease-in-out infinite;
+    /* animation: movebtn 3s ease-in-out infinite; */
     transition: all .5s ease-in-out;
   }
   .icon-style:hover{

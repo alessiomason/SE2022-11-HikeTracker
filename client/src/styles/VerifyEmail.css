@@ -6,3 +6,22 @@
 .verify-email-message {
     margin-top: 30px;
 }
+
+.verify-email-btn {
+    margin-top: 30px;
+    margin-bottom: 100px;
+    border-radius: 0px !important;
+    width: 200px !important;
+    border: 2px solid #0B5ED7 !important;
+    font-weight: bold;
+    background-color: transparent !important;
+    --hover: #0B5ED7;
+    color: #0B5ED7 !important;
+}
+
+.verify-email-btn:hover,
+.verify-email-btn:focus {
+    color: white !important;
+    font-weight: bold;
+    box-shadow: inset 200px 0 0 0 var(--hover);
+}
