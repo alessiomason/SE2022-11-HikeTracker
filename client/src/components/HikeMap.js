@@ -106,7 +106,7 @@ function HikeMap(props) {
             {props.points?.filter(p => p.referencePoint).map(p => {
                 return (
                     <Marker position={[p.latitude, p.longitude]} icon={p.reachedInOngoingHike ? iconReachedReferencePoint : iconNotReachedReferencePoint} key={p.pointID}>
-                        {p.label || props.showTerminateHike &&
+                        {(p.label || props.showTerminateHike) &&
                             <Popup>
                                 <p><strong>{p.label}</strong></p>
                                 {!p.reachedInOngoingHike && props.showTerminateHike &&  // not shown if hike is not started

@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
-import { Container, Row, Col, OverlayTrigger, Tooltip, Button, Tabs, Tab, Modal, Table, Card } from 'react-bootstrap';
+import { Container, Row, Col, OverlayTrigger, Tooltip, Button, Tabs, Tab, Modal, Table, Card, Badge } from 'react-bootstrap';
 import { useParams, useNavigate } from 'react-router-dom';
-import DateTimePicker from 'react-datetime-picker'
+import DateTimePicker from 'react-datetime-picker';
+import { Icon } from 'leaflet';
+import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet';
 import HikeMap from '../HikeMap';
 import API from '../../API';
 import '../../styles/SinglePageHike.css';
@@ -156,17 +158,19 @@ function HikePage(props) {
   const [imageModalShow, setImageModalShow] = useState(false);
   const [trackedHikeModalShow, setTrackedHikeModalShow] = useState(false);
   const [referencePointReachedModalShow, setReferencePointReachedModalShow] = useState(false);
+  const [trackedHikesInfoModalShow, setTrackedHikesInfoModalShow] = useState(false);
 
   return (
     <Container fluid className="external-box">
       <MyImageModal hikeId={hike.id} hikeLabel={hike.label} show={imageModalShow} onHide={() => setImageModalShow(false)} />
       <TrackedHikeModal startHike={startHike} terminateHike={terminateHike} show={trackedHikeModalShow} onHide={() => setTrackedHikeModalShow(false)} />
       <ReferencePointReachedModal recordReferencePointReached={recordReferencePointReached} show={referencePointReachedModalShow} onHide={() => setReferencePointReachedModalShow(false)} />
+      <TrackedHikesInfoModal show={trackedHikesInfoModalShow} onHide={() => setTrackedHikesInfoModalShow(false)} hike={hike} trackedHikes={trackedHikes} />
       <Container fluid className='internal-box' >
         <Row className="center-box mb-4">
-        <Col md={12} className="center-box">
-          <h2 className="background double single-hike-title "><span><img src={Hiking} alt="hiking_image" className='me-2 single-hike-icon' />{hike.label}</span></h2>
-        </Col>
+          <Col md={12} className="center-box">
+            <h2 className="background double single-hike-title "><span><img src={Hiking} alt="hiking_image" className='me-2 single-hike-icon' />{hike.label}</span></h2>
+          </Col>
         </Row>
         <Row className="mx-4">
           <Col md={3} >
@@ -255,7 +259,7 @@ function HikePage(props) {
               {props.loggedIn && trackedHikes.filter(th => th.endTime === null || th.endTime === undefined).length === 1 && <Button className="mx-1 mt-2 cancel_btn slide" type="submit" onClick={cancelHike}>Cancel hike</Button>}
               {props.loggedIn && trackedHikes.filter(th => th.endTime === null || th.endTime === undefined).length === 1 && <Button className="mx-1 mt-2 terminate_btn slide" type="submit" onClick={() => setTrackedHikeModalShow('terminate')}>Terminate hike</Button>}
             </Row>
-            {props.loggedIn && <TrackedHikesInfo hike={hike} trackedHikes={trackedHikes} />}
+            {props.loggedIn && <TrackedHikesInfoTable hike={hike} trackedHikes={trackedHikes} setTrackedHikesInfoModalShow={setTrackedHikesInfoModalShow} />}
             <Row className="tab-box">
               <Tabs defaultActiveKey="description" id="justify-tab-example" className="mb-3 " justify >
                 <Tab eventKey="description" title="Description" >
@@ -288,13 +292,13 @@ function MyImageModal(props) {
         <Row>
           <Col md={12} className="modal-img-box">
             <img src={`http://localhost:3001/images/hike-${props.hikeId}.jpg`}
-          onError={({ currentTarget }) => {
-            currentTarget.onerror = null; // prevents looping
-            currentTarget.src = Img1;
-          }} alt="photo" className="modal-imgs" />
+              onError={({ currentTarget }) => {
+                currentTarget.onerror = null; // prevents looping
+                currentTarget.src = Img1;
+              }} alt="photo" className="modal-imgs" />
           </Col>
         </Row>
-        
+
       </Modal.Body>
 
     </Modal>
@@ -484,7 +488,7 @@ function ReferencePointReachedModal(props) {
   );
 }
 
-function TrackedHikesInfo(props) {
+function TrackedHikesInfoTable(props) {
   const ongoingHike = props.trackedHikes.filter(th => th.endTime === null || th.endTime === undefined).pop();
   const [ongoingHikeElapsedTime, setOngoingHikeElapsedTime] = useState(ongoingHike ? dayjs.duration(dayjs() - dayjs(ongoingHike.startTime)) : undefined);
   const completedHikes = props.trackedHikes.filter(th => th.endTime !== null && th.endTime !== undefined);
@@ -521,23 +525,22 @@ function TrackedHikesInfo(props) {
             <thead>
               <tr>
                 <th>#</th>
-                <th>Start time</th>
-                <th>End time</th>
+                <th>Date</th>
                 <th>Time</th>
-                <th>Pace</th>
-                <th>Ascent speed</th>
+                <th>Status</th>
+                <th>Progress</th>
               </tr>
             </thead>
             <tbody>
               {completedHikes.map((ch, i) => {
                 return (
-                  <tr key={ch.id}>
+                  <tr key={ch.id} className='align-middle'>
                     <td>{i + 1}</td>
-                    <td>{dayjs(ch.startTime).format('MMM DD, YYYY h:mm a')}</td>
-                    <td>{dayjs(ch.endTime).format('MMM DD, YYYY h:mm a')}</td>
+                    <td>{dayjs(ch.startTime).format('MMM DD, YYYY')}</td>
                     <td>{dayjs.duration(dayjs(ch.endTime) - dayjs(ch.startTime)).format('H [h] mm [m]')}</td>
-                    <td>{(dayjs.duration(dayjs(ch.endTime) - dayjs(ch.startTime)).asMinutes() / props.hike.length * 1000).toFixed(2)} min/km</td>
-                    <td>{(props.hike.ascent / dayjs.duration(dayjs(ch.endTime) - dayjs(ch.startTime)).asHours()).toFixed(2)} m/hour</td>
+                    <td><Badge bg={ch.status === 'completed' ? 'success' : 'info'}>{ch.status}</Badge></td>
+                    <td>{ch.progress ? ch.progress + ' reference points reached' : 'Not recorded'}</td>
+                    <td><Button className='see-more-btn' onClick={() => props.setTrackedHikesInfoModalShow(ch.id)}>See more</Button></td>
                   </tr>
                 );
               })}
@@ -545,6 +548,65 @@ function TrackedHikesInfo(props) {
           </Table>
         </Row>}
     </>
+  );
+}
+
+function TrackedHikesInfoModal(props) {
+  const [trackedHikeID, setTrackedHikeID] = useState(props.show);
+  const trackedHike = props.trackedHikes.find(th => th.id === trackedHikeID);
+
+    return (
+      <Modal show={props.show} onShow={() => setTrackedHikeID(props.show)} onHide={props.onHide} size="xl" aria-labelledby="contained-modal-title-vcenter" centered>
+        <Modal.Header closeButton className='box-modal hike-page-modal-header'>
+          <Modal.Title id="contained-modal-title-vcenter">Tracked hike {trackedHikeID}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body className='box-modal hike-page-modal-body'>
+          <Container>
+            <Row>
+              <Col lg={5}>
+                <Row>
+                  <Col xs={4} className='stats-names-col d-flex justify-content-end'>Start time</Col>
+                  <Col>{trackedHike && dayjs(trackedHike.startTime).format('MMM DD, YYYY h:mm:ss a')}</Col>
+                </Row>
+                <Row>
+                  <Col xs={4} className='stats-names-col d-flex justify-content-end'>End time</Col>
+                  <Col>{trackedHike && dayjs(trackedHike.endTime).format('MMM DD, YYYY h:mm:ss a')}</Col>
+                </Row>
+                <Row>
+                  <Col xs={4} className='stats-names-col d-flex justify-content-end'>Time</Col>
+                  <Col>{trackedHike && dayjs.duration(dayjs(trackedHike.endTime) - dayjs(trackedHike.startTime)).format('H [h] mm [m]')}</Col>
+                </Row>
+                <Row>
+                  <Col xs={4} className='stats-names-col d-flex justify-content-end'>Pace</Col>
+                  <Col>{trackedHike && (dayjs.duration(dayjs(trackedHike.endTime) - dayjs(trackedHike.startTime)).asMinutes() / props.hike.length * 1000).toFixed(2)} min/km</Col>
+                </Row>
+                <Row>
+                  <Col xs={4} className='stats-names-col d-flex justify-content-end'>Ascent speed</Col>
+                  <Col>{trackedHike && (props.hike.ascent / dayjs.duration(dayjs(trackedHike.endTime) - dayjs(trackedHike.startTime)).asHours()).toFixed(2)} m/hour</Col>
+                </Row>
+              </Col>
+              <Col>
+                <TrackedHikeMap />
+              </Col>
+            </Row>
+          </Container>
+        </Modal.Body>
+
+      </Modal>
+    );
+}
+
+function TrackedHikeMap(props) {
+
+  return (
+    <MapContainer className='single-hut-map' center={props.coordinates} zoom={10}>
+      <TileLayer
+        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+      />
+      
+
+    </MapContainer>
   );
 }
 
