@@ -60,13 +60,12 @@ function SingleUpdateHikeCard(props) {
   const hikeToEdit = props.hike;
   let difficulty_text;
 
-  if (props.hike.difficulty === 1)
+  if (parseInt(props.hike.difficulty) === 1)
     difficulty_text = "Tourist";
-  else if (props.hike.difficulty === 2)
+  else if (parseInt(props.hike.difficulty) === 2)
     difficulty_text = "Hiker";
-  else if (props.hike.difficulty === 3)
+  else if (parseInt(props.hike.difficulty) === 3)
     difficulty_text = "Professional hiker";
-
 
   const [label, setLabel] = useState(hikeToEdit ? hikeToEdit.label : '');
   const [length, setLength] = useState(hikeToEdit ? hikeToEdit.length : 0);
@@ -82,12 +81,11 @@ function SingleUpdateHikeCard(props) {
   const [image, setImage] = useState(`http://localhost:3001/images/hike-${hikeId}.jpg`);
   const [preview, setPreview] = useState(`http://localhost:3001/images/hike-${hikeId}.jpg`);
 
-
   const handleSubmit = (event) => {
     event.preventDefault();
 
     if (label.trim().length === 0)
-      setErrorMsg('The label of the hike cannot be consisted of only empty spaces');
+      setErrorMsg('The label of the hike cannot consist of only empty spaces');
     else {
       const updatedHike = {
         id: hikeId,
