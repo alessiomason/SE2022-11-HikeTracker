@@ -15,7 +15,7 @@ function MyModalLogin(props) {
       );
   };
 
-  const [email, setEmail] = useState('u3@p.it');
+  const [email, setEmail] = useState('local-guide@p.it');
   const [password, setPassword] = useState('password');
 
   const handleSubmit = (event) => {

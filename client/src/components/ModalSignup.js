@@ -118,7 +118,7 @@ function MyModalSignup(props) {
                   </Form.Select>
                 </Col>
               </Row>
-              {(accessRight == "hut-worker") ? <Row className='mb-3 box_center'>
+              {(accessRight == "hut-worker") && <Row className='mb-3 box_center'>
                 <Col md="auto" sm="auto" xs="auto" className='box_center fit'>
                   <img src={Hut} alt="hut" className='log-hut-icon' />
                 </Col>
@@ -127,12 +127,10 @@ function MyModalSignup(props) {
                     <option>~ Choose an hut ~</option>
                     <option value="r1">Rifugio1</option>
                     <option value="r2">Rifugio2</option>
-                    {/*<option value="platform-manager">Platform manager</option>*/}
                     <option value="r3">Rifugio3</option>
-                    {/*<option value="emergency-operator">Emergency operator</option>*/}
                   </Form.Select>
                 </Col>
-              </Row> : false}
+              </Row>}
 
               <Row className="my-4 box_center">
                 <Button variant="primary signup_btn" type="submit" > Sign Up </Button>

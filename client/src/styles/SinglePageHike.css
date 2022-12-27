@@ -169,7 +169,7 @@ tr {
   background-color: #30AC42 !important;
   --hover: #30AC42;
   color: #fff !important;
-  transition: all .2s ease-out;
+  transition: all .1s ease-out;
 }
 
 .reach_ref_point_btn {
@@ -180,7 +180,7 @@ tr {
   background-color: #ffd326 !important;
   --hover: #ffd326;
   color: #373737 !important;
-  transition: all .2s ease-out;
+  transition: all .1s ease-out;
 }
 
 .terminate_btn {
@@ -191,7 +191,7 @@ tr {
   background-color: #a972cb !important;
   --hover: #a972cb;
   color: #fff !important;
-  transition: all .2s ease-out;
+  transition: all .1s ease-out;
 }
 
 .cancel_btn {
@@ -202,7 +202,7 @@ tr {
   background-color: #212529 !important;
   --hover: #212529;
   color: #fff !important;
-  transition: all .2s ease-out;
+  transition: all .1s ease-out;
 }
 
 .start_btn:hover,

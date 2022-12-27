@@ -11,7 +11,13 @@ import ProfileHutWorker from "../ProfileHutWorker";
 import ProfileHiker from "../ProfileHiker";
 
 function Profile(props) {
-
+  const rolesNames = {
+    'hiker': 'Hiker',
+    'local-guide': 'Local guide',
+    'hut-worker': 'Hut worker',
+    'manager': 'Platform manager',
+    'emergency-operator': 'Emergency operator'
+  };
 
   return (
     <Container fluid className="external-box-profile">
@@ -20,16 +26,28 @@ function Profile(props) {
           <div className="overflow-profile">
             <img src={Img1} alt="profile_photo" className="profile-img" />
           </div>
-          <h1 className="profile-role"> PLATFORM MANAGER </h1>
+          <h1 className="profile-role">{props.user.fullName}</h1>
         </Row>
         <Row >
           <Col md={4} className="center-top-side mb-4">
-            <Col md={3}>
-              <h4 className="pe-2 mb-0 email" id="fadeshow1"> Email: </h4>
-            </Col>
-            <Col md={8}>
-              <h3 className="profile-email"> tracker@gmail.com</h3>
-            </Col>
+            <Container>
+              <Row>
+                <Col md={3}>
+                  <h4 className="pe-2 mb-0 email" id="fadeshow1">Email:</h4>
+                </Col>
+                <Col md={8}>
+                  <h3 className="profile-email">{props.user.email}</h3>
+                </Col>
+              </Row>
+              <Row>
+                <Col md={3}>
+                  <h4 className="pe-2 mb-0 email" id="fadeshow1">Role:</h4>
+                </Col>
+                <Col md={8}>
+                  <h3 className="profile-email">{rolesNames[props.user.access_right]}</h3>
+                </Col>
+              </Row>
+            </Container>
           </Col>
           <Col md={{ span: 4, offset: 4 }} className="center-top-side mb-4">
             <Button variant="warning" className="mx-4 profile-img-btn"> Update Photo </Button>
@@ -38,14 +56,26 @@ function Profile(props) {
         </Row>
         <Row className="end-top-profile" />
         <Row className="component">
-           {<ProfileLocalGuide />}
-          {/*<ProfileManager />*/} 
-          {/*<ProfileHutWorker />*/}
-          {/*<ProfileHiker hikes={props.hikes} />*/}
+          {<SpecificProfile user={props.user} hikes={props.hikes} />}
         </Row>
       </Container>
     </Container>
   );
+}
+
+function SpecificProfile(props) {
+  switch (props.user.access_right) {
+    case 'hiker':
+      return (<ProfileHiker hikes={props.hikes} />);
+    case 'local-guide':
+      return (<ProfileLocalGuide />);
+    case 'hut-worker':
+      return (<ProfileHutWorker />);
+    case 'platform-manager':
+      return (<ProfileManager />);
+    default:
+      return(<></>);
+  }
 }
 
 export default Profile;

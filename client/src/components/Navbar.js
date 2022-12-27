@@ -50,7 +50,7 @@ function MyNavbar(props) {
                 {/*{props.user.access_right === 'local-guide' ? <Button variant="outline-warning"  className="mx-2 my-2  btn--outline" onClick={() => navigate("/hikeManager")}> Manage Hikes</Button> : false}
                 {props.user.access_right === 'local-guide' ? <Button variant="outline-warning"  className="mx-2 my-2 btn--outline" onClick={() => navigate("/hutManager")}> Manage Huts</Button> : false}
             {props.user.access_right === 'local-guide' ? <Button variant="outline-warning"  className="mx-2 my-2  btn--outline" onClick={() => navigate("/parkingManager")}> Manage Parkings</Button> : false}*/}
-                <Button variant="outline-success" className="mx-2 my-1 btn-profile" onClick={() => {navigate("/profile1")}}><img src={User} alt="user_image" className="me-2" /> YOUR PROFILE </Button>
+                <Button variant="outline-success" className="mx-2 my-1 btn-profile" onClick={() => {navigate("/profile")}}><img src={User} alt="user_image" className="me-2" /> YOUR PROFILE </Button>
               </Nav>
             }
           </Nav>

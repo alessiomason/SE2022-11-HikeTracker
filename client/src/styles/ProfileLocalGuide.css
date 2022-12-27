@@ -33,23 +33,32 @@
     border-color: #4D4DFF;
 }
 
-.man-park-btn:hover {
+.man-park-btn:hover,
+.man-park-btn:focus,
+.man-park-btn:active {
     color: #000;
     background: #4D4DFF;
-    border-color: #494681;
+    background-color: #4D4DFF !important;
+    border-color: #494681 !important;
     box-shadow: 0 0 10px #4D4DFF, 0 0 40px #4D4DFF, 0 0 80px #4D4DFF;
 }
 
-.man-hike-btn:hover {
+.man-hike-btn:hover,
+.man-hike-btn:focus,
+.man-hike-btn:active {
     color: #000;
     background: #16a085;
-    border-color: #05725c;
+    background-color: #16a085 !important;
+    border-color: #05725c !important;
     box-shadow: 0 0 10px #16a085, 0 0 40px #16a085, 0 0 80px #16a085;
 }
 
-.man-hut-btn:hover {
+.man-hut-btn:hover,
+.man-hut-btn:focus,
+.man-hut-btn:active {
     color: #000;
     background: #FF6700;
-    border-color: #c75205;
+    background-color: #FF6700 !important;
+    border-color: #c75205 !important;
     box-shadow: 0 0 10px #FF6700, 0 0 40px #FF6700, 0 0 80px #FF6700;
 }

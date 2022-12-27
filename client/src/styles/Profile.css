@@ -43,6 +43,7 @@
 }
 
 .profile-role {
+  text-transform: uppercase;
   color: #494681;
   font-weight: bold;
   font-size: 50px;
@@ -68,6 +69,7 @@
   background-color: #494681 !important;
   --hover: #494681;
   color: #000 !important;
+  transition: all .1s ease-out;
 }
 
 .profile-img-btn:hover,
@@ -85,6 +87,7 @@
   background-color: #FF0000 !important;
   --hover: #FF0000;
   color: #000 !important;
+  transition: all .1s ease-out;
 }
 
 .logout-btn:hover,
