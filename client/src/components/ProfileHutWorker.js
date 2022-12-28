@@ -73,7 +73,7 @@ function YourHut() {
               ))}
             </Row>
             <Row className="center-box mt-3 mb-5">
-              <Button className="log_btn"> Upload Image </Button>
+              <Button className="upload_btn"> Upload Image </Button>
             </Row>
           </Container>
         </Col>

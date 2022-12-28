@@ -6,7 +6,7 @@
     background-color: #0B5ED7 !important;
     --hover: #0B5ED7;
     color: white !important;
-  
+    transition: all .1s ease-out;
   }
 
   .add-ref-btn:hover, 
@@ -28,7 +28,7 @@
     background-color: #30AC42 !important;
     --hover: #30AC42;
     color: white !important;
-  
+    transition: all .1s ease-out;
   }
 
   .start-point-btn:hover, 
@@ -45,7 +45,7 @@
     background-color: #c31e2c !important;
     --hover: #c31e2c;
     color: white !important;
-  
+    transition: all .1s ease-out;
   }
 
   .end-point-btn:hover, 

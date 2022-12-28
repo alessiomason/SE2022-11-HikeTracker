@@ -90,7 +90,7 @@ function TrackedHikesInfoModal(props) {
 	return (
 		<Modal show={props.show} onShow={() => setTrackedHikeID(props.show)} onHide={props.onHide} size="xl" aria-labelledby="contained-modal-title-vcenter" centered>
 			<Modal.Header closeButton className='box-modal hike-page-modal-header'>
-				<Modal.Title id="contained-modal-title-vcenter">Tracked hike {trackedHikeID}{trackedHike && dayjs(trackedHike.startTime).format(' [-] MMM DD, YYYY')}</Modal.Title>
+				<Modal.Title id="contained-modal-title-vcenter">Tracked hike {trackedHike && dayjs(trackedHike.startTime).format(' [-] MMM DD, YYYY')}</Modal.Title>
 			</Modal.Header>
 			<Modal.Body className='box-modal hike-page-modal-body'>
 				<Container>

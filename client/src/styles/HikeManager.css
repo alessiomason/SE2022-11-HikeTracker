@@ -128,6 +128,7 @@
     background-color: blue !important;
     --hover: blue;
     color: white !important;
+    transition: all .1s ease-out;
   
   }
   
@@ -145,7 +146,7 @@
     background-color: blueviolet !important;
     --hover: blueviolet;
     color: white !important;
-  
+    transition: all .1s ease-out;
   }
   
   .link-btn:hover,
@@ -161,7 +162,7 @@
     background-color: #0B5ED7 !important;
     --hover: #0B5ED7;
     color: white !important;
-  
+    transition: all .1s ease-out;
   }
 
   .add-man-btn:hover, 

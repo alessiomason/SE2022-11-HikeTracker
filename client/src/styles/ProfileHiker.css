@@ -36,7 +36,7 @@
     background-color: red !important;
     --hover: red;
     color: white !important;
-
+    transition: all .1s ease-out;
 }
 
 .cancel-btn2:hover,
@@ -54,7 +54,7 @@
     background-color: green !important;
     --hover: green;
     color: white !important;
-
+    transition: all .1s ease-out;
 }
 
 .save-btn2:hover,

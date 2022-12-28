@@ -171,3 +171,20 @@
 .val-user-box3 .form-control, .val-user-box3 .form-select{
     border: 1px solid #494681;
 }
+
+.upload_btn {
+    border-radius: 0px !important;
+    width: 148px !important;
+    font-weight: bold;
+    border: 2px solid #0B5ED7 !important;
+    background-color: #0B5ED7 !important;
+    --hover: #0B5ED7;
+    color: #fff !important;
+    transition: all .1s ease-out;
+  }
+  
+  .upload_btn:hover,
+  .upload_btn:focus {
+    box-shadow: 0 0.6em 0.4em -0.4em var(--hover);
+    transform: translateY(-0.25em);
+  }
