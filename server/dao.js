@@ -532,6 +532,17 @@ exports.getReferencePoint = () => {
     });
 }
 
+exports.getReferencePointsByHike = (hikeID) => {
+    return new Promise((resolve, reject) => {
+        const sql = 'SELECT * FROM POINTS WHERE RP = 1 AND HikeID = ?';
+        db.all(sql, [hikeID], (err, rows) => {
+            if (err) reject(err);
+            const referencePoints = rows.map((rp) => ({ hikeID: rp.HikeID, pointID: rp.PointID, label: rp.Label }));
+            resolve(referencePoints);
+        });
+    });
+}
+
 exports.getReferencePointID = (pointID) => {
     return new Promise((resolve, reject) => {
         const sql = 'SELECT * FROM POINTS WHERE PointID = ?';
@@ -631,13 +642,14 @@ exports.getTrackedHikesByUserID = (userID) => {
     });
 }
 
-exports.terminateHike = (trackedHikeID, endTime) => {
+exports.terminateHike = (trackedHikeID, endTime, progress) => {
     return new Promise((resolve, reject) => {
         const sql = `UPDATE TrackedHikes
                      SET EndTime = ?,
-                         Status = 'completed'
+                         Status = 'completed',
+                         Progress = ?
                      WHERE TrackedHikeID = ?`
-        db.run(sql, [endTime, trackedHikeID], function (err) {
+        db.run(sql, [endTime, progress, trackedHikeID], function (err) {
             if (err) reject(err);
             resolve();
         });
@@ -665,8 +677,6 @@ exports.getHikeByTrackedHikeId = (trackedHikeID) => {
                     region: row.Region,
                     province: row.Province,
                     municipality: row.Municipality,
-                    trackedHikeStatus: row.Status,
-                    trackedHikeProgress: row.Progress,
                     startTime: row.StartTime,
                     endTime: row.EndTime
                 };
@@ -763,19 +773,6 @@ exports.recordReferencePointReached = (trackedHikeID, pointID, time) => {
         });
     });
 }
-
-exports.getTrackedHikeProgress = (trackedHikeID) => {
-    return new Promise((resolve, reject) => {
-        const sql = `SELECT Progress
-                     FROM TrackedHikes
-                     WHERE TrackedHikeID = ?`;
-        db.get(sql, [trackedHikeID], (err, row) => {
-            if (err) reject(err);
-            else
-                resolve(row.Progress);
-        });
-    });
-};
 
 exports.updateTrackedHikeProgress = (trackedHikeID, progress) => {
     return new Promise((resolve, reject) => {

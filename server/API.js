@@ -133,7 +133,7 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
                 let rp_desc = refPointsArray[i].properties.desc;
                 await dao.addPoint(hikeID, pointsArray[1], pointsArray[0], pointsArray[2], 0, 0, 1, rp_desc);
             }
-          
+
             let ascent = endPointElev - startPointElev;
             await dao.addHike(label, length, null, ascent, null, desc, state, region, province, municipality, req.user.id);
             let hike = await dao.getHike(hikeID)
@@ -848,9 +848,14 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
         // if time is undefined, current time is retrieved
         const time = dayjs(req.body.time).format();
 
-        let progress = await dao.getTrackedHikeProgress(trackedHikeID);
-        const splitProgress = progress.split('/');
-        progress = (parseInt(splitProgress[0]) + 1) + '/' + splitProgress[1];
+        const hike = await dao.getHikeByTrackedHikeId(trackedHikeID);
+        const referencePoints = await dao.getReferencePointsByHike(hike.id);
+        let i;
+        for (i = 0; i < referencePoints.length; i++) {
+            if (referencePoints[i].pointID > pointID)   // find first reference point not reached, count the ones reached
+                break;
+        }
+        const progress = i + '/' + referencePoints.length;
 
         try {
             await dao.recordReferencePointReached(trackedHikeID, pointID, time);
@@ -876,9 +881,11 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
         const endTime = dayjs(req.body.endTime).format();
 
         try {
-            await dao.terminateHike(trackedHikeID, endTime);
-
             const hike = await dao.getHikeByTrackedHikeId(trackedHikeID);
+            const nOfRefPoints = await dao.getNOfHikeRefPoints(hike.id);
+            const progress = nOfRefPoints + '/' + nOfRefPoints;     // all reference point have been reached, even if not marked as such
+            await dao.terminateHike(trackedHikeID, endTime, progress);
+
             const hikePoints = await dao.getHikePoints(hike.id);
             const hikePointsAltitudes = hikePoints.map(p => p.altitude);
             let hikeHighestAltitude = null;
@@ -887,8 +894,8 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
 
             const userStats = await dao.getUserStats(userID);
 
-            const hikeTime = dayjs.duration(dayjs(hike.endTime) - dayjs(hike.startTime)).asHours();
-            const hikePace = dayjs.duration(dayjs(hike.endTime) - dayjs(hike.startTime)).asMinutes() / hike.length * 1000;
+            const hikeTime = dayjs.duration(dayjs(endTime) - dayjs(hike.startTime)).asHours();
+            const hikePace = dayjs.duration(dayjs(endTime) - dayjs(hike.startTime)).asMinutes() / hike.length * 1000;
             userStats.hikesFinished += 1;
             userStats.walkedLength += hike.length;
             userStats.totalHikeTime += hikeTime;
