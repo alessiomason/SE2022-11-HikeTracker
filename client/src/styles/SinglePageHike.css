@@ -342,6 +342,11 @@ tr {
   text-transform: capitalize;
 }
 
+.ref-points-reached {
+  margin-top: 30px;
+  padding-bottom: 4px;
+}
+
 .stats-names-col {
   border-right: 1px #30ac42 solid;
   font-weight: bold;
