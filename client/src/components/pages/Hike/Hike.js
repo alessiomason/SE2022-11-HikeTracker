@@ -71,7 +71,7 @@ function HikePage(props) {
 
                       const refPointReached = refPointsReachedInOngoingHike.find(refPointReached => point.pointID === refPointReached.pointID);
                       if (refPointReached)    // look for previously reached reference point
-                        point.timeOfReach = refPointReached.timeOfReach;
+                        point.timeOfReachInOngoingHike = refPointReached.timeOfReach;
                     }
                   }
                 }
@@ -245,7 +245,7 @@ function HikePage(props) {
                     <h3 className='mb-5 text'>Sign In to look the Map!</h3>
                     <Button variant="primary log_btn slide" type="submit" onClick={() => { props.setShowLogin(true); navigate("/"); }} > Sign In </Button>
                   </div>
-                </div> : hike.id && <HikeMap length={hike.length} points={hike.points} alreadyLinkedHut={alreadyLinkedHut}
+                </div> : hike.id && <HikeMap length={hike.length} points={hike.points} alreadyLinkedHut={alreadyLinkedHut} showOngoing
                   showStartHike={trackedHikes.filter(th => th.endTime === null || th.endTime === undefined).length === 0} setTrackedHikeModalShow={setTrackedHikeModalShow}
                   showTerminateHike={trackedHikes.filter(th => th.endTime === null || th.endTime === undefined).length === 1} setReferencePointReachedModalShow={setReferencePointReachedModalShow} />}
               {/* hike.id ensures that the map is rendered only when the hike is loaded  */}

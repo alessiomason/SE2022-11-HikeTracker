@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Container, Row, Col, Button, Modal, Table, Badge } from 'react-bootstrap';
 import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet';
+import HikeMap from '../../HikeMap';
 const dayjs = require('dayjs');
 const duration = require('dayjs/plugin/duration');
 dayjs.extend(duration);
@@ -72,10 +73,24 @@ function TrackedHikesInfoModal(props) {
 	const [trackedHikeID, setTrackedHikeID] = useState(props.show);
 	const trackedHike = props.trackedHikes.find(th => th.id === trackedHikeID);
 
+	const refPointsReachedInTrackedHike = trackedHike?.pointsReached?.sort((a, b) => (a.pointID > b.pointID) ? 1 : -1);
+
+	if (trackedHike && refPointsReachedInTrackedHike.length > 0) {
+		const maxRefPointReachedInTrackedHike = refPointsReachedInTrackedHike[refPointsReachedInTrackedHike.length - 1];
+
+		for (let point of props.hike.points) {
+			point.reachedInTrackedHike = point.pointID <= maxRefPointReachedInTrackedHike.pointID;    // generic point is before latest reached point
+
+			const refPointReached = refPointsReachedInTrackedHike.find(refPointReached => point.pointID === refPointReached.pointID);
+			// look for previously reached reference point
+			point.timeOfReachInTrackedHike = refPointReached ? refPointReached.timeOfReach : undefined;
+		}
+	}
+
 	return (
 		<Modal show={props.show} onShow={() => setTrackedHikeID(props.show)} onHide={props.onHide} size="xl" aria-labelledby="contained-modal-title-vcenter" centered>
 			<Modal.Header closeButton className='box-modal hike-page-modal-header'>
-				<Modal.Title id="contained-modal-title-vcenter">Tracked hike {trackedHikeID}</Modal.Title>
+				<Modal.Title id="contained-modal-title-vcenter">Tracked hike {trackedHikeID}{trackedHike && dayjs(trackedHike.startTime).format(' [-] MMM DD, YYYY')}</Modal.Title>
 			</Modal.Header>
 			<Modal.Body className='box-modal hike-page-modal-body'>
 				<Container>
@@ -124,34 +139,29 @@ function TrackedHikesInfoModal(props) {
 											</tr>
 										</thead>
 										<tbody>
-											
+											{trackedHike?.pointsReached.sort((a, b) => (a.pointID > b.pointID) ? 1 : -1).map((pr, i) => {
+												return (
+													<tr key={pr.pointID} className='align-middle'>
+														<td>{i + 1}</td>
+														<td>{pr.label}</td>
+														<td>{dayjs(pr.timeOfReach).format('MMM DD, YYYY h:mm:ss a')}</td>
+													</tr>
+												);
+											})}
 										</tbody>
 									</Table>
 								</Col>
 							</Row>
 						</Col>
 						<Col>
-							<TrackedHikeMap />
+							<HikeMap trackedHikeStatus={trackedHike?.status} length={props.hike.length} points={props.hike.points}
+								alreadyLinkedHut={[]} startTime={trackedHike?.startTime} endTime={trackedHike?.endTime} />
 						</Col>
 					</Row>
 				</Container>
 			</Modal.Body>
 
 		</Modal>
-	);
-}
-
-function TrackedHikeMap(props) {
-
-	return (
-		<MapContainer className='single-hut-map' center={props.coordinates} zoom={10}>
-			<TileLayer
-				attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-				url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-			/>
-
-
-		</MapContainer>
 	);
 }
 

@@ -77,8 +77,8 @@ function HikeMap(props) {
     else if (props.length && props.length >= 14000)
         zoom = 10;
 
-    const reachedPositions = props.points?.filter(p => p.reachedInOngoingHike && !p.referencePoint && !p.hutID && !p.parkingID).map(p => [p.latitude, p.longitude]);
-    const notReachedPositions = props.points?.filter(p => !p.reachedInOngoingHike && !p.referencePoint && !p.hutID && !p.parkingID).map(p => [p.latitude, p.longitude]);
+    const reachedPositions = props.points?.filter(p => (props.showOngoing && p.reachedInOngoingHike || !props.showOngoing && p.reachedInTrackedHike || !props.showOngoing && props.trackedHikeStatus === 'completed') && !p.referencePoint && !p.hutID && !p.parkingID).map(p => [p.latitude, p.longitude]);
+    const notReachedPositions = props.points?.filter(p => (props.showOngoing && !p.reachedInOngoingHike || !props.showOngoing && !p.reachedInTrackedHike && props.trackedHikeStatus !== 'completed') && !p.referencePoint && !p.hutID && !p.parkingID).map(p => [p.latitude, p.longitude]);
 
     return (
         <MapContainer className='single-hike-map' center={center} zoom={zoom}>
@@ -89,30 +89,34 @@ function HikeMap(props) {
             {reachedPositions && <Polyline pathOptions={{ color: '#a972cb' }} positions={reachedPositions} />}
             {notReachedPositions && <Polyline pathOptions={{ color: 'blue' }} positions={notReachedPositions} />}
             {startPoint && <Marker position={startPoint} icon={iconStartPoint}>
-                {startPointLabel || props.showStartHike &&
+                {(startPointLabel || props.showStartHike || props.trackedHikeStatus === 'completed') &&
                     <Popup>
-                        {startPointLabel}
+                        {<p><strong>{startPointLabel}</strong></p>}
                         {props.showStartHike && <Button className='start_btn' onClick={() => props.setTrackedHikeModalShow('start')}>Start hike</Button>}
+                        {(props.trackedHikeStatus === 'completed' || props.trackedHikeStatus === 'stopped') && <p>Reached on {dayjs(props.startTime).format('MMM DD, YYYY h:mm:ss a')}</p>}
                     </Popup>}
             </Marker>}
             {endPoint && <Marker position={endPoint} icon={iconEndPoint}>
                 {endPointLabel && <Popup>{endPointLabel}</Popup>}
-                {endPointLabel || props.showTerminateHike &&
+                {(endPointLabel || props.showTerminateHike || props.trackedHikeStatus === 'completed') &&
                     <Popup>
-                        {endPointLabel}
+                        {<p><strong>{endPointLabel}</strong></p>}
                         {props.showTerminateHike && <Button className='terminate_btn' onClick={() => props.setTrackedHikeModalShow('terminate')}>Terminate hike</Button>}
+                        {props.trackedHikeStatus === 'completed' && <p>Reached on {dayjs(props.endTime).format('MMM DD, YYYY h:mm:ss a')}</p>}
                     </Popup>}
             </Marker>}
             {props.points?.filter(p => p.referencePoint).map(p => {
                 return (
-                    <Marker position={[p.latitude, p.longitude]} icon={p.reachedInOngoingHike ? iconReachedReferencePoint : iconNotReachedReferencePoint} key={p.pointID}>
-                        {(p.label || props.showTerminateHike) &&
+                    <Marker position={[p.latitude, p.longitude]} icon={(props.showOngoing && p.reachedInOngoingHike || !props.showOngoing && p.reachedInTrackedHike || props.trackedHikeStatus === 'completed') ? iconReachedReferencePoint : iconNotReachedReferencePoint} key={p.pointID}>
+                        {(p.label || props.showTerminateHike || !props.showOngoing && p.reachedInTrackedHike || props.trackedHikeStatus === 'completed') &&
                             <Popup>
                                 <p><strong>{p.label}</strong></p>
                                 {!p.reachedInOngoingHike && props.showTerminateHike &&  // not shown if hike is not started
                                     <Button className='reach_ref_point_btn' onClick={() => props.setReferencePointReachedModalShow(p.pointID)}>Mark as reached</Button>}
-                                {p.reachedInOngoingHike && p.timeOfReach && <p>Reached on {dayjs(p.timeOfReach).format('MMM DD, YYYY h:mm:ss a')}</p>}
-                                {p.reachedInOngoingHike && !p.timeOfReach && <p>Point reached, time of reach not marked</p>}
+                                {props.showOngoing && p.reachedInOngoingHike && p.timeOfReachInOngoingHike && <p>Reached on {dayjs(p.timeOfReachInOngoingHike).format('MMM DD, YYYY h:mm:ss a')}</p>}
+                                {!props.showOngoing && p.reachedInTrackedHike && p.timeOfReachInTrackedHike && <p>Reached on {dayjs(p.timeOfReachInTrackedHike).format('MMM DD, YYYY h:mm:ss a')}</p>}
+                                {(props.showOngoing && p.reachedInOngoingHike && !p.timeOfReachInOngoingHike || !props.showOngoing && p.reachedInTrackedHike && !p.timeOfReachInTrackedHike || !p.reachedInTrackedHike && props.trackedHikeStatus === 'completed') &&
+                                <p>Point reached, time of reach not marked</p>}
                             </Popup>
                         }
                     </Marker>
