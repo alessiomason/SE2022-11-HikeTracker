@@ -1,4 +1,4 @@
-import { Alert, Form, Container, Row, Col, Button, FloatingLabel } from 'react-bootstrap';
+import { Form, Container, Row, Col, Button, FloatingLabel } from 'react-bootstrap';
 import { Icon } from 'leaflet';
 import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet';
 import { useState, useEffect } from 'react';
@@ -27,7 +27,7 @@ function EditForm(props) {
         });
     }
     setDirty(false)
-  });
+  }, [dirty, hikeId]);
 
   if (parseInt(props.hike.difficulty) === 1)
     difficulty_text = "Tourist";
