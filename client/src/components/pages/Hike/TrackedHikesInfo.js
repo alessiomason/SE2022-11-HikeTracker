@@ -38,7 +38,7 @@ function TrackedHikesInfoTable(props) {
 			{completedHikes.length > 0 &&
 				<Row className='tracked-hikes-row'>
 					<h3 className='sub-title'>Completed hikes</h3>
-					<Table striped>
+					<Table striped responsive>
 						<thead>
 							<tr>
 								<th>#</th>
@@ -134,7 +134,7 @@ function TrackedHikesInfoModal(props) {
 							</Row>
 							<Row>
 								<Col>
-									<Table striped>
+									<Table striped responsive>
 										<thead>
 											<tr>
 												<th>#</th>
