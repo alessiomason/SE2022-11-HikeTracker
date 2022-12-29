@@ -125,6 +125,10 @@ tr {
   border-color: rgba(48, 172, 66, 0.1);
 }
 
+.faded-td {
+  color: rgb(125, 125, 125) !important;
+}
+
 .table-striped>tbody>tr:nth-child(odd)>td,
 .table-striped>tbody>tr:nth-child(odd)>th {
   background-color: rgba(48, 172, 66, 0.1);
@@ -357,6 +361,7 @@ tr {
 
 .badge {
   text-transform: capitalize;
+  width: 82px;
 }
 
 .bg-info {

@@ -813,7 +813,7 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
         try {
             const trackedHikes = await dao.getTrackedHikesByHikeIDAndUserID(hikeID, userID);
             for (const trackedHike of trackedHikes)
-                trackedHike.pointsReached = await dao.getTrackedHikePoints(trackedHike.id);
+                trackedHike.pointsReached = await dao.getTrackedHikePoints(trackedHike.id, trackedHike.hikeID);
             res.status(200).json(trackedHikes);
         }
         catch (err) {
@@ -828,7 +828,7 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
         try {
             const trackedHikes = await dao.getTrackedHikesByUserID(userID);
             for (const trackedHike of trackedHikes)
-                trackedHike.pointsReached = await dao.getTrackedHikePoints(trackedHike.id);
+                trackedHike.pointsReached = await dao.getTrackedHikePoints(trackedHike.id, trackedHike.hikeID);
             res.status(200).json(trackedHikes);
         }
         catch (err) {

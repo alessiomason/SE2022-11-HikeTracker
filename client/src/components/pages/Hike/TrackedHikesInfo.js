@@ -148,7 +148,7 @@ function TrackedHikesInfoModal(props) {
 													<tr key={pr.pointID} className='align-middle'>
 														<td>{i + 1}</td>
 														<td>{pr.label}</td>
-														<td>{dayjs(pr.timeOfReach).format('MMM DD, YYYY h:mm:ss a')}</td>
+														<td className={!pr.timeOfReach && 'faded-td'}>{pr.timeOfReach ? dayjs(pr.timeOfReach).format('MMM DD, YYYY h:mm:ss a') : 'Time of reach not marked'}</td>
 													</tr>
 												);
 											})}

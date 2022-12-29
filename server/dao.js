@@ -797,13 +797,16 @@ exports.updateTrackedHikeProgress = (trackedHikeID, progress) => {
     });
 }
 
-exports.getTrackedHikePoints = (trackedHikeID) => {
+exports.getTrackedHikePoints = (trackedHikeID, hikeID) => {
     return new Promise((resolve, reject) => {
-        const sql = `SELECT *
-                     FROM TrackedHikesPoints THP, Points P
-                     WHERE THP.PointID = P.PointID
-                     AND TrackedHikeID = ?`;
-        db.all(sql, [trackedHikeID], (err, rows) => {
+        // select reached reference points, even the ones whose time of reach is not marked
+        const sql = `SELECT P.PointID, P.Label, P.Lat, P.Lon, P.Altitude, THP.Time
+                     FROM Points P
+                     LEFT JOIN (SELECT * FROM TrackedHikesPoints WHERE TrackedHikeID = ?) THP
+                     ON P.PointID = THP.PointID
+                     WHERE HikeID = ? AND RP = 1
+                       AND P.PointID <= (SELECT MAX(PointID) FROM TrackedHikesPoints WHERE TrackedHikeID = ?)`;
+        db.all(sql, [trackedHikeID, hikeID, trackedHikeID], (err, rows) => {
             if (err) reject(err);
             const points = rows.map((r) => ({
                 pointID: r.PointID,
