@@ -149,7 +149,7 @@ function StopHikeModal(props) {
 		}
 	}
 
-	const handleRefPointReached = () => {
+	const handleStopHike = () => {
 		if (selectedTime === 'adjusted')
 			props.stopHike(dayjs(adjustedTime).format());
 		else
@@ -212,7 +212,7 @@ function StopHikeModal(props) {
 						</Col>
 					</Row>
 					<Row className='btn-row'>
-						<Button className={"mx-1 mt-2 slide stop_btn"} type="submit" onClick={handleRefPointReached}>Stop hike</Button>
+						<Button className={"mx-1 mt-2 slide stop_btn"} type="submit" onClick={handleStopHike}>Stop hike</Button>
 					</Row>
 				</Container>
 			</Modal.Body>

@@ -698,7 +698,7 @@ function stopHike(trackedHikeID, stopTime) {
                 'Content-Type': 'application/json',
             },
 
-            body: JSON.stringify({ endTime: stopTime }),
+            body: JSON.stringify({ stopTime }),
 
         }).then((response) => {
             if (response.ok)
