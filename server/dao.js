@@ -656,6 +656,19 @@ exports.terminateHike = (trackedHikeID, endTime, progress) => {
     });
 }
 
+exports.stopHike = (trackedHikeID, stopTime) => {
+    return new Promise((resolve, reject) => {
+        const sql = `UPDATE TrackedHikes
+                     SET EndTime = ?,
+                         Status = 'stopped'
+                     WHERE TrackedHikeID = ?`
+        db.run(sql, [stopTime, trackedHikeID], function (err) {
+            if (err) reject(err);
+            resolve();
+        });
+    });
+}
+
 exports.getHikeByTrackedHikeId = (trackedHikeID) => {
     return new Promise((resolve, reject) => {
         const sql = `SELECT *

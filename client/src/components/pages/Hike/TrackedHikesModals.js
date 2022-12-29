@@ -29,7 +29,7 @@ function MyImageModal(props) {
 	);
 }
 
-function TrackedHikeModal(props) {
+function StartTerminateHikeModal(props) {
 	const [startTerminateLabel, setStartTerminateLabel] = useState(props.show); // copied into a state only on modal show, this avoids erratic behaviour on modal hide
 	const [currentTime, setCurrentTime] = useState(dayjs());
 	const [adjustedTime, setAdjustedTime] = useState(new Date());
@@ -88,6 +88,12 @@ function TrackedHikeModal(props) {
 			</Modal.Header>
 			<Modal.Body className='box-modal hike-page-modal-body'>
 				<Container>
+					{startTerminateLabel === 'terminate' && <Row className='modal-info-row'>
+						<h6>Mark the end point as reached and terminate the hike.</h6>
+						<p>Please mark any reference point of which you wish to record the time of reach before proceeding:
+							the remaining ones will be marked as reached upon termination.
+						</p>
+					</Row>}
 					<Row>
 						<Col md={6} className='d-flex justify-content-center'>
 							<Card className={'tracked-hikes-card ' + currentTimeClassName} onClick={() => handleSelection('current')}>
@@ -116,6 +122,97 @@ function TrackedHikeModal(props) {
 					</Row>
 					<Row className='btn-row'>
 						<Button className={"mx-1 mt-2 slide " + (startTerminateLabel === 'start' ? 'start_btn' : 'terminate_btn')} type="submit" onClick={handleStartTerminateHike}>{startTerminateLabel === 'start' ? 'Start' : 'Terminate'} hike</Button>
+					</Row>
+				</Container>
+			</Modal.Body>
+
+		</Modal>
+	);
+}
+
+function StopHikeModal(props) {
+	const [currentTime, setCurrentTime] = useState(dayjs());
+	const [adjustedTime, setAdjustedTime] = useState(new Date());
+	const [currentTimeClassName, setCurrentTimeClassName] = useState('selected-card');
+	const [adjustedTimeClassName, setAdjustedTimeClassName] = useState('deselected-card');
+	const [selectedTime, setSelectedTime] = useState('current');
+
+	const handleSelection = (selected) => {
+		if (selected === 'current') {
+			setCurrentTimeClassName('selected-card');
+			setAdjustedTimeClassName('deselected-card');
+			setSelectedTime('current');
+		} else if (selected === 'adjusted') {
+			setCurrentTimeClassName('deselected-card');
+			setAdjustedTimeClassName('selected-card');
+			setSelectedTime('adjusted');
+		}
+	}
+
+	const handleRefPointReached = () => {
+		if (selectedTime === 'adjusted')
+			props.stopHike(dayjs(adjustedTime).format());
+		else
+			props.stopHike();
+	}
+
+	let setIntervalsToUpdateCurrentTime = [];
+
+	useEffect(() => {
+		if (props.show) {
+			setCurrentTime(dayjs());
+
+			const setIntervalToUpdateCurrentTime = setInterval(() => {		// update the elapsed time every second
+				setCurrentTime(dayjs());
+			}, 1000);
+
+			setIntervalsToUpdateCurrentTime.push(setIntervalToUpdateCurrentTime);
+		}
+
+		return () => {		// stop setInterval on page leave
+			setIntervalsToUpdateCurrentTime.forEach(s => clearInterval(s));
+		};
+	}, [props.show])
+
+	return (
+		<Modal show={props.show} onHide={props.onHide} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
+			<Modal.Header closeButton className='box-modal hike-page-modal-header'>
+				<Modal.Title id="contained-modal-title-vcenter">Stop ongoing hike</Modal.Title>
+			</Modal.Header>
+			<Modal.Body className='box-modal hike-page-modal-body'>
+				<Container>
+					<Row className='modal-info-row'>
+						<h6>If you wish not to terminate the ongoing hike, but still want to save your progress, stop the hike.</h6>
+						<p>All the previously reached reference points will be saved.</p>
+					</Row>
+					<Row>
+						<Col md={6} className='d-flex justify-content-center'>
+							<Card className={'tracked-hikes-card ' + currentTimeClassName} onClick={() => handleSelection('current')}>
+								<Card.Body className='tracked-hikes-card-body'>
+									<Card.Title className='tracked-hikes-card-title text-center'>
+										Stop with current time
+									</Card.Title>
+									<Card.Text className='text-center'>
+										{currentTime.format('MMM DD, YYYY h:mm:ss a')}
+									</Card.Text>
+								</Card.Body>
+							</Card>
+						</Col>
+						<Col md={6} className='d-flex justify-content-center'>
+							<Card className={'tracked-hikes-card ' + adjustedTimeClassName} onClick={() => handleSelection('adjusted')}>
+								<Card.Body className='tracked-hikes-card-body'>
+									<Card.Title className='tracked-hikes-card-title text-center'>
+										Adjust stopping time
+									</Card.Title>
+									<div className='d-flex justify-content-center'>
+										<DateTimePicker format='MM/dd/y h:mm:ss a' value={adjustedTime} onChange={setAdjustedTime} disabled={selectedTime !== 'adjusted'} />
+									</div>
+								</Card.Body>
+							</Card>
+						</Col>
+					</Row>
+					<Row className='btn-row'>
+						<Button className={"mx-1 mt-2 slide stop_btn"} type="submit" onClick={handleRefPointReached}>Stop hike</Button>
 					</Row>
 				</Container>
 			</Modal.Body>
@@ -212,4 +309,4 @@ function ReferencePointReachedModal(props) {
 	);
 }
 
-export { MyImageModal, TrackedHikeModal, ReferencePointReachedModal };
+export { MyImageModal, StartTerminateHikeModal, StopHikeModal, ReferencePointReachedModal };

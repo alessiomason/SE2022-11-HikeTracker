@@ -951,6 +951,26 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
 
     });
 
+    // stop hike
+    app.patch('/api/trackedHikes/:id', async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty())
+            return res.status(422).json({ errors: errors.array() });
+
+        const trackedHikeID = req.params.id;
+
+        // if stopTime is undefined, current time is retrieved
+        const stopTime = dayjs(req.body.stopTime).format();
+
+        try {
+            await dao.stopHike(trackedHikeID, stopTime);
+            res.status(200).json().end();
+        } catch (err) {
+            res.status(500).json({ error: `Database error while starting the hike.` });
+        }
+
+    });
+
 
     // POST /signup
     // signup

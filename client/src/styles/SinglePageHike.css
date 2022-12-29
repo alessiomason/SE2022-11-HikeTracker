@@ -185,9 +185,9 @@ tr {
   border-radius: 0px !important;
   width: 148px !important;
   font-weight: bold;
-  border: 2px solid #a972cb !important;
-  background-color: #a972cb !important;
-  --hover: #a972cb;
+  border: 2px solid #30AC42 !important;
+  background-color: #30AC42 !important;
+  --hover: #30AC42;
   color: #fff !important;
   transition: all .1s ease-out;
 }
@@ -203,12 +203,25 @@ tr {
   transition: all .1s ease-out;
 }
 
+.stop_btn {
+  border-radius: 0px !important;
+  width: 148px !important;
+  font-weight: bold;
+  border: 2px solid #a972cb !important;
+  background-color: #a972cb !important;
+  --hover: #a972cb;
+  color: #fff !important;
+  transition: all .1s ease-out;
+}
+
 .start_btn:hover,
 .start_btn:focus,
 .terminate_btn:hover,
 .terminate_btn:focus,
 .cancel_btn:hover,
 .cancel_btn:focus,
+.stop_btn:hover,
+.stop_btn:focus,
 .reach_ref_point_btn:hover,
 .reach_ref_point_btn:focus {
   box-shadow: 0 0.6em 0.4em -0.4em var(--hover);
@@ -299,6 +312,10 @@ tr {
   transform: translateY(-0.25em);
 }
 
+.modal-info-row {
+  margin-bottom: 20px;
+}
+
 .tracked-hikes-card {
   width: 330px;
   margin-bottom: 30px;
@@ -340,6 +357,10 @@ tr {
 
 .badge {
   text-transform: capitalize;
+}
+
+.bg-info {
+  background-color: #a972cb !important;
 }
 
 .ref-points-reached {

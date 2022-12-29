@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { Container, Row, Col, Button, Modal, Table, Badge } from 'react-bootstrap';
-import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet';
 import HikeMap from '../../HikeMap';
 const dayjs = require('dayjs');
 const duration = require('dayjs/plugin/duration');

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Container, Row, Col, OverlayTrigger, Tooltip, Button, Tabs, Tab } from 'react-bootstrap';
 import { useParams, useNavigate } from 'react-router-dom';
 import HikeMap from '../../HikeMap';
-import { MyImageModal, TrackedHikeModal, ReferencePointReachedModal } from './TrackedHikesModals';
+import { MyImageModal, StartTerminateHikeModal, StopHikeModal, ReferencePointReachedModal } from './TrackedHikesModals';
 import { TrackedHikesInfoTable, TrackedHikesInfoModal } from './TrackedHikesInfo';
 import API from '../../../API';
 import '../../../styles/SinglePageHike.css';
@@ -94,7 +94,7 @@ function HikePage(props) {
     API.startHike(hikeId, startTime)
       .then(() => {
         setDirty(true);
-        setTrackedHikeModalShow(false);
+        setStartTerminateHikeModalShow(false);
       })
       .catch(err => console.log(err));
   }
@@ -126,7 +126,23 @@ function HikePage(props) {
     API.terminateHike(trackedHikeID, endTime)
       .then(() => {
         setDirty(true);
-        setTrackedHikeModalShow(false);
+        setStartTerminateHikeModalShow(false);
+      })
+      .catch(err => console.log(err));
+  }
+
+  const stopHike = async (stopTime) => {
+    if (trackedHikes.filter(th => th.endTime === null || th.endTime === undefined).length !== 1) {
+      console.log('More than one ongoing hike found: impossible to stop.');
+      return;
+    }
+
+    const trackedHikeID = trackedHikes.filter(th => th.endTime === null || th.endTime === undefined).pop().id;
+
+    API.stopHike(trackedHikeID, stopTime)
+      .then(() => {
+        setDirty(true);
+        setStopHikeModalShow(false);
       })
       .catch(err => console.log(err));
   }
@@ -152,14 +168,16 @@ function HikePage(props) {
   if (hike.state) locationsArray.push(hike.state);
 
   const [imageModalShow, setImageModalShow] = useState(false);
-  const [trackedHikeModalShow, setTrackedHikeModalShow] = useState(false);
+  const [startTerminateHikeModalShow, setStartTerminateHikeModalShow] = useState(false);
+  const [stopHikeModalShow, setStopHikeModalShow] = useState(false);
   const [referencePointReachedModalShow, setReferencePointReachedModalShow] = useState(false);
   const [trackedHikesInfoModalShow, setTrackedHikesInfoModalShow] = useState(false);
 
   return (
     <Container fluid className="external-box">
       <MyImageModal hikeId={hike.id} hikeLabel={hike.label} show={imageModalShow} onHide={() => setImageModalShow(false)} />
-      <TrackedHikeModal startHike={startHike} terminateHike={terminateHike} show={trackedHikeModalShow} onHide={() => setTrackedHikeModalShow(false)} />
+      <StartTerminateHikeModal startHike={startHike} terminateHike={terminateHike} show={startTerminateHikeModalShow} onHide={() => setStartTerminateHikeModalShow(false)} />
+      <StopHikeModal stopHike={stopHike} show={stopHikeModalShow} onHide={() => setStopHikeModalShow(false)} />
       <ReferencePointReachedModal recordReferencePointReached={recordReferencePointReached} show={referencePointReachedModalShow} onHide={() => setReferencePointReachedModalShow(false)} />
       <TrackedHikesInfoModal show={trackedHikesInfoModalShow} onHide={() => setTrackedHikesInfoModalShow(false)} hike={hike} trackedHikes={trackedHikes} />
       <Container fluid className='internal-box' >
@@ -246,14 +264,15 @@ function HikePage(props) {
                     <Button variant="primary log_btn slide" type="submit" onClick={() => { props.setShowLogin(true); navigate("/"); }} > Sign In </Button>
                   </div>
                 </div> : hike.id && <HikeMap length={hike.length} points={hike.points} alreadyLinkedHut={alreadyLinkedHut} showOngoing
-                  showStartHike={trackedHikes.filter(th => th.endTime === null || th.endTime === undefined).length === 0} setTrackedHikeModalShow={setTrackedHikeModalShow}
+                  showStartHike={trackedHikes.filter(th => th.endTime === null || th.endTime === undefined).length === 0} setTrackedHikeModalShow={setStartTerminateHikeModalShow}
                   showTerminateHike={trackedHikes.filter(th => th.endTime === null || th.endTime === undefined).length === 1} setReferencePointReachedModalShow={setReferencePointReachedModalShow} />}
               {/* hike.id ensures that the map is rendered only when the hike is loaded  */}
             </Row>
             <Row className='btn-row'>
-              {props.loggedIn && trackedHikes.filter(th => th.endTime === null || th.endTime === undefined).length === 0 && <Button className="mx-1 mt-2 start_btn slide" type="submit" onClick={() => setTrackedHikeModalShow('start')}>Start hike</Button>}
+              {props.loggedIn && trackedHikes.filter(th => th.endTime === null || th.endTime === undefined).length === 0 && <Button className="mx-1 mt-2 start_btn slide" type="submit" onClick={() => setStartTerminateHikeModalShow('start')}>Start hike</Button>}
               {props.loggedIn && trackedHikes.filter(th => th.endTime === null || th.endTime === undefined).length === 1 && <Button className="mx-1 mt-2 cancel_btn slide" type="submit" onClick={cancelHike}>Cancel hike</Button>}
-              {props.loggedIn && trackedHikes.filter(th => th.endTime === null || th.endTime === undefined).length === 1 && <Button className="mx-1 mt-2 terminate_btn slide" type="submit" onClick={() => setTrackedHikeModalShow('terminate')}>Terminate hike</Button>}
+              {props.loggedIn && trackedHikes.filter(th => th.endTime === null || th.endTime === undefined).length === 1 && <Button className="mx-1 mt-2 stop_btn slide" type="submit" onClick={() => setStopHikeModalShow(true)}>Stop hike</Button>}
+              {props.loggedIn && trackedHikes.filter(th => th.endTime === null || th.endTime === undefined).length === 1 && <Button className="mx-1 mt-2 terminate_btn slide" type="submit" onClick={() => setStartTerminateHikeModalShow('terminate')}>Terminate hike</Button>}
             </Row>
             {props.loggedIn && <TrackedHikesInfoTable hike={hike} trackedHikes={trackedHikes} setTrackedHikesInfoModalShow={setTrackedHikesInfoModalShow} />}
             <Row className="tab-box">

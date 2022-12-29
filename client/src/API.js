@@ -688,6 +688,31 @@ function cancelHike(trackedHikeID) {
     });
 }
 
+function stopHike(trackedHikeID, stopTime) {
+    // call: PATCH /api/trackedHikes/:id
+    return new Promise((resolve, reject) => {
+        fetch(new URL('trackedHikes/' + trackedHikeID, APIURL), {
+            method: 'PATCH',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+
+            body: JSON.stringify({ endTime: stopTime }),
+
+        }).then((response) => {
+            if (response.ok)
+                resolve();
+            else {
+                // analyze the cause of error
+                response.json()
+                    .then((message) => { reject(message); }) // error message in the response body
+                    .catch(() => { reject({ error: "Cannot parse server response." }) }); // something else
+            }
+        }).catch(() => { reject({ error: "Cannot communicate with the server." }) }); // connection errors
+    });
+}
+
 async function signup(credentials) {
     let response = await fetch(new URL('signup', APIURL), {
         method: 'POST',
@@ -774,6 +799,6 @@ const API = {
     addGPXTrack, addParkingLot, AddPoint, deleteParkingLot, updateParkingLot, deleteHike, getHikes, getParkingLots, addHut, updateHut, uploadHutImage,
     uploadParkingLotImage, getHuts, getHut, deletHut, getHike, addHike, updateHike, signup, verifyEmail, login, logout, getUserInfo, getUserAccessRight, getHikesRefPoints,
     getStartPoint, getEndPoint, getReferencePoint, reverseNominatim, setNewReferencePoint, clearReferencePoint, startHike, getTrackedHikesByHikeIDAndUserID,
-    getTrackedHikesByUserID, recordReferencePointReached, terminateHike, cancelHike
+    getTrackedHikesByUserID, recordReferencePointReached, terminateHike, cancelHike, stopHike
 };
 export default API;
