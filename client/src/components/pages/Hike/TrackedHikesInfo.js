@@ -80,9 +80,14 @@ function TrackedHikesInfoModal(props) {
 		for (let point of props.hike.points) {
 			point.reachedInTrackedHike = point.pointID <= maxRefPointReachedInTrackedHike.pointID;    // generic point is before latest reached point
 
+			// search if current point is a previously reached reference point; if so, save time of reach
 			const refPointReached = refPointsReachedInTrackedHike.find(refPointReached => point.pointID === refPointReached.pointID);
-			// look for previously reached reference point
 			point.timeOfReachInTrackedHike = refPointReached ? refPointReached.timeOfReach : undefined;
+		}
+	} else if (trackedHike && refPointsReachedInTrackedHike.length === 0) {		// set to null, might not be if I previously opened another hike map
+		for (let point of props.hike.points) {
+			point.reachedInTrackedHike = false;
+			point.timeOfReachInTrackedHike = undefined;
 		}
 	}
 

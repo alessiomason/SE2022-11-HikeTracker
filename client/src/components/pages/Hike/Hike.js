@@ -69,8 +69,9 @@ function HikePage(props) {
                     for (let point of hike.points) {
                       point.reachedInOngoingHike = point.pointID <= maxRefPointReachedInOngoingHike.pointID;    // generic point is before latest reached point
 
+                      // search if current point is a previously reached reference point; if so, save time of reach
                       const refPointReached = refPointsReachedInOngoingHike.find(refPointReached => point.pointID === refPointReached.pointID);
-                      if (refPointReached)    // look for previously reached reference point
+                      if (refPointReached)
                         point.timeOfReachInOngoingHike = refPointReached.timeOfReach;
                     }
                   }
