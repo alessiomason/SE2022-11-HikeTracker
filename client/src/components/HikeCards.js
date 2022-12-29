@@ -22,27 +22,29 @@ function HikesCards(props) {
 
     const [showingAll, setShowingAll] = useState(false);    // state for Show more button
 
+    const filteredHikes = props.hikes.filter(h => {
+        if (props.hikesMinLength && h.length < props.hikesMinLength
+            || props.hikesMaxLength && h.length > props.hikesMaxLength
+            || props.hikesMinTime && h.expTime < props.hikesMinTime
+            || props.hikesMaxTime && h.expTime > props.hikesMaxTime
+            || props.hikesMinAscent && h.ascent < props.hikesMinAscent
+            || props.hikesMaxAscent && h.ascent > props.hikesMaxAscent
+            || !props.hikesDifficulties.find(d => d.level === parseInt(h.difficulty)).isChecked
+            || props.hikesState && h.state !== props.hikesState
+            || props.hikesRegion && h.region !== props.hikesRegion
+            || props.hikesProvince && h.province !== props.hikesProvince
+            || props.hikesMunicipality && h.municipality !== props.hikesMunicipality
+            || props.hikesLatitude !== -1 && props.hikesLongitude !== -1 && props.hikesRadius !== -1 &&
+            coordinatesDistanceInMeter(h.startPoint.latitude, h.startPoint.longitude, props.hikesLatitude, props.hikesLongitude) > props.hikesRadius * 1000)
+            return false;
+
+        return true;
+    });
+
     return (
         <Container fluid className="cards p-5">
             <Row className='mb-3 box_centered'>
-                {props.hikes.filter(h => {
-                    if (props.hikesMinLength && h.length < props.hikesMinLength
-                        || props.hikesMaxLength && h.length > props.hikesMaxLength
-                        || props.hikesMinTime && h.expTime < props.hikesMinTime
-                        || props.hikesMaxTime && h.expTime > props.hikesMaxTime
-                        || props.hikesMinAscent && h.ascent < props.hikesMinAscent
-                        || props.hikesMaxAscent && h.ascent > props.hikesMaxAscent
-                        || !props.hikesDifficulties.find(d => d.level === parseInt(h.difficulty)).isChecked
-                        || props.hikesState && h.state !== props.hikesState
-                        || props.hikesRegion && h.region !== props.hikesRegion
-                        || props.hikesProvince && h.province !== props.hikesProvince
-                        || props.hikesMunicipality && h.municipality !== props.hikesMunicipality
-                        || props.hikesLatitude !== -1 && props.hikesLongitude !== -1 && props.hikesRadius !== -1 &&
-                        coordinatesDistanceInMeter(h.startPoint.latitude, h.startPoint.longitude, props.hikesLatitude, props.hikesLongitude) > props.hikesRadius * 1000)
-                        return false;
-
-                    return true;
-                }).sort((a, b) => (a.id > b.id) ? 1 : -1).slice(0, showingAll ? undefined : 9).map(h => {
+                {filteredHikes.sort((a, b) => (a.id > b.id) ? 1 : -1).slice(0, showingAll ? undefined : 9).map(h => {
                     return (
                         <Col xl={4} lg="auto" md="auto" sm="auto" xs="auto" key={h.id} >
                             <SingleHikeCard fromHikeCards key={h.id} hike={h} user={props.user} />
@@ -51,11 +53,11 @@ function HikesCards(props) {
                 })}
             </Row>
             <Row className="box_centered">
-                {!showingAll && <Button variant="primary" className="btn_show my-3 log_btn" onClick={() => setShowingAll(true)}>
-                    Show more <img className="ms-2 mt-1 " src={ArrowDown} alt="arrow_image" />
+                {filteredHikes.length > 9 && !showingAll && <Button variant="primary" className="show-more-btn my-3" onClick={() => setShowingAll(true)}>
+                    Show more <img src={ArrowDown} alt="arrow_image" />
                 </Button>}
-                {showingAll && <Button variant="primary" className="btn_show my-3 log_btn" onClick={() => setShowingAll(false)}>
-                    Show less <img className="ms-2 mt-1 " src={ArrowUp} alt="arrow_image" />
+                {filteredHikes.length > 9 && showingAll && <Button variant="primary" className="show-more-btn my-3" onClick={() => setShowingAll(false)}>
+                    Show less <img src={ArrowUp} alt="arrow_image" />
                 </Button>}
             </Row>
         </Container>
