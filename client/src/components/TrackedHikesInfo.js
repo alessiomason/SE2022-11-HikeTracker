@@ -90,7 +90,7 @@ function TrackedHikesInfoTable(props) {
 												th.elapsedTime.format('H [h] mm [m]') :
 												dayjs.duration(dayjs(th.endTime) - dayjs(th.startTime)).format('H [h] mm [m]')}
 										</td>
-										<td><Badge bg={th.status === 'completed' ? 'success' : 'info'}>{th.status}</Badge></td>
+										<td><Badge bg={th.status === 'completed' ? 'success' : th.status === 'stopped' ? 'info' : 'warning'}>{th.status}</Badge></td>
 										<td>{th.progress ? th.progress + ' reference points reached' : 'Not recorded'}</td>
 										<td><Button className='see-more-btn' onClick={() => props.setTrackedHikesInfoModalShow(th.id)}>See more</Button></td>
 									</tr>
@@ -147,7 +147,7 @@ function TrackedHikesInfoModal(props) {
 	}, [trackedHike])
 
 	return (
-		<Modal show={props.show} onShow={() => setTrackedHikeID(props.show)} onHide={props.onHide} size="xl" aria-labelledby="contained-modal-title-vcenter" centered>
+		<Modal style={props.style} show={props.show} onShow={() => setTrackedHikeID(props.show)} onHide={props.onHide} size="xl" aria-labelledby="contained-modal-title-vcenter" centered>
 			<Modal.Header closeButton className='box-modal hike-page-modal-header'>
 				<Modal.Title id="contained-modal-title-vcenter">{props.inProfilePage && trackedHike ? trackedHike.hikeLabel : 'Tracked hike'}{trackedHike && dayjs(trackedHike.startTime).format(' [-] MMM DD, YYYY')}</Modal.Title>
 			</Modal.Header>
@@ -173,7 +173,7 @@ function TrackedHikesInfoModal(props) {
 							</Row>
 							<Row>
 								<Col xs={4} className='stats-names-col d-flex justify-content-end'>Status</Col>
-								<Col>{trackedHike && <Badge bg={trackedHike.status === 'completed' ? 'success' : 'info'}>{trackedHike.status}</Badge>}</Col>
+								<Col>{trackedHike && <Badge bg={trackedHike.status === 'completed' ? 'success' : trackedHike.status === 'stopped' ? 'info' : 'warning'}>{trackedHike.status}</Badge>}</Col>
 							</Row>
 							<Row>
 								<Col xs={4} className='stats-names-col d-flex justify-content-end'>Progress</Col>

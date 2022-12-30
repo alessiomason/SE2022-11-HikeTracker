@@ -6,7 +6,7 @@ import '../styles/ProfileHutWorker.css';
 import { default as Params } from '../icons/equalizer.svg';
 import API from '../API';
 
-function ProfileHiker(props) {
+function ProfileHiker() {
 
   const [task1, setTask1] = useState("stats");
 
@@ -48,20 +48,20 @@ function YourStats() {
         setDirtyHike(true);
 
         API.getHike(hikeID)
-        .then((hike) => {
-          setHike(hike);
-          setDirtyHike(false);
-        })
-        .catch(err => console.log(err));
+          .then((hike) => {
+            setHike(hike);
+            setDirtyHike(false);
+          })
+          .catch(err => console.log(err));
       }
     }
   }, [trackedHikesInfoModalShow]);
 
   return (
-    <Row>
+    <Row style={{ '--main-color': '#494681',  '--faded-main-color': 'rgba(73, 70, 129, 0.1)' }}>
       <Col xs={{ span: 10, offset: 1 }}>
         {trackedHikes.length > 0 && <TrackedHikesInfoTable inProfilePage trackedHikes={trackedHikes} setTrackedHikesInfoModalShow={setTrackedHikesInfoModalShow} />}
-        {trackedHikes.length > 0 && <TrackedHikesInfoModal inProfilePage show={trackedHikesInfoModalShow} onHide={() => setTrackedHikesInfoModalShow(false)} hike={hike} dirtyHike={dirtyHike} trackedHikes={trackedHikes} />}
+        {trackedHikes.length > 0 && <TrackedHikesInfoModal inProfilePage show={trackedHikesInfoModalShow} onHide={() => setTrackedHikesInfoModalShow(false)} hike={hike} dirtyHike={dirtyHike} trackedHikes={trackedHikes} style={{ '--main-color': '#494681',  '--faded-main-color': 'rgba(73, 70, 129, 0.1)' }} />}
       </Col>
     </Row>
   );

@@ -108,33 +108,6 @@
   max-width: 100%
 }
 
-.sub-title {
-  text-transform: uppercase;
-  font-weight: bold;
-  font-style: italic;
-  color: #30AC42;
-  padding-bottom: 8px;
-  border-bottom: 2px solid #30AC42;
-}
-
-th {
-  color: #30AC42;
-}
-
-tr {
-  border-color: rgba(48, 172, 66, 0.1);
-}
-
-.faded-td {
-  color: rgb(125, 125, 125) !important;
-}
-
-.table-striped>tbody>tr:nth-child(odd)>td,
-.table-striped>tbody>tr:nth-child(odd)>th {
-  background-color: rgba(48, 172, 66, 0.1);
-  box-shadow: none;
-}
-
 .single-hike-icon {
   vertical-align: baseline;
   filter: invert(54%) sepia(70%) saturate(545%) hue-rotate(77deg) brightness(89%) contrast(80%)
@@ -145,21 +118,9 @@ tr {
   height: 30px;
 }
 
-.single-hike-map {
-  margin-bottom: 0px !important;
-  height: 400px !important;
-  width: 100% !important;
-  border: 2px solid #30AC42;
-  border-radius: 8px;
-}
-
 .btn-row {
   display: flex;
   justify-content: end;
-  margin-bottom: 30px;
-}
-
-.tracked-hikes-row {
   margin-bottom: 30px;
 }
 
@@ -249,32 +210,6 @@ tr {
   font-weight: bold !important;
 }
 
-.hike-page-modal-header {
-  border-top: 2px solid #30AC42;
-  border-left: 2px solid #30AC42;
-  border-right: 2px solid #30AC42;
-}
-
-.hike-page-modal-body {
-  border-radius: 0px 0px 8px 8px !important;
-  border-left: 2px solid #30AC42;
-  border-right: 2px solid #30AC42;
-  border-bottom: 2px solid #30AC42;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-.hike-page-container {
-  position: relative;
-  background-color: #212529;
-  border: 2px solid #30AC42;
-  border-radius: 10px;
-  padding-left: 0px !important;
-  padding-right: 0px !important;
-}
-
 .fake-image {
   opacity: 0.1;
   display: block;
@@ -314,67 +249,4 @@ tr {
 .log_btn:focus {
   box-shadow: 0 0.6em 0.4em -0.4em var(--hover);
   transform: translateY(-0.25em);
-}
-
-.modal-info-row {
-  margin-bottom: 20px;
-}
-
-.tracked-hikes-card {
-  width: 330px;
-  margin-bottom: 30px;
-  background-color: white;
-  color: black;
-  transition: all .25s ease;
-}
-
-.tracked-hikes-card:hover {
-  cursor: pointer;
-}
-
-.tracked-hikes-card.selected-card {
-  background-color: rgba(48, 172, 66, 0.1);
-}
-
-.tracked-hikes-card.deselected-card {
-  color: rgba(128, 128, 128, 0.7);
-}
-
-.see-more-btn {
-  border-radius: 0px !important;
-  width: 110px !important;
-  border: 1px solid #30ac42 !important;
-  background-color: transparent !important;
-  --hover: #30ac42;
-  color: #30ac42 !important;
-  padding-top: 3px;
-  padding-bottom: 3px;
-  padding-left: 0;
-  padding-right: 0;
-}
-
-.see-more-btn:hover,
-.see-more-btn:focus {
-  color: white !important;
-  box-shadow: inset 110px 0 0 0 var(--hover);
-}
-
-.badge {
-  text-transform: capitalize;
-  width: 82px;
-}
-
-.bg-info {
-  background-color: #a972cb !important;
-}
-
-.ref-points-reached {
-  margin-top: 30px;
-  padding-bottom: 4px;
-}
-
-.stats-names-col {
-  border-right: 1px #30ac42 solid;
-  font-weight: bold;
-  color: #30ac42;
 }
