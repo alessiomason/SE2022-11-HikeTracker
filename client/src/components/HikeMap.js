@@ -124,7 +124,7 @@ function HikeMap(props) {
             })}
             {props.alreadyLinkedHut.length !== 0 && props.alreadyLinkedHut.map(p => {
                 return (
-                    <Marker position={[p.latitude, p.longitude]} icon={iconLinkedHut} key={p.id} >
+                    <Marker position={[p.latitude, p.longitude]} icon={iconLinkedHut} key={p.hutID} >
                         {p.label &&
                             <Popup>
                                 <p>{p.label}</p>

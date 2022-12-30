@@ -14,7 +14,7 @@ function TrackedHikesInfoTable(props) {
 	let tempOngoingHikes = props.trackedHikes.filter(th => th.endTime === null || th.endTime === undefined);
 	for (let tempOngoingHike of tempOngoingHikes)
 		tempOngoingHike.elapsedTime = dayjs.duration(dayjs() - dayjs(tempOngoingHike.startTime));
-	const [ongoingHikes, setOngoingHikes] = useState( props.inProfilePage ? [tempOngoingHikes] : []);
+	const [ongoingHikes, setOngoingHikes] = useState(props.inProfilePage ? [tempOngoingHikes] : []);
 
 	let setIntervalsToUpdateElapsedTime = [];
 
@@ -149,7 +149,7 @@ function TrackedHikesInfoModal(props) {
 	return (
 		<Modal show={props.show} onShow={() => setTrackedHikeID(props.show)} onHide={props.onHide} size="xl" aria-labelledby="contained-modal-title-vcenter" centered>
 			<Modal.Header closeButton className='box-modal hike-page-modal-header'>
-				<Modal.Title id="contained-modal-title-vcenter">Tracked hike {trackedHike && dayjs(trackedHike.startTime).format(' [-] MMM DD, YYYY')}</Modal.Title>
+				<Modal.Title id="contained-modal-title-vcenter">{props.inProfilePage && trackedHike ? trackedHike.hikeLabel : 'Tracked hike'}{trackedHike && dayjs(trackedHike.startTime).format(' [-] MMM DD, YYYY')}</Modal.Title>
 			</Modal.Header>
 			<Modal.Body className='box-modal hike-page-modal-body'>
 				<Container>
@@ -166,7 +166,7 @@ function TrackedHikesInfoModal(props) {
 							<Row>
 								<Col xs={4} className='stats-names-col d-flex justify-content-end'>Time</Col>
 								<Col>
-									{trackedHike && (trackedHike.status === 'ongoing' && ongoingHikeElapsedTime ? 
+									{trackedHike && (trackedHike.status === 'ongoing' && ongoingHikeElapsedTime ?
 										ongoingHikeElapsedTime.format('H [h] mm [m] ss [s]') :
 										dayjs.duration(dayjs(trackedHike.endTime) - dayjs(trackedHike.startTime)).format('H [h] mm [m]'))}
 								</Col>
