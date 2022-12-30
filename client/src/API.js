@@ -593,6 +593,7 @@ async function getTrackedHikesByHikeIDAndUserID(hikeID) {
         return trackedHikes.map((th) => ({
             id: th.id,
             hikeID: th.hikeID,
+            hikeLabel: th.hikeLabel,
             status: th.status,
             progress: th.progress,
             startTime: th.startTime,
@@ -610,6 +611,7 @@ async function getTrackedHikesByUserID() {
         return trackedHikes.map((th) => ({
             id: th.id,
             hikeID: th.hikeID,
+            hikeLabel: th.hikeLabel,
             status: th.status,
             progress: th.progress,
             startTime: th.startTime,

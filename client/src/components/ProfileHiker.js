@@ -60,9 +60,9 @@ function YourStats() {
   return (
     <Row>
       <Col xs={{ span: 10, offset: 1 }}>
-        <p>Ongoing hikes</p>
-        <TrackedHikesInfoTable TrackedHikesInfoTable trackedHikes={trackedHikes} setTrackedHikesInfoModalShow={setTrackedHikesInfoModalShow} />
-        <TrackedHikesInfoModal show={trackedHikesInfoModalShow} onHide={() => setTrackedHikesInfoModalShow(false)} hike={hike} dirtyHike={dirtyHike} trackedHikes={trackedHikes} />
+        <p>Hike name in modal</p>
+        {trackedHikes.length > 0 && <TrackedHikesInfoTable inProfilePage trackedHikes={trackedHikes} setTrackedHikesInfoModalShow={setTrackedHikesInfoModalShow} />}
+        {trackedHikes.length > 0 && <TrackedHikesInfoModal show={trackedHikesInfoModalShow} onHide={() => setTrackedHikesInfoModalShow(false)} hike={hike} dirtyHike={dirtyHike} trackedHikes={trackedHikes} />}
       </Col>
     </Row>
   );

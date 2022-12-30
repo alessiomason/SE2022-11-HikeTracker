@@ -608,12 +608,15 @@ exports.startHike = (hikeID, userID, progress, startTime) => {
 
 exports.getTrackedHikesByHikeIDAndUserID = (hikeID, userID) => {
     return new Promise((resolve, reject) => {
-        const sql = 'SELECT * FROM TrackedHikes WHERE HikeID = ? AND UserID = ?';
+        const sql = `SELECT TrackedHikeID, TH.HikeID, Label, Status, Progress, StartTime, EndTime
+                     FROM TrackedHikes TH, Hikes H
+                     WHERE TH.HikeID = H.HikeID AND TH.HikeID = ? AND UserID = ?`;
         db.all(sql, [hikeID, userID], (err, rows) => {
             if (err) reject(err);
             const trackedHikes = rows.map((r) => ({
                 id: r.TrackedHikeID,
                 hikeID: r.HikeID,
+                hikeLabel: r.Label,
                 status: r.Status,
                 progress: r.Progress,
                 startTime: r.StartTime,
@@ -626,12 +629,15 @@ exports.getTrackedHikesByHikeIDAndUserID = (hikeID, userID) => {
 
 exports.getTrackedHikesByUserID = (userID) => {
     return new Promise((resolve, reject) => {
-        const sql = 'SELECT * FROM TrackedHikes WHERE UserID = ?';
+        const sql = `SELECT TrackedHikeID, TH.HikeID, Label, Status, Progress, StartTime, EndTime
+                     FROM TrackedHikes TH, Hikes H
+                     WHERE TH.HikeID = H.HikeID AND UserID = ?`;
         db.all(sql, [userID], (err, rows) => {
             if (err) reject(err);
             const trackedHikes = rows.map((r) => ({
                 id: r.TrackedHikeID,
                 hikeID: r.HikeID,
+                hikeLabel: r.Label,
                 status: r.Status,
                 progress: r.Progress,
                 startTime: r.StartTime,
