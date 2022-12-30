@@ -1,7 +1,7 @@
 :root {
 	/*	These variables are used for the hike single page.
 		For the profile page they are reset
-		in ProfileHiker.js in the Row component of function YourStats
+		in ProfileHiker.js in the Row component of function YourHikes
 		and in the following lines for the single components */
 
 	/* in profile page is #494681 */

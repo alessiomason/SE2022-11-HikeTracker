@@ -8,22 +8,22 @@ import API from '../API';
 
 function ProfileHiker() {
 
-  const [task1, setTask1] = useState("stats");
+  const [tab, setTab] = useState("hikes");
 
   return (
     <Container fluid className="">
       <Row className="box-btn mb-5">
-        <Button className={(task1 === "stats") ? 'user-btn-fix me-2 margin-bottom2' : 'user-btn me-2 margin-bottom2'} onClick={() => setTask1("stats")}> Your Hikes </Button>
-        <Button className={(task1 === "filter") ? 'user-btn-fix mx-2 margin-bottom2' : 'user-btn mx-2 margin-bottom2'} onClick={() => setTask1("filter")}> Your Filters </Button>
-        <Button className={(task1 === "param") ? 'user-btn-fix ms-2' : 'user-btn ms-2 '} onClick={() => setTask1("param")}> Your Parameters </Button>
+        <Button className={(tab === "hikes") ? 'user-btn-fix me-2 margin-bottom2' : 'user-btn me-2 margin-bottom2'} onClick={() => setTab("hikes")}>Tracked hikes</Button>
+        <Button className={(tab === "stats") ? 'user-btn-fix ms-2' : 'user-btn ms-2 '} onClick={() => setTab("stats")}>Performance stats</Button>
+        <Button className={(tab === "parameters") ? 'user-btn-fix mx-2 margin-bottom2' : 'user-btn mx-2 margin-bottom2'} onClick={() => setTab("parameters")}>Set parameters</Button>
       </Row>
-      {(task1 === "stats") ? <YourStats /> : (task1 === "filter") ? <YourFilter /> : <YourParameter />}
+      {(tab === "hikes") ? <TrackedHikes /> : (tab === "stats") ? <PerformanceStats /> : <Parameters />}
 
     </Container>
   );
 }
 
-function YourStats() {
+function TrackedHikes() {
   const [dirty, setDirty] = useState(true);
   const [hike, setHike] = useState({});
   const [dirtyHike, setDirtyHike] = useState(false);    // allows showing of the map only when loading of the hike is done
@@ -68,7 +68,7 @@ function YourStats() {
 }
 
 
-function YourFilter() {
+function Parameters() {
   return (
 
     <Row className="margin-x box-center">
@@ -280,7 +280,7 @@ function YourFilter() {
   );
 }
 
-function YourParameter() {
+function PerformanceStats() {
 
   return (
     <Row className=" val-user-box3 mx-5 p-4 box-center">
@@ -290,61 +290,61 @@ function YourParameter() {
         </Col>
         <Col lg={3} md={6} sm={12} xs={12} className=" padding-x " >
           <FloatingLabel controlId="floatingInput" label="Total nr of hikes finished" className="mb-3">
-            <Form.Control required={true} type="text" disabled readOnly value={"12"}></Form.Control>
+            <Form.Control required={true} type="text" readOnly value={"12"}></Form.Control>
           </FloatingLabel>
         </Col>
         <Col lg={3} md={6} sm={12} xs={12} className=" padding-x "  >
           <FloatingLabel controlId="floatingInput" label="Total nr of kms walked" className="mb-3">
-            <Form.Control required={true} type="text" disabled readOnly value={"70"}></Form.Control>
+            <Form.Control required={true} type="text" readOnly value={"70"}></Form.Control>
           </FloatingLabel>
         </Col>
         <Col lg={3} md={6} sm={12} xs={12} className=" padding-x " >
           <FloatingLabel controlId="floatingInput" label="Highest altitude reached" className="mb-3">
-            <Form.Control required={true} type="text" disabled readOnly value={"70"}></Form.Control>
+            <Form.Control required={true} type="text" readOnly value={"70"}></Form.Control>
           </FloatingLabel>
         </Col>
       </Row>
       <Row>
         <Col lg={3} md={6} sm={12} xs={12} className=" padding-x " >
           <FloatingLabel controlId="floatingInput" label="Highest altitude range done" className="mb-3">
-            <Form.Control required={true} type="text" disabled readOnly value={"70"}></Form.Control>
+            <Form.Control required={true} type="text" readOnly value={"70"}></Form.Control>
           </FloatingLabel>
         </Col>
         <Col lg={3} md={6} sm={12} xs={12} className=" padding-x " >
           <FloatingLabel controlId="floatingInput" label="Longest (km) hike completed" className="mb-3">
-            <Form.Control required={true} type="text" disabled readOnly value={"12"}></Form.Control>
+            <Form.Control required={true} type="text" readOnly value={"12"}></Form.Control>
           </FloatingLabel>
         </Col>
         <Col lg={3} md={6} sm={12} xs={12} className=" padding-x " >
           <FloatingLabel controlId="floatingInput" label="Longest (hours) hike completed" className="mb-3">
-            <Form.Control required={true} type="text" disabled readOnly value={"70"}></Form.Control>
+            <Form.Control required={true} type="text" readOnly value={"70"}></Form.Control>
           </FloatingLabel>
         </Col>
         <Col lg={3} md={6} sm={12} xs={12} className=" padding-x " >
           <FloatingLabel controlId="floatingInput" label="Shortest (km) hike completed" className="mb-3">
-            <Form.Control required={true} type="text" disabled readOnly value={"70"}></Form.Control>
+            <Form.Control required={true} type="text" readOnly value={"70"}></Form.Control>
           </FloatingLabel>
         </Col>
       </Row>
       <Row>
         <Col lg={3} md={6} sm={12} xs={12} className=" padding-x " >
           <FloatingLabel controlId="floatingInput" label="Shortest (hours) hike completed" className="mb-3">
-            <Form.Control required={true} type="text" disabled readOnly value={"70"}></Form.Control>
+            <Form.Control required={true} type="text" readOnly value={"70"}></Form.Control>
           </FloatingLabel>
         </Col>
         <Col lg={3} md={6} sm={12} xs={12} className=" padding-x " >
           <FloatingLabel controlId="floatingInput" label="Average pace (min/km)" className="mb-3">
-            <Form.Control required={true} type="text" disabled readOnly value={"12"}></Form.Control>
+            <Form.Control required={true} type="text" readOnly value={"12"}></Form.Control>
           </FloatingLabel>
         </Col>
         <Col lg={3} md={6} sm={12} xs={12} className=" padding-x " >
           <FloatingLabel controlId="floatingInput" label="Fastest paced hike (min/km)" className="mb-3">
-            <Form.Control required={true} type="text" disabled readOnly value={"70"}></Form.Control>
+            <Form.Control required={true} type="text" readOnly value={"70"}></Form.Control>
           </FloatingLabel>
         </Col>
         <Col lg={3} md={6} sm={12} xs={12} className=" padding-x ">
           <FloatingLabel controlId="floatingInput" label="Average vertical ascent speed (m/hour)" className="mb-3">
-            <Form.Control required={true} type="text" disabled readOnly value={"70"}></Form.Control>
+            <Form.Control required={true} type="text" readOnly value={"70"}></Form.Control>
           </FloatingLabel>
         </Col>
       </Row>

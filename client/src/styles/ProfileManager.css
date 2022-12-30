@@ -42,7 +42,7 @@
 
 .user-btn {
     border-radius: 0px !important;
-    width: 160px !important;
+    width: 180px !important;
     border: 2px solid #494681 !important;
     font-weight: bold;
     background-color: whitesmoke !important;
@@ -55,18 +55,23 @@
 .user-btn:focus {
     color: white !important;
     font-weight: bold;
-    box-shadow: inset 160px 0 0 0 var(--hover);
+    box-shadow: inset 180px 0 0 0 var(--hover);
     transition: 0.5s;
 }
 
 .user-btn-fix {
     border-radius: 0px !important;
-    width: 160px !important;
+    width: 180px !important;
     border: 2px solid #494681 !important;
     font-weight: bold;
     color: white !important;
     --hover: #494681;
-    box-shadow: inset 160px 0 0 0 var(--hover);
+    box-shadow: inset 180px 0 0 0 var(--hover);
+    background-color: #494681;
+}
+
+.user-btn-fix:hover {
+    background-color: #494681;
 }
 
 .map-box {
