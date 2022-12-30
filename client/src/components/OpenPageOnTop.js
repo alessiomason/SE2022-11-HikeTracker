@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 
-const OpenPageOnTop = (props) => {
+function OpenPageOnTop(props) {
 	const location = useLocation();
 	useEffect(() => {
 		window.scrollTo({

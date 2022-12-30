@@ -74,20 +74,22 @@ function TrackedHikesInfoModal(props) {
 
 	const refPointsReachedInTrackedHike = trackedHike?.pointsReached?.sort((a, b) => (a.pointID > b.pointID) ? 1 : -1);
 
-	if (trackedHike && refPointsReachedInTrackedHike.length > 0) {
-		const maxRefPointReachedInTrackedHike = refPointsReachedInTrackedHike[refPointsReachedInTrackedHike.length - 1];
+	if (props.hike && props.hike !== {} && props.hike.points) {		// to prevent access in case hike is not loaded
+		if (trackedHike && refPointsReachedInTrackedHike.length > 0) {
+			const maxRefPointReachedInTrackedHike = refPointsReachedInTrackedHike[refPointsReachedInTrackedHike.length - 1];
 
-		for (let point of props.hike.points) {
-			point.reachedInTrackedHike = point.pointID <= maxRefPointReachedInTrackedHike.pointID;    // generic point is before latest reached point
+			for (let point of props.hike.points) {
+				point.reachedInTrackedHike = point.pointID <= maxRefPointReachedInTrackedHike.pointID;    // generic point is before latest reached point
 
-			// search if current point is a previously reached reference point; if so, save time of reach
-			const refPointReached = refPointsReachedInTrackedHike.find(refPointReached => point.pointID === refPointReached.pointID);
-			point.timeOfReachInTrackedHike = refPointReached ? refPointReached.timeOfReach : undefined;
-		}
-	} else if (trackedHike && refPointsReachedInTrackedHike.length === 0) {		// set to null, might not be if I previously opened another hike map
-		for (let point of props.hike.points) {
-			point.reachedInTrackedHike = false;
-			point.timeOfReachInTrackedHike = undefined;
+				// search if current point is a previously reached reference point; if so, save time of reach
+				const refPointReached = refPointsReachedInTrackedHike.find(refPointReached => point.pointID === refPointReached.pointID);
+				point.timeOfReachInTrackedHike = refPointReached ? refPointReached.timeOfReach : undefined;
+			}
+		} else if (trackedHike && refPointsReachedInTrackedHike.length === 0) {		// set to null, might not be if I previously opened another hike map
+			for (let point of props.hike.points) {
+				point.reachedInTrackedHike = false;
+				point.timeOfReachInTrackedHike = undefined;
+			}
 		}
 	}
 
@@ -148,7 +150,7 @@ function TrackedHikesInfoModal(props) {
 													<tr key={pr.pointID} className='align-middle'>
 														<td>{i + 1}</td>
 														<td>{pr.label}</td>
-														<td className={!pr.timeOfReach && 'faded-td'}>{pr.timeOfReach ? dayjs(pr.timeOfReach).format('MMM DD, YYYY h:mm:ss a') : 'Time of reach not marked'}</td>
+														<td className={pr.timeOfReach ? undefined : 'faded-td'}>{pr.timeOfReach ? dayjs(pr.timeOfReach).format('MMM DD, YYYY h:mm:ss a') : 'Time of reach not marked'}</td>
 													</tr>
 												);
 											})}
@@ -158,8 +160,9 @@ function TrackedHikesInfoModal(props) {
 							</Row>
 						</Col>
 						<Col>
-							<HikeMap trackedHikeStatus={trackedHike?.status} length={props.hike.length} points={props.hike.points}
-								alreadyLinkedHut={[]} startTime={trackedHike?.startTime} endTime={trackedHike?.endTime} />
+							{/* props.hike ensures that the map is rendered only when the hike is loaded  */}
+							{props.hike && props.hike !== {} && props.hike.points && props.dirtyHike === false && <HikeMap trackedHikeStatus={trackedHike?.status} length={props.hike.length} points={props.hike.points}
+								alreadyLinkedHut={[]} startTime={trackedHike?.startTime} endTime={trackedHike?.endTime} />}
 						</Col>
 					</Row>
 				</Container>

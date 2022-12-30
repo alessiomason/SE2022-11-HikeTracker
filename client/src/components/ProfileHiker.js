@@ -1,253 +1,69 @@
-import { useNavigate } from "react-router-dom";
-import { Button, Navbar, Nav, Container, Card, Row, Col, Form, OverlayTrigger, Tooltip, FloatingLabel, Image, Modal, Alert } from "react-bootstrap";
-
-import '../styles/ProfileHiker.css';
 import React, { useState, useEffect } from 'react';
-
-import { default as Img1 } from '../images/img1.jpg';
-import { default as Email } from "../icons/email.svg";
-import { default as Parking } from "../icons/parking.svg";
-import { default as Hut } from "../icons/hut.svg";
-import { default as Hike } from "../icons/hiking.svg";
-import { default as Alert1 } from "../icons/alert.svg";
-import { default as User } from '../icons/user.svg';
-
-import { default as Location } from "../icons/map.svg";
-import { default as Length } from "../icons/location-on-road.svg";
-import { default as Time } from "../icons/stopwatch.svg";
-import { default as Ascent } from "../icons/mountain.svg";
-import { default as Difficulty } from "../icons/volume.svg";
-
-import { default as Close2 } from '../icons/close2.svg';
+import { Button, Navbar, Nav, Container, Card, Row, Col, Form, OverlayTrigger, Tooltip, FloatingLabel, Image, Modal, Alert } from "react-bootstrap";
+import { TrackedHikesInfoTable, TrackedHikesInfoModal } from './pages/Hike/TrackedHikesInfo';
+import '../styles/ProfileHiker.css';
 import '../styles/ProfileHutWorker.css';
-
 import { default as Params } from '../icons/equalizer.svg';
-import { func } from "prop-types";
+import API from '../API';
 
 function ProfileHiker(props) {
 
-  const [task1, setTask1] = useState("hike");
+  const [task1, setTask1] = useState("stats");
 
   return (
     <Container fluid className="">
       <Row className="box-btn mb-5">
-        <Button className={(task1 == "hike") ? 'user-btn-fix me-2 margin-bottom2' : 'user-btn me-2 margin-bottom2'} onClick={() => setTask1("hike")}> Your Hikes </Button>
-        <Button className={(task1 == "filter") ? 'user-btn-fix mx-2 margin-bottom2' : 'user-btn mx-2 margin-bottom2'} onClick={() => setTask1("filter")}> Your Filters </Button>
-        <Button className={(task1 == "param") ? 'user-btn-fix ms-2' : 'user-btn ms-2 '} onClick={() => setTask1("param")}> Your Parameters </Button>
+        <Button className={(task1 === "stats") ? 'user-btn-fix me-2 margin-bottom2' : 'user-btn me-2 margin-bottom2'} onClick={() => setTask1("stats")}> Your Hikes </Button>
+        <Button className={(task1 === "filter") ? 'user-btn-fix mx-2 margin-bottom2' : 'user-btn mx-2 margin-bottom2'} onClick={() => setTask1("filter")}> Your Filters </Button>
+        <Button className={(task1 === "param") ? 'user-btn-fix ms-2' : 'user-btn ms-2 '} onClick={() => setTask1("param")}> Your Parameters </Button>
       </Row>
-      {(task1 == "hike") ? <YourHike /> : (task1 == "filter") ? <YourFilter /> : <YourParameter />}
+      {(task1 === "stats") ? <YourStats /> : (task1 === "filter") ? <YourFilter /> : <YourParameter />}
 
     </Container>
   );
 }
 
-function YourHike(props) {
+function YourStats() {
+  const [dirty, setDirty] = useState(true);
+  const [hike, setHike] = useState({});
+  const [dirtyHike, setDirtyHike] = useState(false);    // allows showing of the map only when loading of the hike is done
+  const [trackedHikes, setTrackedHikes] = useState([]);
+  const [trackedHikesInfoModalShow, setTrackedHikesInfoModalShow] = useState(false);  // state to show the modal, if true, contains the id of the tracked hike currently showing
 
-  const navigate = useNavigate();
+  useEffect(() => {
+    if (dirty) {
+      API.getTrackedHikesByUserID()
+        .then((trackedHikes) => setTrackedHikes(trackedHikes))
+        .catch(err => console.log(err));
 
+      setDirty(false);
+    }
+  }, [dirty]);
+
+  useEffect(() => {
+    if (trackedHikesInfoModalShow) {
+      const hikeID = trackedHikes.find(th => th.id === trackedHikesInfoModalShow).hikeID;
+
+      if (hikeID !== hike.id) {
+        setDirtyHike(true);
+
+        API.getHike(hikeID)
+        .then((hike) => {
+          setHike(hike);
+          setDirtyHike(false);
+        })
+        .catch(err => console.log(err));
+      }
+    }
+  }, [trackedHikesInfoModalShow]);
 
   return (
-    <Row className="margin-x ">
-
-      <Col xl={3} lg={4} md={6} sm={12} xs={12} className="box-center">
-        <Card className='your-card mb-3 mx-1 hike-list-card'>
-          <div className='overflow'>
-            <Card.Img variant="top" src={Img1} className="your-card_img" />
-            <h6 className="your-card-status"> In progress </h6>
-          </div>
-          <Card.Body className='card-body y-top'>
-            <Row className='card-title-box'>
-              <Card.Title className='your-card-title'>"Titolo carta"</Card.Title>
-            </Row>
-            <Row>
-              <Col md={6} sm={6} xs={6} className='mb-3 align'>
-                <OverlayTrigger placement="bottom" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip-2">Length</Tooltip>}>
-                  <img src={Length} alt="length_image" className='me-3 your-card-icon' />
-                </OverlayTrigger>
-                <Card.Text className="card-text p-card"> 250 m</Card.Text>
-              </Col>
-              <Col md={6} sm={6} xs={6} className='mb-3 align'>
-                <OverlayTrigger placement="bottom" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip-2">Expected time</Tooltip>}>
-                  <img src={Time} alt="time_image" className='me-3 your-card-icon' />
-                </OverlayTrigger>
-                <Card.Text className="card-text p-card"> 4 hours</Card.Text>
-              </Col>
-            </Row>
-            <Row>
-              <Col md={6} sm={6} xs={6} className='mb-3 align'>
-                <OverlayTrigger placement="bottom" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip-2">Ascent</Tooltip>}>
-                  <img src={Ascent} alt="ascent_image" className='me-3 your-card-icon' />
-                </OverlayTrigger>
-                <Card.Text className="card-text p-card"> 300 m</Card.Text>
-              </Col>
-              <Col md={6} sm={6} xs={6} className='mb-3 align'>
-                <OverlayTrigger placement="bottom" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip-2">Difficulty</Tooltip>}>
-                  <img src={Difficulty} alt="difficulty_image" className='me-3 your-card-icon' />
-                </OverlayTrigger>
-                <Card.Text className="card-text p-card"> Pro hiker</Card.Text>
-              </Col>
-            </Row>
-            <Row>
-              <Col md={12} className='mb-4 align'>
-                <OverlayTrigger placement="bottom" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip-2">Location</Tooltip>}>
-                  <img src={Location} alt="location_image" className='me-3 your-card-icon' />
-                </OverlayTrigger>
-                <Card.Text className="card-text p-card">{"Torino, Torino, Piemonte, Italia"}</Card.Text>
-              </Col>
-            </Row>
-          </Card.Body>
-        </Card>
+    <Row>
+      <Col xs={{ span: 10, offset: 1 }}>
+        <p>Ongoing hikes</p>
+        <TrackedHikesInfoTable TrackedHikesInfoTable trackedHikes={trackedHikes} setTrackedHikesInfoModalShow={setTrackedHikesInfoModalShow} />
+        <TrackedHikesInfoModal show={trackedHikesInfoModalShow} onHide={() => setTrackedHikesInfoModalShow(false)} hike={hike} dirtyHike={dirtyHike} trackedHikes={trackedHikes} />
       </Col>
-     
-      <Col xl={3} lg={4} md={6} sm={12} xs={12} className="box-center">
-        <Card className='your-card mb-3 mx-1 hike-list-card'>
-          <div className='overflow'>
-            <Card.Img variant="top" src={Img1} className="your-card_img" />
-            <h6 className="your-card-status-terminate"> Terminate </h6>
-          </div>
-          <Card.Body className='card-body y-top'>
-            <Row className='card-title-box'>
-              <Card.Title className='your-card-title'>"Titolo carta"</Card.Title>
-            </Row>
-            <Row>
-              <Col md={6} sm={6} xs={6} className='mb-3 align'>
-                <OverlayTrigger placement="bottom" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip-2">Length</Tooltip>}>
-                  <img src={Length} alt="length_image" className='me-3 your-card-icon' />
-                </OverlayTrigger>
-                <Card.Text className="card-text p-card"> 250 m</Card.Text>
-              </Col>
-              <Col md={6} sm={6} xs={6} className='mb-3 align'>
-                <OverlayTrigger placement="bottom" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip-2">Expected time</Tooltip>}>
-                  <img src={Time} alt="time_image" className='me-3 your-card-icon' />
-                </OverlayTrigger>
-                <Card.Text className="card-text p-card"> 4 hours</Card.Text>
-              </Col>
-            </Row>
-            <Row>
-              <Col md={6} sm={6} xs={6} className='mb-3 align'>
-                <OverlayTrigger placement="bottom" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip-2">Ascent</Tooltip>}>
-                  <img src={Ascent} alt="ascent_image" className='me-3 your-card-icon' />
-                </OverlayTrigger>
-                <Card.Text className="card-text p-card"> 300 m</Card.Text>
-              </Col>
-              <Col md={6} sm={6} xs={6} className='mb-3 align'>
-                <OverlayTrigger placement="bottom" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip-2">Difficulty</Tooltip>}>
-                  <img src={Difficulty} alt="difficulty_image" className='me-3 your-card-icon' />
-                </OverlayTrigger>
-                <Card.Text className="card-text p-card"> Pro hiker</Card.Text>
-              </Col>
-            </Row>
-            <Row>
-              <Col md={12} className='mb-4 align'>
-                <OverlayTrigger placement="bottom" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip-2">Location</Tooltip>}>
-                  <img src={Location} alt="location_image" className='me-3 your-card-icon' />
-                </OverlayTrigger>
-                <Card.Text className="card-text p-card">{"Torino, Torino, Piemonte, Italia"}</Card.Text>
-              </Col>
-            </Row>
-          </Card.Body>
-        </Card>
-      </Col>
-
-      <Col xl={3} lg={4} md={6} sm={12} xs={12} className="box-center">
-        <Card className='your-card mb-3 mx-1 hike-list-card'>
-          <div className='overflow'>
-            <Card.Img variant="top" src={Img1} className="your-card_img" />
-          </div>
-          <Card.Body className='card-body'>
-            <Row className='card-title-box'>
-              <Card.Title className='your-card-title'>"Titolo carta"</Card.Title>
-            </Row>
-            <Row>
-              <Col md={6} sm={6} xs={6} className='mb-3 align'>
-                <OverlayTrigger placement="bottom" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip-2">Length</Tooltip>}>
-                  <img src={Length} alt="length_image" className='me-3 your-card-icon' />
-                </OverlayTrigger>
-                <Card.Text className="card-text p-card"> 250 m</Card.Text>
-              </Col>
-              <Col md={6} sm={6} xs={6} className='mb-3 align'>
-                <OverlayTrigger placement="bottom" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip-2">Expected time</Tooltip>}>
-                  <img src={Time} alt="time_image" className='me-3 your-card-icon' />
-                </OverlayTrigger>
-                <Card.Text className="card-text p-card"> 4 hours</Card.Text>
-              </Col>
-            </Row>
-            <Row>
-              <Col md={6} sm={6} xs={6} className='mb-3 align'>
-                <OverlayTrigger placement="bottom" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip-2">Ascent</Tooltip>}>
-                  <img src={Ascent} alt="ascent_image" className='me-3 your-card-icon' />
-                </OverlayTrigger>
-                <Card.Text className="card-text p-card"> 300 m</Card.Text>
-              </Col>
-              <Col md={6} sm={6} xs={6} className='mb-3 align'>
-                <OverlayTrigger placement="bottom" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip-2">Difficulty</Tooltip>}>
-                  <img src={Difficulty} alt="difficulty_image" className='me-3 your-card-icon' />
-                </OverlayTrigger>
-                <Card.Text className="card-text p-card"> Pro hiker</Card.Text>
-              </Col>
-            </Row>
-            <Row>
-              <Col md={12} className='mb-4 align'>
-                <OverlayTrigger placement="bottom" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip-2">Location</Tooltip>}>
-                  <img src={Location} alt="location_image" className='me-3 your-card-icon' />
-                </OverlayTrigger>
-                <Card.Text className="card-text p-card">{"Torino, Torino, Piemonte, Italia"}</Card.Text>
-              </Col>
-            </Row>
-          </Card.Body>
-        </Card>
-      </Col>
-
-      <Col xl={3} lg={4} md={6} sm={12} xs={12} className="box-center">
-        <Card className='your-card mb-3 mx-1 hike-list-card'>
-          <div className='overflow'>
-            <Card.Img variant="top" src={Img1} className="your-card_img" />
-          </div>
-          <Card.Body className='card-body'>
-            <Row className='card-title-box'>
-              <Card.Title className='your-card-title'>"Titolo carta"</Card.Title>
-            </Row>
-            <Row>
-              <Col md={6} sm={6} xs={6} className='mb-3 align'>
-                <OverlayTrigger placement="bottom" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip-2">Length</Tooltip>}>
-                  <img src={Length} alt="length_image" className='me-3 your-card-icon' />
-                </OverlayTrigger>
-                <Card.Text className="card-text p-card"> 250 m</Card.Text>
-              </Col>
-              <Col md={6} sm={6} xs={6} className='mb-3 align'>
-                <OverlayTrigger placement="bottom" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip-2">Expected time</Tooltip>}>
-                  <img src={Time} alt="time_image" className='me-3 your-card-icon' />
-                </OverlayTrigger>
-                <Card.Text className="card-text p-card"> 4 hours</Card.Text>
-              </Col>
-            </Row>
-            <Row>
-              <Col md={6} sm={6} xs={6} className='mb-3 align'>
-                <OverlayTrigger placement="bottom" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip-2">Ascent</Tooltip>}>
-                  <img src={Ascent} alt="ascent_image" className='me-3 your-card-icon' />
-                </OverlayTrigger>
-                <Card.Text className="card-text p-card"> 300 m</Card.Text>
-              </Col>
-              <Col md={6} sm={6} xs={6} className='mb-3 align'>
-                <OverlayTrigger placement="bottom" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip-2">Difficulty</Tooltip>}>
-                  <img src={Difficulty} alt="difficulty_image" className='me-3 your-card-icon' />
-                </OverlayTrigger>
-                <Card.Text className="card-text p-card"> Pro hiker</Card.Text>
-              </Col>
-            </Row>
-            <Row>
-              <Col md={12} className='mb-4 align'>
-                <OverlayTrigger placement="bottom" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip-2">Location</Tooltip>}>
-                  <img src={Location} alt="location_image" className='me-3 your-card-icon' />
-                </OverlayTrigger>
-                <Card.Text className="card-text p-card">{"Torino, Torino, Piemonte, Italia"}</Card.Text>
-              </Col>
-            </Row>
-          </Card.Body>
-        </Card>
-      </Col>
-     
-     
     </Row>
   );
 }

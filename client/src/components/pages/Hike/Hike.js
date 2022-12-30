@@ -180,7 +180,7 @@ function HikePage(props) {
       <StartTerminateHikeModal startHike={startHike} terminateHike={terminateHike} show={startTerminateHikeModalShow} onHide={() => setStartTerminateHikeModalShow(false)} />
       <StopHikeModal stopHike={stopHike} show={stopHikeModalShow} onHide={() => setStopHikeModalShow(false)} />
       <ReferencePointReachedModal recordReferencePointReached={recordReferencePointReached} show={referencePointReachedModalShow} onHide={() => setReferencePointReachedModalShow(false)} />
-      <TrackedHikesInfoModal show={trackedHikesInfoModalShow} onHide={() => setTrackedHikesInfoModalShow(false)} hike={hike} trackedHikes={trackedHikes} />
+      <TrackedHikesInfoModal show={trackedHikesInfoModalShow} onHide={() => setTrackedHikesInfoModalShow(false)} hike={hike} trackedHikes={trackedHikes} dirtyHike={false} />
       <Container fluid className='internal-box' >
         <Row className="center-box mb-4">
           <Col md={12} className="center-box">
@@ -275,7 +275,7 @@ function HikePage(props) {
               {props.loggedIn && trackedHikes.filter(th => th.endTime === null || th.endTime === undefined).length === 1 && <Button className="mx-1 mt-2 stop_btn slide" type="submit" onClick={() => setStopHikeModalShow(true)}>Stop hike</Button>}
               {props.loggedIn && trackedHikes.filter(th => th.endTime === null || th.endTime === undefined).length === 1 && <Button className="mx-1 mt-2 terminate_btn slide" type="submit" onClick={() => setStartTerminateHikeModalShow('terminate')}>Terminate hike</Button>}
             </Row>
-            {props.loggedIn && <TrackedHikesInfoTable hike={hike} trackedHikes={trackedHikes} setTrackedHikesInfoModalShow={setTrackedHikesInfoModalShow} />}
+            {props.loggedIn && <TrackedHikesInfoTable trackedHikes={trackedHikes} setTrackedHikesInfoModalShow={setTrackedHikesInfoModalShow} />}
             <Row className="tab-box">
               <Tabs defaultActiveKey="description" id="justify-tab-example" className="mb-3 " justify >
                 <Tab eventKey="description" title="Description" >
