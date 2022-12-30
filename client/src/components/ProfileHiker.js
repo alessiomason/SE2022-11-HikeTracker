@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Navbar, Nav, Container, Card, Row, Col, Form, OverlayTrigger, Tooltip, FloatingLabel, Image, Modal, Alert } from "react-bootstrap";
-import { TrackedHikesInfoTable, TrackedHikesInfoModal } from './pages/Hike/TrackedHikesInfo';
+import { Button, Container, Row, Col, Form, FloatingLabel } from "react-bootstrap";
+import { TrackedHikesInfoTable, TrackedHikesInfoModal } from './TrackedHikesInfo';
 import '../styles/ProfileHiker.css';
 import '../styles/ProfileHutWorker.css';
 import { default as Params } from '../icons/equalizer.svg';

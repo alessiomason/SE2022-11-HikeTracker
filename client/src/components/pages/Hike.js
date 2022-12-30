@@ -1,20 +1,20 @@
 import { useState, useEffect } from 'react';
 import { Container, Row, Col, OverlayTrigger, Tooltip, Button, Tabs, Tab } from 'react-bootstrap';
 import { useParams, useNavigate } from 'react-router-dom';
-import HikeMap from '../../HikeMap';
-import { MyImageModal, StartTerminateHikeModal, StopHikeModal, ReferencePointReachedModal } from './TrackedHikesModals';
-import { TrackedHikesInfoTable, TrackedHikesInfoModal } from './TrackedHikesInfo';
-import API from '../../../API';
-import '../../../styles/SinglePageHike.css';
-import { default as Hiking } from '../../../icons/hiking.svg';
-import { default as Location } from "../../../icons/map.svg";
-import { default as Length } from "../../../icons/location-on-road.svg";
-import { default as Time } from "../../../icons/stopwatch.svg";
-import { default as Ascent } from "../../../icons/mountain.svg";
-import { default as User } from "../../../icons/user-login.svg";
-import { default as Difficulty } from "../../../icons/volume.svg";
-import { default as Img1 } from "../../../images/image3.jpg";
-import { default as FakeMap } from "../../../images/fakeMap.jpg";
+import HikeMap from '../HikeMap';
+import { MyImageModal, StartTerminateHikeModal, StopHikeModal, ReferencePointReachedModal } from '../TrackedHikesModals';
+import { TrackedHikesInfoTable, TrackedHikesInfoModal } from '../TrackedHikesInfo';
+import API from '../../API';
+import '../../styles/SinglePageHike.css';
+import { default as Hiking } from './../../icons/hiking.svg';
+import { default as Location } from "./../../icons/map.svg";
+import { default as Length } from "./../../icons/location-on-road.svg";
+import { default as Time } from "./../../icons/stopwatch.svg";
+import { default as Ascent } from "./../../icons/mountain.svg";
+import { default as User } from "./../../icons/user-login.svg";
+import { default as Difficulty } from "./../../icons/volume.svg";
+import { default as Img1 } from "./../../images/image3.jpg";
+import { default as FakeMap } from "./../../images/fakeMap.jpg";
 
 // from https://stackoverflow.com/questions/639695/how-to-convert-latitude-or-longitude-to-meters
 function coordinatesDistanceInMeter(lat1, lon1, lat2, lon2) {  // generally used geo measurement function

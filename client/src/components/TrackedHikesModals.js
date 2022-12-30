@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Container, Row, Col, Button, Modal, Card } from 'react-bootstrap';
 import DateTimePicker from 'react-datetime-picker';
-import { default as Img1 } from "../../../images/image3.jpg";
+import { default as Img1 } from '../images/image3.jpg';
 const dayjs = require('dayjs');
 
 function MyImageModal(props) {

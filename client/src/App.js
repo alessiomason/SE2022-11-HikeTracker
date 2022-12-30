@@ -12,7 +12,7 @@ import MyNavbar from './components/Navbar';
 import MyHikeManager from './components/pages/HikeManager';
 import MyHutManager from './components/pages/HutManager';
 import MyParkingManager from './components/pages/ParkingManager';
-import HikePage from './components/pages/Hike/Hike';
+import HikePage from './components/pages/Hike';
 import LinkHike from './components/LinkHike';
 import ReferencePoints from './components/ManageRefPoints';
 import Home from './components/pages/Home';

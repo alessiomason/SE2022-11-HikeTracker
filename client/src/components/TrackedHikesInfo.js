@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Container, Row, Col, Button, Modal, Table, Badge } from 'react-bootstrap';
-import HikeMap from '../../HikeMap';
-import '../../../styles/TrackedHikes.css';
+import HikeMap from './HikeMap';
+import '../styles/TrackedHikes.css';
 const dayjs = require('dayjs');
 const duration = require('dayjs/plugin/duration');
 dayjs.extend(duration);
