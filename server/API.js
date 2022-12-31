@@ -971,6 +971,18 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
 
     });
 
+    // get tracked hikes by userID
+    app.get('/api/userStats', async (req, res) => {
+        const userID = req.user.id;
+
+        try {
+            const userStats = await dao.getUserStats(userID);
+            res.status(200).json(userStats);
+        }
+        catch (err) {
+            res.status(500).end();
+        }
+    });
 
     // POST /signup
     // signup

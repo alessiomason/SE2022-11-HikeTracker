@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Container, Row, Col, Form, FloatingLabel } from "react-bootstrap";
+import { useNavigate } from 'react-router-dom';
 import { TrackedHikesInfoTable, TrackedHikesInfoModal } from './TrackedHikesInfo';
 import '../styles/ProfileHiker.css';
 import '../styles/ProfileHutWorker.css';
 import { default as Params } from '../icons/equalizer.svg';
 import API from '../API';
+const dayjs = require('dayjs');
+const duration = require('dayjs/plugin/duration');
+dayjs.extend(duration);
 
 function ProfileHiker() {
 
@@ -58,10 +62,10 @@ function TrackedHikes() {
   }, [trackedHikesInfoModalShow]);
 
   return (
-    <Row style={{ '--main-color': '#494681',  '--faded-main-color': 'rgba(73, 70, 129, 0.1)' }}>
+    <Row style={{ '--main-color': '#494681', '--faded-main-color': 'rgba(73, 70, 129, 0.1)' }}>
       <Col xs={{ span: 10, offset: 1 }}>
         {trackedHikes.length > 0 && <TrackedHikesInfoTable inProfilePage trackedHikes={trackedHikes} setTrackedHikesInfoModalShow={setTrackedHikesInfoModalShow} />}
-        {trackedHikes.length > 0 && <TrackedHikesInfoModal inProfilePage show={trackedHikesInfoModalShow} onHide={() => setTrackedHikesInfoModalShow(false)} hike={hike} dirtyHike={dirtyHike} trackedHikes={trackedHikes} style={{ '--main-color': '#494681',  '--faded-main-color': 'rgba(73, 70, 129, 0.1)' }} />}
+        {trackedHikes.length > 0 && <TrackedHikesInfoModal inProfilePage show={trackedHikesInfoModalShow} onHide={() => setTrackedHikesInfoModalShow(false)} hike={hike} dirtyHike={dirtyHike} trackedHikes={trackedHikes} style={{ '--main-color': '#494681', '--faded-main-color': 'rgba(73, 70, 129, 0.1)' }} />}
       </Col>
     </Row>
   );
@@ -281,6 +285,20 @@ function Parameters() {
 }
 
 function PerformanceStats() {
+  const navigate = useNavigate();
+
+  const [userStats, setUserStats] = useState({});
+  const [dirty, setDirty] = useState(true);
+
+  useEffect(() => {
+    if (dirty) {
+      API.getUserStats()
+        .then((userStats) => setUserStats(userStats))
+        .catch(err => console.log(err));
+    }
+
+    setDirty(false);
+  }, [dirty]);
 
   return (
     <Row className=" val-user-box3 mx-5 p-4 box-center">
@@ -288,63 +306,72 @@ function PerformanceStats() {
         <Col lg={3} md={6} sm={12} xs={12} className="box-center ">
           <img src={Params} alt="param_image" className="mb-3" />
         </Col>
+        <Col lg={6} md={6} ><h3 className='text-center filter-hiker-title no-pad-text'>Performance statistics</h3></Col>
+        <Col><p className='text-center pad-text'>Click on a box to see the relative hike</p></Col>
+      </Row>
+      <Row>
         <Col lg={3} md={6} sm={12} xs={12} className=" padding-x " >
-          <FloatingLabel controlId="floatingInput" label="Total nr of hikes finished" className="mb-3">
-            <Form.Control required={true} type="text" readOnly value={"12"}></Form.Control>
+          <FloatingLabel controlId="floatingInput" label="Total number of hikes finished" className="mb-3">
+            <Form.Control required={true} type="text" readOnly value={userStats.hikesFinished}></Form.Control>
           </FloatingLabel>
         </Col>
         <Col lg={3} md={6} sm={12} xs={12} className=" padding-x "  >
-          <FloatingLabel controlId="floatingInput" label="Total nr of kms walked" className="mb-3">
-            <Form.Control required={true} type="text" readOnly value={"70"}></Form.Control>
+          <FloatingLabel controlId="floatingInput" label="Total number of kms walked" className="mb-3">
+            <Form.Control required={true} type="text" readOnly value={(userStats.walkedLength / 1000).toFixed(2) + ' km'}></Form.Control>
+          </FloatingLabel>
+        </Col>
+        <Col lg={3} md={6} sm={12} xs={12} className=" padding-x "  >
+          <FloatingLabel controlId="floatingInput" label="Total hike time" className="mb-3">
+            <Form.Control required={true} type="text" readOnly value={dayjs.duration(userStats.totalHikeTime, 'hours').format('H [h] mm [m]')}></Form.Control>
           </FloatingLabel>
         </Col>
         <Col lg={3} md={6} sm={12} xs={12} className=" padding-x " >
           <FloatingLabel controlId="floatingInput" label="Highest altitude reached" className="mb-3">
-            <Form.Control required={true} type="text" readOnly value={"70"}></Form.Control>
+            <Form.Control required={true} type="text" readOnly value={userStats.highestAltitude + ' m'}></Form.Control>
           </FloatingLabel>
         </Col>
       </Row>
       <Row>
         <Col lg={3} md={6} sm={12} xs={12} className=" padding-x " >
           <FloatingLabel controlId="floatingInput" label="Highest altitude range done" className="mb-3">
-            <Form.Control required={true} type="text" readOnly value={"70"}></Form.Control>
+            <Form.Control required={true} type="text" readOnly value={userStats.highestAltitudeRange + ' m'}></Form.Control>
           </FloatingLabel>
         </Col>
         <Col lg={3} md={6} sm={12} xs={12} className=" padding-x " >
-          <FloatingLabel controlId="floatingInput" label="Longest (km) hike completed" className="mb-3">
-            <Form.Control required={true} type="text" readOnly value={"12"}></Form.Control>
+          <FloatingLabel controlId="floatingInput" label="Longest (km) hike completed" className="mb-3" onClick={() => navigate('/hike/' + userStats.longestHikeByKmID)}>
+            <Form.Control className='clickable-box' required={true} type="text" readOnly value={(userStats.longestHikeByKmLength)?.toFixed(2) + ' km'}></Form.Control>
           </FloatingLabel>
         </Col>
         <Col lg={3} md={6} sm={12} xs={12} className=" padding-x " >
-          <FloatingLabel controlId="floatingInput" label="Longest (hours) hike completed" className="mb-3">
-            <Form.Control required={true} type="text" readOnly value={"70"}></Form.Control>
+          <FloatingLabel controlId="floatingInput" label="Longest (hours) hike completed" className="mb-3" onClick={() => navigate('/hike/' + userStats.longestHikeByHoursID)}>
+            <Form.Control className='clickable-box' required={true} type="text" readOnly value={dayjs.duration(userStats.longestHikeByHoursTime, 'hours').format('H [h] mm [m]')}></Form.Control>
           </FloatingLabel>
         </Col>
         <Col lg={3} md={6} sm={12} xs={12} className=" padding-x " >
-          <FloatingLabel controlId="floatingInput" label="Shortest (km) hike completed" className="mb-3">
-            <Form.Control required={true} type="text" readOnly value={"70"}></Form.Control>
+          <FloatingLabel controlId="floatingInput" label="Shortest (km) hike completed" className="mb-3" onClick={() => navigate('/hike/' + userStats.shortestHikeByKmID)}>
+            <Form.Control className='clickable-box' required={true} type="text" readOnly value={(userStats.shortestHikeByKmLength)?.toFixed(2) + ' km'}></Form.Control>
           </FloatingLabel>
         </Col>
       </Row>
       <Row>
         <Col lg={3} md={6} sm={12} xs={12} className=" padding-x " >
-          <FloatingLabel controlId="floatingInput" label="Shortest (hours) hike completed" className="mb-3">
-            <Form.Control required={true} type="text" readOnly value={"70"}></Form.Control>
+          <FloatingLabel controlId="floatingInput" label="Shortest (hours) hike completed" className="mb-3" onClick={() => navigate('/hike/' + userStats.shortestHikeByHoursID)}>
+            <Form.Control className='clickable-box' required={true} type="text" readOnly value={dayjs.duration(userStats.shortestHikeByHoursTime, 'hours').format('H [h] mm [m]')}></Form.Control>
           </FloatingLabel>
         </Col>
         <Col lg={3} md={6} sm={12} xs={12} className=" padding-x " >
-          <FloatingLabel controlId="floatingInput" label="Average pace (min/km)" className="mb-3">
-            <Form.Control required={true} type="text" readOnly value={"12"}></Form.Control>
+          <FloatingLabel controlId="floatingInput" label="Average pace" className="mb-3">
+            <Form.Control required={true} type="text" readOnly value={(dayjs.duration(userStats.totalHikeTime, 'hours').asMinutes() / userStats.walkedLength * 1000).toFixed(2) + ' min/km'}></Form.Control>
           </FloatingLabel>
         </Col>
         <Col lg={3} md={6} sm={12} xs={12} className=" padding-x " >
-          <FloatingLabel controlId="floatingInput" label="Fastest paced hike (min/km)" className="mb-3">
-            <Form.Control required={true} type="text" readOnly value={"70"}></Form.Control>
+          <FloatingLabel controlId="floatingInput" label="Fastest paced hike" className="mb-3" onClick={() => navigate('/hike/' + userStats.fastestPacedHikeID)}>
+            <Form.Control className='clickable-box' required={true} type="text" readOnly value={(userStats.fastestPacedHikePace)?.toFixed(2) + ' min/km'}></Form.Control>
           </FloatingLabel>
         </Col>
         <Col lg={3} md={6} sm={12} xs={12} className=" padding-x ">
-          <FloatingLabel controlId="floatingInput" label="Average vertical ascent speed (m/hour)" className="mb-3">
-            <Form.Control required={true} type="text" readOnly value={"70"}></Form.Control>
+          <FloatingLabel controlId="floatingInput" label="Average vertical ascent speed" className="mb-3">
+            <Form.Control required={true} type="text" readOnly value={(userStats.totalAscent / dayjs.duration(userStats.totalHikeTime, 'hours').asHours()).toFixed(2) + ' m/hour'}></Form.Control>
           </FloatingLabel>
         </Col>
       </Row>

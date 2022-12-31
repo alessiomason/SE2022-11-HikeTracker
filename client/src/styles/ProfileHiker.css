@@ -1,4 +1,4 @@
-.margin-x{
+.margin-x {
     margin-left: 3rem;
     margin-right: 3rem;
 }
@@ -9,7 +9,7 @@
         margin-bottom: 20px;
     }
 
-    .padding-x{
+    .padding-x {
         padding-right: 0px !important;
         padding-left: 0px !important;
     }
@@ -20,10 +20,18 @@
     }
 }
 
-
-
-.filter-hiker-title{
+.filter-hiker-title {
     font-weight: bold;
+    color: #494681;
+}
+
+.no-pad-text {
+    margin: 0;
+    padding: 0;
+}
+
+.pad-text {
+    margin-top: 10px;
     color: #494681;
 }
 
@@ -63,7 +71,7 @@
     transform: translateY(-0.25em);
 }
 
-.filter-hike-map-box{
+.filter-hike-map-box {
     height: 350px;
     background-color: red;
     border-radius: 8px;
@@ -72,7 +80,6 @@
 
 .hike-filter-range input[type=range]::-webkit-slider-thumb {
     background-color: #494681;
-    
 }
 
 .hike-filter-range input[type=range]::-webkit-slider-thumb:hover {
@@ -90,7 +97,7 @@
     border-color: #494681;
 }
 
-.back-bar{
+.back-bar {
     background-color: transparent !important;
 }
 
@@ -118,7 +125,7 @@
     object-fit: cover;
 }
 
-.your-card-title{
+.your-card-title {
     font-style: italic;
     font-size: 24px;
     margin-bottom: 20px;
@@ -126,12 +133,12 @@
     width: fit-content;
 }
 
-.your-card-icon{
+.your-card-icon {
     filter: invert(29%) sepia(7%) saturate(4120%) hue-rotate(204deg) brightness(92%) contrast(91%);
 }
 
 
-.your-card-status{
+.your-card-status {
     background-color: #ffc107;
     border-radius: 30px;
     border: 1px solid #ffc107;
@@ -143,7 +150,7 @@
     z-index: 99;
 }
 
-.your-card-status-terminate{
+.your-card-status-terminate {
     background-color: #000;
     color: #fff;
     border-radius: 30px;
@@ -163,7 +170,7 @@
         left: 53%;
     }
 
-    .your-card-status{
+    .your-card-status {
         left: 50%;
     }
 
@@ -175,7 +182,7 @@
         left: 70%;
     }
 
-    .your-card-status{
+    .your-card-status {
         left: 68%;
     }
 
@@ -188,7 +195,7 @@
         left: 65%;
     }
 
-    .your-card-status{
+    .your-card-status {
         left: 63%;
     }
 
@@ -201,7 +208,7 @@
         left: 60%;
     }
 
-    .your-card-status{
+    .your-card-status {
         left: 58%;
     }
 
@@ -213,7 +220,7 @@
         left: 78%;
     }
 
-    .your-card-status{
+    .your-card-status {
         left: 77%;
     }
 
@@ -225,14 +232,18 @@
         left: 64%;
     }
 
-    .your-card-status{
+    .your-card-status {
         left: 62%;
     }
 
 }
 
-.y-top{
+.y-top {
     position: relative;
     top: -2em;
     height: 240px;
+}
+
+.clickable-box {
+    cursor: pointer;
 }

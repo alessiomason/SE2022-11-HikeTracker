@@ -715,6 +715,33 @@ function stopHike(trackedHikeID, stopTime) {
     });
 }
 
+async function getUserStats() {
+    // call /api/trackedHikes/
+    const response = await fetch(new URL('userStats', APIURL), { credentials: 'include' });
+    const userStats = await response.json();
+    if (response.ok)
+        return ({
+            userID: userStats.userID,
+            hikesFinished: userStats.hikesFinished,
+            walkedLength: userStats.walkedLength,
+            totalHikeTime: userStats.totalHikeTime,
+            totalAscent: userStats.totalAscent,
+            highestAltitude: userStats.highestAltitude,
+            highestAltitudeRange: userStats.highestAltitudeRange,
+            longestHikeByKmID: userStats.longestHikeByKmID,
+            longestHikeByKmLength: userStats.longestHikeByKmLength,
+            longestHikeByHoursID: userStats.longestHikeByHoursID,
+            longestHikeByHoursTime: userStats.longestHikeByHoursTime,
+            shortestHikeByKmID: userStats.shortestHikeByKmID,
+            shortestHikeByKmLength: userStats.shortestHikeByKmLength,
+            shortestHikeByHoursID: userStats.shortestHikeByHoursID,
+            shortestHikeByHoursTime: userStats.shortestHikeByHoursTime,
+            fastestPacedHikeID: userStats.fastestPacedHikeID,
+            fastestPacedHikePace: userStats.fastestPacedHikePace
+        });
+    else throw userStats;
+}
+
 async function signup(credentials) {
     let response = await fetch(new URL('signup', APIURL), {
         method: 'POST',
@@ -801,6 +828,6 @@ const API = {
     addGPXTrack, addParkingLot, AddPoint, deleteParkingLot, updateParkingLot, deleteHike, getHikes, getParkingLots, addHut, updateHut, uploadHutImage,
     uploadParkingLotImage, getHuts, getHut, deletHut, getHike, addHike, updateHike, signup, verifyEmail, login, logout, getUserInfo, getUserAccessRight, getHikesRefPoints,
     getStartPoint, getEndPoint, getReferencePoint, reverseNominatim, setNewReferencePoint, clearReferencePoint, startHike, getTrackedHikesByHikeIDAndUserID,
-    getTrackedHikesByUserID, recordReferencePointReached, terminateHike, cancelHike, stopHike
+    getTrackedHikesByUserID, recordReferencePointReached, terminateHike, cancelHike, stopHike, getUserStats
 };
 export default API;
