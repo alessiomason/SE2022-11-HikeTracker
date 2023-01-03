@@ -894,3 +894,13 @@ exports.deleteWeatherAlert = (weatherAlertID) => {
         });
     });
 };
+
+exports.deleteAllWeatherAlerts = () => {
+    return new Promise((resolve, reject) => {
+        const sql = 'DELETE FROM WeatherAlert';
+        db.all(sql, (err) => {
+            if (err) reject(err);
+            resolve();
+        });
+    });
+}
