@@ -856,3 +856,41 @@ exports.deleteAllTrackedHikes = () => {
         });
     });
 }
+
+exports.addWeatherAlert = (type, radius, lat, lon, time, description) => {
+    return new Promise((resolve, reject) => {
+        const sql = 'INSERT INTO WeatherAlert(Type, Radius, Lat, Lon, Time, Description) VALUES(?, ?, ?, ?, ?, ?)';
+        db.run(sql, [type, radius, lat, lon, time, description], function (err) {
+            if (err) reject(err);
+            resolve();
+        });
+    });
+}
+
+exports.getWeatherAlerts = () => {
+    return new Promise((resolve, reject) => {
+        const sql = `SELECT * FROM WeatherAlert`
+        db.all(sql, [], (err, rows) => {
+            if (err) reject(err);
+            const weatherAlert = rows.map((r) => ({
+                weatherAlertID: r.WeatherAlertID,
+                type: r.Type,
+                radius: r.Radius,
+                lat: r.Lat,
+                lon: r.Lon,
+                time: r.Time,
+                description: r.Description    
+            }));
+            resolve(weatherAlert);
+        });
+    });
+}
+
+exports.deleteWeatherAlert = (weatherAlertID) => {
+    return new Promise((resolve, reject) => {
+        db.run("DELETE FROM WeatherAlert WHERE WeatherAlertID = ?", [weatherAlertID], (err) => {
+            if (err) reject(err);
+            else resolve(null);
+        });
+    });
+};

@@ -715,6 +715,72 @@ function stopHike(trackedHikeID, stopTime) {
     });
 }
 
+function addWeatherAlert(weatherAlert) {
+    // call: POST /api/newWeatherAlert
+    return new Promise((resolve, reject) => {
+        fetch(new URL('newWeatherAlert', APIURL), {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                type: weatherAlert.type,
+                radius: weatherAlert.radius,
+                lat: weatherAlert.lat,
+                lon: weatherAlert.lon,
+                time: weatherAlert.time,
+                description: weatherAlert.description
+            })
+        }).then((response) => {
+            if (response.ok)
+                resolve(response.json());
+            else {
+                // analyze the cause of error
+                response.json()
+                    .then((message) => { reject(message); }) // error message in the response body
+                    .catch(() => { reject({ error: "Cannot parse server response." }) }); // something else
+            }
+        }).catch(() => { reject({ error: "Cannot communicate with the server." }) }); // connection errors
+    });
+}
+
+async function getWeatherAlerts() {
+    // call /api/weatherAlert
+    const response = await fetch(new URL('weatherAlert', APIURL));
+    const weatherAlerts = await response.json();
+    if (response.ok)
+        return weatherAlerts.map((w) => ({
+            weatherAlertID: w.weatherAlertID,
+            type: w.type,
+            radius: w.radius,
+            lat: w.lat,
+            lon: w.lon,
+            time: w.time,
+            description: w.description
+        }))
+    else throw weatherAlerts;
+}
+
+function deleteWeatherAlert(id) {
+    // call: DELETE /api/weatherAlert/:id
+    return new Promise((resolve, reject) => {
+        fetch(new URL('weatherAlert/' + id, APIURL), {
+            method: 'DELETE',
+            credentials: 'include'
+        }).then((response) => {
+            if (response.ok)
+                resolve(null);
+            else {
+                // analyze the cause of error
+                response.json()
+                    .then((message) => { reject(message); }) // error message in the response body
+                    .catch(() => { reject({ error: "Cannot parse server response." }) }); // something else
+            }
+        }).catch(() => { reject({ error: "Cannot communicate with the server." }) }); // connection errors
+    });
+}
+
 async function getUserStats() {
     // call /api/trackedHikes/
     const response = await fetch(new URL('userStats', APIURL), { credentials: 'include' });
@@ -828,6 +894,6 @@ const API = {
     addGPXTrack, addParkingLot, AddPoint, deleteParkingLot, updateParkingLot, deleteHike, getHikes, getParkingLots, addHut, updateHut, uploadHutImage,
     uploadParkingLotImage, getHuts, getHut, deletHut, getHike, addHike, updateHike, signup, verifyEmail, login, logout, getUserInfo, getUserAccessRight, getHikesRefPoints,
     getStartPoint, getEndPoint, getReferencePoint, reverseNominatim, setNewReferencePoint, clearReferencePoint, startHike, getTrackedHikesByHikeIDAndUserID,
-    getTrackedHikesByUserID, recordReferencePointReached, terminateHike, cancelHike, stopHike, getUserStats
+    getTrackedHikesByUserID, recordReferencePointReached, terminateHike, cancelHike, stopHike, getUserStats, addWeatherAlert, getWeatherAlerts, deleteWeatherAlert
 };
 export default API;

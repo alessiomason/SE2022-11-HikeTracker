@@ -971,6 +971,51 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
 
     });
 
+    //Add a weather alert
+    app.post('/api/newWeatherAlert', async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty())
+            return res.status(422).json({ errors: errors.array() });
+
+        try {
+            const type = req.body.type;
+            const radius = req.body.radius;
+            const lat = req.body.lat;
+            const lon = req.body.lon;
+            const time = req.body.time;
+            const description = req.body.description;
+
+            await dao.addWeatherAlert(type, radius, lat, lon, time, description);
+            res.status(201).json().end();
+        } catch (err) {
+            console.log(err)
+            res.status(500).json({ error: err });
+        }
+    });
+
+    // get weather alerts
+    app.get('/api/weatherAlert', async (req, res) => {
+        try {
+            const weatherAlert = await dao.getWeatherAlerts();
+            res.status(200).json(weatherAlert);
+        }
+        catch (err) {
+            res.status(500).end();
+        }
+    });
+
+    // delete weather alert
+    app.delete('/api/weatherAlert/:id', async (req, res) => {
+        const weatherAlertID = req.params.id;
+        try {
+            await dao.deleteWeatherAlert(weatherAlertID);
+            res.status(200).end();
+        }
+        catch (err) {
+            res.status(500).json({ error: 'The weather alert could not be deleted' });
+        }
+    });
+
     // get tracked hikes by userID
     app.get('/api/userStats', async (req, res) => {
         const userID = req.user.id;

@@ -71,7 +71,7 @@ function SpecificProfile(props) {
       return (<ProfileLocalGuide />);
     case 'hut-worker':
       return (<ProfileHutWorker />);
-    case 'platform-manager':
+    case 'manager':
       return (<ProfileManager />);
     default:
       return(<></>);
