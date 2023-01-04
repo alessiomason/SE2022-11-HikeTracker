@@ -209,7 +209,7 @@ function WeatherAlert(props) {
       </Row>
     </Form>
     <Row className="val-user-box mx-5 mb-4 p-4 mt-5">
-       {weatherAlerts.map((w) => <ListWeatherAlert key={w.id} weatherAlert={w} setDirty={setDirty}/>)}
+       {weatherAlerts.map((w) => <ListWeatherAlert key={w.weatherAlertID} weatherAlert={w} setDirty={setDirty}/>)}
     </Row>
     </>
   );

@@ -15,6 +15,14 @@ import { default as User } from "./../../icons/user-login.svg";
 import { default as Difficulty } from "./../../icons/volume.svg";
 import { default as Img1 } from "./../../images/image3.jpg";
 import { default as FakeMap } from "./../../images/fakeMap.jpg";
+import { default as Alert1 } from "./../../icons/alert.svg";
+import { default as Cloud } from "./../../icons/cloud.svg";
+import { default as Rain } from "./../../icons/rain.svg";
+import { default as Storm } from "./../../icons/storm.svg";
+import { default as Snow } from "./../../icons/snow.svg";
+import { default as Wind } from "./../../icons/wind.svg";
+import { default as Quiet } from "./../../icons/quiet.svg";
+const dayjs = require('dayjs');
 
 // from https://stackoverflow.com/questions/639695/how-to-convert-latitude-or-longitude-to-meters
 function coordinatesDistanceInMeter(lat1, lon1, lat2, lon2) {  // generally used geo measurement function
@@ -285,7 +293,7 @@ function HikePage(props) {
                   <p>Function to be implemented</p>
                 </Tab>
                 <Tab eventKey="weather" title="Weather Alert"  >
-                  <p>Function to be implemented</p>
+                  <WeatherAlertHike/>
                 </Tab>
               </Tabs>
             </Row>
@@ -295,5 +303,166 @@ function HikePage(props) {
     </Container>
   );
 }
+
+
+function WeatherAlertHike(props) {
+
+  const [weatherAlerts, setWeatherAlerts] = useState([]);
+  const [dirty, setDirty] = useState(true);
+  const [startPoint, setStartPoint] = useState({});
+
+  let { hikeId } = useParams();
+  hikeId = parseInt(hikeId);
+
+
+  useEffect(() => {
+    if (dirty) {
+
+      API.getHike(hikeId)
+        .then((hike) => {
+          setStartPoint(hike.points?.filter(p => p.startPoint).map(p => [p.latitude, p.longitude]).pop());
+          //setStartPoint(hike.points[hike.length/2].map(p => [p.latitude, p.longitude]));
+        })
+        .catch(err => console.log(err))
+
+      API.getWeatherAlerts()
+        .then((weatherAlert) => {
+        setWeatherAlerts(weatherAlert);
+        //setFilteredHikes(weatherAlerts.filter(w => coordinatesDistanceInMeter(startPoint[0], startPoint[1], w.lat, w.lon) < (w.radius * 1000)));
+      })
+      .catch(err => console.log(err))
+
+      setDirty(false);
+    }
+  }, [dirty, hikeId, startPoint]);
+
+  // const startPoint = props.hike.points?.filter(p => p.startPoint).map(p => [p.latitude, p.longitude]).pop();
+  // verifico quali weather alert sono entro "radius km" dallo starting point dell'hike
+  let tempFilteredAlerts = weatherAlerts.filter(w => coordinatesDistanceInMeter(startPoint[0], startPoint[1], w.lat, w.lon) < (w.radius * 1000));
+  //console.log(tempFilteredHikes);
+
+  let weatherIcon;
+  
+
+  if (tempFilteredAlerts.length === 0) {
+    weatherIcon = Quiet;
+    return (
+      <>
+      <Row>
+        <Col md={12} className="box-center margin-bottom">
+            <OverlayTrigger placement="bottom" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip-2">Weather Alert</Tooltip>}>
+              <img src={weatherIcon} alt="weather_image" />
+            </OverlayTrigger>
+        </Col>
+        <Col md={12} className="box-center margin-bottom">
+          <h6 className="card-text p-card">{`No weather alert`}</h6>
+        </Col>
+      </Row>
+      </>
+    );
+  } else if (tempFilteredAlerts.length === 1){
+
+    if (tempFilteredAlerts[0].type === "Cloudy") {
+      weatherIcon = Cloud;
+    } else if (tempFilteredAlerts[0].type === "Windy") {
+      weatherIcon = Wind;
+    } else if (tempFilteredAlerts[0].type === "Rainy") {
+      weatherIcon = Rain;
+    } else if (tempFilteredAlerts[0].type === "Stormy") {
+      weatherIcon = Storm;
+    } else if (tempFilteredAlerts[0].type === "Snowy") {
+      weatherIcon = Snow;
+    } else {
+      weatherIcon = Alert1;
+    }
+
+    return (
+      <>
+      {/*<Row>
+        <Col md={4} className="box-center margin-bottom">
+          <h6 className="card-text p-card">{"Alert type:"}</h6>
+        </Col>
+        <Col md={4} className="box-center margin-bottom">
+          <h6 className="card-text p-card">{"Alert description:"}</h6>
+        </Col>
+        <Col md={4} className="box-center margin-bottom">
+          <h6 className="card-text p-card">{"Attempted end:"}</h6>
+        </Col>
+    </Row> */}
+      <Row>
+        <Col md={4} className="box-center margin-bottom">
+            <OverlayTrigger placement="bottom" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip-2">Weather Alert</Tooltip>}>
+              <img src={weatherIcon} alt="weather_image" />
+            </OverlayTrigger>
+        </Col>
+        <Col md={4} className="box-center margin-bottom">
+        <h6 className="card-text p-card">{`${tempFilteredAlerts[0].description}`}</h6>
+        </Col>
+        <Col md={4} className="box-center margin-bottom">
+        <h6 className="card-text p-card">{`Until to: ${dayjs(tempFilteredAlerts[0].time).format('DD/MM/YYYY HH:mm')}`}</h6>
+        </Col>
+      </Row>
+      </>
+    ); 
+  } else {
+    weatherIcon = Alert1;
+    return (
+      <>
+      {/*<Row>
+        <Col md={4} className="box-center margin-bottom">
+          <h6 className="card-text p-card">{"Alert type:"}</h6>
+        </Col>
+        <Col md={4} className="box-center margin-bottom">
+          <h6 className="card-text p-card">{"Alert description:"}</h6>
+        </Col>
+        <Col md={4} className="box-center margin-bottom">
+          <h6 className="card-text p-card">{"Attempted end:"}</h6>
+        </Col>
+    </Row> */}
+      {tempFilteredAlerts.map((w) => <WeatherAlertRow weatherAlert={w}/>)}
+      </>
+    );
+  }
+
+  
+}
+
+function WeatherAlertRow(props) {
+
+  let weatherIcon;
+
+  if (props.weatherAlert.type === "Cloudy") {
+    weatherIcon = Cloud;
+  } else if (props.weatherAlert.type === "Windy") {
+    weatherIcon = Wind;
+  } else if (props.weatherAlert.type === "Rainy") {
+    weatherIcon = Rain;
+  } else if (props.weatherAlert.type === "Stormy") {
+    weatherIcon = Storm;
+  } else if (props.weatherAlert.type === "Snowy") {
+    weatherIcon = Snow;
+  } else {
+    weatherIcon = Alert1;
+  }
+
+  return(
+    <Row>
+        <Col md={4} className="box-center margin-bottom">
+            <OverlayTrigger placement="bottom" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip-2">Weather Alert</Tooltip>}>
+              <img src={weatherIcon} alt="weather_image" />
+            </OverlayTrigger>
+        </Col>
+        <Col md={4} className="box-center margin-bottom">
+        <h6 className="card-text p-card">{`${props.weatherAlert.description}`}</h6>
+        </Col>
+        <Col md={4} className="box-center margin-bottom">
+        <h6 className="card-text p-card">{`Until to: ${dayjs(props.weatherAlert.time).format('DD/MM/YYYY HH:mm')}`}</h6>
+        </Col>
+      </Row>
+  );
+  
+}
+
+
 
 export default HikePage;

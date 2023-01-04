@@ -997,7 +997,9 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
     app.get('/api/weatherAlert', async (req, res) => {
         try {
             const weatherAlert = await dao.getWeatherAlerts();
-            res.status(200).json(weatherAlert);
+            // get only future weather alerts
+            const weatherAlertFiltered = weatherAlert.filter((w) => dayjs(w.time).format() > dayjs().format());
+            res.status(200).json(weatherAlertFiltered);
         }
         catch (err) {
             res.status(500).end();
