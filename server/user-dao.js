@@ -88,6 +88,32 @@ exports.newUser = (email, password, accessRight) => {
         });
     });
 };
+exports.newHutWorker = (email, password, accessRight,hutId) => {
+    return new Promise(async (resolve, reject) => {
+        const salt = crypto.randomBytes(16);
+        const dateOfRegistration = dayjs().format();
+        const emailConfirmationToken = crypto.randomBytes(8).toString('hex');
+
+        crypto.scrypt(password, salt, 32, (err, hashedPassword) => {
+            if (err) reject(err);
+            else {
+                const sql = "INSERT INTO Users (Email, PasswordHash, Salt, AccessRight, DateOfRegistration, EmailConfirmationToken,HutID) VALUES (?, ?, ?, ?, ?, ?, ?)";
+                db.run(sql, [email, hashedPassword, salt, accessRight, dateOfRegistration, emailConfirmationToken,hutId], (err) => {
+                    if (err) reject(err);
+                    else {
+                        db.get('SELECT last_insert_rowid() AS ID', (err, row) => {
+                            if (err) reject(err);
+                            else if (row === undefined) resolve(false);
+                            else
+                                resolve({ id: row.ID, email: email, access_right: accessRight, verified: false, dateOfRegistration: dateOfRegistration, emailConfirmationToken: emailConfirmationToken,hutId: hutId });
+                        })
+                    }
+                });
+            }
+            return hashedPassword;
+        });
+    });
+};
 
 exports.getDateOfRegistration = (emailConfirmationToken) => {
     return new Promise((resolve, reject) => {
