@@ -1,10 +1,12 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button, Col, Form, Row, Container, Alert, Modal } from "react-bootstrap";
 import { default as UserLogin } from "../icons/user-login.svg";
 import { default as Password } from "../icons/password.svg";
 import { default as UserKind } from "../icons/user_kind.svg";
 import { default as Hut } from "../icons/hut.svg";
 import '../styles/SignInSignUp.css';
+import API from '../API';
+
 
 function MyModalSignup(props) {
 
@@ -16,16 +18,31 @@ function MyModalSignup(props) {
       );
   };
 
+  const [huts, setHuts] = useState([]);
+  const [dirty, setDirty] = useState(true);
+  
+  useEffect(() => {
+    if (dirty) {
+      API.getHuts()
+        .then((h) => setHuts(h))
+        .catch(err => console.log(err))
+      setDirty(false);
+    }
+  }, [dirty]);
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [passwordReenter, setPasswordReenter] = useState('');
   const [accessRight, setAccessRight] = useState('');
+  const [chosenHut, setChosenHut] = useState('');
+
 
   const handleSubmit = (event) => {
     event.preventDefault();
     let valid = true;
     props.setMessage('');
-    const credentials = { email, password, accessRight };
+
+    let credentials = { email, password, accessRight };
 
     if (email.trim() === '') {
       valid = false;
@@ -46,10 +63,23 @@ function MyModalSignup(props) {
       valid = false;
       props.setMessage('Invalid email.');
     }
-
-    if (valid)
+    if (valid && accessRight == "hut-worker") {
+      if (!chosenHut) {
+        valid = false;
+        props.setMessage('Choose a hut.');
+      } else {
+        credentials = { ...credentials, hut: chosenHut }
+      }
+    }
+    if (valid) {
+      console.log(credentials)
       props.doSignUp(credentials);
+    }
+
+
   };
+
+
 
   return (
 
@@ -109,20 +139,21 @@ function MyModalSignup(props) {
               </Row>
               {(accessRight == "hut-worker") ? <Row className='mb-3 box_center'>
                 <Col md="auto" sm="auto" xs="auto" className='box_center fit'>
-                  <img src={Hut} alt="hut" className='log-hut-icon'/>
+                  <img src={Hut} alt="hut" className='log-hut-icon' />
                 </Col>
                 <Col md="auto" sm="auto" xs="auto"> {/* it appear only when hut worker is selected */}
-                  <Form.Select aria-label="Default select example" value={accessRight} onChange={ev => setAccessRight(ev.target.value)} className="form-sel">
-                    <option>- Choose an hut -</option>
-                    <option value="r1">Rifugio1</option>
-                    <option value="r2">Rifugio2</option>
-                    {/*<option value="platform-manager">Platform manager</option>*/}
-                    <option value="r3">Rifugio3</option>
-                    {/*<option value="emergency-operator">Emergency operator</option>*/}
+                  <Form.Select aria-label="Default select example" value={chosenHut}
+                    onChange={e => setChosenHut(e.target.value)} className="form-sel">
+                     <option>- Choose a hut -</option>
+                    {huts.map(h => (
+                       <option value={h.id}>{h.name}</option>
+                    ))}
                   </Form.Select>
+
+
                 </Col>
               </Row> : false}
-              
+
               <Row className="my-5 box_center">
                 <Button variant="primary signup_btn" type="submit" > Sign Up </Button>
               </Row>

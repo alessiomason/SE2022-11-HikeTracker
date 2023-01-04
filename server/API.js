@@ -941,7 +941,17 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
     // signup
     app.post('/api/signup', async function (req, res) {
         // save user
-        const user = await user_dao.newUser(req.body.email, req.body.password, req.body.accessRight);
+        let user;
+      
+        console.log(req.body)
+        if (req.body.hut){
+            console.log("new hut worker;");
+            user = await user_dao.newHutWorker(req.body.email, req.body.password, req.body.accessRight,req.body.hut);
+        }else{
+            user = await user_dao.newUser(req.body.email, req.body.password, req.body.accessRight);
+        }
+       
+        
         if (!user)
             return res.status(401).json({ error: 'Error in signing up' });
 

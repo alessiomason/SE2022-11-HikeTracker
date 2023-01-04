@@ -190,7 +190,8 @@ function App2() {
     return (
         <Routes>
             <Route path="/" element={<Layout />}>
-                <Route index element={ initialLoading ? <Loading/> :  <Home showEmailAlert={showEmailAlert} setShowEmailAlert={setShowEmailAlert} user={user}
+                <Route index element={ initialLoading ? <Loading/> :  <Home 
+                showEmailAlert={showEmailAlert} setShowEmailAlert={setShowEmailAlert} user={user}
                 setShowLogin={setShowLogin} showLogin={showLogin} loggedIn={loggedIn} doLogin={doLogin} message={message} setMessage={setMessage} 
                 showSignup={showSignup} setShowSignup={setShowSignup} doSignUp={doSignUp}/>} />
                 
