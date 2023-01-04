@@ -1,5 +1,5 @@
 import '../../styles/HikeManager.css';
-import { Container, Row, Col, InputGroup, Form, Button, Alert } from 'react-bootstrap';
+import { Container, Row, Col, InputGroup, Form, Button, Alert, FloatingLabel } from 'react-bootstrap';
 import { useState, useEffect } from 'react';
 import { default as Img1 } from "../../images/img1.jpg";
 import { useNavigate } from 'react-router-dom';
@@ -38,13 +38,15 @@ function MyHikeManager(props) {
           </InputGroup>
         </Col>
         <Col className='search_row'>
-          <Button variant='primary' size="lg" className='mx-5 my-3' onClick={() => navigate("/newHike")}>Add new Hike</Button>
+          <Button variant='primary' size="lg" className='mx-5 my-3 add-man-btn' onClick={() => navigate("/newHike")}>Add new Hike</Button>
         </Col>
       </Row>
       {showUpdateBanner && <Alert variant='success' onClose={() => { setShowUpdateBanner(false); setMessage('') }} dismissible>{message}</Alert>}
-      {hikes.filter(h => searchField === '' || searchField !== '' && h.label.toLowerCase().indexOf(searchField) !== -1).sort((a, b) => (a.id > b.id) ? 1 : -1).map(h => <SingleUpdateHikeCard key={h.id} hike={h} user={props.user}
-        updateHike={props.updateHike} deleteHike={props.deleteHike} setDirty={setDirty}  
-        setShowUpdateBanner={setShowUpdateBanner} setMessage={setMessage} />)}
+      {hikes.filter(h => searchField === '' || searchField !== '' && h.label.toLowerCase()
+        .indexOf(searchField) !== -1).filter((h) => h.authorId === props.user.id)
+        .sort((a, b) => (a.id > b.id) ? 1 : -1).map(h => <SingleUpdateHikeCard key={h.id} hike={h} user={props.user}
+          updateHike={props.updateHike} deleteHike={props.deleteHike} setDirty={setDirty}
+          setShowUpdateBanner={setShowUpdateBanner} setMessage={setMessage} />)}
     </Container>
 
   );
@@ -58,13 +60,12 @@ function SingleUpdateHikeCard(props) {
   const hikeToEdit = props.hike;
   let difficulty_text;
 
-  if (props.hike.difficulty === 1)
+  if (parseInt(props.hike.difficulty) === 1)
     difficulty_text = "Tourist";
-  else if (props.hike.difficulty === 2)
+  else if (parseInt(props.hike.difficulty) === 2)
     difficulty_text = "Hiker";
-  else if (props.hike.difficulty === 3)
+  else if (parseInt(props.hike.difficulty) === 3)
     difficulty_text = "Professional hiker";
-
 
   const [label, setLabel] = useState(hikeToEdit ? hikeToEdit.label : '');
   const [length, setLength] = useState(hikeToEdit ? hikeToEdit.length : 0);
@@ -80,12 +81,11 @@ function SingleUpdateHikeCard(props) {
   const [image, setImage] = useState(`http://localhost:3001/images/hike-${hikeId}.jpg`);
   const [preview, setPreview] = useState(`http://localhost:3001/images/hike-${hikeId}.jpg`);
 
-
   const handleSubmit = (event) => {
     event.preventDefault();
 
     if (label.trim().length === 0)
-      setErrorMsg('The label of the hike cannot be consisted of only empty spaces');
+      setErrorMsg('The label of the hike cannot consist of only empty spaces');
     else {
       const updatedHike = {
         id: hikeId,
@@ -111,8 +111,8 @@ function SingleUpdateHikeCard(props) {
   return (
 
     <Row className="hike_box mx-5 py-5 px-5 mb-4">
-      <Col md={2} className="box_img_box" >
-        <img className=" img_box mb-3"
+      <Col lg={3} md={6} sm={12} className="box-center" >
+        <img className=" img_box-hike mb-3 "
           src={preview}
           onError={({ currentTarget }) => {
             currentTarget.onerror = null; // prevents looping
@@ -120,105 +120,96 @@ function SingleUpdateHikeCard(props) {
           }}
         />
         <Form.Group controlId="formFile" className="mb-3">
-          <Form.Label className='updateImageButton'>Update Image</Form.Label>
+          <Form.Label className='updateImageHut'>Update Image</Form.Label>
           <Form.Control type="file" accept='.jpg'
             onChange={(e) => { setImage(e.target.files[0]); setPreview(URL.createObjectURL(e.target.files[0])) }} />
         </Form.Group>
       </Col>
 
-      <Col md={10} className="px-4" >
+      <Col lg={9} md={6} sm={12} >
         <Form onSubmit={handleSubmit}>
-          <Row>
-            <Col>
-              <Form.Group>
-                <Form.Label>Label</Form.Label>
-                <Form.Control required={true} value={label} onChange={ev => setLabel(ev.target.value)}></Form.Control>
-              </Form.Group>
+          <Row className='man-hike-label'>
+            <Col lg={6} md={12} sm={12} xs={12} >
+              <FloatingLabel controlId="floatingInput" label="Name" className="mb-3">
+                <Form.Control required={true} value={label} onChange={ev => setLabel(ev.target.value)} type="text" placeholder="Rifugio x" />
+              </FloatingLabel>
             </Col>
-          </Row>
-
-          <Row>
-            <Col md={3}>
-              <Form.Group>
-                <Form.Label>State</Form.Label>
-                <Form.Control required={true} value={state} disabled readOnly />
-              </Form.Group>
-            </Col>
-            <Col md={3} >
-              <Form.Group>
-                <Form.Label>Region</Form.Label>
-                <Form.Control required={true} value={region} disabled readOnly />
-              </Form.Group>
-            </Col>
-            <Col md={3} >
-              <Form.Group>
-                <Form.Label>Province</Form.Label>
-                <Form.Control required={true} value={province} disabled readOnly />
-              </Form.Group>
-            </Col>
-            <Col md={3}>
-              <Form.Group>
-                <Form.Label>Municipality</Form.Label>
-                <Form.Control required={true} value={municipality} disabled readOnly />
-              </Form.Group>
-            </Col>
-          </Row>
-
-          <Row>
-            <Col md={3} >
-              <Form.Group>
-                <Form.Label>Length [m]</Form.Label>
+            <Col lg={3} md={6} sm={6} xs={12}>
+              <FloatingLabel controlId="floatingInput" label="Length [m]" className="mb-3">
                 <Form.Control required={true} type='number' step="any" min={0} value={length} onChange={ev => setLength(ev.target.value)} />
-              </Form.Group>
+              </FloatingLabel>
             </Col>
-            <Col md={3}>
-              <Form.Group>
-                <Form.Label>Expected time [h]</Form.Label>
-                <Form.Control required={true} type='number' step="any" min={0} value={expTime} onChange={ev => setExpTime(ev.target.value)}></Form.Control>
-              </Form.Group>
-            </Col>
-            <Col md={3} >
-              <Form.Group>
-                <Form.Label>Ascent [m]</Form.Label>
-                <Form.Control required={true} type='number' step="any" value={ascent} onChange={ev => setAscent(ev.target.value)} />
-              </Form.Group>
-            </Col>
-            <Col md={3}>
-              <Form.Group>
-                <Form.Label>Difficulty</Form.Label>
-                <Form.Select required={true} value={difficultyText} onChange={ev => setDifficultyText(ev.target.value)}>
-                  <option disabled value="">Choose...</option>
-                  <option>Tourist</option>
-                  <option>Hiker</option>
-                  <option>Professional hiker</option>
-                </Form.Select>
-              </Form.Group>
+            <Col lg={3} md={6} sm={6} xs={12}>
+              <FloatingLabel controlId="floatingInput" label="Ascent [m]" className="mb-3">
+                <Form.Control required={true} type='number' step="any" value={ascent} onChange={ev => setAscent(ev.target.value)}></Form.Control>
+              </FloatingLabel>
             </Col>
           </Row>
-
-          <Row>
-            <Col md={8}>
-              <Form.Group>
-                <Form.Label>Description</Form.Label>
-                <Form.Control required={true} value={description} onChange={ev => setDescription(ev.target.value)} as="textarea" rows={3} />
-              </Form.Group>
+          <Row className='man-hike-label'>
+            <Col lg={3} md={6} sm={6} xs={12}>
+              <FloatingLabel controlId="floatingInput" label="State" className="mb-3">
+                <Form.Control required={true} value={state} type="text" disabled readOnly></Form.Control>
+              </FloatingLabel>
             </Col>
-            <Col md={4} >
-              <Row className='m-3'>
-              <Col className="text-center"><Button variant="primary" className="mt-2 btn btn-primary" 
-                onClick={() => navigate(`/refPoints/${hikeId}`)} >Manage reference points </Button></Col>
-
-              </Row>
-              <Row className='m-3'>
-                <Col className="text-center"><Button variant="warning" className="btn btn-primary"
-                  onClick={() => navigate(`/linkHike/${hikeId}`)}>Link hut/parking lot </Button></Col>
-
-              </Row>
-              <Row className='m-2 text-center' >
-                <Col ><Button variant="danger" onClick={() => props.deleteHike(hikeId)} className="m-2 btn btn-primary" >Delete</Button>
-                  <Button variant="success" type='submit' className="btn btn-primary">Save</Button>
+            <Col lg={3} md={6} sm={6} xs={12}>
+              <FloatingLabel controlId="floatingInput" label="Region" className="mb-3">
+                <Form.Control required={true} value={region} type="text" disabled readOnly ></Form.Control>
+              </FloatingLabel>
+            </Col>
+            <Col lg={3} md={6} sm={6} xs={12}>
+              <FloatingLabel controlId="floatingInput" label="Province" className="mb-3">
+                <Form.Control required={true} value={province} type="text" disabled readOnly></Form.Control>
+              </FloatingLabel>
+            </Col>
+            <Col lg={3} md={6} sm={6} xs={12}>
+              <FloatingLabel controlId="floatingInput" label="Municipality" className="mb-3">
+                <Form.Control required={true} value={municipality} type="text" disabled readOnly></Form.Control>
+              </FloatingLabel>
+            </Col>
+          </Row>
+          <Row className='man-hike-label'>
+            <Col lg={3} md={6} sm={6} xs={12}>
+              <Row>
+                <Col md={12}>
+                  <FloatingLabel controlId="floatingInput" label="Expected time [h] " className="mb-3">
+                    <Form.Control required={true} type='number' step="any" min={0} value={expTime} onChange={ev => setExpTime(ev.target.value)} />
+                  </FloatingLabel>
                 </Col>
-
+              </Row>
+              <Row>
+                <Col md={12} >
+                  <FloatingLabel controlId="floatingSelect" label="Difficulty" className="form-sel2 mb-3">
+                    <Form.Select aria-label="Floating label select example" placeholder="Select an Hike Condition" required={true} value={difficultyText} onChange={ev => setDifficultyText(ev.target.value)}>
+                      <option disabled value="">Choose...</option>
+                      <option>Tourist</option>
+                      <option>Hiker</option>
+                      <option>Professional hiker</option>
+                    </Form.Select>
+                  </FloatingLabel>
+                </Col>
+              </Row>
+            </Col>
+            <Col md={6} sm={6}>
+              <FloatingLabel controlId="floatingTextarea2" label="Description" className="mb-3">
+                <Form.Control required={true} value={description} onChange={ev => setDescription(ev.target.value)} as="textarea" style={{ height: '130px' }} placeholder="description" />
+              </FloatingLabel>
+            </Col>
+            <Col lg={3} md={12} sm={12} xs={12}>
+              <Row>
+                <Col md={12}>
+                  <Button variant="primary" className="ref-btn mx-2 mb-3"
+                    onClick={() => navigate(`/refPoints/${hikeId}`)} >Manage Ref Points </Button>
+                </Col>
+              </Row>
+              <Row>
+                <Col md={12}>
+                  <Button variant="warning" className="link-btn mx-2 mb-3"
+                    onClick={() => navigate(`/linkHike/${hikeId}`)}>Link Hut/Parking Lot </Button>
+                </Col>
+              </Row>
+              <Row className='btn_box'>
+                <Button variant="danger" onClick={() => props.deleteHike(hikeId)} className="cancel-btn2 mx-2 mb-2" >Delete</Button>
+                <Button variant="success" type='submit' className="save-btn2 mx-2 mb-2">Save</Button>
               </Row>
             </Col>
           </Row>

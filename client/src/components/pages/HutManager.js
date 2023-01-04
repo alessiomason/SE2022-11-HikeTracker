@@ -26,7 +26,6 @@ function MyHutManager(props) {
   }, [dirty]);
 
 
-
   return (
 
     <Container fluid className='back'>
@@ -41,13 +40,14 @@ function MyHutManager(props) {
           </InputGroup>
         </Col>
         <Col className='search_row'>
-          <Button variant='primary' size="lg" className='mx-5 my-3' onClick={() => navigate("/newHut")}>Add new Hut</Button>
+          <Button variant='primary' size="lg" className='mx-5 my-3 add-man-btn' onClick={() => navigate("/newHut")}>Add new Hut</Button>
         </Col>
       </Row>
       {showUpdateBanner && <Alert variant='success' onClose={() => { setShowUpdateBanner(false); setMessage('') }} dismissible>{message}</Alert>}
-      {huts.sort((a, b) => (a.id > b.id) ? 1 : -1).map(h => <SingleUpdateHutCard key={h.id} hut={h} user={props.user}
-        updateHut={props.updateHut} deleteHut={props.deleteHut} setDirty={setDirty}
-        setShowUpdateBanner={setShowUpdateBanner} setMessage={setMessage} name={name} />)}
+      {huts.filter((h) => h.authorId === props.user.id).sort((a, b) => (a.id > b.id) ? 1 : -1)
+        .map(h => <SingleUpdateHutCard key={h.id} hut={h} user={props.user}
+          updateHut={props.updateHut} deleteHut={props.deleteHut} setDirty={setDirty}
+          setShowUpdateBanner={setShowUpdateBanner} setMessage={setMessage} name={name} />)}
     </Container>
 
   );
@@ -107,103 +107,96 @@ function SingleUpdateHutCard(props) {
 
 
       <Row className="hut_box mx-5 py-5 px-5 mb-4">
-        <Col md={3} className="box-center" >
+        <Col lg={3} md={6} sm={12} className="box-center" >
           <img className=" img_box mb-3 "
             src={preview}
-              onError={({ currentTarget }) => {
+            onError={({ currentTarget }) => {
               currentTarget.onerror = null; // prevents looping
               currentTarget.src = Img1;
             }}
-           />
+          />
           <Form.Group controlId="formFile" className="mb-3">
             <Form.Label className='updateImageHut'>Update Image</Form.Label>
             <Form.Control type="file" accept='.jpg'
-              onChange={(e) => { setImage(e.target.files[0]); setPreview(URL.createObjectURL(e.target.files[0]))} }/>
+              onChange={(e) => { setImage(e.target.files[0]); setPreview(URL.createObjectURL(e.target.files[0])) }} />
           </Form.Group>
-          </Col>
-        <Col md={9}>
-
-        
-        <Form onSubmit={handleSubmit}>
-          <Row className='man-hut-label'>
-            <Col md={3}>
-              <FloatingLabel controlId="floatingInput" label="Name" className="mb-3">
-                <Form.Control required={true} value={name} onChange={ev => setName(ev.target.value)} type="text" placeholder="Rifugio x" />
-              </FloatingLabel>
-            </Col>
-            <Col md={3}>
-              <FloatingLabel controlId="floatingInput" label="Ascent" className="mb-3">
-                <Form.Control required={true} type="text" placeholder="2400 m" />
-              </FloatingLabel>
-            </Col>
-            <Col md={3}>
-              <FloatingLabel controlId="floatingInput" label="Number of beds" className="mb-3">
-                <Form.Control required={true} type='number' step="any" min={0} value={beds} onChange={ev => setBeds(ev.target.value)} placeholder="#" />
-              </FloatingLabel>
-            </Col>
-            <Col md={3}>
-              <FloatingLabel controlId="floatingInput" label="Phone number" className="mb-3">
-                <Form.Control required={true} type="text" placeholder="+39 xxx xxx xxxx"></Form.Control>
-              </FloatingLabel>
-            </Col>
-          </Row>
-          <Row className='man-hut-label'>
-            <Col md={3}>
-              <FloatingLabel controlId="floatingInput" label="State" className="mb-3">
-                <Form.Control required={true} value={state} type="text" disabled readOnly value={"Italia"}></Form.Control>
-              </FloatingLabel>
-            </Col>
-            <Col md={3}>
-              <FloatingLabel controlId="floatingInput" label="Region" className="mb-3">
-                <Form.Control required={true} value={region} type="text" disabled readOnly value={"Piemonte"}></Form.Control>
-              </FloatingLabel>
-            </Col>
-            <Col md={3}>
-              <FloatingLabel controlId="floatingInput" label="Province" className="mb-3">
-                <Form.Control required={true} value={province} type="text" disabled readOnly value={"Torino"}></Form.Control>
-              </FloatingLabel>
-            </Col>
-            <Col md={3}>
-              <FloatingLabel controlId="floatingInput" label="Municipality" className="mb-3">
-                <Form.Control required={true} value={municipality} type="text" disabled readOnly value={"Torino"}></Form.Control>
-              </FloatingLabel>
-            </Col>
-          </Row>
-
-
-          <Row className='man-hut-label'>
-            <Col md={6}>
-              <FloatingLabel controlId="floatingTextarea2" label="Description" className="mb-3">
-                <Form.Control value={description} onChange={ev => setDescription(ev.target.value)} as="textarea" style={{ height: '130px' }} placeholder="description" />
-              </FloatingLabel>
-            </Col>
-            <Col md={6}>
-              <Row>
-                <Col md={6}>
-                  <FloatingLabel controlId="floatingInput" label="Email address" className="mb-3">
-                    <Form.Control required={true} type="email" placeholder="name@example.com"></Form.Control>
-                  </FloatingLabel>
-                </Col>
-                <Col md={6}>
-
-                  <FloatingLabel controlId="floatingInput" label="Website (optional)" className="mb-3">
-                    <Form.Control type="text" placeholder="nameexample.com" ></Form.Control>
-                  </FloatingLabel>
-                </Col>
-              </Row>
-              <Row className='btn_box mt-3'>
-                <Button variant="danger" onClick={() => props.deleteHut(hutID)} className="cancel-btn2 mx-2 mb-2" >Delete</Button>
-                <Button variant="success" type='submit' className="save-btn2 mx-2 mb-2">Save</Button>
-              </Row>
-            </Col>
-          </Row>
-        </Form>
+        </Col>
+        <Col lg={9} md={6} sm={12}>
+          <Form onSubmit={handleSubmit}>
+            <Row className='man-hut-label'>
+              <Col lg={3} md={6} sm={6} xs={12}>
+                <FloatingLabel controlId="floatingInput" label="Name" className="mb-3">
+                  <Form.Control required={true} value={name} onChange={ev => setName(ev.target.value)} type="text" placeholder="Rifugio x" />
+                </FloatingLabel>
+              </Col>
+              <Col lg={3} md={6} sm={6} xs={12}>
+                <FloatingLabel controlId="floatingInput" label="Ascent" className="mb-3">
+                  <Form.Control required={true} type="text" placeholder="2400 m" />
+                </FloatingLabel>
+              </Col>
+              <Col lg={3} md={6} sm={6} xs={12}>
+                <FloatingLabel controlId="floatingInput" label="Number of beds" className="mb-3">
+                  <Form.Control required={true} type='number' step="any" min={0} value={beds} onChange={ev => setBeds(ev.target.value)} placeholder="#" />
+                </FloatingLabel>
+              </Col>
+              <Col lg={3} md={6} sm={6} xs={12}>
+                <FloatingLabel controlId="floatingInput" label="Phone number" className="mb-3">
+                  <Form.Control required={true} type="text" placeholder="+39 xxx xxx xxxx"></Form.Control>
+                </FloatingLabel>
+              </Col>
+            </Row>
+            <Row className='man-hut-label'>
+              <Col lg={3} md={6} sm={6} xs={12}>
+                <FloatingLabel controlId="floatingInput" label="State" className="mb-3">
+                  <Form.Control required={true} value={state} type="text" disabled readOnly ></Form.Control>
+                </FloatingLabel>
+              </Col>
+              <Col lg={3} md={6} sm={6} xs={12}>
+                <FloatingLabel controlId="floatingInput" label="Region" className="mb-3">
+                  <Form.Control required={true} value={region} type="text" disabled readOnly ></Form.Control>
+                </FloatingLabel>
+              </Col>
+              <Col lg={3} md={6} sm={6} xs={12}>
+                <FloatingLabel controlId="floatingInput" label="Province" className="mb-3">
+                  <Form.Control required={true} value={province} type="text" disabled readOnly ></Form.Control>
+                </FloatingLabel>
+              </Col>
+              <Col lg={3} md={6} sm={6} xs={12}>
+                <FloatingLabel controlId="floatingInput" label="Municipality" className="mb-3">
+                  <Form.Control required={true} value={municipality} type="text" disabled readOnly ></Form.Control>
+                </FloatingLabel>
+              </Col>
+            </Row>
+            <Row className='man-hut-label'>
+              <Col lg={6} md={12} sm={12}>
+                <FloatingLabel controlId="floatingTextarea2" label="Description" className="mb-3">
+                  <Form.Control value={description} onChange={ev => setDescription(ev.target.value)} as="textarea" style={{ height: '130px' }} placeholder="description" />
+                </FloatingLabel>
+              </Col>
+              <Col lg={6} md={12} sm={12}>
+                <Row>
+                  <Col lg={6} md={6} sm={6} xs={12}>
+                    <FloatingLabel controlId="floatingInput" label="Email address" className="mb-3">
+                      <Form.Control required={true} type="email" placeholder="name@example.com"></Form.Control>
+                    </FloatingLabel>
+                  </Col>
+                  <Col lg={6} md={6} sm={6} xs={12}>
+                    <FloatingLabel controlId="floatingInput" label="Website (optional)" className="mb-3">
+                      <Form.Control type="text" placeholder="nameexample.com" ></Form.Control>
+                    </FloatingLabel>
+                  </Col>
+                </Row>
+                <Row className='btn_box mt-3'>
+                  <Button variant="danger" onClick={() => props.deleteHut(hutID)} className="cancel-btn2 mx-2 mb-2" >Delete</Button>
+                  <Button variant="success" type='submit' className="save-btn2 mx-2 mb-2">Save</Button>
+                </Row>
+              </Col>
+            </Row>
+          </Form>
         </Col>
       </Row>
     )
   }
-
-
 }
 
 export default MyHutManager;

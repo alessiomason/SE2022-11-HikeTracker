@@ -340,7 +340,8 @@ async function getHikes() {
             province: h.province,
             municipality: h.municipality,
             startPoint: h.startPoint,
-            author: h.author
+            author: h.author,
+            authorId: h.authorId
         }))
     else throw hikes;
 }
@@ -354,7 +355,7 @@ async function getParkingLots() {
             id: pl.id, label: pl.label,
             description: pl.description, state: pl.state, region: pl.region, province: pl.province, municipality: pl.municipality,
             lat: pl.lat, lon: pl.lon, altitude: pl.altitude,
-            total: pl.total, occupied: pl.occupied, author: pl.author
+            total: pl.total, occupied: pl.occupied, author: pl.author,authorId: pl.authorId
         }))
     else throw pls;
 }
@@ -376,9 +377,33 @@ async function getHuts() {
             region: h.region,
             province: h.province,
             municipality: h.municipality,
-            author: h.author
+            author: h.author,
+            authorId: h.authorId
         }))
     else throw huts;
+}
+
+async function getHut(id) {
+    // call /api/hut/:id
+    const response = await fetch(new URL('hut/' + id, APIURL));
+    const hut = await response.json();
+    if (response.ok)
+        return ({
+            id: hut.id,
+            name: hut.hutName,
+            description: hut.hutDescription,
+            lat: hut.lat,
+            lon: hut.lon,
+            altitude: hut.altitude,
+            beds: hut.beds,
+            state: hut.state,
+            region: hut.region,
+            province: hut.province,
+            municipality: hut.municipality,
+            author: hut.author,
+            authorId: hut.authorId
+        });
+    else throw hut;
 }
 
 async function getHikesRefPoints() {
@@ -568,6 +593,9 @@ async function getTrackedHikesByHikeIDAndUserID(hikeID) {
         return trackedHikes.map((th) => ({
             id: th.id,
             hikeID: th.hikeID,
+            hikeLabel: th.hikeLabel,
+            status: th.status,
+            progress: th.progress,
             startTime: th.startTime,
             endTime: th.endTime,
             pointsReached: th.pointsReached
@@ -583,6 +611,9 @@ async function getTrackedHikesByUserID() {
         return trackedHikes.map((th) => ({
             id: th.id,
             hikeID: th.hikeID,
+            hikeLabel: th.hikeLabel,
+            status: th.status,
+            progress: th.progress,
             startTime: th.startTime,
             endTime: th.endTime,
             pointsReached: th.pointsReached
@@ -657,6 +688,124 @@ function cancelHike(trackedHikeID) {
             }
         }).catch(() => { reject({ error: "Cannot communicate with the server." }) }); // connection errors
     });
+}
+
+function stopHike(trackedHikeID, stopTime) {
+    // call: PATCH /api/trackedHikes/:id
+    return new Promise((resolve, reject) => {
+        fetch(new URL('trackedHikes/' + trackedHikeID, APIURL), {
+            method: 'PATCH',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+
+            body: JSON.stringify({ stopTime }),
+
+        }).then((response) => {
+            if (response.ok)
+                resolve();
+            else {
+                // analyze the cause of error
+                response.json()
+                    .then((message) => { reject(message); }) // error message in the response body
+                    .catch(() => { reject({ error: "Cannot parse server response." }) }); // something else
+            }
+        }).catch(() => { reject({ error: "Cannot communicate with the server." }) }); // connection errors
+    });
+}
+
+function addWeatherAlert(weatherAlert) {
+    // call: POST /api/newWeatherAlert
+    return new Promise((resolve, reject) => {
+        fetch(new URL('newWeatherAlert', APIURL), {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                type: weatherAlert.type,
+                radius: weatherAlert.radius,
+                lat: weatherAlert.lat,
+                lon: weatherAlert.lon,
+                time: weatherAlert.time,
+                description: weatherAlert.description
+            })
+        }).then((response) => {
+            if (response.ok)
+                resolve(response.json());
+            else {
+                // analyze the cause of error
+                response.json()
+                    .then((message) => { reject(message); }) // error message in the response body
+                    .catch(() => { reject({ error: "Cannot parse server response." }) }); // something else
+            }
+        }).catch(() => { reject({ error: "Cannot communicate with the server." }) }); // connection errors
+    });
+}
+
+async function getWeatherAlerts() {
+    // call /api/weatherAlert
+    const response = await fetch(new URL('weatherAlert', APIURL));
+    const weatherAlerts = await response.json();
+    if (response.ok)
+        return weatherAlerts.map((w) => ({
+            weatherAlertID: w.weatherAlertID,
+            type: w.type,
+            radius: w.radius,
+            lat: w.lat,
+            lon: w.lon,
+            time: w.time,
+            description: w.description
+        }))
+    else throw weatherAlerts;
+}
+
+function deleteWeatherAlert(id) {
+    // call: DELETE /api/weatherAlert/:id
+    return new Promise((resolve, reject) => {
+        fetch(new URL('weatherAlert/' + id, APIURL), {
+            method: 'DELETE',
+            credentials: 'include'
+        }).then((response) => {
+            if (response.ok)
+                resolve(null);
+            else {
+                // analyze the cause of error
+                response.json()
+                    .then((message) => { reject(message); }) // error message in the response body
+                    .catch(() => { reject({ error: "Cannot parse server response." }) }); // something else
+            }
+        }).catch(() => { reject({ error: "Cannot communicate with the server." }) }); // connection errors
+    });
+}
+
+async function getUserStats() {
+    // call /api/trackedHikes/
+    const response = await fetch(new URL('userStats', APIURL), { credentials: 'include' });
+    const userStats = await response.json();
+    if (response.ok)
+        return ({
+            userID: userStats.userID,
+            hikesFinished: userStats.hikesFinished,
+            walkedLength: userStats.walkedLength,
+            totalHikeTime: userStats.totalHikeTime,
+            totalAscent: userStats.totalAscent,
+            highestAltitude: userStats.highestAltitude,
+            highestAltitudeRange: userStats.highestAltitudeRange,
+            longestHikeByKmID: userStats.longestHikeByKmID,
+            longestHikeByKmLength: userStats.longestHikeByKmLength,
+            longestHikeByHoursID: userStats.longestHikeByHoursID,
+            longestHikeByHoursTime: userStats.longestHikeByHoursTime,
+            shortestHikeByKmID: userStats.shortestHikeByKmID,
+            shortestHikeByKmLength: userStats.shortestHikeByKmLength,
+            shortestHikeByHoursID: userStats.shortestHikeByHoursID,
+            shortestHikeByHoursTime: userStats.shortestHikeByHoursTime,
+            fastestPacedHikeID: userStats.fastestPacedHikeID,
+            fastestPacedHikePace: userStats.fastestPacedHikePace
+        });
+    else throw userStats;
 }
 
 async function signup(credentials) {
@@ -743,8 +892,8 @@ async function reverseNominatim(latitude, longitude) {
 
 const API = {
     addGPXTrack, addParkingLot, AddPoint, deleteParkingLot, updateParkingLot, deleteHike, getHikes, getParkingLots, addHut, updateHut, uploadHutImage,
-    uploadParkingLotImage, getHuts, deletHut, getHike, addHike, updateHike, signup, verifyEmail, login, logout, getUserInfo, getUserAccessRight, getHikesRefPoints,
+    uploadParkingLotImage, getHuts, getHut, deletHut, getHike, addHike, updateHike, signup, verifyEmail, login, logout, getUserInfo, getUserAccessRight, getHikesRefPoints,
     getStartPoint, getEndPoint, getReferencePoint, reverseNominatim, setNewReferencePoint, clearReferencePoint, startHike, getTrackedHikesByHikeIDAndUserID,
-    getTrackedHikesByUserID, recordReferencePointReached, terminateHike, cancelHike
+    getTrackedHikesByUserID, recordReferencePointReached, terminateHike, cancelHike, stopHike, getUserStats, addWeatherAlert, getWeatherAlerts, deleteWeatherAlert
 };
 export default API;

@@ -15,7 +15,7 @@ function MyModalLogin(props) {
       );
   };
 
-  const [email, setEmail] = useState('u3@p.it');
+  const [email, setEmail] = useState('local-guide@p.it');
   const [password, setPassword] = useState('password');
 
   const handleSubmit = (event) => {
@@ -51,6 +51,16 @@ function MyModalLogin(props) {
           <h1 className='my-5' >Sign In</h1>
         </Row>
         <Row>
+          <Col md={12}>
+            {(props.showEmailAlert) &&
+              <Alert className="mx-3" variant="success" onClose={() => props.setShowEmailAlert(false)}>
+                <Alert.Heading>Verify email</Alert.Heading>
+                <p> Please click on the link in the email you received to verify your account. </p>
+              </Alert>
+            }
+          </Col>
+        </Row>
+        <Row>
           <Col >
             <Form onSubmit={handleSubmit}>
               {props.message && <Alert variant='danger' onClose={() => props.setMessage('')} dismissible>{props.message}</Alert>}
@@ -81,6 +91,10 @@ function MyModalLogin(props) {
               </Row>
             </Form>
           </Col>
+        </Row>
+        <Row className='end-signup align'>
+          <p className='p-sign'>Don't have an account?</p>
+          <h6 className='h6-sign-in' onClick={() => {props.setShowSignup(true);props.setShowLogin(false)}}> Sign Up</h6>
         </Row>
       </Container>
     </Modal>

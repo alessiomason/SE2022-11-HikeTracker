@@ -7,6 +7,7 @@ import { default as Hut } from "../icons/hut.svg";
 import '../styles/SignInSignUp.css';
 import API from '../API';
 
+import { Navigate, useNavigate } from 'react-router-dom';
 
 function MyModalSignup(props) {
 
@@ -51,7 +52,7 @@ function MyModalSignup(props) {
 
     if (valid && password.trim() === '') {
       valid = false;
-      props.setMessage('Password cannot be empty or contain whitespaces.');
+      props.setMessage('Passwo8rd cannot be empty or contain whitespaces.');
     }
 
     if (valid && passwordReenter !== password) {
@@ -83,10 +84,20 @@ function MyModalSignup(props) {
 
   return (
 
-    <Modal className="mt-3 me-5 " show={props.showSignup} onHide={() => props.setShowSignup(false)}>
+    <Modal className="mt-3 me-5 " show={props.showSignup} onHide={() => { props.setShowSignup(false); props.setShowEmailAlert(false) }}>
       <Container fluid className="me-5 box-signup">
         <Row>
           <h1 className='my-5' >Sign Up</h1>
+        </Row>
+        <Row>
+          <Col md={12}>
+            {(props.showEmailAlert) &&
+              <Alert className="mx-3" variant="success" onClose={() => props.setShowEmailAlert(false)}>
+                <Alert.Heading>Verify email</Alert.Heading>
+                <p> Please click on the link in the email you received to verify your account. </p>
+              </Alert>
+            }
+          </Col>
         </Row>
         <Row>
           <Col >
@@ -137,7 +148,7 @@ function MyModalSignup(props) {
                   </Form.Select>
                 </Col>
               </Row>
-              {(accessRight == "hut-worker") ? <Row className='mb-3 box_center'>
+              {(accessRight == "hut-worker") && <Row className='mb-3 box_center'>
                 <Col md="auto" sm="auto" xs="auto" className='box_center fit'>
                   <img src={Hut} alt="hut" className='log-hut-icon' />
                 </Col>
@@ -152,13 +163,17 @@ function MyModalSignup(props) {
 
 
                 </Col>
-              </Row> : false}
+              </Row>}
 
-              <Row className="my-5 box_center">
+              <Row className="my-4 box_center">
                 <Button variant="primary signup_btn" type="submit" > Sign Up </Button>
               </Row>
             </Form>
           </Col>
+        </Row>
+        <Row className='end-signup align'>
+          <p className='p-sign'>Already have an account?</p>
+          <h6 className='h6-sign' onClick={() => { props.setShowSignup(false); props.setShowLogin(true); props.setShowEmailAlert(false) }}> Sign In</h6>
         </Row>
       </Container>
     </Modal>

@@ -35,25 +35,37 @@ function HikeForm(props) {
     }
 
     return (
-        <Container fluid className='box'>
-            <Row>
-                <Col><h1 className="hike_form-title">Create new hike</h1></Col>
-            </Row>
-            <Row>
-                <Col>
-                    {errorMsg ? <Alert variant='danger' onClose={() => setErrorMsg('')} dismissible>{errorMsg}</Alert> : false}
-                    <Form onSubmit={handleSubmit}>
-                        <Form.Group controlId="formFile" className="mb-3">
-                            <Form.Label>Upload GPX File</Form.Label>
-                            <Form.Control type="file" accept='.gpx'
-                                onChange={(e) => setFile(e.target.files[0])} />
-                        </Form.Group>
-                        <Button className='save-button' type='submit'>Send</Button>
-                        <Button className='back-button' onClick={() => navigate('/hikeManager')} variant='secondary'>Back</Button>
-                    </Form>
-                </Col>
-            </Row>
-        </Container>
+      <Container fluid className="external-box-hike">
+      <Container fluid className='internal-box-hut pb-3' >
+        <Row>
+          <Col>
+            <h1 className="hike_form-title">Add new Hike</h1>
+          </Col>
+        </Row >
+        <Row>
+          <Col>
+            {errorMsg ? <Alert variant='danger' onClose={() => setErrorMsg('')} dismissible>{errorMsg}</Alert> : false}
+          </Col>
+        </Row>
+
+        <Row className='mt-3'>
+          <Col md={12}>
+            <Form onSubmit={handleSubmit}>
+              <Row className='box-add-hike'>
+                <Form.Group controlId="formFile" className="mb-3 box-add-hike mt-4">
+                  <Form.Label><h5 className='display pe-4'>Upload GPX File</h5></Form.Label>
+                  <Form.Control type="file" accept='.gpx' onChange={(e) => setFile(e.target.files[0])} className="width" />
+                </Form.Group>
+              </Row>
+              <Row className='box-add-hike mx-2 mt-3 mb-4'>
+            <Button variant="danger" onClick={() => navigate('/hikeManager')} className="cancel-btn mx-2 mb-2" >Back</Button>
+            <Button variant="success" type='submit' className="save-btn mx-2 mb-2" >Send</Button>
+          </Row>
+            </Form>
+          </Col>
+        </Row>
+        </Container >
+    </Container>
     );
 }
 

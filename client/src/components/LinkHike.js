@@ -4,9 +4,8 @@ import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet'
 import { Alert ,Container, Row, Col, Button} from 'react-bootstrap';
 import { useState, useEffect } from 'react';
 
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import '../styles/SinglePageHike.css';
-import '..//styles/LinkHike.css';
 import '../styles/Map.css';
 import 'leaflet/dist/leaflet.css';
 import API from '../API';
@@ -138,6 +137,7 @@ function LinkHike(props) {
     setFilteredParkingLots([]);
     setDirty(true);
   }
+  const navigate = useNavigate();
 
   return (
     <Container fluid className="external-box">
@@ -145,9 +145,9 @@ function LinkHike(props) {
         <Row className="center-box mb-4">
           <h2 className="background double single-hike-title"><span><img src={Hiking} alt="hiking_image" className='me-2 hike-img single-hike-icon' />{hike.label}</span></h2>
           {showLinkedHutBanner && <Alert className='alertStyle' variant='success' onClose={() => { setShowLinkedHutBanner(false); setMessage('') }} dismissible>{message}</Alert>}
-          {showChooseStartPoint ? <p className='linkSubTitleStartPoint'>Select a new Start point</p> : ""}
-          {showChooseEndPoint ? <p className='linkSubTitleEndPoint'>Select a new End point</p> : ""}
-          {showLinkHut ? <p className='linkSubTitleHut'>Link a new Hut</p> : ""}
+          {showChooseStartPoint ? <h6 className='fit2'>Select a new Start point</h6> : ""}
+          {showChooseEndPoint ? <h6 className='fit2'>Select a new End point</h6> : ""}
+          {showLinkHut ? <h6 className='fit2'>Link a new Hut</h6> : ""}
         </Row>
         <Row className="mx-4">
           <Col >
@@ -155,10 +155,11 @@ function LinkHike(props) {
               {hike.id && <LinkHikeMap length={hike.length} points={hike.points} filteredHuts={filteredHuts} filteredParkingLots={filteredParkingLots} startOrEnd={startOrEnd} hikeId={hikeId} setDirty={setDirty} linkedHut={linkedHut} alreadyLinkedHut={alreadyLinkedHut} setFilteredHuts={setFilteredHuts} setFilteredParkingLots={setFilteredParkingLots} setLinkedHut={setLinkedHut} setAlreadyLinkedHut={setAlreadyLinkedHut} setShowChooseStartPoint={setShowChooseStartPoint} setShowChooseEndPoint={setShowChooseEndPoint} setShowLinkHut={setShowLinkHut} setShowLinkedHutBanner={setShowLinkedHutBanner} setMessage={setMessage}/>}
               {/* hike.id ensures that the map is rendered only when the hike is loaded  */}
             </Row>
-            <Row className='btn-row'>
-            <Button className="mx-1 mt-2 choose_start slide" onClick={() => { chooseNewStartPoint(); setShowChooseStartPoint(true); setShowChooseEndPoint(false); setShowLinkHut(false); setDirty(true); setShowLinkedHutBanner(false); }} > Choose new Start Point </Button>
-              <Button className="mx-1 mt-2 choose_end slide" onClick={() => { chooseNewEndPoint(); setShowChooseEndPoint(true); setShowChooseStartPoint(false); setShowLinkHut(false); setDirty(true); setShowLinkedHutBanner(false); }} > Choose new End Point  </Button>
-              <Button className="mx-1 mt-2 link_hut slide" onClick={() => { chooseLinkHut(); setShowLinkHut(true); setShowChooseEndPoint(false); setShowChooseStartPoint(false); setDirty(true); setShowLinkedHutBanner(false); }} > Link hut </Button>
+            <Row className='btn_box mt-3 mb-3'>
+              <Button className="cancel-btn mx-2 mb-2" type="submit" onClick={() => { navigate('/hikeManager') }} > Cancel </Button>
+              <Button className="start-point-btn mx-2 mb-2" onClick={() => { chooseNewStartPoint(); setShowChooseStartPoint(true); setShowChooseEndPoint(false); setShowLinkHut(false); setDirty(true); setShowLinkedHutBanner(false); }} > Choose new Start Point </Button>
+              <Button className="end-point-btn mx-2 mb-2" onClick={() => { chooseNewEndPoint(); setShowChooseEndPoint(true); setShowChooseStartPoint(false); setShowLinkHut(false); setDirty(true); setShowLinkedHutBanner(false); }} > Choose new End Point  </Button>
+              <Button className="add-ref-btn mx-2 mb-2" onClick={() => { chooseLinkHut(); setShowLinkHut(true); setShowChooseEndPoint(false); setShowChooseStartPoint(false); setDirty(true); setShowLinkedHutBanner(false); }} > Link hut </Button>
             </Row>
           </Col>
         </Row>
@@ -364,7 +365,7 @@ function LinkHikeMap(props) {
   } 
 
   return (
-    <MapContainer className='single-hike-map' center={center} zoom={zoom} scrollWheelZoom={false}>
+    <MapContainer className='single-hike-map' center={center} zoom={zoom}>
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

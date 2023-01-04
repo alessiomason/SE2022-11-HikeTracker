@@ -1,0 +1,249 @@
+.margin-x {
+    margin-left: 3rem;
+    margin-right: 3rem;
+}
+
+@media only screen and (max-width: 650px) {
+
+    .margin-bottom2 {
+        margin-bottom: 20px;
+    }
+
+    .padding-x {
+        padding-right: 0px !important;
+        padding-left: 0px !important;
+    }
+
+    .margin-x {
+        margin-left: 1rem;
+        margin-right: 1rem;
+    }
+}
+
+.filter-hiker-title {
+    font-weight: bold;
+    color: #494681;
+}
+
+.no-pad-text {
+    margin: 0;
+    padding: 0;
+}
+
+.pad-text {
+    margin-top: 10px;
+    color: #494681;
+}
+
+.cancel-btn2 {
+    font-size: 14px;
+    border-radius: 0px !important;
+    width: 80px !important;
+    border: 2px solid red !important;
+    font-weight: bold;
+    background-color: red !important;
+    --hover: red;
+    color: white !important;
+    transition: all .1s ease-out;
+}
+
+.cancel-btn2:hover,
+.cancel-btn2:focus {
+    box-shadow: 0 0.6em 0.4em -0.4em var(--hover);
+    transform: translateY(-0.25em);
+}
+
+.save-btn2 {
+    font-size: 14px;
+    border-radius: 0px !important;
+    width: 80px !important;
+    border: 2px solid green !important;
+    font-weight: bold;
+    background-color: green !important;
+    --hover: green;
+    color: white !important;
+    transition: all .1s ease-out;
+}
+
+.save-btn2:hover,
+.save-btn2:focus {
+    box-shadow: 0 0.6em 0.4em -0.4em var(--hover);
+    transform: translateY(-0.25em);
+}
+
+.filter-hike-map-box {
+    height: 350px;
+    background-color: red;
+    border-radius: 8px;
+    border: 1px solid #494681;
+}
+
+.hike-filter-range input[type=range]::-webkit-slider-thumb {
+    background-color: #494681;
+}
+
+.hike-filter-range input[type=range]::-webkit-slider-thumb:hover {
+    background-color: #494681;
+    border: 2px solid black;
+}
+
+.hike-filter-range input[type=range].my-slider:active::-webkit-slider-runnable-track {
+    background: #494681;
+    border-color: #494681;
+}
+
+.hike-filter-range input[type=range].my-slider:hover::-webkit-slider-runnable-track {
+    background: #f5f5f5;
+    border-color: #494681;
+}
+
+.back-bar {
+    background-color: transparent !important;
+}
+
+.your-card {
+    border: 3px solid #494681;
+    box-shadow: 0 6px 20px rgba(56, 125, 255, 0.17) !important;
+    -webkit-filter: drop-shadow(0 6px 20px rgba(56, 125, 255, 0.017)) !important;
+    filter: drop-shadow(0 6px 20px rgba(56, 125, 255, 0.017)) !important;
+    border-radius: 10px;
+    text-decoration: none !important;
+    display: block;
+    margin-bottom: 2rem !important;
+    margin-left: 20px !important;
+    margin-right: 20px !important;
+    width: 100%;
+}
+
+
+.your-card:hover {
+    box-shadow: 5px 10px 20px 1px rgba(0, 0, 0, 253) !important;
+}
+
+.your-card_img {
+    height: 10rem;
+    object-fit: cover;
+}
+
+.your-card-title {
+    font-style: italic;
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #494681;
+    width: fit-content;
+}
+
+.your-card-icon {
+    filter: invert(29%) sepia(7%) saturate(4120%) hue-rotate(204deg) brightness(92%) contrast(91%);
+}
+
+
+.your-card-status {
+    background-color: #ffc107;
+    border-radius: 30px;
+    border: 1px solid #ffc107;
+    width: fit-content;
+    padding: 5px 10px 5px 10px;
+    position: relative;
+    left: 55%;
+    top: -9.5em;
+    z-index: 99;
+}
+
+.your-card-status-terminate {
+    background-color: #000;
+    color: #fff;
+    border-radius: 30px;
+    border: 1px solid #000;
+    width: fit-content;
+    padding: 5px 12px 5px 12px;
+    position: relative;
+    left: 58%;
+    top: -9.5em;
+    z-index: 99;
+}
+
+
+@media only screen and (max-width: 1300px) {
+
+    .your-card-status-terminate {
+        left: 53%;
+    }
+
+    .your-card-status {
+        left: 50%;
+    }
+
+}
+
+@media only screen and (max-width: 990px) {
+
+    .your-card-status-terminate {
+        left: 70%;
+    }
+
+    .your-card-status {
+        left: 68%;
+    }
+
+}
+
+
+@media only screen and (max-width: 950px) {
+
+    .your-card-status-terminate {
+        left: 65%;
+    }
+
+    .your-card-status {
+        left: 63%;
+    }
+
+}
+
+
+@media only screen and (max-width: 900px) {
+
+    .your-card-status-terminate {
+        left: 60%;
+    }
+
+    .your-card-status {
+        left: 58%;
+    }
+
+}
+
+@media only screen and (max-width: 767px) {
+
+    .your-card-status-terminate {
+        left: 78%;
+    }
+
+    .your-card-status {
+        left: 77%;
+    }
+
+}
+
+@media only screen and (max-width: 700px) {
+
+    .your-card-status-terminate {
+        left: 64%;
+    }
+
+    .your-card-status {
+        left: 62%;
+    }
+
+}
+
+.y-top {
+    position: relative;
+    top: -2em;
+    height: 240px;
+}
+
+.clickable-box {
+    cursor: pointer;
+}

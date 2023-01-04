@@ -133,7 +133,7 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
                 let rp_desc = refPointsArray[i].properties.desc;
                 await dao.addPoint(hikeID, pointsArray[1], pointsArray[0], pointsArray[2], 0, 0, 1, rp_desc);
             }
-          
+
             let ascent = endPointElev - startPointElev;
             await dao.addHike(label, length, null, ascent, null, desc, state, region, province, municipality, req.user.id);
             let hike = await dao.getHike(hikeID)
@@ -289,7 +289,7 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
 
         try {
             const huts = await dao.getHut(hutID);
-            res.status(200).json(huts);
+            res.status(200).json(huts[0]);
         }
         catch (err) {
             console.log(err)
@@ -790,11 +790,14 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
         const hikeID = req.params.hikeID;
         const userID = req.user.id;
 
+        const nOfRefPoints = await dao.getNOfHikeRefPoints(hikeID);
+        const progress = '0/' + nOfRefPoints;
+
         // if startTime is undefined, current time is retrieved
         const startTime = dayjs(req.body.startTime).format();
 
         try {
-            await dao.startHike(hikeID, userID, startTime);
+            await dao.startHike(hikeID, userID, progress, startTime);
             res.status(200).json().end();
         } catch (err) {
             res.status(500).json({ error: `Database error while starting the hike.` });
@@ -810,7 +813,7 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
         try {
             const trackedHikes = await dao.getTrackedHikesByHikeIDAndUserID(hikeID, userID);
             for (const trackedHike of trackedHikes)
-                trackedHike.pointsReached = await dao.getTrackedHikePoints(trackedHike.id);
+                trackedHike.pointsReached = await dao.getTrackedHikePoints(trackedHike.id, trackedHike.hikeID);
             res.status(200).json(trackedHikes);
         }
         catch (err) {
@@ -825,7 +828,7 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
         try {
             const trackedHikes = await dao.getTrackedHikesByUserID(userID);
             for (const trackedHike of trackedHikes)
-                trackedHike.pointsReached = await dao.getTrackedHikePoints(trackedHike.id);
+                trackedHike.pointsReached = await dao.getTrackedHikePoints(trackedHike.id, trackedHike.hikeID);
             res.status(200).json(trackedHikes);
         }
         catch (err) {
@@ -845,8 +848,18 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
         // if time is undefined, current time is retrieved
         const time = dayjs(req.body.time).format();
 
+        const hike = await dao.getHikeByTrackedHikeId(trackedHikeID);
+        const referencePoints = await dao.getReferencePointsByHike(hike.id);
+        let i;
+        for (i = 0; i < referencePoints.length; i++) {
+            if (referencePoints[i].pointID > pointID)   // find first reference point not reached, count the ones reached
+                break;
+        }
+        const progress = i + '/' + referencePoints.length;
+
         try {
             await dao.recordReferencePointReached(trackedHikeID, pointID, time);
+            await dao.updateTrackedHikeProgress(trackedHikeID, progress);
 
             res.status(200).json().end();
         } catch (err) {
@@ -868,9 +881,11 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
         const endTime = dayjs(req.body.endTime).format();
 
         try {
-            await dao.terminateHike(trackedHikeID, endTime);
-
             const hike = await dao.getHikeByTrackedHikeId(trackedHikeID);
+            const nOfRefPoints = await dao.getNOfHikeRefPoints(hike.id);
+            const progress = nOfRefPoints + '/' + nOfRefPoints;     // all reference point have been reached, even if not marked as such
+            await dao.terminateHike(trackedHikeID, endTime, progress);
+
             const hikePoints = await dao.getHikePoints(hike.id);
             const hikePointsAltitudes = hikePoints.map(p => p.altitude);
             let hikeHighestAltitude = null;
@@ -879,8 +894,8 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
 
             const userStats = await dao.getUserStats(userID);
 
-            const hikeTime = dayjs.duration(dayjs(hike.endTime) - dayjs(hike.startTime)).asHours();
-            const hikePace = dayjs.duration(dayjs(hike.endTime) - dayjs(hike.startTime)).asMinutes() / hike.length * 1000;
+            const hikeTime = dayjs.duration(dayjs(endTime) - dayjs(hike.startTime)).asHours();
+            const hikePace = dayjs.duration(dayjs(endTime) - dayjs(hike.startTime)).asMinutes() / hike.length * 1000;
             userStats.hikesFinished += 1;
             userStats.walkedLength += hike.length;
             userStats.totalHikeTime += hikeTime;
@@ -936,6 +951,85 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
 
     });
 
+    // stop hike
+    app.patch('/api/trackedHikes/:id', async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty())
+            return res.status(422).json({ errors: errors.array() });
+
+        const trackedHikeID = req.params.id;
+
+        // if stopTime is undefined, current time is retrieved
+        const stopTime = dayjs(req.body.stopTime).format();
+
+        try {
+            await dao.stopHike(trackedHikeID, stopTime);
+            res.status(200).json().end();
+        } catch (err) {
+            res.status(500).json({ error: `Database error while starting the hike.` });
+        }
+
+    });
+
+    //Add a weather alert
+    app.post('/api/newWeatherAlert', async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty())
+            return res.status(422).json({ errors: errors.array() });
+
+        try {
+            const type = req.body.type;
+            const radius = req.body.radius;
+            const lat = req.body.lat;
+            const lon = req.body.lon;
+            const time = req.body.time;
+            const description = req.body.description;
+
+            await dao.addWeatherAlert(type, radius, lat, lon, time, description);
+            res.status(201).json().end();
+        } catch (err) {
+            console.log(err)
+            res.status(500).json({ error: err });
+        }
+    });
+
+    // get weather alerts
+    app.get('/api/weatherAlert', async (req, res) => {
+        try {
+            const weatherAlert = await dao.getWeatherAlerts();
+            // get only future weather alerts
+            const weatherAlertFiltered = weatherAlert.filter((w) => dayjs(w.time).format() > dayjs().format());
+            res.status(200).json(weatherAlertFiltered);
+        }
+        catch (err) {
+            res.status(500).end();
+        }
+    });
+
+    // delete weather alert
+    app.delete('/api/weatherAlert/:id', async (req, res) => {
+        const weatherAlertID = req.params.id;
+        try {
+            await dao.deleteWeatherAlert(weatherAlertID);
+            res.status(200).end();
+        }
+        catch (err) {
+            res.status(500).json({ error: 'The weather alert could not be deleted' });
+        }
+    });
+
+    // get tracked hikes by userID
+    app.get('/api/userStats', async (req, res) => {
+        const userID = req.user.id;
+
+        try {
+            const userStats = await dao.getUserStats(userID);
+            res.status(200).json(userStats);
+        }
+        catch (err) {
+            res.status(500).end();
+        }
+    });
 
     // POST /signup
     // signup

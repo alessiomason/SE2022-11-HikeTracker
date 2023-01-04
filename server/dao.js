@@ -111,7 +111,8 @@ exports.getHuts = () => {
                 region: r.Region,
                 province: r.Province,
                 municipality: r.Municipality,
-                author: r.FullName
+                author: r.FullName,
+                authorId: r.Author
             }));
             resolve(huts);
         });
@@ -162,7 +163,8 @@ exports.getHut = (hutID) => {
                         region: r.Region,
                         province: r.Province,
                         municipality: r.Municipality,
-                        author: r.FullName
+                        author: r.FullName,
+                        authorId: r.Author
                     }));
                     resolve(hut);
                 }
@@ -238,7 +240,7 @@ exports.getEndPointOfHike = (hikeID) => {
 exports.getHikes = () => {
     return new Promise((resolve, reject) => {
         const sql = `SELECT H.HikeID, H.Label, H.Length, H.ExpTime, H.Ascent, H.Difficulty, H.Description,
-                        H.State, H.Region, H. Province, H.Municipality, P.Lat, P.Lon, P.Label AS StartPointLabel, U.FullName
+                        H.State, H.Region, H. Province, H.Municipality,H.Author, P.Lat, P.Lon, P.Label AS StartPointLabel, U.FullName
                      FROM Hikes H, Points P, Users U
                      WHERE H.HikeID = P.HikeID AND P.SP = 1
                      AND H.Author = U.UserId`;
@@ -261,7 +263,8 @@ exports.getHikes = () => {
                     longitude: r.Lon,
                     label: r.StartPointLabel
                 },
-                author: r.FullName
+                author: r.FullName,
+                authorId: r.Author
             }));
             resolve(hikes);
         });
@@ -278,7 +281,7 @@ exports.getParkingLots = () => {
             const pls = rows.map((r) => ({
                 id: r.ParkingID, label: r.Label,
                 description: r.Description, state: r.State, region: r.Region, province: r.Province, municipality: r.Municipality,
-                lat: r.Lat, lon: r.Lon, altitude: r.Altitude, total: r.Total, occupied: r.Occupied, author: r.FullName
+                lat: r.Lat, lon: r.Lon, altitude: r.Altitude, total: r.Total, occupied: r.Occupied, author: r.FullName, authorId: r.Author
             }));
             resolve(pls);
         });
@@ -422,6 +425,19 @@ exports.getHike = (hikeID) => {
     });
 }
 
+exports.getNOfHikeRefPoints = (hikeID) => {
+    return new Promise((resolve, reject) => {
+        const sql = `SELECT COUNT(*) AS N
+                     FROM Points
+                     WHERE HikeID = ? AND RP = 1`;
+        db.get(sql, [hikeID], (err, row) => {
+            if (err) reject(err);
+            else
+                resolve(row.N);
+        });
+    });
+};
+
 exports.getHikePoints = (hikeID) => {
     return new Promise((resolve, reject) => {
         const sql = 'SELECT * FROM Points WHERE HikeID = ?';
@@ -516,6 +532,17 @@ exports.getReferencePoint = () => {
     });
 }
 
+exports.getReferencePointsByHike = (hikeID) => {
+    return new Promise((resolve, reject) => {
+        const sql = 'SELECT * FROM POINTS WHERE RP = 1 AND HikeID = ?';
+        db.all(sql, [hikeID], (err, rows) => {
+            if (err) reject(err);
+            const referencePoints = rows.map((rp) => ({ hikeID: rp.HikeID, pointID: rp.PointID, label: rp.Label }));
+            resolve(referencePoints);
+        });
+    });
+}
+
 exports.getReferencePointID = (pointID) => {
     return new Promise((resolve, reject) => {
         const sql = 'SELECT * FROM POINTS WHERE PointID = ?';
@@ -569,10 +596,10 @@ exports.getParkingPoints = (parkingID) => {
     });
 }
 
-exports.startHike = (hikeID, userID, startTime) => {
+exports.startHike = (hikeID, userID, progress, startTime) => {
     return new Promise((resolve, reject) => {
-        const sql = 'INSERT INTO TrackedHikes(HikeID, UserID, StartTime) VALUES(?, ?, ?)'
-        db.run(sql, [hikeID, userID, startTime], function (err) {
+        const sql = 'INSERT INTO TrackedHikes(HikeID, UserID, Progress, StartTime) VALUES(?, ?, ?, ?)'
+        db.run(sql, [hikeID, userID, progress, startTime], function (err) {
             if (err) reject(err);
             resolve();
         });
@@ -581,30 +608,67 @@ exports.startHike = (hikeID, userID, startTime) => {
 
 exports.getTrackedHikesByHikeIDAndUserID = (hikeID, userID) => {
     return new Promise((resolve, reject) => {
-        const sql = 'SELECT * FROM TrackedHikes WHERE HikeID = ? AND UserID = ?';
+        const sql = `SELECT TrackedHikeID, TH.HikeID, Label, Status, Progress, StartTime, EndTime
+                     FROM TrackedHikes TH, Hikes H
+                     WHERE TH.HikeID = H.HikeID AND TH.HikeID = ? AND UserID = ?`;
         db.all(sql, [hikeID, userID], (err, rows) => {
             if (err) reject(err);
-            const points = rows.map((r) => ({ id: r.TrackedHikeID, hikeID: r.HikeID, startTime: r.StartTime, endTime: r.EndTime }));
-            resolve(points);
+            const trackedHikes = rows.map((r) => ({
+                id: r.TrackedHikeID,
+                hikeID: r.HikeID,
+                hikeLabel: r.Label,
+                status: r.Status,
+                progress: r.Progress,
+                startTime: r.StartTime,
+                endTime: r.EndTime
+            }));
+            resolve(trackedHikes);
         });
     });
 }
 
 exports.getTrackedHikesByUserID = (userID) => {
     return new Promise((resolve, reject) => {
-        const sql = 'SELECT * FROM TrackedHikes WHERE UserID = ?';
+        const sql = `SELECT TrackedHikeID, TH.HikeID, Label, Status, Progress, StartTime, EndTime
+                     FROM TrackedHikes TH, Hikes H
+                     WHERE TH.HikeID = H.HikeID AND UserID = ?`;
         db.all(sql, [userID], (err, rows) => {
             if (err) reject(err);
-            const points = rows.map((r) => ({ id: r.TrackedHikeID, hikeID: r.HikeID, startTime: r.StartTime, endTime: r.EndTime }));
-            resolve(points);
+            const trackedHikes = rows.map((r) => ({
+                id: r.TrackedHikeID,
+                hikeID: r.HikeID,
+                hikeLabel: r.Label,
+                status: r.Status,
+                progress: r.Progress,
+                startTime: r.StartTime,
+                endTime: r.EndTime
+            }));
+            resolve(trackedHikes);
         });
     });
 }
 
-exports.terminateHike = (trackedHikeID, endTime) => {
+exports.terminateHike = (trackedHikeID, endTime, progress) => {
     return new Promise((resolve, reject) => {
-        const sql = 'UPDATE TrackedHikes SET EndTime=? WHERE TrackedHikeID=?'
-        db.run(sql, [endTime, trackedHikeID], function (err) {
+        const sql = `UPDATE TrackedHikes
+                     SET EndTime = ?,
+                         Status = 'completed',
+                         Progress = ?
+                     WHERE TrackedHikeID = ?`
+        db.run(sql, [endTime, progress, trackedHikeID], function (err) {
+            if (err) reject(err);
+            resolve();
+        });
+    });
+}
+
+exports.stopHike = (trackedHikeID, stopTime) => {
+    return new Promise((resolve, reject) => {
+        const sql = `UPDATE TrackedHikes
+                     SET EndTime = ?,
+                         Status = 'stopped'
+                     WHERE TrackedHikeID = ?`
+        db.run(sql, [stopTime, trackedHikeID], function (err) {
             if (err) reject(err);
             resolve();
         });
@@ -721,7 +785,7 @@ exports.updateUserStats = (userID, userStats) => {
 
 exports.recordReferencePointReached = (trackedHikeID, pointID, time) => {
     return new Promise((resolve, reject) => {
-        const sql = 'INSERT INTO TrackedHikesPoints(TrackedHikeID, PointID, Time) VALUES(?, ?, ?)'
+        const sql = 'INSERT INTO TrackedHikesPoints(TrackedHikeID, PointID, Time) VALUES(?, ?, ?)';
         db.run(sql, [trackedHikeID, pointID, time], function (err) {
             if (err) reject(err);
             resolve();
@@ -729,13 +793,26 @@ exports.recordReferencePointReached = (trackedHikeID, pointID, time) => {
     });
 }
 
-exports.getTrackedHikePoints = (trackedHikeID) => {
+exports.updateTrackedHikeProgress = (trackedHikeID, progress) => {
     return new Promise((resolve, reject) => {
-        const sql = `SELECT *
-                     FROM TrackedHikesPoints THP, Points P
-                     WHERE THP.PointID = P.PointID
-                     AND TrackedHikeID = ?`;
-        db.all(sql, [trackedHikeID], (err, rows) => {
+        const sql = 'UPDATE TrackedHikes SET Progress=? WHERE TrackedHikeID=?';
+        db.run(sql, [progress, trackedHikeID], function (err) {
+            if (err) reject(err);
+            resolve();
+        });
+    });
+}
+
+exports.getTrackedHikePoints = (trackedHikeID, hikeID) => {
+    return new Promise((resolve, reject) => {
+        // select reached reference points, even the ones whose time of reach is not marked
+        const sql = `SELECT P.PointID, P.Label, P.Lat, P.Lon, P.Altitude, THP.Time
+                     FROM Points P
+                     LEFT JOIN (SELECT * FROM TrackedHikesPoints WHERE TrackedHikeID = ?) THP
+                     ON P.PointID = THP.PointID
+                     WHERE HikeID = ? AND RP = 1
+                       AND P.PointID <= (SELECT MAX(PointID) FROM TrackedHikesPoints WHERE TrackedHikeID = ?)`;
+        db.all(sql, [trackedHikeID, hikeID, trackedHikeID], (err, rows) => {
             if (err) reject(err);
             const points = rows.map((r) => ({
                 pointID: r.PointID,
@@ -774,6 +851,54 @@ exports.deleteAllTrackedHikes = () => {
     return new Promise((resolve, reject) => {
         const sql = 'DELETE FROM TrackedHikes';
         db.run(sql, (err) => {
+            if (err) reject(err);
+            resolve();
+        });
+    });
+}
+
+exports.addWeatherAlert = (type, radius, lat, lon, time, description) => {
+    return new Promise((resolve, reject) => {
+        const sql = 'INSERT INTO WeatherAlert(Type, Radius, Lat, Lon, Time, Description) VALUES(?, ?, ?, ?, ?, ?)';
+        db.run(sql, [type, radius, lat, lon, time, description], function (err) {
+            if (err) reject(err);
+            resolve();
+        });
+    });
+}
+
+exports.getWeatherAlerts = () => {
+    return new Promise((resolve, reject) => {
+        const sql = `SELECT * FROM WeatherAlert`
+        db.all(sql, [], (err, rows) => {
+            if (err) reject(err);
+            const weatherAlert = rows.map((r) => ({
+                weatherAlertID: r.WeatherAlertID,
+                type: r.Type,
+                radius: r.Radius,
+                lat: r.Lat,
+                lon: r.Lon,
+                time: r.Time,
+                description: r.Description    
+            }));
+            resolve(weatherAlert);
+        });
+    });
+}
+
+exports.deleteWeatherAlert = (weatherAlertID) => {
+    return new Promise((resolve, reject) => {
+        db.run("DELETE FROM WeatherAlert WHERE WeatherAlertID = ?", [weatherAlertID], (err) => {
+            if (err) reject(err);
+            else resolve(null);
+        });
+    });
+};
+
+exports.deleteAllWeatherAlerts = () => {
+    return new Promise((resolve, reject) => {
+        const sql = 'DELETE FROM WeatherAlert';
+        db.all(sql, (err) => {
             if (err) reject(err);
             resolve();
         });

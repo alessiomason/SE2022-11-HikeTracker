@@ -71,8 +71,8 @@ function ReferencePoints() {
       <Container fluid className='internal-box' >
         <Row className="center-box mb-4">
           <h2 className="background double single-hike-title"><span><img src={Hiking} alt="hiking_image" className='me-2 hike-img single-hike-icon' />{hike.label}</span></h2>
-          {adding ? "Select a point on a hike to add a new reference point" 
-          :"To delete a reference point, click on it on the hike map"
+          {adding ? <h6 className='fit2'>Select a point on a hike to add a new reference point </h6>
+          :<h6 className='fit2'>To delete a reference point, click on it on the hike map</h6>
           }
         </Row>
         <Row className="mx-4">
@@ -85,16 +85,10 @@ function ReferencePoints() {
                 />}
               {/* hike.id ensures that the map is rendered only when the hike is loaded  */}
             </Row>
-            <Row className='btn-row' md="auto" >
-              <Button className="mx-1 mt-2 choose_start slide"  onClick={() => {setAdding(true) } } > Add a new reference point </Button>
-                <Col>
-                  <Row >
-                  <Button className="mx-1 mt-2 cancel_refPoint slide" type="submit"  onClick={()=>{navigate('/hikeManager')}} > Cancel </Button>
-                  </Row>
-                  <Row >
-                  <Button className="mx-1 mt-2 save_refPoint slide"   onClick={()=>{if(adding && validPoint){confirmationButton(); }}} > Save </Button>
-                  </Row>
-                </Col>
+            <Row className='btn_box mt-3 mb-3'>
+              <Button className="add-ref-btn mx-2 mb-2" onClick={() => { setAdding(true) }} > Add a new reference point </Button>
+              <Button className="cancel-btn mx-2 mb-2" type="submit" onClick={() => { navigate('/hikeManager') }} > Cancel </Button>
+              <Button className="save-btn mx-2 mb-2" onClick={() => { if (adding && validPoint) { confirmationButton(); } }} > Save </Button>
             </Row>
           </Col>
         </Row>
@@ -159,7 +153,7 @@ function ManageReferencePoints(props) {
   const positions = props.points?.filter(p => !p.referencePoint && !p.hutID && !p.parkingID).map(p => [p.latitude, p.longitude]);
 
   return (
-    <MapContainer className='single-hike-map' center={center} zoom={zoom} scrollWheelZoom={false}>
+    <MapContainer className='single-hike-map' center={center} zoom={zoom}>
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

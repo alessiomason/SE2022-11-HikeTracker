@@ -4,7 +4,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import API from "../API";
 import "./../styles/VerifyEmail.css";
 
-function VerifyEmailPage() {
+function VerifyEmailPage(props) {
     const [verified, setVerified] = useState(false);
 
     const search = useLocation().search;
@@ -15,26 +15,34 @@ function VerifyEmailPage() {
             .catch(err => console.log(err))
     }
 
-    return (<> {verified ? <EmailAlreadyVerified /> : <EmailToBeVerified />} </>);
+    return (<> {verified ? <EmailAlreadyVerified setShowLogin={props.setShowLogin} /> : <EmailToBeVerified />} </>);
 }
 
 function EmailToBeVerified() {
+    const navigate = useNavigate();
+
     return (
         <Container>
             <h1 className="verify-email-title">Verify email</h1>
             <h3 className="verify-email-message">Please click on the link in the email you received to verify your account.</h3>
+            <div className="d-flex justify-content-center">
+                <Button className="verify-email-btn" onClick={() => navigate('/')}>Go back to home page</Button>
+            </div>
         </Container>
     );
 }
 
-function EmailAlreadyVerified() {
+function EmailAlreadyVerified(props) {
     const navigate = useNavigate();
 
     return (
         <Container>
             <h1 className="verify-email-title">Email verified</h1>
-            <h3 className="verify-email-message">You have successfully verified your email! Please head over to the login page to continue.</h3>
-            <Button className="verify-email-message" onClick={() => navigate('/login')}>Login</Button>
+            <h3 className="verify-email-message">You have successfully verified your email!</h3>
+            <h4>Please head over to the home page and login to continue.</h4>
+            <div className="d-flex justify-content-center">
+                <Button className="verify-email-btn" onClick={() => { props.setShowLogin(true); navigate('/'); }}>Login</Button>
+            </div>
         </Container>
     );
 }

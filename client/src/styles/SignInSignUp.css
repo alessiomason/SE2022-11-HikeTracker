@@ -60,3 +60,40 @@
 .fit{
     padding-right: 8px;
 }
+
+.end-signup{
+    display: flex;
+    justify-content: end;
+    flex-direction: row;
+}
+
+.p-sign{
+    width: fit-content;
+    padding-left: 0px;
+    padding-right: 0px;
+    margin-bottom: 20px;
+}
+
+.h6-sign{
+    width: fit-content;
+    margin-bottom: 20px;
+    cursor: pointer;
+    color: #0B5ED7;
+    font-weight: bold;
+}
+
+.h6-sign:hover{
+    text-decoration: underline;
+}
+
+.h6-sign-in{
+    width: fit-content;
+    margin-bottom: 20px;
+    cursor: pointer;
+    color: #198754;
+    font-weight: bold;
+}
+
+.h6-sign-in:hover{
+    text-decoration: underline;
+}

@@ -17,7 +17,7 @@ exports.getUsers = () => {
         const sql = 'SELECT * FROM Users';
         db.all(sql, [], (err, rows) => {
             if (err) reject(err);
-            const users = rows.map((u) => ({ id: u.UserId, email: u.Email, access_right: u.AccessRight, verified: u.Verified }));
+            const users = rows.map((u) => ({ id: u.UserId, fullName: r.FullName, email: u.Email, access_right: u.AccessRight, verified: u.Verified }));
             resolve(users);
         });
     });
@@ -32,7 +32,7 @@ exports.getUserById = (id) => {
             if (err) reject(err);
             else if (row == undefined) resolve({ error: 'User not found.' });
             else {
-                const user = { id: row.UserId, email: row.Email, access_right: row.AccessRight, verified: row.Verified };
+                const user = { id: row.UserId, fullName: row.FullName, email: row.Email, access_right: row.AccessRight, verified: row.Verified };
 
                 resolve(user);
             }
@@ -47,7 +47,7 @@ exports.getUser = (email, password) => {
             if (err) reject(err);
             else if (row === undefined) resolve(false);
             else {
-                const user = { id: row.UserId, email: row.Email, access_right: row.AccessRight, verified: row.Verified };
+                const user = { id: row.UserId, fullName: row.FullName, email: row.Email, access_right: row.AccessRight, verified: row.Verified };
 
                 const salt = row.Salt;
                 crypto.scrypt(password, salt, 32, (err, hashedPassword) => {

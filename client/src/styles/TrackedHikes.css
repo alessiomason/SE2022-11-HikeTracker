@@ -1,0 +1,143 @@
+:root {
+	/*	These variables are used for the hike single page.
+		For the profile page they are reset
+		in ProfileHiker.js in the Row component of function TrackedHikes
+		and in the following lines for the single components */
+
+	/* in profile page is #494681 */
+	--main-color: #30ac42;
+
+	/* in profile page is rgba(73, 70, 129, 0.1) */
+	--faded-main-color: rgba(48, 172, 66, 0.1);
+}
+
+.tracked-hikes-row {
+	margin-bottom: 30px;
+}
+
+.modal-info-row {
+	margin-bottom: 20px;
+}
+
+th {
+	color: var(--main-color);
+}
+
+tr {
+	border-color: var(--faded-main-color);
+}
+
+.wide-td {
+	max-width: 350px;
+}
+
+.faded-td {
+	color: rgb(125, 125, 125) !important;
+}
+
+.table-striped>tbody>tr:nth-child(odd)>td,
+.table-striped>tbody>tr:nth-child(odd)>th {
+	background-color: var(--faded-main-color);
+	box-shadow: none;
+}
+
+.hike-page-modal-header {
+	border-top: 2px solid var(--main-color);
+	border-left: 2px solid var(--main-color);
+	border-right: 2px solid var(--main-color);
+}
+
+.hike-page-modal-body {
+	border-radius: 0px 0px 8px 8px !important;
+	border-left: 2px solid var(--main-color);
+	border-right: 2px solid var(--main-color);
+	border-bottom: 2px solid var(--main-color);
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+.hike-page-container {
+	position: relative;
+	background-color: #212529;
+	border: 2px solid var(--main-color);
+	border-radius: 10px;
+	padding-left: 0px !important;
+	padding-right: 0px !important;
+}
+
+.sub-title {
+	text-transform: uppercase;
+	font-weight: bold;
+	font-style: italic;
+	color: var(--main-color);
+	padding-bottom: 8px;
+	border-bottom: 2px solid var(--main-color);
+}
+
+.single-hike-map {
+	margin-bottom: 0px !important;
+	height: 400px !important;
+	width: 100% !important;
+	border: 2px solid var(--main-color);
+	border-radius: 8px;
+}
+
+.tracked-hikes-card {
+	width: 330px;
+	margin-bottom: 30px;
+	background-color: white;
+	color: black;
+	transition: all .25s ease;
+}
+
+.tracked-hikes-card:hover {
+	cursor: pointer;
+}
+
+.tracked-hikes-card.selected-card {
+	background-color: var(--faded-main-color);
+}
+
+.tracked-hikes-card.deselected-card {
+	color: rgba(128, 128, 128, 0.7);
+}
+
+.see-more-btn {
+	border-radius: 0px !important;
+	width: 110px !important;
+	border: 1px solid var(--main-color) !important;
+	background-color: transparent !important;
+	color: var(--main-color) !important;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	padding-left: 0;
+	padding-right: 0;
+}
+
+.see-more-btn:hover,
+.see-more-btn:focus {
+	color: white !important;
+	box-shadow: inset 110px 0 0 0 var(--main-color);
+}
+
+.badge {
+	text-transform: capitalize;
+	width: 82px;
+}
+
+.bg-info {
+	background-color: #a972cb !important;
+}
+
+.ref-points-reached {
+	margin-top: 30px;
+	padding-bottom: 4px;
+}
+
+.stats-names-col {
+	border-right: 1px var(--main-color) solid;
+	font-weight: bold;
+	color: var(--main-color);
+}

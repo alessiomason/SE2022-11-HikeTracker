@@ -1,22 +1,28 @@
 import { useState, useEffect } from 'react';
-import { Container, Row, Col, OverlayTrigger, Tooltip, Button, Tabs, Tab, Modal, Table, Card } from 'react-bootstrap';
+import { Container, Row, Col, OverlayTrigger, Tooltip, Button, Tabs, Tab } from 'react-bootstrap';
 import { useParams, useNavigate } from 'react-router-dom';
-import DateTimePicker from 'react-datetime-picker'
 import HikeMap from '../HikeMap';
+import { MyImageModal, StartTerminateHikeModal, StopHikeModal, ReferencePointReachedModal } from '../TrackedHikesModals';
+import { TrackedHikesInfoTable, TrackedHikesInfoModal } from '../TrackedHikesInfo';
 import API from '../../API';
 import '../../styles/SinglePageHike.css';
-import { default as Hiking } from '../../icons/hiking.svg';
-import { default as Location } from "../../icons/map.svg";
-import { default as Length } from "../../icons/location-on-road.svg";
-import { default as Time } from "../../icons/stopwatch.svg";
-import { default as Ascent } from "../../icons/mountain.svg";
-import { default as User } from "../../icons/user-login.svg";
-import { default as Difficulty } from "../../icons/volume.svg";
-import { default as Img1 } from "../../images/image3.jpg";
-import { default as FakeMap } from "../../images/fakeMap.jpg";
+import { default as Hiking } from './../../icons/hiking.svg';
+import { default as Location } from "./../../icons/map.svg";
+import { default as Length } from "./../../icons/location-on-road.svg";
+import { default as Time } from "./../../icons/stopwatch.svg";
+import { default as Ascent } from "./../../icons/mountain.svg";
+import { default as User } from "./../../icons/user-login.svg";
+import { default as Difficulty } from "./../../icons/volume.svg";
+import { default as Img1 } from "./../../images/image3.jpg";
+import { default as FakeMap } from "./../../images/fakeMap.jpg";
+import { default as Alert1 } from "./../../icons/alert.svg";
+import { default as Cloud } from "./../../icons/cloud.svg";
+import { default as Rain } from "./../../icons/rain.svg";
+import { default as Storm } from "./../../icons/storm.svg";
+import { default as Snow } from "./../../icons/snow.svg";
+import { default as Wind } from "./../../icons/wind.svg";
+import { default as Quiet } from "./../../icons/quiet.svg";
 const dayjs = require('dayjs');
-const duration = require('dayjs/plugin/duration');
-dayjs.extend(duration);
 
 // from https://stackoverflow.com/questions/639695/how-to-convert-latitude-or-longitude-to-meters
 function coordinatesDistanceInMeter(lat1, lon1, lat2, lon2) {  // generally used geo measurement function
@@ -71,9 +77,10 @@ function HikePage(props) {
                     for (let point of hike.points) {
                       point.reachedInOngoingHike = point.pointID <= maxRefPointReachedInOngoingHike.pointID;    // generic point is before latest reached point
 
+                      // search if current point is a previously reached reference point; if so, save time of reach
                       const refPointReached = refPointsReachedInOngoingHike.find(refPointReached => point.pointID === refPointReached.pointID);
-                      if (refPointReached)    // look for previously reached reference point
-                        point.timeOfReach = refPointReached.timeOfReach;
+                      if (refPointReached)
+                        point.timeOfReachInOngoingHike = refPointReached.timeOfReach;
                     }
                   }
                 }
@@ -96,7 +103,7 @@ function HikePage(props) {
     API.startHike(hikeId, startTime)
       .then(() => {
         setDirty(true);
-        setTrackedHikeModalShow(false);
+        setStartTerminateHikeModalShow(false);
       })
       .catch(err => console.log(err));
   }
@@ -128,7 +135,23 @@ function HikePage(props) {
     API.terminateHike(trackedHikeID, endTime)
       .then(() => {
         setDirty(true);
-        setTrackedHikeModalShow(false);
+        setStartTerminateHikeModalShow(false);
+      })
+      .catch(err => console.log(err));
+  }
+
+  const stopHike = async (stopTime) => {
+    if (trackedHikes.filter(th => th.endTime === null || th.endTime === undefined).length !== 1) {
+      console.log('More than one ongoing hike found: impossible to stop.');
+      return;
+    }
+
+    const trackedHikeID = trackedHikes.filter(th => th.endTime === null || th.endTime === undefined).pop().id;
+
+    API.stopHike(trackedHikeID, stopTime)
+      .then(() => {
+        setDirty(true);
+        setStopHikeModalShow(false);
       })
       .catch(err => console.log(err));
   }
@@ -154,17 +177,23 @@ function HikePage(props) {
   if (hike.state) locationsArray.push(hike.state);
 
   const [imageModalShow, setImageModalShow] = useState(false);
-  const [trackedHikeModalShow, setTrackedHikeModalShow] = useState(false);
+  const [startTerminateHikeModalShow, setStartTerminateHikeModalShow] = useState(false);
+  const [stopHikeModalShow, setStopHikeModalShow] = useState(false);
   const [referencePointReachedModalShow, setReferencePointReachedModalShow] = useState(false);
+  const [trackedHikesInfoModalShow, setTrackedHikesInfoModalShow] = useState(false);
 
   return (
     <Container fluid className="external-box">
       <MyImageModal hikeId={hike.id} hikeLabel={hike.label} show={imageModalShow} onHide={() => setImageModalShow(false)} />
-      <TrackedHikeModal startHike={startHike} terminateHike={terminateHike} show={trackedHikeModalShow} onHide={() => setTrackedHikeModalShow(false)} />
+      <StartTerminateHikeModal startHike={startHike} terminateHike={terminateHike} show={startTerminateHikeModalShow} onHide={() => setStartTerminateHikeModalShow(false)} />
+      <StopHikeModal stopHike={stopHike} show={stopHikeModalShow} onHide={() => setStopHikeModalShow(false)} />
       <ReferencePointReachedModal recordReferencePointReached={recordReferencePointReached} show={referencePointReachedModalShow} onHide={() => setReferencePointReachedModalShow(false)} />
+      <TrackedHikesInfoModal show={trackedHikesInfoModalShow} onHide={() => setTrackedHikesInfoModalShow(false)} hike={hike} trackedHikes={trackedHikes} dirtyHike={false} />
       <Container fluid className='internal-box' >
         <Row className="center-box mb-4">
-          <h2 className="background double single-hike-title "><span><img src={Hiking} alt="hiking_image" className='me-2 single-hike-icon' />{hike.label}</span></h2>
+          <Col md={12} className="center-box">
+            <h2 className="background double single-hike-title "><span><img src={Hiking} alt="hiking_image" className='me-2 single-hike-icon' />{hike.label}</span></h2>
+          </Col>
         </Row>
         <Row className="mx-4">
           <Col md={3} >
@@ -243,17 +272,18 @@ function HikePage(props) {
                     <h3 className='mb-5 text'>Sign In to look the Map!</h3>
                     <Button variant="primary log_btn slide" type="submit" onClick={() => { props.setShowLogin(true); navigate("/"); }} > Sign In </Button>
                   </div>
-                </div> : hike.id && <HikeMap length={hike.length} points={hike.points} alreadyLinkedHut={alreadyLinkedHut}
-                  showStartHike={trackedHikes.filter(th => th.endTime === null || th.endTime === undefined).length === 0} setTrackedHikeModalShow={setTrackedHikeModalShow}
+                </div> : hike.id && <HikeMap length={hike.length} points={hike.points} alreadyLinkedHut={alreadyLinkedHut} showOngoing
+                  showStartHike={trackedHikes.filter(th => th.endTime === null || th.endTime === undefined).length === 0} setTrackedHikeModalShow={setStartTerminateHikeModalShow}
                   showTerminateHike={trackedHikes.filter(th => th.endTime === null || th.endTime === undefined).length === 1} setReferencePointReachedModalShow={setReferencePointReachedModalShow} />}
               {/* hike.id ensures that the map is rendered only when the hike is loaded  */}
             </Row>
             <Row className='btn-row'>
-              {props.loggedIn && trackedHikes.filter(th => th.endTime === null || th.endTime === undefined).length === 0 && <Button className="mx-1 mt-2 start_btn slide" type="submit" onClick={() => setTrackedHikeModalShow('start')}>Start hike</Button>}
+              {props.loggedIn && trackedHikes.filter(th => th.endTime === null || th.endTime === undefined).length === 0 && <Button className="mx-1 mt-2 start_btn slide" type="submit" onClick={() => setStartTerminateHikeModalShow('start')}>Start hike</Button>}
               {props.loggedIn && trackedHikes.filter(th => th.endTime === null || th.endTime === undefined).length === 1 && <Button className="mx-1 mt-2 cancel_btn slide" type="submit" onClick={cancelHike}>Cancel hike</Button>}
-              {props.loggedIn && trackedHikes.filter(th => th.endTime === null || th.endTime === undefined).length === 1 && <Button className="mx-1 mt-2 terminate_btn slide" type="submit" onClick={() => setTrackedHikeModalShow('terminate')}>Terminate hike</Button>}
+              {props.loggedIn && trackedHikes.filter(th => th.endTime === null || th.endTime === undefined).length === 1 && <Button className="mx-1 mt-2 stop_btn slide" type="submit" onClick={() => setStopHikeModalShow(true)}>Stop hike</Button>}
+              {props.loggedIn && trackedHikes.filter(th => th.endTime === null || th.endTime === undefined).length === 1 && <Button className="mx-1 mt-2 terminate_btn slide" type="submit" onClick={() => setStartTerminateHikeModalShow('terminate')}>Terminate hike</Button>}
             </Row>
-            {props.loggedIn && <TrackedHikesInfo hike={hike} trackedHikes={trackedHikes} />}
+            {props.loggedIn && <TrackedHikesInfoTable trackedHikes={trackedHikes} setTrackedHikesInfoModalShow={setTrackedHikesInfoModalShow} />}
             <Row className="tab-box">
               <Tabs defaultActiveKey="description" id="justify-tab-example" className="mb-3 " justify >
                 <Tab eventKey="description" title="Description" >
@@ -263,7 +293,7 @@ function HikePage(props) {
                   <p>Function to be implemented</p>
                 </Tab>
                 <Tab eventKey="weather" title="Weather Alert"  >
-                  <p>Function to be implemented</p>
+                  <WeatherAlertHike/>
                 </Tab>
               </Tabs>
             </Row>
@@ -274,276 +304,165 @@ function HikePage(props) {
   );
 }
 
-function MyImageModal(props) {
-  return (
-    <Modal show={props.show} onHide={props.onHide} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
-      <Modal.Header closeButton className='box-modal hike-page-modal-header'>
-        <Modal.Title id="contained-modal-title-vcenter">
-          {props.hikeLabel}
-        </Modal.Title>
-      </Modal.Header>
-      <Modal.Body className='box-modal hike-page-modal-body'>
-        <Row>
-          <Col md={12} className="modal-img-box">
-            <img src={`http://localhost:3001/images/hike-${props.hikeId}.jpg`}
-          onError={({ currentTarget }) => {
-            currentTarget.onerror = null; // prevents looping
-            currentTarget.src = Img1;
-          }} alt="photo" className="modal-imgs" />
-          </Col>
-        </Row>
-        
-      </Modal.Body>
 
-    </Modal>
-  );
-}
+function WeatherAlertHike(props) {
 
-function TrackedHikeModal(props) {
-  const [startTerminateLabel, setStartTerminateLabel] = useState(props.show); // copied into a state only on modal show, this avoids erratic behaviour on modal hide
-  const [currentTime, setCurrentTime] = useState(dayjs());
-  const [adjustedTime, setAdjustedTime] = useState(new Date());
-  const [currentTimeClassName, setCurrentTimeClassName] = useState('selected-card');
-  const [adjustedTimeClassName, setAdjustedTimeClassName] = useState('deselected-card');
-  const [selectedTime, setSelectedTime] = useState('current');
+  const [weatherAlerts, setWeatherAlerts] = useState([]);
+  const [dirty, setDirty] = useState(true);
+  const [startPoint, setStartPoint] = useState({});
 
-  const handleSelection = (selected) => {
-    if (selected === 'current') {
-      setCurrentTimeClassName('selected-card');
-      setAdjustedTimeClassName('deselected-card');
-      setSelectedTime('current');
-    } else if (selected === 'adjusted') {
-      setCurrentTimeClassName('deselected-card');
-      setAdjustedTimeClassName('selected-card');
-      setSelectedTime('adjusted');
-    }
-  }
+  let { hikeId } = useParams();
+  hikeId = parseInt(hikeId);
 
-  const handleStartTerminateHike = () => {
-    if (props.show === 'start') {
-      if (selectedTime === 'adjusted')
-        props.startHike(dayjs(adjustedTime).format());
-      else
-        props.startHike();
-    } else if (props.show === 'terminate') {
-      if (selectedTime === 'adjusted')
-        props.terminateHike(dayjs(adjustedTime).format());
-      else
-        props.terminateHike();
-    }
-  }
-
-  let setIntervalsToUpdateCurrentTime = [];
 
   useEffect(() => {
-    if (props.show) {
-      setCurrentTime(dayjs());
+    if (dirty) {
 
-      const setIntervalToUpdateCurrentTime = setInterval(() => {		// update the elapsed time every second
-        setCurrentTime(dayjs());
-      }, 1000);
+      API.getHike(hikeId)
+        .then((hike) => {
+          setStartPoint(hike.points?.filter(p => p.startPoint).map(p => [p.latitude, p.longitude]).pop());
+          //setStartPoint(hike.points[hike.length/2].map(p => [p.latitude, p.longitude]));
+        })
+        .catch(err => console.log(err))
 
-      setIntervalsToUpdateCurrentTime.push(setIntervalToUpdateCurrentTime);
+      API.getWeatherAlerts()
+        .then((weatherAlert) => {
+        setWeatherAlerts(weatherAlert);
+        //setFilteredHikes(weatherAlerts.filter(w => coordinatesDistanceInMeter(startPoint[0], startPoint[1], w.lat, w.lon) < (w.radius * 1000)));
+      })
+      .catch(err => console.log(err))
+
+      setDirty(false);
+    }
+  }, [dirty, hikeId, startPoint]);
+
+  // const startPoint = props.hike.points?.filter(p => p.startPoint).map(p => [p.latitude, p.longitude]).pop();
+  // verifico quali weather alert sono entro "radius km" dallo starting point dell'hike
+  let tempFilteredAlerts = weatherAlerts.filter(w => coordinatesDistanceInMeter(startPoint[0], startPoint[1], w.lat, w.lon) < (w.radius * 1000));
+  //console.log(tempFilteredHikes);
+
+  let weatherIcon;
+  
+
+  if (tempFilteredAlerts.length === 0) {
+    weatherIcon = Quiet;
+    return (
+      <>
+      <Row>
+        <Col md={12} className="box-center margin-bottom">
+            <OverlayTrigger placement="bottom" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip-2">Weather Alert</Tooltip>}>
+              <img src={weatherIcon} alt="weather_image" />
+            </OverlayTrigger>
+        </Col>
+        <Col md={12} className="box-center margin-bottom">
+          <h6 className="card-text p-card">{`No weather alert`}</h6>
+        </Col>
+      </Row>
+      </>
+    );
+  } else if (tempFilteredAlerts.length === 1){
+
+    if (tempFilteredAlerts[0].type === "Cloudy") {
+      weatherIcon = Cloud;
+    } else if (tempFilteredAlerts[0].type === "Windy") {
+      weatherIcon = Wind;
+    } else if (tempFilteredAlerts[0].type === "Rainy") {
+      weatherIcon = Rain;
+    } else if (tempFilteredAlerts[0].type === "Stormy") {
+      weatherIcon = Storm;
+    } else if (tempFilteredAlerts[0].type === "Snowy") {
+      weatherIcon = Snow;
+    } else {
+      weatherIcon = Alert1;
     }
 
-    return () => {		// stop setInterval on page leave
-      setIntervalsToUpdateCurrentTime.forEach(s => clearInterval(s));
-    };
-  }, [props.show])
-
-  return (
-    <Modal show={props.show} onShow={() => setStartTerminateLabel(props.show)} onHide={props.onHide} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
-      <Modal.Header closeButton className='box-modal hike-page-modal-header'>
-        <Modal.Title id="contained-modal-title-vcenter">{startTerminateLabel === 'start' ? 'Start' : 'Terminate'} hike</Modal.Title>
-      </Modal.Header>
-      <Modal.Body className='box-modal hike-page-modal-body'>
-        <Container>
-          <Row>
-            <Col md={6} className='d-flex justify-content-center'>
-              <Card className={'tracked-hikes-card ' + currentTimeClassName} onClick={() => handleSelection('current')}>
-                <Card.Body className='tracked-hikes-card-body'>
-                  <Card.Title className='tracked-hikes-card-title text-center'>
-                    {startTerminateLabel === 'start' ? 'Start' : 'Terminate'} with current time
-                  </Card.Title>
-                  <Card.Text className='text-center'>
-                    {currentTime.format('MMM DD, YYYY h:mm:ss a')}
-                  </Card.Text>
-                </Card.Body>
-              </Card>
-            </Col>
-            <Col md={6} className='d-flex justify-content-center'>
-              <Card className={'tracked-hikes-card ' + adjustedTimeClassName} onClick={() => handleSelection('adjusted')}>
-                <Card.Body className='tracked-hikes-card-body'>
-                  <Card.Title className='tracked-hikes-card-title text-center'>
-                    Adjust {startTerminateLabel === 'start' ? 'start' : 'termination'} time
-                  </Card.Title>
-                  <div className='d-flex justify-content-center'>
-                    <DateTimePicker format='MM/dd/y h:mm:ss a' value={adjustedTime} onChange={setAdjustedTime} disabled={selectedTime !== 'adjusted'} />
-                  </div>
-                </Card.Body>
-              </Card>
-            </Col>
-          </Row>
-          <Row className='btn-row'>
-            <Button className={"mx-1 mt-2 slide " + (startTerminateLabel === 'start' ? 'start_btn' : 'terminate_btn')} type="submit" onClick={handleStartTerminateHike}>{startTerminateLabel === 'start' ? 'Start' : 'Terminate'} hike</Button>
-          </Row>
-        </Container>
-      </Modal.Body>
-
-    </Modal>
-  );
-}
-
-function ReferencePointReachedModal(props) {
-  const pointID = props.show;
-  const [currentTime, setCurrentTime] = useState(dayjs());
-  const [adjustedTime, setAdjustedTime] = useState(new Date());
-  const [currentTimeClassName, setCurrentTimeClassName] = useState('selected-card');
-  const [adjustedTimeClassName, setAdjustedTimeClassName] = useState('deselected-card');
-  const [selectedTime, setSelectedTime] = useState('current');
-
-  const handleSelection = (selected) => {
-    if (selected === 'current') {
-      setCurrentTimeClassName('selected-card');
-      setAdjustedTimeClassName('deselected-card');
-      setSelectedTime('current');
-    } else if (selected === 'adjusted') {
-      setCurrentTimeClassName('deselected-card');
-      setAdjustedTimeClassName('selected-card');
-      setSelectedTime('adjusted');
-    }
+    return (
+      <>
+      {/*<Row>
+        <Col md={4} className="box-center margin-bottom">
+          <h6 className="card-text p-card">{"Alert type:"}</h6>
+        </Col>
+        <Col md={4} className="box-center margin-bottom">
+          <h6 className="card-text p-card">{"Alert description:"}</h6>
+        </Col>
+        <Col md={4} className="box-center margin-bottom">
+          <h6 className="card-text p-card">{"Attempted end:"}</h6>
+        </Col>
+    </Row> */}
+      <Row>
+        <Col md={4} className="box-center margin-bottom">
+            <OverlayTrigger placement="bottom" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip-2">Weather Alert</Tooltip>}>
+              <img src={weatherIcon} alt="weather_image" />
+            </OverlayTrigger>
+        </Col>
+        <Col md={4} className="box-center margin-bottom">
+        <h6 className="card-text p-card">{`${tempFilteredAlerts[0].description}`}</h6>
+        </Col>
+        <Col md={4} className="box-center margin-bottom">
+        <h6 className="card-text p-card">{`Until to: ${dayjs(tempFilteredAlerts[0].time).format('DD/MM/YYYY HH:mm')}`}</h6>
+        </Col>
+      </Row>
+      </>
+    ); 
+  } else {
+    weatherIcon = Alert1;
+    return (
+      <>
+      {/*<Row>
+        <Col md={4} className="box-center margin-bottom">
+          <h6 className="card-text p-card">{"Alert type:"}</h6>
+        </Col>
+        <Col md={4} className="box-center margin-bottom">
+          <h6 className="card-text p-card">{"Alert description:"}</h6>
+        </Col>
+        <Col md={4} className="box-center margin-bottom">
+          <h6 className="card-text p-card">{"Attempted end:"}</h6>
+        </Col>
+    </Row> */}
+      {tempFilteredAlerts.map((w) => <WeatherAlertRow weatherAlert={w}/>)}
+      </>
+    );
   }
 
-  const handleRefPointReached = () => {
-    if (selectedTime === 'adjusted')
-      props.recordReferencePointReached(pointID, dayjs(adjustedTime).format());
-    else
-      props.recordReferencePointReached(pointID);
+  
+}
+
+function WeatherAlertRow(props) {
+
+  let weatherIcon;
+
+  if (props.weatherAlert.type === "Cloudy") {
+    weatherIcon = Cloud;
+  } else if (props.weatherAlert.type === "Windy") {
+    weatherIcon = Wind;
+  } else if (props.weatherAlert.type === "Rainy") {
+    weatherIcon = Rain;
+  } else if (props.weatherAlert.type === "Stormy") {
+    weatherIcon = Storm;
+  } else if (props.weatherAlert.type === "Snowy") {
+    weatherIcon = Snow;
+  } else {
+    weatherIcon = Alert1;
   }
 
-  let setIntervalsToUpdateCurrentTime = [];
-
-  useEffect(() => {
-    if (props.show) {
-      setCurrentTime(dayjs());
-
-      const setIntervalToUpdateCurrentTime = setInterval(() => {		// update the elapsed time every second
-        setCurrentTime(dayjs());
-      }, 1000);
-
-      setIntervalsToUpdateCurrentTime.push(setIntervalToUpdateCurrentTime);
-    }
-
-    return () => {		// stop setInterval on page leave
-      setIntervalsToUpdateCurrentTime.forEach(s => clearInterval(s));
-    };
-  }, [props.show])
-
-  return (
-    <Modal show={props.show} onHide={props.onHide} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
-      <Modal.Header closeButton className='box-modal hike-page-modal-header'>
-        <Modal.Title id="contained-modal-title-vcenter">Mark reference point as reached</Modal.Title>
-      </Modal.Header>
-      <Modal.Body className='box-modal hike-page-modal-body'>
-        <Container>
-          <Row>
-            <Col md={6} className='d-flex justify-content-center'>
-              <Card className={'tracked-hikes-card ' + currentTimeClassName} onClick={() => handleSelection('current')}>
-                <Card.Body className='tracked-hikes-card-body'>
-                  <Card.Title className='tracked-hikes-card-title text-center'>
-                    Mark with current time
-                  </Card.Title>
-                  <Card.Text className='text-center'>
-                    {currentTime.format('MMM DD, YYYY h:mm:ss a')}
-                  </Card.Text>
-                </Card.Body>
-              </Card>
-            </Col>
-            <Col md={6} className='d-flex justify-content-center'>
-              <Card className={'tracked-hikes-card ' + adjustedTimeClassName} onClick={() => handleSelection('adjusted')}>
-                <Card.Body className='tracked-hikes-card-body'>
-                  <Card.Title className='tracked-hikes-card-title text-center'>
-                    Adjust time of reach
-                  </Card.Title>
-                  <div className='d-flex justify-content-center'>
-                    <DateTimePicker format='MM/dd/y h:mm:ss a' value={adjustedTime} onChange={setAdjustedTime} disabled={selectedTime !== 'adjusted'} />
-                  </div>
-                </Card.Body>
-              </Card>
-            </Col>
-          </Row>
-          <Row className='btn-row'>
-            <Button className={"mx-1 mt-2 slide reach_ref_point_btn"} type="submit" onClick={handleRefPointReached}>Mark as reached</Button>
-          </Row>
-        </Container>
-      </Modal.Body>
-
-    </Modal>
+  return(
+    <Row>
+        <Col md={4} className="box-center margin-bottom">
+            <OverlayTrigger placement="bottom" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip-2">Weather Alert</Tooltip>}>
+              <img src={weatherIcon} alt="weather_image" />
+            </OverlayTrigger>
+        </Col>
+        <Col md={4} className="box-center margin-bottom">
+        <h6 className="card-text p-card">{`${props.weatherAlert.description}`}</h6>
+        </Col>
+        <Col md={4} className="box-center margin-bottom">
+        <h6 className="card-text p-card">{`Until to: ${dayjs(props.weatherAlert.time).format('DD/MM/YYYY HH:mm')}`}</h6>
+        </Col>
+      </Row>
   );
+  
 }
 
-function TrackedHikesInfo(props) {
-  const ongoingHike = props.trackedHikes.filter(th => th.endTime === null || th.endTime === undefined).pop();
-  const [ongoingHikeElapsedTime, setOngoingHikeElapsedTime] = useState(ongoingHike ? dayjs.duration(dayjs() - dayjs(ongoingHike.startTime)) : undefined);
-  const completedHikes = props.trackedHikes.filter(th => th.endTime !== null && th.endTime !== undefined);
 
-  let setIntervalsToUpdateElapsedTime = [];
-
-  useEffect(() => {
-    if (ongoingHike) {
-      setOngoingHikeElapsedTime(dayjs.duration(dayjs() - dayjs(ongoingHike.startTime)));
-
-      const setIntervalToUpdateElapsedTime = setInterval(() => {		// update the elapsed time every second
-        setOngoingHikeElapsedTime(dayjs.duration(dayjs() - dayjs(ongoingHike.startTime)));
-      }, 1000);
-
-      setIntervalsToUpdateElapsedTime.push(setIntervalToUpdateElapsedTime);
-    }
-
-    return () => {		// stop setInterval on page leave
-      setIntervalsToUpdateElapsedTime.forEach(s => clearInterval(s));
-    };
-  }, [ongoingHike])
-
-  return (
-    <>
-      {ongoingHike && <Row className='tracked-hikes-row'>
-        <h3 className='sub-title'>Ongoing hike</h3>
-        <p>Start time: {dayjs(ongoingHike.startTime).format('MMM DD, YYYY h:mm a')}</p>
-        <p>Elapsed time: {ongoingHikeElapsedTime?.format('H [h] mm [m] ss [s]')}</p>
-      </Row>}
-      {completedHikes.length > 0 &&
-        <Row className='tracked-hikes-row'>
-          <h3 className='sub-title'>Completed hikes</h3>
-          <Table striped>
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Start time</th>
-                <th>End time</th>
-                <th>Time</th>
-                <th>Pace</th>
-                <th>Ascent speed</th>
-              </tr>
-            </thead>
-            <tbody>
-              {completedHikes.map((ch, i) => {
-                return (
-                  <tr key={ch.id}>
-                    <td>{i + 1}</td>
-                    <td>{dayjs(ch.startTime).format('MMM DD, YYYY h:mm a')}</td>
-                    <td>{dayjs(ch.endTime).format('MMM DD, YYYY h:mm a')}</td>
-                    <td>{dayjs.duration(dayjs(ch.endTime) - dayjs(ch.startTime)).format('H [h] mm [m]')}</td>
-                    <td>{(dayjs.duration(dayjs(ch.endTime) - dayjs(ch.startTime)).asMinutes() / props.hike.length * 1000).toFixed(2)} min/km</td>
-                    <td>{(props.hike.ascent / dayjs.duration(dayjs(ch.endTime) - dayjs(ch.startTime)).asHours()).toFixed(2)} m/hour</td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </Table>
-        </Row>}
-    </>
-  );
-}
 
 export default HikePage;

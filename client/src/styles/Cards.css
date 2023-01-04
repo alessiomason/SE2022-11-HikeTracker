@@ -1,6 +1,6 @@
 .cards {
     background: #fff;
-    border-bottom: 2px solid #FF6700 ;
+    border-bottom: 2px solid #FF6700;
 }
 
 .card:not(.tracked-hikes-card) {
@@ -17,7 +17,6 @@
     width: 340px;
     transition: all .5s ease;
 }
-
 
 .card:not(.tracked-hikes-card):hover {
     box-shadow: 5px 10px 20px 1px rgba(0, 0, 0, 253) !important;
@@ -40,7 +39,7 @@
 }
 
 @media screen and (min-width: 768px) {
-	.overflow {
+    .overflow {
         max-height: 50vh;
     }
 }
@@ -56,9 +55,21 @@
     align-items: center;
 }
 
-.btn_show {
+.show-more-btn {
     border-radius: 0px !important;
-    max-width: fit-content;
+    width: fit-content !important;
+    font-weight: bold;
+    border: 2px solid #0B5ED7 !important;
+    background-color: #0B5ED7 !important;
+    --hover: #0B5ED7;
+    color: #fff !important;
+    transition: all .1s ease-in-out;
+}
+
+.show-more-btn:hover,
+.show-more-btn:focus {
+    box-shadow: 0 0.6em 0.4em -0.4em var(--hover);
+    transform: translateY(-0.25em);
 }
 
 .card_link {
@@ -112,7 +123,7 @@
     scrollbar-width: none;
 }
 
-.p-card{
+.p-card {
     display: inline;
     font-weight: bold;
 }
