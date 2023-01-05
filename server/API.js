@@ -1032,10 +1032,10 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
     });
 
     app.put('/api/validate/:id', async(req, res) =>{
-        const userID = req.user.id;
+        const userID = req.params.id;
         try {
-            const userID = await dao.validateUser(userID, 1);
-            res.status(200).json({validated:true, userID:userID});
+            const _userID = await dao.validateUser(userID, 1);
+            res.status(200).json({validated:true, userID:_userID});
         }
         catch (err) {
             res.status(500).end();
