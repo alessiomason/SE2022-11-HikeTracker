@@ -156,3 +156,15 @@ exports.deleteAllUsers = () => {
         });
     });
 }
+
+
+exports.checkEmail = (email) => {
+    return new Promise((resolve, reject) => {
+        const sql = "SELECT * FROM Users WHERE Email = ?";
+        db.get(sql, [email], (err, row) => {
+            if (err) reject(err);
+            else if (row === undefined) resolve(false);
+            else resolve(true);
+        })
+    });
+}

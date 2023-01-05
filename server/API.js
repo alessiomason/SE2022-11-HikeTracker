@@ -1038,6 +1038,12 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
         let user;
       
         console.log(req.body)
+
+        // if the email already registered if statement will run.
+        if (user_dao.checkEmail(req.body.email)){
+            return res.status(401).json({ error: 'This email already registered' });
+        }
+        
         if (req.body.hut){
             console.log("new hut worker;");
             user = await user_dao.newHutWorker(req.body.email, req.body.password, req.body.accessRight,req.body.hut);
