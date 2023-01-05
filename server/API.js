@@ -1037,9 +1037,7 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
         // save user
         let user;
       
-        console.log(req.body)
         if (req.body.hut){
-            console.log("new hut worker;");
             user = await user_dao.newHutWorker(req.body.email, req.body.password, req.body.accessRight,req.body.hut);
         }else{
             user = await user_dao.newUser(req.body.email, req.body.password, req.body.accessRight);

@@ -1,8 +1,10 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate} from "react-router-dom";
 import { Button, Container, Row, Col } from "react-bootstrap";
+import API from '../../API.js';
 
 import '../../styles/Profile.css';
-import React from 'react';
+
+import React, { useState, useEffect } from 'react';
 import { default as Img1 } from '../../images/img1.jpg';
 
 import ProfileManager from '../ProfileManager';
@@ -18,6 +20,7 @@ function Profile(props) {
     'manager': 'Platform manager',
     'emergency-operator': 'Emergency operator'
   };
+
 
   return (
     <Container fluid className="external-box-profile">
@@ -56,7 +59,7 @@ function Profile(props) {
         </Row>
         <Row className="end-top-profile" />
         <Row className="component">
-          {<SpecificProfile user={props.user} hikes={props.hikes} />}
+          {<SpecificProfile  updateHut={props.updateHut} setDirty={props.setDirty} user={props.user} hikes={props.hikes} hut={props.hut}/>}
         </Row>
       </Container>
     </Container>
@@ -64,13 +67,16 @@ function Profile(props) {
 }
 
 function SpecificProfile(props) {
+
+  
+
   switch (props.user.access_right) {
     case 'hiker':
       return (<ProfileHiker hikes={props.hikes} />);
     case 'local-guide':
       return (<ProfileLocalGuide />);
     case 'hut-worker':
-      return (<ProfileHutWorker />);
+      return (<ProfileHutWorker  setDirty={props.setDirty}  updateHut={props.updateHut} user= {props.user} hut={props.hut}/>);
     case 'manager':
       return (<ProfileManager />);
     default:

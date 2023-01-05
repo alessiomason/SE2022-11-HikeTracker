@@ -1,9 +1,11 @@
 const user_dao = require('../user-dao'); // module for accessing the DB
 const dao = require('../dao');
+const { default: HutForm } = require('../../client/src/components/HutForm');
 
 describe("CRUD Users functions", () => {
     deleteAllUsersTest();
     newUserTest();
+   // newHutWorkerTest();
     updateUserStatsTest();
 });
 
@@ -14,6 +16,46 @@ function deleteAllUsersTest() {
         expect(res.length).toStrictEqual(0);
     });
 }
+
+
+function newHutWorkerTest()
+{
+    test('create new user', async () => {
+        await user_dao.deleteAllUsers();
+        let res = await user_dao.getUsers();
+        expect(res.length).toStrictEqual(0);
+
+        const data = {
+            email: 'u1@p.it',
+            password: 'ciao',
+            accessRight: 'hut-worker',
+            hut: '12'
+        };
+
+        await user_dao.newHutWorker(data.email, data.password, data.accessRight,data.hut);
+
+        res = await user_dao.getUsers();
+        expect(res.length).toStrictEqual(1);
+
+        const user = await user_dao.getUser('u1@p.it', 'ciao');
+
+        expect(user.email).toStrictEqual(data.email);
+        expect(user.access_right).toStrictEqual(data.accessRight);
+        expect(user.verified).toStrictEqual(0);
+
+        const userById = await user_dao.getUserById(1);
+
+        expect(userById.email).toStrictEqual(data.email);
+        expect(userById.access_right).toStrictEqual(data.accessRight);
+        expect(userById.verified).toStrictEqual(0);
+
+
+        await user_dao.deleteAllUsers();
+        res = await user_dao.getUsers();
+        expect(res.length).toStrictEqual(0);
+    });
+}
+
 
 function newUserTest() {
     test('create new user', async () => {

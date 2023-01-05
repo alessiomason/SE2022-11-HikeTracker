@@ -144,7 +144,7 @@ exports.getHut = (hutID) => {
     return new Promise((resolve, reject) => {
         const sql = `SELECT H.*, FullName
                      FROM Huts H, Users U
-                     WHERE HutID = ?
+                     WHERE H.HutID = ?
                      AND H.Author = U.UserId`;
         db.all(sql, [hutID], (err, rows) => {
             if (err) reject(err);

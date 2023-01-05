@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { Button, Navbar, Nav, Container, Row, Col, Form, OverlayTrigger, Tooltip, FloatingLabel, Image, Modal, Alert } from "react-bootstrap";
+import API from '../API.js';
 
 import '../styles/ProfileLocalGuide.css';
 import React, { useState, useEffect } from 'react';
@@ -15,27 +16,30 @@ import { default as User } from '../icons/user.svg';
 import '../styles/ProfileHutWorker.css';
 
 import { default as Close2 } from '../icons/close2.svg';
-import { func } from "prop-types";
 
 
 
 function ProfileHutWorker(props) {
 
   const [task1, setTask1] = useState(true);
+  const [showUpdateBanner, setShowUpdateBanner] = useState(false);
+  const [message, setMessage] = useState('');
 
+const hutId=props.user.hut;
   return (
     <Container fluid className="">
       <Row className="box-btn mb-5">
         <Button className={task1 ? 'user-btn-fix me-2' : 'user-btn me-2'} onClick={() => setTask1(true)}> Your Hut </Button>
         <Button className={!task1 ? 'user-btn-fix ms-2 ' : 'user-btn ms-2'} onClick={() => setTask1(false)}> Hike Condition </Button>
       </Row>
-      {task1 ? <YourHut /> : <HikeCondition />}
-
+      {showUpdateBanner && <Alert variant='success' onClose={() => { setShowUpdateBanner(false); setMessage('') }} dismissible>{message}</Alert>}
+      {task1 ? <YourHut hut={props.hut} setDirty={props.setDirty} updateHut={props.updateHut} setShowUpdateBanner={setShowUpdateBanner}
+        setMessage={setMessage} /> : <HikeCondition />}
     </Container>
   );
 }
 
-function YourHut() {
+function YourHut(props) {
 
   const imgs = [
     { id: 0, value: require('../images/img1.jpg') },
@@ -48,8 +52,51 @@ function YourHut() {
   ]
 
   const [mainImg, setMainImg] = useState(imgs[0]);
-  const navigate = useNavigate();
   const [modalShow, setModalShow] = useState(false);
+
+  const hutId = props.hut.id;
+
+  const [name, setName] = useState(props.hut ? props.hut.name : '');
+  const [description, setDescription] = useState(props.hut ? props.hut.description : '');
+  const [lat, setLat] = useState(props.hut ? props.hut.lat : 0);
+  const [lon, setLon] = useState(props.hut ? props.hut.lon : 0);
+  const [altitude, setAltitude] = useState(props.hut ? props.hut.altitude : 0);
+  const [beds, setBeds] = useState(props.hut ? props.hut.beds : 0);
+  const [state, setState] = useState(props.hut ? props.hut.state : '');
+  const [region, setRegion] = useState(props.hut ? props.hut.region : '');
+  const [province, setProvince] = useState(props.hut ? props.hut.province : '');
+  const [municipality, setMunicipality] = useState(props.hut ? props.hut.municipality : '');
+  const [errorMsg, setErrorMsg] = useState('');
+
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+
+    if (name.trim().length === 0)
+      setErrorMsg('The name of the hut cannot be consisted of only empty spaces');
+    else {
+      const updatedHut = {
+        id: props.hut.id,
+        name: name,
+        description: description,
+        lat: lat,
+        lon: lon,
+        altitude: altitude,
+        beds: beds,
+        state: state,
+        region: region,
+        province: province,
+        municipality: municipality,
+        image: mainImg
+      }
+      props.updateHut(updatedHut);
+      props.setDirty(true);
+      props.setShowUpdateBanner(true);
+      props.setMessage(`Hut #${hutId} ${name} has been updated successfully!`);
+    }
+  }
+
+
 
   return (
     <Container fluid className="">
@@ -78,79 +125,85 @@ function YourHut() {
           </Container>
         </Col>
 
-        <Col md={7} className="px-3 hut-label">
-          <Form >
-            <Row>
-              <Col md={6} >
+        <Col >
+          <Form onSubmit={handleSubmit}>
+
+            <Row className='man-hut-label'>
+              <Col>
                 <FloatingLabel controlId="floatingInput" label="Name" className="mb-3">
-                  <Form.Control required={true} type="text" placeholder="Rifugio x" />
+                  <Form.Control required={true} value={name} onChange={ev => setName(ev.target.value)} type="text" placeholder="Rifugio x" />
                 </FloatingLabel>
               </Col>
-              <Col md={6} >
+              <Col>
                 <FloatingLabel controlId="floatingInput" label="Ascent" className="mb-3">
                   <Form.Control required={true} type="text" placeholder="2400 m" />
                 </FloatingLabel>
               </Col>
             </Row>
             <Row>
-              <Col md={6} >
-                <FloatingLabel controlId="floatingInput" label="State" className="mb-3">
-                  <Form.Control required={true} type="text" disabled readOnly value={"Italia"}></Form.Control>
-                </FloatingLabel>
-              </Col>
-              <Col md={6} >
-                <FloatingLabel controlId="floatingInput" label="Region" className="mb-3">
-                  <Form.Control required={true} type="text" disabled readOnly value={"Piemonte"}></Form.Control>
-                </FloatingLabel>
-              </Col>
-            </Row>
-            <Row>
-              <Col md={6} >
-                <FloatingLabel controlId="floatingInput" label="Province" className="mb-3">
-                  <Form.Control required={true} type="text" disabled readOnly value={"Torino"}></Form.Control>
-                </FloatingLabel>
-              </Col>
-              <Col md={6} >
-                <FloatingLabel controlId="floatingInput" label="Municipality" className="mb-3">
-                  <Form.Control required={true} type="text" disabled readOnly value={"Torino"}></Form.Control>
-                </FloatingLabel>
-              </Col>
-            </Row>
-            <Row>
-              <Col md={6} >
+              <Col>
                 <FloatingLabel controlId="floatingInput" label="Number of beds" className="mb-3">
-                  <Form.Control required={true} type='number' step="any" min={0} placeholder="#" />
+                  <Form.Control required={true} type='number' step="any" min={0} value={beds} onChange={ev => setBeds(ev.target.value)} placeholder="#" />
                 </FloatingLabel>
               </Col>
-              <Col md={6} >
+              <Col>
                 <FloatingLabel controlId="floatingInput" label="Phone number" className="mb-3">
                   <Form.Control required={true} type="text" placeholder="+39 xxx xxx xxxx"></Form.Control>
                 </FloatingLabel>
               </Col>
             </Row>
-            <Row>
-              <Col md={6} >
-                <FloatingLabel controlId="floatingInput" label="Email address" className="mb-3">
-                  <Form.Control required={true} type="email" placeholder="name@example.com"></Form.Control>
+            <Row className='man-hut-label'>
+              <Col>
+                <FloatingLabel controlId="floatingInput" label="State" className="mb-3">
+                  <Form.Control required={true} value={state} type="text" disabled readOnly ></Form.Control>
                 </FloatingLabel>
               </Col>
-              <Col md={6} >
-                <FloatingLabel controlId="floatingInput" label="Website (optional)" className="mb-3">
-                  <Form.Control type="text" placeholder="nameexample.com" ></Form.Control>
+              <Col>
+                <FloatingLabel controlId="floatingInput" label="Region" className="mb-3">
+                  <Form.Control required={true} value={region} type="text" disabled readOnly ></Form.Control>
                 </FloatingLabel>
               </Col>
             </Row>
             <Row>
-              <Col md={12} >
+              <Col>
+                <FloatingLabel controlId="floatingInput" label="Province" className="mb-3">
+                  <Form.Control required={true} value={province} type="text" disabled readOnly ></Form.Control>
+                </FloatingLabel>
+              </Col>
+              <Col>
+                <FloatingLabel controlId="floatingInput" label="Municipality" className="mb-3">
+                  <Form.Control required={true} value={municipality} type="text" disabled readOnly ></Form.Control>
+                </FloatingLabel>
+              </Col>
+            </Row>
+           
+            <Row>
+              <Col>
+                <Row>
+                  <Col lg={6} md={6} sm={6} xs={12}>
+                    <FloatingLabel controlId="floatingInput" label="Email address" className="mb-3">
+                      <Form.Control required={true} type="email" placeholder="name@example.com"></Form.Control>
+                    </FloatingLabel>
+                  </Col>
+                  <Col lg={6} md={6} sm={6} xs={12}>
+                    <FloatingLabel controlId="floatingInput" label="Website (optional)" className="mb-3">
+                      <Form.Control type="text" placeholder="nameexample.com" ></Form.Control>
+                    </FloatingLabel>
+                  </Col>
+                </Row>
+                <Row className='man-hut-label'>
+              <Col>
                 <FloatingLabel controlId="floatingTextarea2" label="Description" className="mb-3">
-                  <Form.Control as="textarea" style={{ height: '100px' }} placeholder="description" />
+                  <Form.Control value={description} onChange={ev => setDescription(ev.target.value)} as="textarea" style={{ height: '130px' }} placeholder="description" />
                 </FloatingLabel>
               </Col>
             </Row>
-            <Row className='btn_box mt-3'>
-              <Button variant="danger" className="cancel-btn mx-2 mb-2" >Undo</Button>
-              <Button variant="success" type='submit' className="save-btn mx-2 mb-2">Save</Button>
+                <Row className='btn_box mt-3'>
+                  <Button variant="success" type='submit' className="save-btn2 mx-2 mb-2">Save</Button>
+                </Row>
+              </Col>
             </Row>
+            
           </Form>
         </Col>
       </Row>
