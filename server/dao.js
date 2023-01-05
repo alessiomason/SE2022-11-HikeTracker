@@ -738,6 +738,21 @@ exports.getUserStats = (userID) => {
     });
 };
 
+exports.validateUser = (userID, userValidated) => {
+    return new Promise((resolve, reject) => {
+        const sql = `UPDATE Users
+                     SET Validated = ?
+                     WHERE UserId = ?`
+        db.run(sql, [
+            userValidated,
+            userID
+        ], function (err) {
+            if (err) reject(err);
+            resolve();
+        });
+    });
+}
+
 exports.updateUserStats = (userID, userStats) => {
     return new Promise((resolve, reject) => {
         const sql = `UPDATE Users
