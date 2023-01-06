@@ -290,7 +290,7 @@ function HikePage(props) {
                   <p>{hike.description}</p>
                 </Tab>
                 <Tab eventKey="condition" title="Condition"  >
-                  <p>Function to be implemented</p>
+                  <ConditionHike/>
                 </Tab>
                 <Tab eventKey="weather" title="Weather Alert"  >
                   <WeatherAlertHike/>
@@ -457,6 +457,95 @@ function WeatherAlertRow(props) {
         </Col>
         <Col md={4} className="box-center margin-bottom">
         <h6 className="card-text p-card">{`Until to: ${dayjs(props.weatherAlert.time).format('DD/MM/YYYY HH:mm')}`}</h6>
+        </Col>
+      </Row>
+  );
+  
+}
+
+
+function ConditionHike(props) {
+
+  const [hikeConditions, setHikeConditions] = useState([]);
+  const [dirty, setDirty] = useState(true);
+
+  let { hikeId } = useParams();
+  hikeId = parseInt(hikeId);
+
+
+  useEffect(() => {
+    if (dirty) {
+
+      API.getHike(hikeId)
+        .then((hike) => {
+          API.getLinkedHuts()
+            .then((points) => {
+              API.getHikeConditions()
+                .then((hikeCondition) => setHikeConditions((hikeCondition.filter((h) => h.hutID === points.filter((p) => p.hikeID === hike.id).pop().hutID))))
+                .catch(err => console.log(err))
+            })
+            .catch(err => console.log(err))
+        })
+        .catch(err => console.log(err))
+
+      setDirty(false);
+    }
+  }, [dirty, hikeId]);
+  
+
+  if (hikeConditions.length === 0) {
+    return (
+      <>
+      <Row>
+        <Col md={12} className="box-center margin-bottom">
+            <OverlayTrigger placement="bottom" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip-2">Hike Condition</Tooltip>}>
+              <img src={Alert1} alt="weather_image" />
+            </OverlayTrigger>
+        </Col>
+        <Col md={12} className="box-center margin-bottom">
+          <h6 className="card-text p-card">{`No hike condition`}</h6>
+        </Col>
+      </Row>
+      </>
+    );
+  } else {
+    return (
+      <>
+        {hikeConditions.map((w) => <HikeConditionRow hikeCondition={w}/>)}
+      </>
+    );
+  }
+}
+
+function HikeConditionRow(props) {
+
+  const [dirty, setDirty] = useState(true);
+  const [hut, setHut] = useState({});
+
+  useEffect(() => {
+    if (dirty) {
+      API.getHut(props.hikeCondition.hutID)
+        .then((h) => setHut(h))
+        .catch(err => console.log(err))
+      setDirty(false);
+    }
+  }, [dirty, props.hikeCondition.hutID]);
+
+  return(
+    <Row>
+        <Col md={1} className="box-center margin-bottom">
+            <OverlayTrigger placement="bottom" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip-2">Hike Condition</Tooltip>}>
+              <img src={Alert1} alt="weather_image" />
+            </OverlayTrigger>
+        </Col>
+        <Col md={4} className="box-center margin-bottom">
+          <h6 className="card-text p-card">{`${props.hikeCondition.typeCondition}`}</h6>
+        </Col>
+        <Col md={3} className="box-center margin-bottom">
+          <h6 className="card-text p-card">{props.hikeCondition.description}</h6>
+        </Col>
+        <Col md={4} className="box-center margin-bottom">
+          <h6 className="card-text p-card">{`Proposed by "${hut.name}"`}</h6>
         </Col>
       </Row>
   );

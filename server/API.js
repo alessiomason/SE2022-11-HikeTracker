@@ -1020,6 +1020,61 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
         }
     });
 
+    // get linked huts
+    app.get('/api/linkedHut/', async (req, res) => {
+        try {
+            const linkedHuts = await dao.getLinkedHuts()
+            res.status(200).json(linkedHuts);
+        }
+        catch (err) {
+            console.log(err)
+            res.status(500).end();
+        }
+    });
+
+    //Add a hike condition
+    app.post('/api/newHikeCondition', async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty())
+            return res.status(422).json({ errors: errors.array() });
+
+        try {
+            const hikeID = req.body.hikeID;
+            const hutID = req.body.hutID;
+            const typeCondition = req.body.typeCondition;
+            const description = req.body.description;
+
+            await dao.addHikeCondition(hikeID, hutID, typeCondition, description);
+            res.status(201).json().end();
+        } catch (err) {
+            console.log(err)
+            res.status(500).json({ error: err });
+        }
+    });
+
+    // get hike conditions
+    app.get('/api/hikeCondition', async (req, res) => {
+        try {
+            const hikeCondition = await dao.getHikeConditions();
+            res.status(200).json(hikeCondition);
+        }
+        catch (err) {
+            res.status(500).end();
+        }
+    });
+
+    // delete hike condition
+    app.delete('/api/hikeCondition/:id', async (req, res) => {
+        const conditionID = req.params.id;
+        try {
+            await dao.deleteHikeCondition(conditionID);
+            res.status(200).end();
+        }
+        catch (err) {
+            res.status(500).json({ error: 'The hike condition could not be deleted' });
+        }
+    });
+
     // get tracked hikes by userID
     app.get('/api/userStats', async (req, res) => {
         const userID = req.user.id;
@@ -1033,38 +1088,38 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
         }
     });
 
-    app.put('/api/validate/:id', async(req, res) =>{
+    app.put('/api/validate/:id', async (req, res) => {
         const userID = req.params.id;
         try {
             const _userID = await dao.validateUser(userID, 1);
-            res.status(200).json({validated:true, userID:_userID});
+            res.status(200).json({ validated: true, userID: _userID });
         }
         catch (err) {
             res.status(500).end();
         }
 
     });
-    
+
     // POST /signup
     // signup
     app.post('/api/signup', async function (req, res) {
         // save user
         let user;
-      
+
         console.log(req.body)
 
         // if the email already registered if statement will run.
-        if (user_dao.checkEmail(req.body.email)){
+        if (user_dao.checkEmail(req.body.email)) {
             return res.status(401).json({ error: 'This email already registered' });
         }
-        
-        if (req.body.hut){
-            user = await user_dao.newHutWorker(req.body.email, req.body.password, req.body.accessRight,req.body.hut);
-        }else{
+
+        if (req.body.hut) {
+            user = await user_dao.newHutWorker(req.body.email, req.body.password, req.body.accessRight, req.body.hut);
+        } else {
             user = await user_dao.newUser(req.body.email, req.body.password, req.body.accessRight);
         }
-       
-        
+
+
         if (!user)
             return res.status(401).json({ error: 'Error in signing up' });
 

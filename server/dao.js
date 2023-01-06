@@ -919,3 +919,58 @@ exports.deleteAllWeatherAlerts = () => {
         });
     });
 }
+
+exports.getLinkedHuts = () => {
+    return new Promise((resolve, reject) => {
+        const sql = 'SELECT * FROM Points WHERE SP == 0 AND EP == 0 AND RP == 0 AND HutID != 0';
+        db.all(sql, [], (err, rows) => {
+            if (err) reject(err);
+            const linkedHut = rows.map((p) => ({ 
+                pointID: p.PointID, 
+                hikeID: p.HikeID, 
+                lat: p.Lat,
+                lon: p.Lon,
+                altitude: p.Altitude,
+                label: p.Label,
+                hutID: p.HutID
+            }));
+            resolve(linkedHut);
+        });
+    });
+}
+
+exports.addHikeCondition = (hikeID, hutID, typeCondition, description) => {
+    return new Promise((resolve, reject) => {
+        const sql = 'INSERT INTO Condition(HikeID, HutID, TypeCondition, Description) VALUES(?, ?, ?, ?)';
+        db.run(sql, [hikeID, hutID, typeCondition, description], function (err) {
+            if (err) reject(err);
+            resolve();
+        });
+    });
+}
+
+exports.getHikeConditions = () => {
+    return new Promise((resolve, reject) => {
+        const sql = `SELECT * FROM Condition`
+        db.all(sql, [], (err, rows) => {
+            if (err) reject(err);
+            const condition = rows.map((r) => ({
+                conditionID: r.ConditionID,
+                hikeID: r.HikeID,
+                hutID: r.HutID,
+                typeCondition: r.TypeCondition,
+                description: r.Description
+            }));
+            resolve(condition);
+        });
+    });
+}
+
+exports.deleteHikeCondition = (conditionID) => {
+    return new Promise((resolve, reject) => {
+        db.run("DELETE FROM Condition WHERE ConditionID = ?", [conditionID], (err) => {
+            if (err) reject(err);
+            else resolve(null);
+        });
+    });
+};

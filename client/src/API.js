@@ -781,6 +781,86 @@ function deleteWeatherAlert(id) {
     });
 }
 
+async function getLinkedHuts() {
+    // this api can be used for get all linked huts
+    // call:  GET /api/linkedHut
+    const response = await fetch(new URL('linkedHut/', APIURL));
+    const linkedHuts = await response.json();
+    if (response.ok)
+        return linkedHuts.map((u) => ({ 
+            pointID: u.pointID, 
+            hikeID: u.hikeID,
+            lat: u.lat, 
+            lon: u.lon,
+            altitude: u.altitude,
+            label: u.label,
+            hutID: u.hutID 
+        }))
+    else throw linkedHuts;
+}
+
+function addHikeCondition(hikeCondition) {
+    // call: POST /api/newHikeCondition
+    return new Promise((resolve, reject) => {
+        fetch(new URL('newHikeCondition', APIURL), {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                hikeID: hikeCondition.hikeID,
+                hutID: hikeCondition.hutID,
+                typeCondition: hikeCondition.typeCondition,
+                description: hikeCondition.description
+            })
+        }).then((response) => {
+            if (response.ok)
+                resolve(response.json());
+            else {
+                // analyze the cause of error
+                response.json()
+                    .then((message) => { reject(message); }) // error message in the response body
+                    .catch(() => { reject({ error: "Cannot parse server response." }) }); // something else
+            }
+        }).catch(() => { reject({ error: "Cannot communicate with the server." }) }); // connection errors
+    });
+}
+
+async function getHikeConditions() {
+    // call /api/hikeCondition
+    const response = await fetch(new URL('hikeCondition', APIURL));
+    const hikeConditions = await response.json();
+    if (response.ok)
+        return hikeConditions.map((w) => ({
+            conditionID: w.conditionID,
+            hikeID: w.hikeID,
+            hutID: w.hutID,
+            typeCondition: w.typeCondition,
+            description: w.description
+        }))
+    else throw hikeConditions;
+}
+
+function deleteHikeCondition(id) {
+    // call: DELETE /api/hikeCondition/:id
+    return new Promise((resolve, reject) => {
+        fetch(new URL('hikeCondition/' + id, APIURL), {
+            method: 'DELETE',
+            credentials: 'include'
+        }).then((response) => {
+            if (response.ok)
+                resolve(null);
+            else {
+                // analyze the cause of error
+                response.json()
+                    .then((message) => { reject(message); }) // error message in the response body
+                    .catch(() => { reject({ error: "Cannot parse server response." }) }); // something else
+            }
+        }).catch(() => { reject({ error: "Cannot communicate with the server." }) }); // connection errors
+    });
+}
+
 async function getUserStats() {
     // call /api/trackedHikes/
     const response = await fetch(new URL('userStats', APIURL), { credentials: 'include' });
@@ -894,6 +974,7 @@ const API = {
     addGPXTrack, addParkingLot, AddPoint, deleteParkingLot, updateParkingLot, deleteHike, getHikes, getParkingLots, addHut, updateHut, uploadHutImage,
     uploadParkingLotImage, getHuts, getHut, deletHut, getHike, addHike, updateHike, signup, verifyEmail, login, logout, getUserInfo, getUserAccessRight, getHikesRefPoints,
     getStartPoint, getEndPoint, getReferencePoint, reverseNominatim, setNewReferencePoint, clearReferencePoint, startHike, getTrackedHikesByHikeIDAndUserID,
-    getTrackedHikesByUserID, recordReferencePointReached, terminateHike, cancelHike, stopHike, getUserStats, addWeatherAlert, getWeatherAlerts, deleteWeatherAlert
+    getTrackedHikesByUserID, recordReferencePointReached, terminateHike, cancelHike, stopHike, getUserStats, addWeatherAlert, getWeatherAlerts, deleteWeatherAlert, getLinkedHuts,
+    addHikeCondition, getHikeConditions, deleteHikeCondition
 };
 export default API;

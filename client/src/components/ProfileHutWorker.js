@@ -1,10 +1,12 @@
 import { useNavigate } from "react-router-dom";
 import { Button, Navbar, Nav, Container, Row, Col, Form, OverlayTrigger, Tooltip, FloatingLabel, Image, Modal, Alert } from "react-bootstrap";
 import API from '../API.js';
-
+import { Icon } from 'leaflet';
+import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet';
 import '../styles/ProfileLocalGuide.css';
 import React, { useState, useEffect } from 'react';
-
+import { default as LinkedHutIcon } from '../images/linked_hut_icon.png';
+import '../styles/SinglePageHut.css';
 import { default as Img1 } from '../images/img1.jpg';
 import { default as Email } from "../icons/email.svg";
 import { default as Parking } from "../icons/parking.svg";
@@ -12,6 +14,7 @@ import { default as Hut } from "../icons/hut.svg";
 import { default as Hike } from "../icons/hiking.svg";
 import { default as Alert1 } from "../icons/alert.svg";
 import { default as User } from '../icons/user.svg';
+import { default as Delete } from "../icons/delete.svg";
 
 import '../styles/ProfileHutWorker.css';
 
@@ -34,7 +37,7 @@ const hutId=props.user.hut;
       </Row>
       {showUpdateBanner && <Alert variant='success' onClose={() => { setShowUpdateBanner(false); setMessage('') }} dismissible>{message}</Alert>}
       {task1 ? <YourHut hut={props.hut} setDirty={props.setDirty} updateHut={props.updateHut} setShowUpdateBanner={setShowUpdateBanner}
-        setMessage={setMessage} /> : <HikeCondition />}
+        setMessage={setMessage} /> : <HikeCondition hut={props.hut}/>}
     </Container>
   );
 }
@@ -136,7 +139,7 @@ function YourHut(props) {
               </Col>
               <Col>
                 <FloatingLabel controlId="floatingInput" label="Ascent" className="mb-3">
-                  <Form.Control required={true} type="text" placeholder="2400 m" />
+                  <Form.Control required={true} value={altitude} type="text" placeholder="2400 m" />
                 </FloatingLabel>
               </Col>
             </Row>
@@ -227,49 +230,223 @@ function MyImageModal(props) {
   );
 }
 
-function HikeCondition() {
+function HikeCondition(props) {
 
   const [show, setShow] = useState(false);
+  const [dirty, setDirty] = useState(true);
+  const [linkedHut, setLinkedHut] = useState([]);
+  const [hike, setHike] = useState([]);
+  const [typeCondition, setTypeCondition] = useState('');
+  const [description, setDescription] = useState('');
+  const [hikeCondition, setHikeCondition] = useState([]);
+  
+  let flagLinked = false;
+
+  useEffect(() => {
+    if (dirty) {
+      API.getLinkedHuts()
+        .then((points) => { 
+          setLinkedHut(points);
+          if (points.filter((p) => p.hutID === props.hut.id).length !== 0){
+            API.getHike(points.filter((p) => p.hutID === props.hut.id)[0].hikeID)
+              .then((hike) => setHike(hike))
+              .catch(err => console.log(err))
+            API.getHikeConditions()
+              .then((hikeCondition) => setHikeCondition(hikeCondition.filter((h) => h.hutID === props.hut.id)))
+              .catch(err => console.log(err))
+          }
+        })
+        .catch(err => console.log(err))
+
+      setDirty(false);
+    }
+  }, [dirty, props.hut.id])
+
+  if (linkedHut.filter((p) => p.hutID === props.hut.id).length !== 0) {
+    flagLinked = true;
+  }
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    let hikeCondition = {
+      hikeID: hike.id,
+      hutID: props.hut.id,
+      typeCondition: typeCondition,
+      description: description
+    };
+    
+    await API.addHikeCondition(hikeCondition)
+        .then()
+        .catch(err => console.log(err));
+
+    setShow(true);
+    resetValues();
+    setDirty(true);
+  }
+
+  const resetValues = () => {
+    setDescription('');
+    setTypeCondition('');
+  }
 
   return (
     <>
-
-      {show ? <Row className="mb-4">
+    <Form onSubmit={handleSubmit}>
+      {/*show ? <Row className="mb-4">
         <Col md={{ span: 6, offset: 3 }} sm={{ span: 8, offset: 2 }} xs={12}>
-          <Alert variant="success" onClose={() => setShow(false)} dismissible>
-            <Alert.Heading>Update Hike Condition with success!</Alert.Heading>
+          <Alert className="mx-3" variant="success" onClose={() => setShow(false)} dismissible>
+            <Alert.Heading>Hike Condition uploaded successfully!</Alert.Heading>
           </Alert>
         </Col>
-      </Row> : false}
-
-      <Row className=" val-user-box3 mx-5 p-4">
-        <Col md={2} className="box-center margin-bottom">
-          <img src={Alert1} alt="user_image" />
-        </Col>
-        <Col md={3} className="align margin-bottom box-center">
-          <FloatingLabel controlId="floatingSelect" label="Hike Condition" className="form-sel2">
-            <Form.Select aria-label="Floating label select example" placeholder="Select an Hike Condition">
-              <option>~ Choose a Condition ~</option>
-              <option value="1"> Open</option>
-              <option value="2">Close</option>
-              <option value="3">Partly blocked</option>
-              <option value="4">Requires special gear</option>
-            </Form.Select>
-          </FloatingLabel>
-        </Col>
-        <Col md={5} className="align margin-bottom box-center ">
-          <FloatingLabel controlId="floatingTextarea2" label="Description" className="form-desc">
-            <Form.Control as="textarea" style={{ height: '80px' }} placeholder="description" />
-          </FloatingLabel>
-        </Col>
-        <Col md={2} className="box-center">
-          <Row className='btn_box mt-3'>
-            <Button variant="success" type='submit' className="save-btn mx-2 mb-2" onClick={() => setShow(true)}>Save</Button>
-          </Row>
-        </Col>
+      </Row> : false*/}
+      <Row>
+        {linkedHut.filter((p) => p.hutID === props.hut.id).length === 0 ? 
+          <h4 className="box-center margin-bottom">{`The hut "${props.hut.name}" is not yet linked`}</h4> : 
+          <h4 className="box-center margin-bottom">{`The hut "${props.hut.name}" is linked to the hike "${hike.label}"`}</h4>}
+      </Row>
+      <Col md={{ span: 6, offset: 3 }}>
+        <Row className="mb-4">
+          <div>
+            {props.hut.id && <HutMapHikeCondition coordinates={[props.hut.lat, props.hut.lon]} hut={props.hut} flagLinked={flagLinked}></HutMapHikeCondition> }
+          </div>
+        </Row>
+      </Col>
+      {linkedHut.filter((p) => p.hutID === props.hut.id).length === 0 ?
+        <Row className="val-user-box3 mx-5 p-4">
+          <Col md={3} className="box-center margin-bottom">
+            <img src={Alert1} alt="user_image" />
+          </Col>
+          <Col md={4} className="align margin-bottom box-center">
+            <FloatingLabel controlId="floatingSelect" label="Hike Condition" className="form-sel2">
+              <Form.Select aria-label="Floating label select example" placeholder="Select an Hike Condition" disabled readOnly>
+                <option selected disabled value="">~ Choose a condition ~</option>
+                <option value="Open"> Open</option>
+                <option value="Close">Close</option>
+                <option value="Partly blocked">Partly blocked</option>
+                <option value="Requires special gear">Requires special gear</option>
+              </Form.Select>
+            </FloatingLabel>
+          </Col>
+          <Col md={5} className="align margin-bottom box-center ">
+            <FloatingLabel controlId="floatingTextarea2" label="Description" className="form-desc">
+              <Form.Control as="textarea" style={{ height: '80px' }} placeholder="description" disabled readOnly/>
+            </FloatingLabel>
+          </Col>
+        </Row> : 
+        <Row className="val-user-box3 mx-5 p-4">
+          <Col md={2} className="box-center margin-bottom">
+            <img src={Alert1} alt="user_image" />
+          </Col>
+          <Col md={3} className="align margin-bottom box-center">
+            <FloatingLabel controlId="floatingSelect" label="Hike Condition" className="form-sel2">
+              <Form.Select aria-label="Floating label select example" required={true} value={typeCondition} onChange={ev => setTypeCondition(ev.target.value)}>
+                <option selected disabled value="">~ Choose a condition ~</option>
+                <option value="Open"> Open</option>
+                <option value="Close">Close</option>
+                <option value="Partly blocked">Partly blocked</option>
+                <option value="Requires special gear">Requires special gear</option>
+              </Form.Select>
+            </FloatingLabel>
+          </Col>
+          <Col md={5} className="align margin-bottom box-center ">
+            <FloatingLabel controlId="floatingTextarea2" label="Description" className="form-desc">
+            <Form.Control required={true} value={description} onChange={ev => setDescription(ev.target.value)} as="textarea" style={{ height: '100px' }} placeholder="description" />
+            </FloatingLabel>
+          </Col>
+          <Col md={2} className="box-center">
+            <Row className='btn_box mt-3'>
+              <Button variant="success" type='submit' className="save-btn mx-2 mb-2">Save</Button>
+            </Row>
+          </Col>
+        </Row>
+        }
+      </Form>
+      <Row className="val-user-box mx-5 mb-4 p-4 mt-5">
+       {hikeCondition.map((w) => <ListHikeCondition key={w.conditionID} hikeCondition={w} hut={props.hut} hike={hike} setDirty={setDirty}/>)}
       </Row>
     </>
   );
+}
+
+function HutMapHikeCondition(props) {
+
+  let hutIcon;
+
+  const iconHut = new Icon({
+    iconUrl: 'https://wiki.openstreetmap.org/w/images/thumb/f/f1/Alpinehut.svg/120px-Alpinehut.svg.png',
+    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+    iconSize: [30, 30],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41]
+  })
+
+  const iconLinkedHut = new Icon({
+    iconUrl: LinkedHutIcon,
+    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+    iconSize: [30, 30],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41]
+  });
+
+  if (props.flagLinked) {
+    hutIcon = iconLinkedHut;
+  } else {
+    hutIcon = iconHut;
+  }
+
+  return (
+    <MapContainer className='single-hut-map' center={props.coordinates} zoom={14}>
+      <TileLayer
+        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+      />
+      <Marker position={props.coordinates} icon={hutIcon}>
+      {props.hut.name &&
+        <Popup>
+          <p>{props.hut.name}</p>
+        </Popup>}
+      </Marker>
+
+    </MapContainer>
+  );
+}
+
+function ListHikeCondition(props) {
+
+     return (
+      <>
+        <Col md={2} className="align margin-bottom">
+          <OverlayTrigger placement="bottom" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip-2">Type Condition</Tooltip>}>
+            <img src={Alert1} alt="location_image" className='me-3 profile-icon' />
+          </OverlayTrigger>
+          <h6 className="card-text p-card">{`Condition: ${props.hikeCondition.typeCondition}`}</h6>
+        </Col>
+        <Col md={2} className="align margin-bottom">
+          <OverlayTrigger placement="bottom" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip-2">Hut</Tooltip>}>
+            <img src={Hut} alt="location_image" className='me-3 profile-icon' />
+          </OverlayTrigger>
+          <h6 className="card-text p-card">{props.hut.name}</h6>
+        </Col>
+        <Col md={2} className="align margin-bottom">
+          <OverlayTrigger placement="bottom" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip-2">Hike</Tooltip>}>
+            <img src={Hike} alt="location_image" className='me-3 profile-icon' />
+          </OverlayTrigger>
+          <h6 className="card-text p-card">{props.hike.label}</h6>
+        </Col>         
+        <Col md={5} className="align margin-bottom desc">
+          <FloatingLabel controlId="floatingTextarea2" label="Description" className=" desc-box">
+            <Form.Control as="textarea" style={{ height: '90px' }} readOnly disabled value={props.hikeCondition.description} />
+          </FloatingLabel>
+        </Col>
+        <Col md={1} className="box-center">
+          <OverlayTrigger placement="bottom" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip-2">Delete</Tooltip>}>
+            <Button className="delete-btn"><img src={Delete} alt="delete_image" className='' onClick={() => { API.deleteHikeCondition(props.hikeCondition.conditionID); props.setDirty(true)}}/></Button>
+          </OverlayTrigger>
+        </Col>
+        </>
+     )
 }
 
 export default ProfileHutWorker;
