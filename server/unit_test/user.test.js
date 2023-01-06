@@ -1,11 +1,10 @@
 const user_dao = require('../user-dao'); // module for accessing the DB
 const dao = require('../dao');
-const { default: HutForm } = require('../../client/src/components/HutForm');
 
 describe("CRUD Users functions", () => {
     deleteAllUsersTest();
     newUserTest();
-   // newHutWorkerTest();
+   newHutWorkerTest();
     updateUserStatsTest();
 });
 
@@ -20,7 +19,7 @@ function deleteAllUsersTest() {
 
 function newHutWorkerTest()
 {
-    test('create new user', async () => {
+    test('create new hut worker', async () => {
         await user_dao.deleteAllUsers();
         let res = await user_dao.getUsers();
         expect(res.length).toStrictEqual(0);

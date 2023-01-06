@@ -17,8 +17,8 @@ exports.getUsers = () => {
         const sql = 'SELECT * FROM Users';
         db.all(sql, [], (err, rows) => {
             if (err) reject(err);
-            const users = rows.map((u) => ({ id: u.UserId, fullName: r.FullName, email: u.Email, access_right: u.AccessRight, verified: u.Verified,
-            hut: r.HutID }));
+            const users = rows.map((u) => ({ id: u.UserId, fullName: u.FullName, email: u.Email, access_right: u.AccessRight, verified: u.Verified,
+            hut: u.HutID }));
             resolve(users);
         });
     });
