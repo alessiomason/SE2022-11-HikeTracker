@@ -974,3 +974,13 @@ exports.deleteHikeCondition = (conditionID) => {
         });
     });
 };
+
+exports.deleteAllHikeConditions = () => {
+    return new Promise((resolve, reject) => {
+        const sql = 'DELETE FROM Condition';
+        db.all(sql, (err) => {
+            if (err) reject(err);
+            resolve();
+        });
+    });
+}

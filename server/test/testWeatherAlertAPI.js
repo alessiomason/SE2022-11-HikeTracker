@@ -13,6 +13,7 @@ describe('test weather alert APIs', () => {
     deleteWeatherAlert(200, 3);
     deleteWeatherAlert(200, 4);
     deleteWeatherAlert(200, 5);
+    deleteWeatherAlert(200, 6);
     getWeatherAlerts(200, 0);
     createWeatherAlert(201, "Snowy", 20, 45.17731777167853, 7.090988159179688, "2023-01-27T02:52:00.000Z", "Attention, snow!");
     getWeatherAlerts(200, 1);
