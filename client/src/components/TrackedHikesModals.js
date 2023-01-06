@@ -184,7 +184,7 @@ function StopHikeModal(props) {
 				<Container>
 					<Row className='modal-info-row'>
 						<h6>If you wish not to terminate the ongoing hike, but still want to save your progress, stop the hike.</h6>
-						<p>All the previously reached reference points will be saved.</p>
+						<p>All the previously reached reference points will be saved. Your performance stats will not be updated.</p>
 					</Row>
 					<Row>
 						<Col md={6} className='d-flex justify-content-center'>
