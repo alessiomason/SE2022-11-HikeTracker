@@ -51,7 +51,9 @@ function newHikeTest() {
       ascent: 23,
       difficulty: "3",
       description: "Alpine challenge",
-      province: "Piemonte",
+      state: "Italy",
+      region: "Piedmont",
+      province: "Torino",
       municipality: "Cogne"
     };
 
@@ -61,6 +63,8 @@ function newHikeTest() {
       data.ascent,
       data.difficulty,
       data.description,
+      data.state,
+      data.region,
       data.province,
       data.municipality);
 
@@ -96,6 +100,8 @@ function updateHikeTest() {
       ascent: 23,
       difficulty: "3",
       description: "Alpine challenge 0",
+      state: "Italy",
+      region: "Piedmont",
       province: "Piemonte",
       municipality: "Cogne"
     };
@@ -106,6 +112,8 @@ function updateHikeTest() {
       data.ascent,
       data.difficulty,
       data.description,
+      data.state,
+      data.region,
       data.province,
       data.municipality);
 
@@ -121,6 +129,8 @@ function updateHikeTest() {
       ascent: 23,
       difficulty: "3",
       description: "Alpine challenge",
+      state: "Italy",
+      region: "Piedmont",
       province: "Piemonte",
       municipality: "Cogne"
     };
@@ -167,6 +177,8 @@ function deleteHikeTest() {
       ascent: 23,
       difficulty: "3",
       description: "Alpine challenge 0",
+      state: "Italy",
+      region: "Piedmont",
       province: "Piemonte",
       municipality: "Cogne"
     };
@@ -177,6 +189,8 @@ function deleteHikeTest() {
       data.ascent,
       data.difficulty,
       data.description,
+      data.state,
+      data.region,
       data.province,
       data.municipality);
 
