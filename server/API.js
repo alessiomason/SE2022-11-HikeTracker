@@ -577,6 +577,8 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
         let length = req.body.length;
         let expTime = req.body.expTime;
         let ascent = req.body.ascent;
+        let state = req.body.state;
+        let region = req.body.region;
         let difficulty = req.body.difficulty;
         let difficulty_level = null;
 
@@ -591,7 +593,7 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
         let municipality = req.body.municipality;
 
         try {
-            const hike = await dao.newHike(label, length, expTime, ascent, difficulty_level, description, province, municipality);
+            const hike = await dao.newHike(label, length, expTime, ascent, difficulty_level, description, state, region, province, municipality);
             res.status(201).json(hike).end();
         } catch (err) {
             res.status(500).json({ error: `Database error during creation of a new hike.` });
@@ -1045,7 +1047,6 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
         }
         
         if (req.body.hut){
-            console.log("new hut worker;");
             user = await user_dao.newHutWorker(req.body.email, req.body.password, req.body.accessRight,req.body.hut);
         }else{
             user = await user_dao.newUser(req.body.email, req.body.password, req.body.accessRight);

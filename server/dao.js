@@ -144,7 +144,7 @@ exports.getHut = (hutID) => {
     return new Promise((resolve, reject) => {
         const sql = `SELECT H.*, FullName
                      FROM Huts H, Users U
-                     WHERE HutID = ?
+                     WHERE H.HutID = ?
                      AND H.Author = U.UserId`;
         db.all(sql, [hutID], (err, rows) => {
             if (err) reject(err);
@@ -479,10 +479,10 @@ exports.deleteAllHikes = () => {
     });
 }
 
-exports.newHike = (label, length, expTime, ascent, difficulty, description, province, municipality) => {
+exports.newHike = (label, length, expTime, ascent, difficulty, description, state, region, province, municipality) => {
     return new Promise((resolve, reject) => {
-        const sql = 'INSERT INTO Hikes(Label, Length, ExpTime,Ascent,Difficulty,Description,Province,Municipality) VALUES(?,?,?,?,?,?,?,?)'
-        db.run(sql, [label, length, expTime, ascent, difficulty, description, province, municipality], function (err) {
+        const sql = 'INSERT INTO Hikes(Label, Length, ExpTime,Ascent,Difficulty,Description,State,Region,Province,Municipality) VALUES(?,?,?,?,?,?,?,?,?,?)'
+        db.run(sql, [label, length, expTime, ascent, difficulty, description, state, region, province, municipality], function (err) {
             if (err) reject(err);
             resolve();
         });

@@ -22,17 +22,17 @@ describe('test creation of hikes by GPX file', () => {
 describe('test UPDATE hike APIs', () => {
     deleteAllHikes();
     getHikes(200, 0);
-    createHike(201, "Gran Paradiso", 205000, 100, 230, "Professional hiker", "Alpine challenge 0", "Piemonte", "Cogne");
+    createHike(201, "Monte Vandalino", 4414.9799873036545, 4, 862.6788329999997, 2, "Sentiero per Monte Vandalino.","Italy", "Piedmont", "Torino", 'Torre Pellice');
     updateHike(422, 1, "", 20500, 10, 23, "Professional hiker", "Alpine challenge", "Piemonte", "Cogne");
     getHikes(200, 1);
-    updateHike(201, 1, "Gran Paradiso", 20500, 10, 23, "Professional hiker", "Alpine challenge", "Piemonte", "Cogne");
+    updateHike(201, "Monte Vandalino2", 4414.9799873036545, 4, 862.6788329999997, 2, "Sentiero per Monte Vandalino.","Italy", "Piedmont", "Torino", 'Torre Pellice');;
     getHikes(200, 1);
 })
 
 describe('test DELETE hike APIs', () => {
     deleteAllHikes();
     getHikes(200, 0);
-    createHike(201, "Gran Paradiso", 205000, 100, 230, "Professional hiker", "Alpine challenge 0", "Piemonte", "Cogne");
+    createHike(201, "Monte Vandalino", 4414.9799873036545, 4, 862.6788329999997, 2, "Sentiero per Monte Vandalino.","Italy", "Piedmont", "Torino", 'Torre Pellice');
     getHikes(200, 1);
     deleteAllHikes();
     getHikes(200, 0);
@@ -41,18 +41,18 @@ describe('test DELETE hike APIs', () => {
 describe('test CREATION and READ hike APIs', () => {
     deleteAllHikes();
     getHikes(200, 0);
-    createHike(201, "Gran Paradiso", 20500, 10, 23, "Professional hiker", "Alpine challenge", "Piemonte", "Cogne");
+    createHike(201, "Monte Vandalino", 4414.9799873036545, 4, 862.6788329999997, 2, "Sentiero per Monte Vandalino.","Italy", "Piedmont", "Torino", 'Torre Pellice');
     getHikes(200, 1);
-    createHike(422, "", 9500, 4, 6, "Hiker", "Best hike in the Dolomites", "Trentino Alto Adige", "Belluno");
-    getHikes(200, 1);
-    createHike(201, "Tre Cime di Lavaredo", 9500, 4, 6, "Hiker", "Best hike in the Dolomites", "Trentino Alto Adige", "Belluno");
-    createHike(201, "Sentiero degli Dei", 8000, 5, 13, "Tourist", "Best hike for a sun-kissed stroll", "Campania", "Salerno");
-    getHikes(200, 3);
-    createHike(422, "", 11400, 7, 1353.053467, "Hiker", "Considered the highest of the Alps for centuries", "Piemonte", "Torino");
-    getHikes(200, 3);
-    createHike(201, "Rocciamelone", 11400, 7, 1353.053467, "Hiker", "Considered the highest of the Alps for centuries", "Piemonte", "Torino");
-    createHike(201, "Corno Grande", 9000, 7, 665, "Hiker", "Best hike for climbing a mountain", "Abruzzo", "Teramo");
+    createHike(201, "Monte Vandalino1", 4414.9799873036545, 4, 862.6788329999997, 2, "Sentiero per Monte Vandalino.","Italy", "Piedmont", "Torino", 'Torre Pellice');
+    getHikes(200, 2);
+    createHike(201, "Monte Vandalino2", 4414.9799873036545, 4, 862.6788329999997, 2, "Sentiero per Monte Vandalino.","Italy", "Piedmont", "Torino", 'Torre Pellice');
+    createHike(201, "Monte Vandalino3", 4414.9799873036545, 4, 862.6788329999997, 2, "Sentiero per Monte Vandalino.","Italy", "Piedmont", "Torino", 'Torre Pellice');
+    getHikes(200, 4);
+    createHike(201, "Monte Vandalino4", 4414.9799873036545, 4, 862.6788329999997, 2, "Sentiero per Monte Vandalino.","Italy", "Piedmont", "Torino", 'Torre Pellice');
     getHikes(200, 5);
+    createHike(201, "Monte Vandalino5", 4414.9799873036545, 4, 862.6788329999997, 2, "Sentiero per Monte Vandalino.","Italy", "Piedmont", "Torino", 'Torre Pellice');
+    createHike(201, "Monte Vandalino", 4414.9799873036545, 4, 862.6788329999997, 2, "Sentiero per Monte Vandalino.","Italy", "Piedmont", "Torino", 'Torre Pellice');
+    getHikes(200, 7);
 })
 
 function deleteAllHikes() {
@@ -88,7 +88,7 @@ function getHikeByID(expectedHTTPStatus, hikeID, expectedNumberOfPoints) {
     });
 }
 
-function createHike(expectedHTTPStatus, label, length, expTime, ascent, difficulty, description, province, municipality) {
+function createHike(expectedHTTPStatus, label, length, expTime, ascent, difficulty, description, state, region, province, municipality) {
     it('creating a hike in the system', function (done) {
         let hike = {
             label : label,
@@ -97,6 +97,8 @@ function createHike(expectedHTTPStatus, label, length, expTime, ascent, difficul
             ascent : ascent,
             difficulty : difficulty,
             description: description,
+            state: state,
+            region: region,
             province: province,
             municipality: municipality
         };
@@ -118,7 +120,7 @@ function createHike(expectedHTTPStatus, label, length, expTime, ascent, difficul
     });
 }
 
-function updateHike(expectedHTTPStatus, id, newLabel, newLength, newExpTime, newAscent, newDifficulty, newDescription, newProvince, newMunicipality) {
+function updateHike(expectedHTTPStatus, id, newLabel, newLength, newExpTime, newAscent, newDifficulty, newDescription, newState, newRegion, newProvince, newMunicipality) {
     it('update an hike in the system', function (done) {
         let hike = {
             id: id,
@@ -128,6 +130,8 @@ function updateHike(expectedHTTPStatus, id, newLabel, newLength, newExpTime, new
             ascent : newAscent,
             difficulty : newDifficulty,
             description: newDescription,
+            state: newState,
+            region: newRegion,
             province: newProvince,
             municipality: newMunicipality
         };

@@ -43,6 +43,7 @@ function App2() {
     const [showSignup, setShowSignup] = useState(false);
     const [initialLoading, setInitialLoading] = useState(false);
     const [showEmailAlert, setShowEmailAlert] = useState(false);
+    const [hut, setHut] = useState('');
 
     useEffect(() => {
         const checkAuth = async () => {
@@ -166,6 +167,17 @@ function App2() {
             .catch(err => handleError(err));
     }, [dirty]);
 
+
+  useEffect(() => {
+    if (user.access_right=='hut-worker') {
+      API.getHut(user.hut)
+        .then((h) => setHut(h))
+        .catch(err => console.log(err))
+      setDirty(false);
+    }
+  }, [dirty]);
+
+
     function Layout() {
         return (
             <>
@@ -201,7 +213,7 @@ function App2() {
                     <Route path="linkHike/:hikeId/" element={loggedIn && user.access_right === 'local-guide' ? <LinkHike /> : <Navigate to='/' />} ></Route>
                     <Route path="refPoints/:hikeId/" element={loggedIn && user.access_right === 'local-guide' ? <ReferencePoints /> : <Navigate to='/' />} ></Route>
                     <Route path="hut/:hutId" element={<HutPage loggedIn={loggedIn} setShowLogin={setShowLogin} />} />
-                    <Route path="profile" element={loggedIn ? <Profile user={user} doLogout={doLogout} hikes={hike} /> : <Navigate to='/' />} />
+                    <Route path="profile" element={loggedIn ? <Profile user={user}  setDirty={setDirty} updateHut={updateHut}  doLogout={doLogout} hikes={hike} hut={hut}/> : <Navigate to='/' />} />
                 </Route>
             </Routes>
         </OpenPageOnTop>
