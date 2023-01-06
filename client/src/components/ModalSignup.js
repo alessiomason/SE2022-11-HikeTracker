@@ -36,6 +36,9 @@ function MyModalSignup(props) {
   const [passwordReenter, setPasswordReenter] = useState('');
   const [accessRight, setAccessRight] = useState('');
   const [chosenHut, setChosenHut] = useState('');
+  const [name, setName] = useState('');
+  const [surname, setSurname] = useState('');
+  const [phone, setPhone] = useState('');
 
 
   const handleSubmit = (event) => {
@@ -52,7 +55,7 @@ function MyModalSignup(props) {
 
     if (valid && password.trim() === '') {
       valid = false;
-      props.setMessage('Passwo8rd cannot be empty or contain whitespaces.');
+      props.setMessage('Password cannot be empty or contain whitespaces.');
     }
 
     if (valid && passwordReenter !== password) {
@@ -72,6 +75,10 @@ function MyModalSignup(props) {
         credentials = { ...credentials, hut: chosenHut }
       }
     }
+    if (valid && (accessRight == "hut-worker" || accessRight === "local-guide") ) {
+      
+      credentials = { ...credentials,surname: surname, name:name, phone:phone  }
+  }
     if (valid) {
       console.log(credentials)
       props.doSignUp(credentials);
@@ -113,6 +120,41 @@ function MyModalSignup(props) {
                   </Form.Group>
                 </Col>
               </Row>
+              {
+                (accessRight === "hut-worker" || accessRight === "local-guide") && 
+              <>
+              <Row className='mb-3 box_center'>
+                  <Col md="auto" sm="auto" xs="auto" className='box_center'>
+                    <img src={UserLogin} alt="user" />
+                  </Col>
+                  <Col md="auto" sm="auto" xs="auto">
+                    <Form.Group controlId="formBasicName" >
+                      <Form.Control type="text" placeholder="Enter name" value={name} onChange={ev => setName(ev.target.value)} />
+                    </Form.Group>
+                  </Col>
+                </Row>
+                <Row className='mb-3 box_center'>
+                  <Col md="auto" sm="auto" xs="auto" className='box_center'>
+                    <img src={UserLogin} alt="user" />
+                  </Col>
+                  <Col md="auto" sm="auto" xs="auto">
+                    <Form.Group controlId="formBasicSurname" >
+                      <Form.Control type="text" placeholder="Enter surname" value={surname} onChange={ev => setSurname(ev.target.value)} />
+                    </Form.Group>
+                  </Col>
+                </Row>
+                <Row className='mb-3 box_center'>
+                  <Col md="auto" sm="auto" xs="auto" className='box_center'>
+                    <img src={UserLogin} alt="user" />
+                  </Col>
+                  <Col md="auto" sm="auto" xs="auto">
+                    <Form.Group controlId="formBasicPhone" >
+                      <Form.Control type="text" placeholder="Enter phone number" value={phone} onChange={ev => setPhone(ev.target.value)} />
+                    </Form.Group>
+                  </Col>
+                </Row>
+                </>
+              } 
               <Row className='my-4 box_center'>
                 <Col md="auto" sm="auto" xs="auto" className='box_center'>
                   <img src={Password} alt="password" />

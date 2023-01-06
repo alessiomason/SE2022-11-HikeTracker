@@ -123,7 +123,10 @@ function addHut(hut) {
                 state: hut.state,
                 region: hut.region,
                 province: hut.province,
-                municipality: hut.municipality
+                municipality: hut.municipality,
+                email: hut.email,
+                phone: hut.phone,
+                website: hut.website
             }),
 
         }).then((response) => {
@@ -225,6 +228,9 @@ function updateHut(hut) {
     dataHut.append('province', hut.province);
     dataHut.append('municipality', hut.municipality);
     dataHut.append('file', hut.image);
+    dataHut.append('email', hut.email);
+    dataHut.append('phone', hut.phone);
+    dataHut.append('website', hut.website);
 
     // call: PUT /api/updateHut/:id
     return new Promise((resolve, reject) => {
@@ -378,7 +384,10 @@ async function getHuts() {
             province: h.province,
             municipality: h.municipality,
             author: h.author,
-            authorId: h.authorId
+            authorId: h.authorId,
+            email: h.email,
+            phone: h.phone,
+            website: h.website
         }))
     else throw huts;
 }
@@ -401,7 +410,10 @@ async function getHut(id) {
             province: hut.province,
             municipality: hut.municipality,
             author: hut.author,
-            authorId: hut.authorId
+            authorId: hut.authorId,
+            email: hut.email,
+            phone: hut.phone,
+            website: hut.website
         });
     else throw hut;
 }

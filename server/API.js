@@ -163,8 +163,11 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
             const region = req.body.region;
             const province = req.body.province;
             const municipality = req.body.municipality;
+            const email = req.body.email;
+            const phone = req.body.phone;
+            const website = req.body.website;
 
-            const hut = await dao.addHut(name, description, lat, lon, altitude, beds, state, region, province, municipality, req.user.id);
+            const hut = await dao.addHut(name, description, lat, lon, altitude, beds, state, region, province, municipality, req.user.id, email, phone, website);
 
             res.status(201).json(hut.id).end();
         } catch (err) {
@@ -357,8 +360,11 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
                 let region = req.body["region"];
                 let province = req.body["province"];
                 let municipality = req.body["municipality"];
+                let email = req.body["email"];
+                let phone = req.body["phone"];
+                let website = req.body["website"];
 
-                const huts = await dao.updateHut(name, description, lat, lon, altitude, beds, state, region, province, municipality, hutId);
+                const huts = await dao.updateHut(name, description, lat, lon, altitude, beds, state, region, province, municipality, hutId, email, phone, website);
                 res.status(201).json(huts).end();
             }
         } catch (err) {
@@ -1109,14 +1115,14 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
         console.log(req.body)
 
         // if the email already registered if statement will run.
-        if (user_dao.checkEmail(req.body.email)) {
+        if (!user_dao.checkEmail(req.body.email)) {
             return res.status(401).json({ error: 'This email already registered' });
         }
 
         if (req.body.hut) {
-            user = await user_dao.newHutWorker(req.body.email, req.body.password, req.body.accessRight, req.body.hut);
+            user = await user_dao.newHutWorker(req.body.email, req.body.password, req.body.accessRight, req.body.hut, req.body.surname, req.body.name, req.body.phone);
         } else {
-            user = await user_dao.newUser(req.body.email, req.body.password, req.body.accessRight);
+            user = await user_dao.newUser(req.body.email, req.body.password, req.body.accessRight, req.body.surname, req.body.name, req.body.phone);
         }
 
 

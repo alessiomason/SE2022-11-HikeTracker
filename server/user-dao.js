@@ -17,7 +17,7 @@ exports.getUsers = () => {
         const sql = 'SELECT * FROM Users';
         db.all(sql, [], (err, rows) => {
             if (err) reject(err);
-            const users = rows.map((u) => ({ id: u.UserId, fullName: r.FullName, email: u.Email, access_right: u.AccessRight, verified: u.Verified,
+            const users = rows.map((u) => ({ id: u.UserId, surname: r.Surname, name:r.Name, phone:r.Phone, email: u.Email, access_right: u.AccessRight, verified: u.Verified,
             hut: r.HutID }));
             resolve(users);
         });
@@ -33,7 +33,7 @@ exports.getUserById = (id) => {
             if (err) reject(err);
             else if (row == undefined) resolve({ error: 'User not found.' });
             else {
-                const user = { id: row.UserId, fullName: row.FullName, email: row.Email, access_right: row.AccessRight, verified: row.Verified,
+                const user = { id: row.UserId, surname: row.Surname, name:row.Name, phone: row.Phone, email: row.Email, access_right: row.AccessRight, verified: row.Verified,
                     hut: row.HutID};
                 
 
@@ -50,7 +50,7 @@ exports.getUser = (email, password) => {
             if (err) reject(err);
             else if (row === undefined) resolve(false);
             else {
-                const user = { id: row.UserId, fullName: row.FullName, email: row.Email, access_right: row.AccessRight, verified: row.Verified,
+                const user = { id: row.UserId, surname: row.Surname, name:row.Name, phone:row.Phone, email: row.Email, access_right: row.AccessRight, verified: row.Verified,
                 hut: row.HutID};
 
                 const salt = row.Salt;
@@ -66,7 +66,7 @@ exports.getUser = (email, password) => {
     });
 };
 
-exports.newUser = (email, password, accessRight) => {
+exports.newUser = (email, password, accessRight, surname, name, phone) => {
     return new Promise(async (resolve, reject) => {
         const salt = crypto.randomBytes(16);
         const dateOfRegistration = dayjs().format();
@@ -75,15 +75,15 @@ exports.newUser = (email, password, accessRight) => {
         crypto.scrypt(password, salt, 32, (err, hashedPassword) => {
             if (err) reject(err);
             else {
-                const sql = "INSERT INTO Users (Email, PasswordHash, Salt, AccessRight, DateOfRegistration, EmailConfirmationToken) VALUES (?, ?, ?, ?, ?, ?)";
-                db.run(sql, [email, hashedPassword, salt, accessRight, dateOfRegistration, emailConfirmationToken], (err) => {
+                const sql = "INSERT INTO Users (Email, PasswordHash, Salt, AccessRight, DateOfRegistration, EmailConfirmationToken, Surname, Name, Phone) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                db.run(sql, [email, hashedPassword, salt, accessRight, dateOfRegistration, emailConfirmationToken, surname, name, phone], (err) => {
                     if (err) reject(err);
                     else {
                         db.get('SELECT last_insert_rowid() AS ID', (err, row) => {
                             if (err) reject(err);
                             else if (row === undefined) resolve(false);
                             else
-                                resolve({ id: row.ID, email: email, access_right: accessRight, verified: false, dateOfRegistration: dateOfRegistration, emailConfirmationToken: emailConfirmationToken });
+                                resolve({ id: row.ID, email: email, access_right: accessRight, verified: false, dateOfRegistration: dateOfRegistration, emailConfirmationToken: emailConfirmationToken, surname: surname, name:name, phone:phone });
                         })
                     }
                 });
@@ -92,7 +92,7 @@ exports.newUser = (email, password, accessRight) => {
         });
     });
 };
-exports.newHutWorker = (email, password, accessRight,hutId) => {
+exports.newHutWorker = (email, password, accessRight,hutId, surname, name, phone) => {
     return new Promise(async (resolve, reject) => {
         const salt = crypto.randomBytes(16);
         const dateOfRegistration = dayjs().format();
@@ -101,15 +101,15 @@ exports.newHutWorker = (email, password, accessRight,hutId) => {
         crypto.scrypt(password, salt, 32, (err, hashedPassword) => {
             if (err) reject(err);
             else {
-                const sql = "INSERT INTO Users (Email, PasswordHash, Salt, AccessRight, DateOfRegistration, EmailConfirmationToken,HutID) VALUES (?, ?, ?, ?, ?, ?, ?)";
-                db.run(sql, [email, hashedPassword, salt, accessRight, dateOfRegistration, emailConfirmationToken,hutId], (err) => {
+                const sql = "INSERT INTO Users (Email, PasswordHash, Salt, AccessRight, DateOfRegistration, EmailConfirmationToken,HutID, Surname, Name, Phone) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                db.run(sql, [email, hashedPassword, salt, accessRight, dateOfRegistration, emailConfirmationToken,hutId, surname, name, phone], (err) => {
                     if (err) reject(err);
                     else {
                         db.get('SELECT last_insert_rowid() AS ID', (err, row) => {
                             if (err) reject(err);
                             else if (row === undefined) resolve(false);
                             else
-                                resolve({ id: row.ID, email: email, access_right: accessRight, verified: false, dateOfRegistration: dateOfRegistration, emailConfirmationToken: emailConfirmationToken,hutId: hutId });
+                                resolve({ id: row.ID, email: email, access_right: accessRight, verified: false, dateOfRegistration: dateOfRegistration, emailConfirmationToken: emailConfirmationToken,hutId: hutId, surname: surname, name: name, phone: phone });
                         })
                     }
                 });

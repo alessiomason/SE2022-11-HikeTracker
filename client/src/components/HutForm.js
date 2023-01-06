@@ -27,6 +27,9 @@ function HutForm(props) {
   const [image, setImage] = useState('');
   const [preview, setPreview] = useState('');
   const [newHutID, setNewHutID] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+  const [website, setWebsite] = useState('');
 
 
   const handleSubmit = async (event) => {
@@ -45,7 +48,10 @@ function HutForm(props) {
         region: region,
         province: province,
         municipality: municipality,
-        beds: beds
+        beds: beds,
+        email: email,
+        phone: phone,
+        website: website
       }
 
       await API.addHut(newHut)
@@ -107,19 +113,19 @@ function HutForm(props) {
                 </Col>
                 <Col md={6}>
                   <FloatingLabel controlId="floatingInput" label="Phone number" className="mb-3">
-                    <Form.Control required={true} type="text" placeholder="+39 xxx xxx xxxx"></Form.Control>
+                    <Form.Control required={true}  type="text" value={phone} onChange={ev => setPhone(ev.target.value)} placeholder="+39 xxx xxx xxxx"></Form.Control>
                   </FloatingLabel>
                 </Col>
               </Row>
               <Row className='man-hut-label'>
                 <Col md={6}>
                   <FloatingLabel controlId="floatingInput" label="Email address" className="mb-3">
-                    <Form.Control required={true} type="email" placeholder="name@example.com"></Form.Control>
+                    <Form.Control required={true} type="email" value={email} onChange={ev => setEmail(ev.target.value)} placeholder="name@example.com"></Form.Control>
                   </FloatingLabel>
                 </Col>
                 <Col md={6}>
                   <FloatingLabel controlId="floatingInput" label="Website (optional)" className="mb-3">
-                    <Form.Control type="text" placeholder="nameexample.com" ></Form.Control>
+                    <Form.Control type="text" value={website} onChange={ev => setWebsite(ev.target.value)}  placeholder="nameexample.com" ></Form.Control>
                   </FloatingLabel>
                 </Col>
               </Row>

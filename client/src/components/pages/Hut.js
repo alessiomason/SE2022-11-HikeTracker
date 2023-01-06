@@ -118,19 +118,19 @@ function HutPage(props) {
                 <OverlayTrigger placement="bottom" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip-2">Phone number</Tooltip>}>
                   <img src={Phone} alt="phone_image" className='me-3 single-hut-icon icon-hut-filter' />
                 </OverlayTrigger>
-                <p className='p-hike'>{"329 137 0642"}</p>
+                <p className='p-hike'>{hut.phone}</p>
               </Col>
               <Col md={12} className='mb-3 align'>
                 <OverlayTrigger placement="bottom" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip-2">Email</Tooltip>}>
                   <img src={Email} alt="email_image" className='me-3 single-hut-icon icon-hut-filter' />
                 </OverlayTrigger>
-                <p className='p-hike'>{"rifugio.rocciamelone@gmail.com"}</p>
+                <p className='p-hike'>{hut.email}</p>
               </Col>
               <Col md={12} className='mb-3 align'>
                 <OverlayTrigger placement="bottom" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip-2">WebSite</Tooltip>}>
                   <img src={Website} alt="website_image" className='me-3 single-hut-icon icon-hut-filter' />
                 </OverlayTrigger>
-                <p className='p-hike'>{"RifugioRocciamelone.com"}</p>
+                <p className='p-hike'>{hut.website}</p>
               </Col>
             </Row>
           </Col>
