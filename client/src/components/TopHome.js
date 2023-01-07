@@ -1,6 +1,6 @@
 import '../styles/TopHome.css';
 import MyCarousel from './Carousel';
-import { Alert, Container } from "react-bootstrap";
+import {  Container } from "react-bootstrap";
 
 function MyTopHome(props) {
 

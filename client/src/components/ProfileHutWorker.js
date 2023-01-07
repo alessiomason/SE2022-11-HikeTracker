@@ -1,24 +1,18 @@
-import { useNavigate } from "react-router-dom";
-import { Button, Navbar, Nav, Container, Row, Col, Form, OverlayTrigger, Tooltip, FloatingLabel, Image, Modal, Alert } from "react-bootstrap";
+import { Button, Container, Row, Col, Form, OverlayTrigger, Tooltip, FloatingLabel, Modal, Alert } from "react-bootstrap";
 import API from '../API.js';
 import { Icon } from 'leaflet';
-import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import '../styles/ProfileLocalGuide.css';
 import React, { useState, useEffect } from 'react';
 import { default as LinkedHutIcon } from '../images/linked_hut_icon.png';
 import '../styles/SinglePageHut.css';
 import { default as Img1 } from '../images/img1.jpg';
-import { default as Email } from "../icons/email.svg";
-import { default as Parking } from "../icons/parking.svg";
 import { default as Hut } from "../icons/hut.svg";
 import { default as Hike } from "../icons/hiking.svg";
 import { default as Alert1 } from "../icons/alert.svg";
-import { default as User } from '../icons/user.svg';
 import { default as Delete } from "../icons/delete.svg";
 
 import '../styles/ProfileHutWorker.css';
-
-import { default as Close2 } from '../icons/close2.svg';
 
 
 
@@ -246,7 +240,7 @@ function MyImageModal(props) {
         </Modal.Title>
       </Modal.Header>
       <Modal.Body className='box-modal man-hut-page-modal-body'>
-        <img src={props.image.image} alt="photo" className="modal-imgs" />
+        <img src={props.image.image} alt="hut" className="modal-imgs" />
       </Modal.Body>
 
     </Modal>

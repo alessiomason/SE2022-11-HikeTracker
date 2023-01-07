@@ -203,7 +203,7 @@ function HikePage(props) {
                   onError={({ currentTarget }) => {
                     currentTarget.onerror = null; // prevents looping
                     currentTarget.src = Img1;
-                  }} alt="photo" className="side-hike-img" onClick={() => setImageModalShow(true)} />
+                  }} alt="hike" className="side-hike-img" onClick={() => setImageModalShow(true)} />
               </Col>
             </Row>
             <Row>
@@ -321,14 +321,12 @@ function WeatherAlertHike(props) {
       API.getHike(hikeId)
         .then((hike) => {
           setStartPoint(hike.points?.filter(p => p.startPoint).map(p => [p.latitude, p.longitude]).pop());
-          //setStartPoint(hike.points[hike.length/2].map(p => [p.latitude, p.longitude]));
         })
         .catch(err => console.log(err))
 
       API.getWeatherAlerts()
         .then((weatherAlert) => {
         setWeatherAlerts(weatherAlert);
-        //setFilteredHikes(weatherAlerts.filter(w => coordinatesDistanceInMeter(startPoint[0], startPoint[1], w.lat, w.lon) < (w.radius * 1000)));
       })
       .catch(err => console.log(err))
 
@@ -336,10 +334,8 @@ function WeatherAlertHike(props) {
     }
   }, [dirty, hikeId, startPoint]);
 
-  // const startPoint = props.hike.points?.filter(p => p.startPoint).map(p => [p.latitude, p.longitude]).pop();
   // verifico quali weather alert sono entro "radius km" dallo starting point dell'hike
   let tempFilteredAlerts = weatherAlerts.filter(w => coordinatesDistanceInMeter(startPoint[0], startPoint[1], w.lat, w.lon) < (w.radius * 1000));
-  //console.log(tempFilteredHikes);
 
   let weatherIcon;
   

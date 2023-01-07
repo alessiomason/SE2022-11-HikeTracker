@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Container, Row, Col, OverlayTrigger, Tooltip, Button, Tabs, Tab, Modal } from 'react-bootstrap';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Icon } from 'leaflet';
-import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker } from 'react-leaflet';
 import API from '../../API';
 import '../../styles/SinglePageHut.css';
 import { default as Hut } from '../../icons/hut.svg';
@@ -179,7 +179,7 @@ function MyImageModal(props) {
         </Modal.Title>
       </Modal.Header>
       <Modal.Body className='box-modal man-hut-page-modal-body'>
-        <img src={props.image.image} alt="photo" className="modal-imgs" />
+        <img src={props.image.image} alt="hut" className="modal-imgs" />
       </Modal.Body>
 
     </Modal>
