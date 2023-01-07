@@ -57,7 +57,7 @@ function HikesFilters(props) {
             </ButtonGroup>
             <ButtonGroup size="lg" className='my-1 me-2'>
               <Button variant="success" className='btn_filter' onClick={() => { setModalShow(true); setTitle("Point from map"); setDesc("Select a specific point on the map:") }}>Point from map</Button>
-              <Button variant="success" className='btn_filter' >Set Personal Filter</Button>
+              {props.user.access_right === 'hiker' && <Button variant="success" className='btn_filter'>Set Personal Filter</Button>}
             </ButtonGroup>
             <ButtonGroup className="my-1" aria-label="Second group">
               <OverlayTrigger placement="right" delay={{ show: 250, hide: 400 }} overlay={renderTooltip} >
