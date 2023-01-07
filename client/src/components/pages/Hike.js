@@ -481,7 +481,7 @@ function ConditionHike(props) {
           API.getLinkedHuts()
             .then((points) => {
               API.getHikeConditions()
-                .then((hikeCondition) => setHikeConditions((hikeCondition.filter((h) => h.hutID === points.filter((p) => p.hikeID === hike.id).pop().hutID))))
+                .then((hikeCondition) => setHikeConditions((hikeCondition.filter((h) => h.hikeID === points.filter((p) => p.hikeID === hike.id).pop().hikeID))))
                 .catch(err => console.log(err))
             })
             .catch(err => console.log(err))

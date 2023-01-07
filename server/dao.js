@@ -77,8 +77,8 @@ exports.updatePoint = (pointID, SP, EP) => {
 
 exports.addHut = (hutName, hutDescription, lat, lon, altitude, beds, state, region, province, municipality, userId) => {
     return new Promise((resolve, reject) => {
-        const sql = 'INSERT INTO Huts(Name, Description, Lat, Lon, Altitude, Beds, State, Region, Province, Municipality, Author) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
-        db.run(sql, [hutName, hutDescription, lat, lon, altitude, beds, state, region, province, municipality, userId], function (err) {
+        const sql = 'INSERT INTO Huts(Name, Description, Lat, Lon, Altitude, Beds, State, Region, Province, Municipality, Author, Images) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
+        db.run(sql, [hutName, hutDescription, lat, lon, altitude, beds, state, region, province, municipality, userId, 0], function (err) {
             if (err) reject(err);
             else {
                 db.get('SELECT last_insert_rowid() AS ID', (err, row) => {
@@ -112,7 +112,8 @@ exports.getHuts = () => {
                 province: r.Province,
                 municipality: r.Municipality,
                 author: r.FullName,
-                authorId: r.Author
+                authorId: r.Author,
+                images: r.Images
             }));
             resolve(huts);
         });
@@ -164,7 +165,8 @@ exports.getHut = (hutID) => {
                         province: r.Province,
                         municipality: r.Municipality,
                         author: r.FullName,
-                        authorId: r.Author
+                        authorId: r.Author,
+                        images: r.Images
                     }));
                     resolve(hut);
                 }
@@ -183,6 +185,15 @@ exports.updateHut = (name, description, lat, lon, altitude, beds, state, region,
     });
 }
 
+exports.increaseImages = (numberOfImages, hutID) => {
+    return new Promise((resolve, reject) => {
+        const sql = 'UPDATE Huts SET Images=? WHERE HutID=?'
+        db.run(sql, [numberOfImages, hutID], function (err) {
+            if (err) reject(err);
+            resolve();
+        });
+    });
+}
 
 exports.addHike = (trackName, len, time, ascent, diff, description, state, region, province, municipality, userId) => {
     return new Promise((resolve, reject) => {
