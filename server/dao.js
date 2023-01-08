@@ -490,10 +490,10 @@ exports.deleteAllHikes = () => {
     });
 }
 
-exports.newHike = (label, length, expTime, ascent, difficulty, description, state, region, province, municipality) => {
+exports.newHike = (label, length, expTime, ascent, difficulty, description, state, region, province, municipality, author) => {
     return new Promise((resolve, reject) => {
-        const sql = 'INSERT INTO Hikes(Label, Length, ExpTime,Ascent,Difficulty,Description,State,Region,Province,Municipality) VALUES(?,?,?,?,?,?,?,?,?,?)'
-        db.run(sql, [label, length, expTime, ascent, difficulty, description, state, region, province, municipality], function (err) {
+        const sql = 'INSERT INTO Hikes(Label, Length, ExpTime,Ascent,Difficulty,Description,State,Region,Province,Municipality,Author) VALUES(?,?,?,?,?,?,?,?,?,?,?)'
+        db.run(sql, [label, length, expTime, ascent, difficulty, description, state, region, province, municipality, author], function (err) {
             if (err) reject(err);
             resolve();
         });
@@ -621,7 +621,7 @@ exports.getTrackedHikesByHikeIDAndUserID = (hikeID, userID) => {
     return new Promise((resolve, reject) => {
         const sql = `SELECT TrackedHikeID, TH.HikeID, Label, Status, Progress, StartTime, EndTime
                      FROM TrackedHikes TH, Hikes H
-                     WHERE TH.HikeID = H.HikeID AND TH.HikeID = ? AND UserID = ?`;
+                     WHERE TH.HikeID = H.HikeID AND TH.HikeID = ? AND TH.UserID = ?`;
         db.all(sql, [hikeID, userID], (err, rows) => {
             if (err) reject(err);
             const trackedHikes = rows.map((r) => ({
@@ -642,7 +642,7 @@ exports.getTrackedHikesByUserID = (userID) => {
     return new Promise((resolve, reject) => {
         const sql = `SELECT TrackedHikeID, TH.HikeID, Label, Status, Progress, StartTime, EndTime
                      FROM TrackedHikes TH, Hikes H
-                     WHERE TH.HikeID = H.HikeID AND UserID = ?`;
+                     WHERE TH.HikeID = H.HikeID AND TH.UserID = ?`;
         db.all(sql, [userID], (err, rows) => {
             if (err) reject(err);
             const trackedHikes = rows.map((r) => ({
