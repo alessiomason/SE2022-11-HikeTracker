@@ -173,6 +173,7 @@ function App2() {
       API.getHut(user.hut)
         .then((h) => setHut(h))
         .catch(err => console.log(err))
+        setDirty(false);
     }
   }, [user]);
 
