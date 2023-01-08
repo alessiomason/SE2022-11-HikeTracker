@@ -1156,7 +1156,7 @@ async function getUsers() {
     if (response.ok)
         return users.map((u) => ({
             id: u.id,
-            fullName: u.fullName,
+            surname: u.surname,
             email: u.email,
             access_right: u.access_right,
             verified: u.verified,

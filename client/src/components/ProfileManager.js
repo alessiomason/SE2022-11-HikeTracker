@@ -68,7 +68,7 @@ function ValidateUser() {
       {users.filter(u => u.verified && (u.access_right === 'local-guide' || u.access_right === 'hut-worker'))
         .map(u => <Row key={u.id} className={u.validated ? "val-user-box mx-5 mb-4 p-4" : "val-user-box2 mx-5 mb-4 p-4"}>
           <Col md={3}>
-            <h5>{u.fullName}</h5>
+            <h5>{u.surname}</h5>
           </Col>
           <Col md={3}>
             <h5>{u.email}</h5>
