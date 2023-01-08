@@ -930,7 +930,9 @@ function addUserPreferences(userPreferences) {
                 region: userPreferences.region,
                 province: userPreferences.province,
                 municipality: userPreferences.municipality,
-                radius: userPreferences.radius
+                radius: userPreferences.radius,
+                latitude: userPreferences.latitude,
+                longitude: userPreferences.longitude
 
             })
         }).then((response) => {
@@ -957,7 +959,9 @@ function updateUserPreferencesRadius(userPreferences) {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                radius: userPreferences.radius
+                radius: userPreferences.radius,
+                latitude: userPreferences.latitude,
+                longitude: userPreferences.longitude
             })
         }).then((response) => {
             if (response.ok)

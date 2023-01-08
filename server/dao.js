@@ -996,7 +996,7 @@ exports.getUserPreferences = (userid) => {
         const sql = 'SELECT * FROM Preferences WHERE userid = ?';
         db.all(sql, [userid], (err, rows) => {
             if (err) reject(err);
-            const preferences = rows.map((p) => ({ userid: p.userid, minLength: p.minLength, maxLength: p.maxLength, minAscent: p.minAscent, maxAscent: p.maxAscent, minTime: p.minTime, maxTime: p.maxTime, difficulty: p.difficulty, state: p.state, radius: p.radius, region: p.region, province: p.province, municipality: p.municipality }));
+            const preferences = rows.map((p) => ({ userid: p.userid, minLength: p.minLength, maxLength: p.maxLength, minAscent: p.minAscent, maxAscent: p.maxAscent, minTime: p.minTime, maxTime: p.maxTime, difficulty: p.difficulty, state: p.state, radius: p.radius, region: p.region, province: p.province, municipality: p.municipality, latitude: p.latitude, longitude:p.longitude }));
             resolve(preferences);
         });
     });
@@ -1080,12 +1080,14 @@ exports.updateUserPreferencesLocation = (userid,state, region, province, municip
     });
 }    
 
-exports.updateUserPreferencesRadius = (userid,radius ) => {
+exports.updateUserPreferencesRadius = (userid,radius,latitude,longitude ) => {
     return new Promise((resolve, reject) => {
         const sql =`UPDATE Preferences 
-                    SET radius=? 
+                    SET radius=?,
+                    latitude = ?,
+                    longitude =? 
                     WHERE userid =? ` ;
-        db.run(sql, [ radius, userid], function (err) {
+        db.run(sql, [ radius,latitude,longitude, userid], function (err) {
             if (err) reject(err);
             resolve();
         });

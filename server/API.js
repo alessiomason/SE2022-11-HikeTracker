@@ -1128,9 +1128,6 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
 
         try {
 
-            console.log("serverda" + userid);
-            console.log(req.body.minLength);
-
             const minLength = req.body.minLength;
             const maxLength = req.body.maxLength;
             const minAscent = req.body.minAscent;
@@ -1241,8 +1238,10 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
             return res.status(422).json({ errors: errors.array() });
         const userid = req.user.id;
         try {
-            const radius = req.body.radius
-            await dao.updateUserPreferencesRadius(userid, radius);
+            const radius = req.body.radius;
+            const latitude = req.body.latitude;
+            const longitude = req.body.longitude;
+            await dao.updateUserPreferencesRadius(userid, radius,latitude, longitude);
             res.status(201).json().end();
         } catch (err) {
             res.status(500).json({ error: `Database error during update of the user preferences` });

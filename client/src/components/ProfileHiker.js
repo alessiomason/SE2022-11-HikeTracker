@@ -117,17 +117,17 @@ function Parameters(props) {
   const [longitude, setLongitude] = useState(-1);
   const [title,setTitle] = useState();
 
-  const [tempMinLength, setTempMinLength] = useState();
-  const [tempMaxLength, setTempMaxLength] = useState();
-  const [tempMinAscent, setTempMinAscent] = useState();
-  const [tempMaxAscent, setTempMaxAscent] = useState();
-  const [tempMinTime, setTempMinTime] = useState();
-  const [tempMaxTime, setTempMaxTime] = useState();
+  const [tempMinLength, setTempMinLength] = useState(props.preferences? props.preferences[0].minLength : 0);
+  const [tempMaxLength, setTempMaxLength] = useState(props.preferences? props.preferences[0].maxLength : 0);
+  const [tempMinAscent, setTempMinAscent] = useState(props.preferences? props.preferences[0].minAscent : 0);
+  const [tempMaxAscent, setTempMaxAscent] = useState(props.preferences? props.preferences[0].maxAscent : 0);
+  const [tempMinTime, setTempMinTime] = useState(props.preferences? props.preferences[0].minTime : 0);
+  const [tempMaxTime, setTempMaxTime] = useState(props.preferences? props.preferences[0].maxTime : 0);
   const [tempDifficulty, setTempDifficulty] = useState();
-  const [tempState, setTempState] = useState();
-  const [tempRegion, setTempRegion] = useState();
-  const [tempProvince, setTempProvince] = useState();
-  const [tempMunicipality, setTempMunicipality] = useState();
+  const [tempState, setTempState] = useState(props.preferences? props.preferences[0].state : "");
+  const [tempRegion, setTempRegion] = useState(props.preferences? props.preferences[0].region : "");
+  const [tempProvince, setTempProvince] = useState(props.preferences? props.preferences[0].province : "");
+  const [tempMunicipality, setTempMunicipality] = useState(props.preferences? props.preferences[0].municipality : null);
   const [tempRadius, setTempRadius] = useState(radius !== -1 ? radius : 3);
   const [tempLatitude, setTempLatitude] = useState(latitude !== -1 ? latitude : 45.17731777167853);
   const [tempLongitude, setTempLongitude] = useState(longitude !== -1 ? longitude : 7.090988159179688);
@@ -184,7 +184,9 @@ function Parameters(props) {
       }
       if(title === "Radius"){
         userPreferences = {
-          radius: radius
+          radius: radius,
+          latitude: latitude,
+          longitude: longitude
         }
       await API.updateUserPreferencesRadius(userPreferences)
         .then((response) => console.log(response))
@@ -222,6 +224,7 @@ function Parameters(props) {
   }).map(h => h.municipality).sort());
 
   console.log("minlength: " + tempMinLength + " maxlength: " + tempMaxLength);
+  console.log(props.preferences);
 
 
   return (
@@ -238,7 +241,7 @@ function Parameters(props) {
             <Row>
               <Col md={12}>
                 <FloatingLabel controlId="floatingInput" label="Minimum Length" className="mb-3">
-                  <Form.Control required={true} type='number' step="any" min={0} placeholder={props.preferences[0].maxLength} value={tempMinLength} onChange={event => setTempMinLength(event.target.value)}/>
+                  <Form.Control required={true} type='number' step="any" min={0} placeholder={tempMaxLength} value={tempMinLength} onChange={event => setTempMinLength(event.target.value)}/>
                 </FloatingLabel>
               </Col>
             </Row>
@@ -250,7 +253,7 @@ function Parameters(props) {
               </Col>
             </Row>
             <Row className='btn_box'>
-              <Button variant="danger" className="cancel-btn2 mx-2 " onClick={()=> {setTempMinLength(0); setMinLength(0); setMaxLength(0);setTempMaxLength(0);}}>Undo</Button>
+              <Button variant="danger" className="cancel-btn2 mx-2 " onClick={()=> {setTempMinLength(''); setMinLength(); setMaxLength();setTempMaxLength('');}}>Undo</Button>
               <Button variant="success" type='submit' className="save-btn2 mx-2 " onClick={()=> { setTitle("Length"); setMinLength(tempMinLength); setMaxLength(tempMaxLength); handleSubmit();}} >Save</Button>
             </Row>
           </Col>
@@ -276,7 +279,7 @@ function Parameters(props) {
               </Col>
             </Row>
             <Row className='btn_box'>
-              <Button variant="danger" className="cancel-btn2 mx-2 " onClick={()=> {setTempMinAscent(0); setMinAscent(0); setMaxAscent(0);setTempMaxAscent(0);}}>Undo</Button>
+              <Button variant="danger" className="cancel-btn2 mx-2 " onClick={()=> {setTempMinAscent(''); setMinAscent(); setMaxAscent();setTempMaxAscent('');}}>Undo</Button>
               <Button variant="success" type='submit' className="save-btn2 mx-2 " onClick={() => { setTitle("Ascent");setMinAscent(tempMinAscent); setMaxAscent(tempMaxAscent);handleSubmit();}}>Save</Button>
             </Row>
           </Col>
@@ -302,7 +305,7 @@ function Parameters(props) {
               </Col>
             </Row>
             <Row className='btn_box'>
-              <Button variant="danger" className="cancel-btn2 mx-2 " onClick={()=> {setTempMinTime(0); setMinTime(0); setMaxTime(0);setTempMaxTime(0);}} >Undo</Button>
+              <Button variant="danger" className="cancel-btn2 mx-2 " onClick={()=> {setTempMinTime(''); setMinTime(); setMaxTime();setTempMaxTime('');}} >Undo</Button>
               <Button variant="success" type='submit' className="save-btn2 mx-2 "  onClick={() => {setTitle("Time");setMinTime(tempMinTime); setMaxTime(tempMaxTime); handleSubmit();}}>Save</Button>
             </Row>
           </Col>
@@ -319,7 +322,7 @@ function Parameters(props) {
                 </Row>
                 <Row>
                   <Col md={12}>
-                    <Form.Check inline label="Tourist" type="checkbox" id="1" className="mb-3"  onClick={() => {setTempDifficulty("Tourist")}}/>
+                    <Form.Check inline label="Tourist" type="checkbox" id="1" className="mb-3" onClick={() => {setTempDifficulty("Tourist")}}/>
                     <Form.Check inline label="Hiker" type="checkbox" id="2" className="mb-3" onClick={() => {setTempDifficulty("Hiker")}} />
                     <Form.Check inline label="Pro Hiker" type="checkbox" id="3" className="mb-3" onClick={() => {setTempDifficulty("Pro Hiker")}} />
                   </Col>
@@ -379,7 +382,7 @@ function Parameters(props) {
                   </Col>
                 </Row>
                 <Row className='btn_box'>
-                  <Button variant="danger" className="cancel-btn2 mx-2 " onClick={() => {setState(''); setRegion(''); setProvince(''); setMunicipality(''); }} >Undo</Button>
+                  <Button variant="danger" className="cancel-btn2 mx-2 " onClick={() => {setTempState(''); setTempRegion(''); setTempProvince(''); setTempMunicipality(''); }} >Undo</Button>
                   <Button variant="success" type='submit' className="save-btn2 mx-2 "  onClick={() => {setTitle("Location");setState(tempState); setRegion(tempRegion); setProvince(tempProvince); setMunicipality(tempMunicipality); handleSubmit(); }} >Save</Button>
                 </Row>
               </Col>
@@ -416,7 +419,7 @@ function Parameters(props) {
             </Row>
             <Row className='btn_box'>
               <Button variant="danger" className="cancel-btn2 mx-2 " >Undo</Button>
-              <Button variant="success" type='submit' className="save-btn2 mx-2 " onClick={() => {setTitle("Radius");setRadius(tempRadius); handleSubmit();}}>Save</Button>
+              <Button variant="success" type='submit' className="save-btn2 mx-2 " onClick={() => {setTitle("Radius");setRadius(tempRadius); setLatitude(tempLatitude); setLongitude(tempLongitude); handleSubmit();}}>Save</Button>
             </Row>
           </Col>
         </Col>
