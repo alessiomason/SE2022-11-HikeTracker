@@ -755,7 +755,7 @@ exports.validateUser = (userID, userValidated) => {
                      SET Validated = ?
                      WHERE UserId = ?`
         db.run(sql, [
-            userValidated,
+            userValidated ? 1 : 0,
             userID
         ], function (err) {
             if (err) reject(err);

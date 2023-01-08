@@ -1141,14 +1141,26 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
 
     app.put('/api/validate/:id', async (req, res) => {
         const userID = req.params.id;
+        const validated = req.body.validated;
+
         try {
-            const _userID = await dao.validateUser(userID, 1);
-            res.status(200).json({ validated: true, userID: _userID });
+            await dao.validateUser(userID, validated);
+            res.status(200).end();
         }
         catch (err) {
             res.status(500).end();
         }
-
+    });
+    
+    // GET /users
+    app.get('/api/users', async (req, res) => {
+        try {
+            const users = await user_dao.getUsers();
+            res.status(200).json(users);
+        }
+        catch (err) {
+            res.status(500).end();
+        }
     });
 
     // POST /signup
