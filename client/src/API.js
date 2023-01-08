@@ -899,9 +899,9 @@ async function getUserStats() {
         });
     else throw userStats;
 }
-async function getUserPreferences() {
-    // call /api/userPreferences/
-    const response = await fetch(new URL('userPreferences', APIURL), { credentials: 'include' });
+async function getUserPreferences(id) {
+    // call /api/userPreferences/:id
+    const response = await fetch(new URL('userPreferences/' + id, APIURL), { credentials: 'include' });
     const userPreferences = await response.json();
     if (response.ok)
         return (userPreferences);

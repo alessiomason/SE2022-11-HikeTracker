@@ -1107,9 +1107,9 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
 
     });
 //GET Preferences of a user
-    app.get('/api/userPreferences/', async (req, res) => {
+    app.get('/api/userPreferences/:id', async (req, res) => {
        
-        const userid = req.user.id;
+        const userid = req.params.id;
         try {
             const userPreferences = await dao.getUserPreferences(userid);
             res.status(200).json(userPreferences);

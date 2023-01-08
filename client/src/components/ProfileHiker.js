@@ -117,8 +117,8 @@ function Parameters(props) {
   const [longitude, setLongitude] = useState(-1);
   const [title,setTitle] = useState();
 
-  const [tempMinLength, setTempMinLength] = useState(props.preferences[0].minLength);
-  const [tempMaxLength, setTempMaxLength] = useState(props.preferences[0].maxLength);
+  const [tempMinLength, setTempMinLength] = useState();
+  const [tempMaxLength, setTempMaxLength] = useState();
   const [tempMinAscent, setTempMinAscent] = useState();
   const [tempMaxAscent, setTempMaxAscent] = useState();
   const [tempMinTime, setTempMinTime] = useState();
