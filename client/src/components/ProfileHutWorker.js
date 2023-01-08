@@ -61,6 +61,10 @@ function YourHut(props) {
   const [region, setRegion] = useState(props.hut ? props.hut.region : '');
   const [province, setProvince] = useState(props.hut ? props.hut.province : '');
   const [municipality, setMunicipality] = useState(props.hut ? props.hut.municipality : '');
+
+  const [phone, setPhone] = useState(props.hut ? props.hut.phone : '');
+  const [email, setEmail] = useState(props.hut ? props.hut.email : '');
+  const [website, setWebsite] = useState(props.hut ? props.hut.website : '');
   const [errorMsg, setErrorMsg] = useState('');
 
   useEffect(() => {
@@ -94,10 +98,13 @@ function YourHut(props) {
         region: region,
         province: province,
         municipality: municipality,
-        image: mainImg
+        image: mainImg,
+        email: email,
+        phone:phone,
+        website:website
       }
       props.updateHut(updatedHut);
-      props.setDirty(true);
+      setDirty(true);
       props.setShowUpdateBanner(true);
       props.setMessage(`Hut #${hutId} ${name} has been updated successfully!`);
     }
@@ -155,8 +162,8 @@ function YourHut(props) {
                 </FloatingLabel>
               </Col>
               <Col>
-                <FloatingLabel controlId="floatingInput" label="Ascent" className="mb-3">
-                  <Form.Control required={true} value={altitude} type="text" placeholder="2400 m" />
+              <FloatingLabel controlId="floatingInput" label="Ascent" className="mb-3">
+                  <Form.Control required={true} type="text" value={altitude} onChange={ev => setAltitude(ev.target.value)} placeholder="2400 m" />
                 </FloatingLabel>
               </Col>
             </Row>
@@ -167,8 +174,8 @@ function YourHut(props) {
                 </FloatingLabel>
               </Col>
               <Col>
-                <FloatingLabel controlId="floatingInput" label="Phone number" className="mb-3">
-                  <Form.Control required={true} type="text" placeholder="+39 xxx xxx xxxx"></Form.Control>
+              <FloatingLabel controlId="floatingInput" label="Phone number" className="mb-3">
+                  <Form.Control required={true} type="text" value={phone} onChange={ev => setPhone(ev.target.value)} placeholder="+39 xxx xxx xxxx"></Form.Control>
                 </FloatingLabel>
               </Col>
             </Row>
@@ -201,13 +208,13 @@ function YourHut(props) {
               <Col>
                 <Row>
                   <Col lg={6} md={6} sm={6} xs={12}>
-                    <FloatingLabel controlId="floatingInput" label="Email address" className="mb-3">
-                      <Form.Control required={true} type="email" placeholder="name@example.com"></Form.Control>
+                  <FloatingLabel controlId="floatingInput" label="Email address" className="mb-3">
+                      <Form.Control required={true} type="email" value={email} onChange={ev => setEmail(ev.target.value)} placeholder="name@example.com"></Form.Control>
                     </FloatingLabel>
                   </Col>
                   <Col lg={6} md={6} sm={6} xs={12}>
-                    <FloatingLabel controlId="floatingInput" label="Website (optional)" className="mb-3">
-                      <Form.Control type="text" placeholder="nameexample.com" ></Form.Control>
+                  <FloatingLabel controlId="floatingInput" label="Website (optional)" className="mb-3">
+                      <Form.Control type="text" value={website} onChange={ev => setWebsite(ev.target.value)} placeholder="nameexample.com" ></Form.Control>
                     </FloatingLabel>
                   </Col>
                 </Row>
