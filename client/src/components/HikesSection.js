@@ -65,7 +65,7 @@ function MyHikesSection(props) {
 
 	return (
 		<>
-			<MyHikesFilters hikes={hikes} hikesMinLength={hikesMinLength} setHikesMinLength={setHikesMinLength} hikesMaxLength={hikesMaxLength} setHikesMaxLength={setHikesMaxLength} hikesMinTime={hikesMinTime} setHikesMinTime={setHikesMinTime} hikesMaxTime={hikesMaxTime} setHikesMaxTime={setHikesMaxTime}
+			<MyHikesFilters user={props.user} hikes={hikes} hikesMinLength={hikesMinLength} setHikesMinLength={setHikesMinLength} hikesMaxLength={hikesMaxLength} setHikesMaxLength={setHikesMaxLength} hikesMinTime={hikesMinTime} setHikesMinTime={setHikesMinTime} hikesMaxTime={hikesMaxTime} setHikesMaxTime={setHikesMaxTime}
 				hikesMinAscent={hikesMinAscent} setHikesMinAscent={setHikesMinAscent} hikesMaxAscent={hikesMaxAscent} setHikesMaxAscent={setHikesMaxAscent} hikesDifficulties={hikesDifficulties} setHikesDifficulties={setHikesDifficulties} hikesDifficultiesList={hikesDifficultiesList}
 				hikesState={hikesState} setHikesState={setHikesState} hikesRegion={hikesRegion} setHikesRegion={setHikesRegion} hikesProvince={hikesProvince} setHikesProvince={setHikesProvince} hikesMunicipality={hikesMunicipality} setHikesMunicipality={setHikesMunicipality}
 				hikesLatitude={hikesLatitude} setHikesLatitude={setHikesLatitude} hikesLongitude={hikesLongitude} setHikesLongitude={setHikesLongitude} hikesRadius={hikesRadius} setHikesRadius={setHikesRadius} preferences={preferences} user={props.user} />

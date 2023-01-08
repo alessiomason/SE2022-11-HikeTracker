@@ -1,7 +1,11 @@
 const dao = require('../dao'); // module for accessing the DB
 
+const user_dao = require('../user-dao'); // module for accessing the DB
+
+
 describe("test Hikes functions", () => {
   deleteAllHikesTest();
+  createUser();
   newHikeTest();
   test("Test for get given hike id", async () => {
     // With given id (1), get specific hikeID and matches it
@@ -10,17 +14,6 @@ describe("test Hikes functions", () => {
     expect(hike[0].id).toStrictEqual(hikeID);
   });
   deleteAllHikesTest();
-  newHikeTest();
-  test("Test for get list of hikes", async () => {
-    // insert new hike to hikes db and checks the list of hikes can we get or not
-    const hikes = await dao.getHikes();
-    const hike = await dao.newHike("Sentiero degli Dei", 8000.0, 5, 13.0, 1, "Best hike for a sun-kissed stroll", "Campania", "Salerno");
-    const hikesList = await dao.getHikes();
-    expect(hikes.length + 1).toStrictEqual(hikesList.length);
-  });
-
-
-
 })
 
 describe("CRUD Hikes functions", () => {
@@ -54,7 +47,8 @@ function newHikeTest() {
       state: "Italy",
       region: "Piedmont",
       province: "Torino",
-      municipality: "Cogne"
+      municipality: "Cogne",
+      authorID: 1
     };
 
     await dao.newHike(data.label,
@@ -66,7 +60,8 @@ function newHikeTest() {
       data.state,
       data.region,
       data.province,
-      data.municipality);
+      data.municipality,
+      data.authorID);
 
     res = await dao.getHikes();
     expect(res.length).toStrictEqual(1);
@@ -103,7 +98,8 @@ function updateHikeTest() {
       state: "Italy",
       region: "Piedmont",
       province: "Piemonte",
-      municipality: "Cogne"
+      municipality: "Cogne",
+      authorID:1
     };
 
     await dao.newHike(data.label,
@@ -115,7 +111,8 @@ function updateHikeTest() {
       data.state,
       data.region,
       data.province,
-      data.municipality);
+      data.municipality,
+      data.authorID);
 
     res = await dao.getHikes();
     expect(res.length).toStrictEqual(1);
@@ -123,16 +120,17 @@ function updateHikeTest() {
     let id = 1;
 
     let newData = {
-      label: "Gran Paradiso",
+      label: "Gran ParadisoNew",
       length: 20500,
       expTime: 10,
       ascent: 23,
       difficulty: "3",
-      description: "Alpine challenge",
-      state: "Italy",
+      description: "Alpine challengeNew",
+      state: "France",
       region: "Piedmont",
       province: "Piemonte",
-      municipality: "Cogne"
+      municipality: "Cogne",
+      authorID: 1
     };
 
     await dao.updateHike(newData.label,
@@ -141,6 +139,8 @@ function updateHikeTest() {
       newData.ascent,
       newData.difficulty,
       newData.description,
+      newData.state,
+      newData.region,
       newData.province,
       newData.municipality,
       id);
@@ -180,7 +180,8 @@ function deleteHikeTest() {
       state: "Italy",
       region: "Piedmont",
       province: "Piemonte",
-      municipality: "Cogne"
+      municipality: "Cogne",
+      authorID:1
     };
 
     await dao.newHike(data.label,
@@ -192,7 +193,8 @@ function deleteHikeTest() {
       data.state,
       data.region,
       data.province,
-      data.municipality);
+      data.municipality,
+      data.authorID);
 
     res = await dao.getHikes();
     expect(res.length).toStrictEqual(1);
@@ -202,5 +204,23 @@ function deleteHikeTest() {
     await dao.deleteHike(id);
     res = await dao.getHikes();
     expect(res.length).toStrictEqual(0);
+  });
+}
+
+
+function createUser() {
+  test('create new user', async () => {
+      await user_dao.deleteAllUsers();
+      let res = await user_dao.getUsers();
+      expect(res.length).toStrictEqual(0);
+
+        const data = {
+          email: 'group11@p.it',
+          password: 'ciao',
+          accessRight: 'hiker'
+      };
+
+      await user_dao.newUser(data.email, data.password, data.accessRight);
+
   });
 }

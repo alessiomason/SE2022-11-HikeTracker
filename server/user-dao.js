@@ -17,8 +17,17 @@ exports.getUsers = () => {
         const sql = 'SELECT * FROM Users';
         db.all(sql, [], (err, rows) => {
             if (err) reject(err);
-            const users = rows.map((u) => ({ id: u.UserId, surname: r.Surname, name:r.Name, phone:r.Phone, email: u.Email, access_right: u.AccessRight, verified: u.Verified,
-            hut: r.HutID }));
+            const users = rows.map((r) => ({
+                id: r.UserId,
+                surname: r.Surname,
+                name: r.Name,
+                phone: r.Phone,
+                email: r.Email,
+                access_right: r.AccessRight,
+                verified: r.Verified,
+                validated: r.Validated,
+                hut: r.HutID
+            }));
             resolve(users);
         });
     });
@@ -33,9 +42,17 @@ exports.getUserById = (id) => {
             if (err) reject(err);
             else if (row == undefined) resolve({ error: 'User not found.' });
             else {
-                const user = { id: row.UserId, surname: row.Surname, name:row.Name, phone: row.Phone, email: row.Email, access_right: row.AccessRight, verified: row.Verified,
-                    hut: row.HutID};
-                
+                const user = {
+                    id: row.UserId,
+                    surname: row.Surname,
+                    name:row.Name,
+                    phone: row.Phone,
+                    email: row.Email,
+                    access_right: row.AccessRight,
+                    verified: row.Verified,
+                    hut: row.HutID
+                };
+
 
                 resolve(user);
             }
@@ -50,8 +67,16 @@ exports.getUser = (email, password) => {
             if (err) reject(err);
             else if (row === undefined) resolve(false);
             else {
-                const user = { id: row.UserId, surname: row.Surname, name:row.Name, phone:row.Phone, email: row.Email, access_right: row.AccessRight, verified: row.Verified,
-                hut: row.HutID};
+                const user = {
+                    id: row.UserId,
+                    surname: row.Surname,
+                    name:row.Name,
+                    phone:row.Phone,
+                    email: row.Email,
+                    access_right: row.AccessRight,
+                    verified: row.Verified,
+                    hut: row.HutID
+                };
 
                 const salt = row.Salt;
                 crypto.scrypt(password, salt, 32, (err, hashedPassword) => {
@@ -92,7 +117,7 @@ exports.newUser = (email, password, accessRight, surname, name, phone) => {
         });
     });
 };
-exports.newHutWorker = (email, password, accessRight,hutId, surname, name, phone) => {
+exports.newHutWorker = (email, password, accessRight, hutId, surname, name, phone) => {
     return new Promise(async (resolve, reject) => {
         const salt = crypto.randomBytes(16);
         const dateOfRegistration = dayjs().format();
@@ -101,15 +126,15 @@ exports.newHutWorker = (email, password, accessRight,hutId, surname, name, phone
         crypto.scrypt(password, salt, 32, (err, hashedPassword) => {
             if (err) reject(err);
             else {
-                const sql = "INSERT INTO Users (Email, PasswordHash, Salt, AccessRight, DateOfRegistration, EmailConfirmationToken,HutID, Surname, Name, Phone) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-                db.run(sql, [email, hashedPassword, salt, accessRight, dateOfRegistration, emailConfirmationToken,hutId, surname, name, phone], (err) => {
+                const sql = "INSERT INTO Users (Email, PasswordHash, Salt, AccessRight, DateOfRegistration, EmailConfirmationToken, HutID, Surname, Name, Phone) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                db.run(sql, [email, hashedPassword, salt, accessRight, dateOfRegistration, emailConfirmationToken, hutId, surname, name, phone], (err) => {
                     if (err) reject(err);
                     else {
                         db.get('SELECT last_insert_rowid() AS ID', (err, row) => {
                             if (err) reject(err);
                             else if (row === undefined) resolve(false);
                             else
-                                resolve({ id: row.ID, email: email, access_right: accessRight, verified: false, dateOfRegistration: dateOfRegistration, emailConfirmationToken: emailConfirmationToken,hutId: hutId, surname: surname, name: name, phone: phone });
+                                resolve({ id: row.ID, email: email, access_right: accessRight, verified: false, dateOfRegistration: dateOfRegistration, emailConfirmationToken: emailConfirmationToken, hutId: hutId, surname: surname, name: name, phone: phone });
                         })
                     }
                 });

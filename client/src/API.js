@@ -276,7 +276,44 @@ function uploadHutImage(hutID, image) {
     });
 }
 
+function uploadMyHutImage(hutID, posID, image) {
 
+    const dataHut = new FormData();
+    dataHut.append('myHutID', hutID);
+    dataHut.append('posID', posID);
+    dataHut.append('file', image);
+
+    // call: PUT /api/uploadMyHutImage/:id
+    return new Promise((resolve, reject) => {
+        fetch(new URL('uploadMyHutImage/' + hutID, APIURL), {
+            method: 'PUT',
+            credentials: 'include',
+            body: dataHut
+        }).then((response) => {
+            if (response.ok)
+                resolve(null);
+            else {
+                // analyze the cause of error
+                response.json()
+                    .then((obj) => { reject(obj); }) // error message in the response body
+                    .catch(() => { reject({ error: "Cannot parse server response." }) }); // something else
+            }
+        }).catch(() => { reject({ error: "Cannot communicate with the server." }) }); // connection errors
+    });
+}
+
+// get my hut images
+async function getMyHutImages(hutID) {
+    // call /api/huts
+    const response = await fetch(new URL('hutsImages/' + hutID, APIURL));
+    const hutsImages = await response.json();
+    if (response.ok)
+        return hutsImages.map((h) => ({
+            posID: h.posID,
+            image: h.image
+        }))
+    else throw hutsImages;
+}
 
 //Set new Reference point
 
@@ -361,7 +398,7 @@ async function getParkingLots() {
             id: pl.id, label: pl.label,
             description: pl.description, state: pl.state, region: pl.region, province: pl.province, municipality: pl.municipality,
             lat: pl.lat, lon: pl.lon, altitude: pl.altitude,
-            total: pl.total, occupied: pl.occupied, author: pl.author,authorId: pl.authorId
+            total: pl.total, occupied: pl.occupied, author: pl.author, authorId: pl.authorId
         }))
     else throw pls;
 }
@@ -387,7 +424,8 @@ async function getHuts() {
             authorId: h.authorId,
             email: h.email,
             phone: h.phone,
-            website: h.website
+            website: h.website,
+            images: h.images
         }))
     else throw huts;
 }
@@ -413,7 +451,8 @@ async function getHut(id) {
             authorId: hut.authorId,
             email: hut.email,
             phone: hut.phone,
-            website: hut.website
+            website: hut.website,
+            images: hut.images
         });
     else throw hut;
 }
@@ -1110,13 +1149,47 @@ function updateUserPreferencesLocation(userPreferences) {
 }
 
 
-        
-        
+async function getUsers() {
+    // call /api/users/
+    const response = await fetch(new URL('users', APIURL));
+    const users = await response.json();
+    if (response.ok)
+        return users.map((u) => ({
+            id: u.id,
+            fullName: u.fullName,
+            email: u.email,
+            access_right: u.access_right,
+            verified: u.verified,
+            validated: u.validated,
+            hutID: u.hut
+        }))
+    else throw users;
+}
 
+function validateUser(userID, validated) {
+    // call: PUT /api/validate
+    return new Promise((resolve, reject) => {
+        fetch(new URL('validate/' + userID, APIURL), {
+            method: 'PUT',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+            },
 
+            body: JSON.stringify({ validated }),
 
-
-
+        }).then((response) => {
+            if (response.ok)
+                resolve();
+            else {
+                // analyze the cause of error
+                response.json()
+                    .then((message) => { reject(message); }) // error message in the response body
+                    .catch(() => { reject({ error: "Cannot parse server response." }) }); // something else
+            }
+        }).catch(() => { reject({ error: "Cannot communicate with the server." }) }); // connection errors
+    });
+}
 
 async function signup(credentials) {
     let response = await fetch(new URL('signup', APIURL), {
@@ -1202,10 +1275,10 @@ async function reverseNominatim(latitude, longitude) {
 
 const API = {
     addGPXTrack, addParkingLot, AddPoint, deleteParkingLot, updateParkingLot, deleteHike, getHikes, getParkingLots, addHut, updateHut, uploadHutImage,
-    uploadParkingLotImage, getHuts, getHut, deletHut, getHike, addHike, updateHike, signup, verifyEmail, login, logout, getUserInfo, getUserAccessRight, getHikesRefPoints,
+    uploadParkingLotImage, getHuts, getHut, deletHut, getHike, addHike, updateHike, signup, verifyEmail, validateUser, login, logout, getUserInfo, getUserAccessRight, getHikesRefPoints,
     getStartPoint, getEndPoint, getReferencePoint, reverseNominatim, setNewReferencePoint, clearReferencePoint, startHike, getTrackedHikesByHikeIDAndUserID,
-    getTrackedHikesByUserID, recordReferencePointReached, terminateHike, cancelHike, stopHike, getUserStats, addWeatherAlert, getWeatherAlerts, deleteWeatherAlert, getLinkedHuts,
+    getTrackedHikesByUserID, recordReferencePointReached, terminateHike, cancelHike, stopHike, getUserStats, getUsers, addWeatherAlert, getWeatherAlerts, deleteWeatherAlert, getLinkedHuts,
     addHikeCondition, getHikeConditions, deleteHikeCondition, getUserPreferences, addUserPreferences,
-    updateUserPreferencesRadius,updateUserPreferencesLength,updateUserPreferencesAscent,updateUserPreferencesTime,updateUserPreferencesDifficulty,updateUserPreferencesLocation
+    updateUserPreferencesRadius,updateUserPreferencesLength,updateUserPreferencesAscent,updateUserPreferencesTime,updateUserPreferencesDifficulty,updateUserPreferencesLocation, uploadMyHutImage, getMyHutImages
 };
 export default API;

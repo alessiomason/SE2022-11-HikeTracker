@@ -77,8 +77,8 @@ exports.updatePoint = (pointID, SP, EP) => {
 
 exports.addHut = (hutName, hutDescription, lat, lon, altitude, beds, state, region, province, municipality, userId, email, phone, website) => {
     return new Promise((resolve, reject) => {
-        const sql = 'INSERT INTO Huts(Name, Description, Lat, Lon, Altitude, Beds, State, Region, Province, Municipality, Author, Email, Phone, Website) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
-        db.run(sql, [hutName, hutDescription, lat, lon, altitude, beds, state, region, province, municipality, userId, email, phone, website], function (err) {
+        const sql = 'INSERT INTO Huts(Name, Description, Lat, Lon, Altitude, Beds, State, Region, Province, Municipality, Author, Email, Phone, Website, Images) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
+        db.run(sql, [hutName, hutDescription, lat, lon, altitude, beds, state, region, province, municipality, userId, email, phone, website, 0], function (err) {
             if (err) reject(err);
             else {
                 db.get('SELECT last_insert_rowid() AS ID', (err, row) => {
@@ -115,7 +115,8 @@ exports.getHuts = () => {
                 authorId: r.Author,
                 email: r.Email,
                 phone: r.Phone,
-                website: r.Website
+                website: r.Website,
+                images: r.Images
             }));
             resolve(huts);
         });
@@ -170,7 +171,8 @@ exports.getHut = (hutID) => {
                         authorId: r.Author,
                         email: r.Email,
                         phone: r.Phone,
-                        website: r.Website
+                        website: r.Website,
+                        images: r.Images
                     }));
                     resolve(hut);
                 }
@@ -189,6 +191,15 @@ exports.updateHut = (name, description, lat, lon, altitude, beds, state, region,
     });
 }
 
+exports.increaseImages = (numberOfImages, hutID) => {
+    return new Promise((resolve, reject) => {
+        const sql = 'UPDATE Huts SET Images=? WHERE HutID=?'
+        db.run(sql, [numberOfImages, hutID], function (err) {
+            if (err) reject(err);
+            resolve();
+        });
+    });
+}
 
 exports.addHike = (trackName, len, time, ascent, diff, description, state, region, province, municipality, userId) => {
     return new Promise((resolve, reject) => {
@@ -485,10 +496,10 @@ exports.deleteAllHikes = () => {
     });
 }
 
-exports.newHike = (label, length, expTime, ascent, difficulty, description, state, region, province, municipality) => {
+exports.newHike = (label, length, expTime, ascent, difficulty, description, state, region, province, municipality, author) => {
     return new Promise((resolve, reject) => {
-        const sql = 'INSERT INTO Hikes(Label, Length, ExpTime,Ascent,Difficulty,Description,State,Region,Province,Municipality) VALUES(?,?,?,?,?,?,?,?,?,?)'
-        db.run(sql, [label, length, expTime, ascent, difficulty, description, state, region, province, municipality], function (err) {
+        const sql = 'INSERT INTO Hikes(Label, Length, ExpTime,Ascent,Difficulty,Description,State,Region,Province,Municipality,Author) VALUES(?,?,?,?,?,?,?,?,?,?,?)'
+        db.run(sql, [label, length, expTime, ascent, difficulty, description, state, region, province, municipality, author], function (err) {
             if (err) reject(err);
             resolve();
         });
@@ -616,7 +627,7 @@ exports.getTrackedHikesByHikeIDAndUserID = (hikeID, userID) => {
     return new Promise((resolve, reject) => {
         const sql = `SELECT TrackedHikeID, TH.HikeID, Label, Status, Progress, StartTime, EndTime
                      FROM TrackedHikes TH, Hikes H
-                     WHERE TH.HikeID = H.HikeID AND TH.HikeID = ? AND UserID = ?`;
+                     WHERE TH.HikeID = H.HikeID AND TH.HikeID = ? AND TH.UserID = ?`;
         db.all(sql, [hikeID, userID], (err, rows) => {
             if (err) reject(err);
             const trackedHikes = rows.map((r) => ({
@@ -637,7 +648,7 @@ exports.getTrackedHikesByUserID = (userID) => {
     return new Promise((resolve, reject) => {
         const sql = `SELECT TrackedHikeID, TH.HikeID, Label, Status, Progress, StartTime, EndTime
                      FROM TrackedHikes TH, Hikes H
-                     WHERE TH.HikeID = H.HikeID AND UserID = ?`;
+                     WHERE TH.HikeID = H.HikeID AND TH.UserID = ?`;
         db.all(sql, [userID], (err, rows) => {
             if (err) reject(err);
             const trackedHikes = rows.map((r) => ({
@@ -750,7 +761,7 @@ exports.validateUser = (userID, userValidated) => {
                      SET Validated = ?
                      WHERE UserId = ?`
         db.run(sql, [
-            userValidated,
+            userValidated ? 1 : 0,
             userID
         ], function (err) {
             if (err) reject(err);

@@ -28,8 +28,11 @@ const storage = multer.diskStorage(
             } else if (req.body['parkingLotID'] != null) {
                 type = "parkingLot";
                 id = req.body["parkingLotID"];
+            } else if (req.body['myHutID'] != null) {
+                type = `myHut-${req.body['posID']}`
+                id = req.body["myHutID"];
             }
-            // hike-id.jpg || hut-id.jpg || parkingLot-id.jpg
+            // hike-id.jpg || hut-id.jpg || parkingLot-id.jpg || myHut-pos-id.jpg
             cb(null, type + "-" + id + ".jpg");
         }
     }
@@ -1081,6 +1084,54 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
         }
     });
 
+    app.put('/api/uploadMyHutImage/:id', upload.single('file'), async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty())
+            return res.status(422).json({ errors: errors.array() });
+
+        const hutId = req.params.id;
+
+        try {
+            let result = await dao.getHut(hutId);
+            if (result.error)
+                res.status(404).json(result);
+            else {
+                await dao.increaseImages(result[0].images + 1, result[0].id);
+                res.status(201).end();
+            }
+        } catch (err) {
+            res.status(500).json({ error: `Error during upload of my hut's image` });
+        }
+    });
+
+    // get tracked hikes by userID
+    app.get('/api/hutsImages/:id', async (req, res) => {
+        const hutID = req.params.id;
+        let hutImages = [];
+        hutImages.push({
+            posID: 0,
+            image: `http://localhost:3001/images/hut-${hutID}.jpg`
+        })
+        try {
+
+            let result = await dao.getHut(hutID);
+            if (result.error)
+                res.status(404).json(result);
+            else {
+                for(let i = 0; i < result[0].images; i++){
+                    hutImages.push({
+                        posID: i+1,
+                        image: `http://localhost:3001/images/myHut-${i+1}-${hutID}.jpg`
+                    })
+                }
+                res.status(200).json(hutImages);
+            }
+        }
+        catch (err) {
+            res.status(500).end();
+        }
+    });
+
     // get tracked hikes by userID
     app.get('/api/userStats', async (req, res) => {
         const userID = req.user.id;
@@ -1096,14 +1147,26 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
 
     app.put('/api/validate/:id', async (req, res) => {
         const userID = req.params.id;
+        const validated = req.body.validated;
+
         try {
-            const _userID = await dao.validateUser(userID, 1);
-            res.status(200).json({ validated: true, userID: _userID });
+            await dao.validateUser(userID, validated);
+            res.status(200).end();
         }
         catch (err) {
             res.status(500).end();
         }
-
+    });
+    
+    // GET /users
+    app.get('/api/users', async (req, res) => {
+        try {
+            const users = await user_dao.getUsers();
+            res.status(200).json(users);
+        }
+        catch (err) {
+            res.status(500).end();
+        }
     });
 //GET Preferences of a user
     app.get('/api/userPreferences/:id', async (req, res) => {
@@ -1257,9 +1320,8 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
         console.log(req.body)
 
         // if the email already registered if statement will run.
-        if (!user_dao.checkEmail(req.body.email)) {
-            return res.status(401).json({ error: 'This email already registered' });
-        }
+        if (await user_dao.checkEmail(req.body.email))
+            return res.status(401).json({ error: 'This email is already registered' });
 
         if (req.body.hut) {
             user = await user_dao.newHutWorker(req.body.email, req.body.password, req.body.accessRight, req.body.hut, req.body.surname, req.body.name, req.body.phone);

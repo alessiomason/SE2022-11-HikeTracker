@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Container, Row, Col, OverlayTrigger, Tooltip, Button, Tabs, Tab, Modal } from 'react-bootstrap';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Icon } from 'leaflet';
-import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker } from 'react-leaflet';
 import API from '../../API';
 import '../../styles/SinglePageHut.css';
 import { default as Hut } from '../../icons/hut.svg';
@@ -18,13 +18,16 @@ import { default as HutIcon } from '../../images/linked_hut_icon.png';
 
 
 function HutPage(props) {
+
+  let { hutId } = useParams();
+  hutId = parseInt(hutId);
+
   const navigate = useNavigate();
   const [modalShow, setModalShow] = useState(false);
   const [hut, setHut] = useState({});
   const [dirty, setDirty] = useState(true);
-
-  let { hutId } = useParams();
-  hutId = parseInt(hutId);
+  const [image, setImage] = useState(`http://localhost:3001/images/hut-${hutId}.jpg`);
+  const [images, setImages] = useState([{ posID: 0, image: image }]);
 
   useEffect(() => {
     if (dirty) {
@@ -32,18 +35,16 @@ function HutPage(props) {
         .then((hut) => setHut(hut))
         .catch(err => console.log(err));
 
+      API.getMyHutImages(hutId)
+        .then((h) => setImages(h))
+        .catch(err => console.log(err))
+
       setDirty(false);
     }
   }, [dirty, hutId])
 
-  const imgs = [
-    { id: 0, value: require('../../images/img1.jpg') },
-    { id: 1, value: require('../../images/img2.jpg') },
-    { id: 2, value: require('../../images/img3.jpg') },
-    { id: 3, value: require('../../images/img4.jpg') },
-    { id: 4, value: require('../../images/img5.jpg') },
-    { id: 5, value: require('../../images/img6.jpg') },
-    { id: 6, value: require('../../images/img7.jpg') },
+  let imgs = [
+    { posID: 0, image: image }
   ]
 
   const [mainImg, setMainImg] = useState(imgs[0]);
@@ -56,7 +57,7 @@ function HutPage(props) {
 
   return (
     <Container fluid className="external-box-hut">
-      <MyImageModal hikeId={1} hikeLabel={hut.name} show={modalShow} onHide={() => setModalShow(false)} />
+      <MyImageModal show={modalShow} image={mainImg} hut={hut} onHide={() => setModalShow(false)} />
       <Container fluid className='internal-box-hut' >
         <Row className="center-box mb-4">
           <Col md={12} className="center-box">
@@ -70,12 +71,15 @@ function HutPage(props) {
             <Row>
               <Col md={12} className='mb-4 '>
                 <Row className="box_img mt-3">
-                  <img className=" main_img side-hut-img mb-3" src={mainImg.value} alt="main_image" onClick={() => setModalShow(true)} />
+                  <img className=" main_img side-hut-img mb-3" src={mainImg.image} alt="main_image" onClick={() => setModalShow(true)} />
                 </Row>
                 <Row className="thumb_row">
-                  {imgs.map((item, index) => (
-                    <Button key={index} className="hut-box-thumb mb-2" >
-                      <img className={mainImg.id == index ? "hut-clicked thumb_img" : "thumb_img"} src={item.value} alt="hut images" onClick={() => setMainImg(imgs[index])} />
+                  {images.map((item, index) => (
+                    <Button key={index} className="hut-man-box-thumb mb-2" >
+                      <img className={mainImg.posID == index ? "hut-man-clicked thumb_img" : "thumb_img"} src={item.image} onError={({ currentTarget }) => {
+                        currentTarget.onerror = null; // prevents looping
+                        currentTarget.src = Img1;
+                      }} alt="hut images" onClick={() => setMainImg(images[index])} />
                     </Button>
                   ))}
                 </Row>
@@ -168,18 +172,14 @@ function HutPage(props) {
 
 function MyImageModal(props) {
   return (
-    <Modal show={props.show} onHide={props.onHide} size="lg" aria-labelledby="contained-modal-title-vcenter" centered >
-      <Modal.Header closeButton className='box-modal hut-page-modal-header'>
+    <Modal {...props} size="lg" aria-labelledby="contained-modal-title-vcenter" centered >
+      <Modal.Header closeButton className='box-modal man-hut-page-modal-header'>
         <Modal.Title id="contained-modal-title-vcenter">
-          {props.hikeLabel}
+          {props.hut.name}
         </Modal.Title>
       </Modal.Header>
-      <Modal.Body className='box-modal hut-page-modal-body'>
-        <img src={`http://localhost:3001/images/hike-${props.hikeId}.jpg`}
-          onError={({ currentTarget }) => {
-            currentTarget.onerror = null; // prevents looping
-            currentTarget.src = Img1;
-          }} alt="photo" className="modal-imgs" />
+      <Modal.Body className='box-modal man-hut-page-modal-body'>
+        <img src={props.image.image} alt="hut" className="modal-imgs" />
       </Modal.Body>
 
     </Modal>

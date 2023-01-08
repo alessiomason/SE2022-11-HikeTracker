@@ -7,8 +7,6 @@ import { default as Hut } from "../icons/hut.svg";
 import '../styles/SignInSignUp.css';
 import API from '../API';
 
-import { Navigate, useNavigate } from 'react-router-dom';
-
 function MyModalSignup(props) {
 
   function validateEmail(email) {

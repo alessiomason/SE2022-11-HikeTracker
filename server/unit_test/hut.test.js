@@ -1,7 +1,9 @@
 const dao = require('../dao'); // module for accessing the DB
+const user_dao = require('../user-dao'); // module for accessing the DB
 
 describe("test Huts functions", () => {
     deleteAllHutsTest();
+    createUser()
     newHutTest();
     deleteAllHutsTest();
     newHutTest();
@@ -40,12 +42,16 @@ function updateHutTest() {
             lon: 12.21816437203585,
             altitude: 1224,
             beds: 80,
+            state: "Italy",
+            region: "Piedmont",
             province: "Belluno",
             municipality: "Cortina d'Ampezzo",
+            author:1,
+            images:0
 
         };
         const respOfUpdate = await dao.updateHut(newData.name, newData.description, newData.lat, newData.lon, newData.altitude, newData.beds,
-            newData.province, newData.municipality, id);
+            newData.state,newData.region,newData.province, newData.municipality, id);
 
 
         res = await dao.getHut(id);
@@ -72,8 +78,12 @@ function newHutTest() {
             lon: 11.091573714948028,
             altitude: 2272,
             beds: 112,
+            state: "Italy",
+            region: "Piedmont",
             province: "Trento",
             municipality: "Ragoli",
+            author:1,
+            images:0
 
         };
 
@@ -83,8 +93,12 @@ function newHutTest() {
             data.lon,
             data.altitude,
             data.beds,
+            data.state,
+            data.region,
             data.province,
-            data.municipality);
+            data.municipality,
+            data.author,
+            data.images);
 
         res = await dao.getHuts();
         expect(res.length).toStrictEqual(1);
@@ -116,3 +130,19 @@ function deleteHutTest() {
         expect(res.length).toStrictEqual(0);
     });
 }
+
+
+function createUser() {
+    test('create new user', async () => {
+  
+        const data = {
+            email: 'group11@p.it',
+            password: 'ciao',
+            accessRight: 'hiker'
+        };
+  
+        await user_dao.newUser(data.email, data.password, data.accessRight);
+  
+    });
+  }
+
