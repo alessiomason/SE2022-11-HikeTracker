@@ -49,7 +49,6 @@ function MyHikesSection(props) {
 				.then((hikes) => setHikes(hikes))
 				.catch(err => console.log(err))
 			setDirty(false);
-			console.log(hikes);
 		}
 	}, [dirty]);
 
@@ -60,7 +59,6 @@ function MyHikesSection(props) {
 				.then((preferences) => setPreferences(preferences))
 				.catch(err => console.log(err))
 			setDirty(false);
-			console.log(preferences);
 		}
 	}, [dirty]);
 	

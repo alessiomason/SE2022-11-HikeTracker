@@ -175,7 +175,6 @@ function HikesFilters(props) {
           {props.hikesProvince && <Button variant="info" size="sm" className='mx-2 my-1 btn_info px-2 filter-label'>Province: {props.hikesProvince} <img src={Close} alt="close" className='ms-1 my-1 close-filter-label' onClick={() => props.setHikesProvince('')} /></Button>}
           {props.hikesMunicipality && <Button variant="info" size="sm" className='mx-2 my-1 btn_info px-2 filter-label'>Municipality: {props.hikesMunicipality} <img src={Close} alt="close" className='ms-1 my-1 close-filter-label' onClick={() => props.setHikesMunicipality('')} /></Button>}
           {props.hikesLatitude !== -1 && props.hikesLongitude !== -1 && props.hikesRadius !== -1 && <Button variant="info" size="sm" className='mx-2 my-1 btn_info px-2 filter-label'>Point from map in a radius of {props.hikesRadius} km<img src={Close} alt="close" className='ms-1 my-1 close-filter-label' onClick={() => { props.setHikesLatitude(-1); props.setHikesLongitude(-1); props.setHikesRadius(-1); }} /></Button>}
-
         </ButtonToolbar>
       </Row>
     </Container>
