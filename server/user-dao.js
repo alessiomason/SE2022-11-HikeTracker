@@ -75,6 +75,7 @@ exports.getUser = (email, password) => {
                     email: row.Email,
                     access_right: row.AccessRight,
                     verified: row.Verified,
+                    validated: row.Validated,
                     hut: row.HutID
                 };
 

@@ -175,7 +175,7 @@ function App2() {
         .catch(err => console.log(err))
         setDirty(false);
     }
-  }, [user]);
+  }, [user, dirty]);
 
 
     function Layout() {

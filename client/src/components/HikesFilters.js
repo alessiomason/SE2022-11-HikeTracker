@@ -32,8 +32,6 @@ function HikesFilters(props) {
     props.setHikesRadius(-1);
   }
 
-  console.log(props.hikesDifficulties);
-
   const applyUserPreferences = () => {
 
     let difficultiesList = [];

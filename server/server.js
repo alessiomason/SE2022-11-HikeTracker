@@ -23,6 +23,8 @@ passport.use(new LocalStrategy({
                 return done(null, false, { message: 'Wrong email and/or password.' });
             else if (!user.verified)
                 return done(null, false, { message: 'User not verified.' })
+            else if (!user.validated && (user.access_right === 'local-guide' || user.access_right === 'hut-worker'))
+                return done(null, false, { message: 'User not validated by a platform manager. Please try again later.' })
             return done(null, user);
         })
     }

@@ -61,6 +61,10 @@ function YourHut(props) {
   const [region, setRegion] = useState(props.hut ? props.hut.region : '');
   const [province, setProvince] = useState(props.hut ? props.hut.province : '');
   const [municipality, setMunicipality] = useState(props.hut ? props.hut.municipality : '');
+
+  const [phone, setPhone] = useState(props.hut ? props.hut.phone : '');
+  const [email, setEmail] = useState(props.hut ? props.hut.email : '');
+  const [website, setWebsite] = useState(props.hut ? props.hut.website : '');
   const [errorMsg, setErrorMsg] = useState('');
 
   useEffect(() => {
@@ -94,16 +98,21 @@ function YourHut(props) {
         region: region,
         province: province,
         municipality: municipality,
-        image: mainImg
+        image: mainImg,
+        email: email,
+        phone:phone,
+        website:website
       }
       props.updateHut(updatedHut);
+      setDirty(true);
       props.setDirty(true);
       props.setShowUpdateBanner(true);
       props.setMessage(`Hut #${hutId} ${name} has been updated successfully!`);
     }
   }
 
-  const uploadImage = async () => {
+  const uploadImage = async (event) => {
+    event.preventDefault();
     setImages(current => [...current, {id: images.length, value: `http://localhost:3001/images/myHut-${images.length}-${props.hut.id}.jpg`}]);
     await API.uploadMyHutImage(hut.id, hut.images+1, newImage);
     setDirty(true);
@@ -135,12 +144,14 @@ function YourHut(props) {
               ))}
             </Row>
             <Row className="thumb_row">
-            <Form.Group controlId="formFile" className="center-box mt-3 mb-5">
-              <Form.Label>Insert an image of your hut!</Form.Label>
-              <Form.Control type="file" accept='.jpg' 
-                  onChange={(e) => { setNewImage(e.target.files[0]); }} />
-                <Button variant="success" className="save-btn2 mx-2 mb-2" onClick={() => uploadImage()}>Upload</Button>
-            </Form.Group>
+              <Form onSubmit={uploadImage}>
+                <Form.Group controlId="formFile" className="center-box mt-3 mb-5">
+                  <Form.Label>Insert an image of your hut!</Form.Label>
+                  <Form.Control type="file" accept='.jpg' required={true}
+                      onChange={(e) => { setNewImage(e.target.files[0]); }} />
+                    <Button variant="success" type='submit' className="save-btn2 mx-2 mb-2">Upload</Button>
+                </Form.Group>
+              </Form>
             </Row>
           </Container>
         </Col>
@@ -155,8 +166,8 @@ function YourHut(props) {
                 </FloatingLabel>
               </Col>
               <Col>
-                <FloatingLabel controlId="floatingInput" label="Ascent" className="mb-3">
-                  <Form.Control required={true} value={altitude} type="text" placeholder="2400 m" />
+              <FloatingLabel controlId="floatingInput" label="Ascent" className="mb-3">
+                  <Form.Control required={true} type='number' step="any" min={0} value={altitude} onChange={ev => setAltitude(ev.target.value)} placeholder="2400 m" />
                 </FloatingLabel>
               </Col>
             </Row>
@@ -167,8 +178,8 @@ function YourHut(props) {
                 </FloatingLabel>
               </Col>
               <Col>
-                <FloatingLabel controlId="floatingInput" label="Phone number" className="mb-3">
-                  <Form.Control required={true} type="text" placeholder="+39 xxx xxx xxxx"></Form.Control>
+              <FloatingLabel controlId="floatingInput" label="Phone number" className="mb-3">
+                  <Form.Control required={true} type="text" value={phone} onChange={ev => setPhone(ev.target.value)} placeholder="+39 xxx xxx xxxx"></Form.Control>
                 </FloatingLabel>
               </Col>
             </Row>
@@ -201,13 +212,13 @@ function YourHut(props) {
               <Col>
                 <Row>
                   <Col lg={6} md={6} sm={6} xs={12}>
-                    <FloatingLabel controlId="floatingInput" label="Email address" className="mb-3">
-                      <Form.Control required={true} type="email" placeholder="name@example.com"></Form.Control>
+                  <FloatingLabel controlId="floatingInput" label="Email address" className="mb-3">
+                      <Form.Control required={true} type="email" value={email} onChange={ev => setEmail(ev.target.value)} placeholder="name@example.com"></Form.Control>
                     </FloatingLabel>
                   </Col>
                   <Col lg={6} md={6} sm={6} xs={12}>
-                    <FloatingLabel controlId="floatingInput" label="Website (optional)" className="mb-3">
-                      <Form.Control type="text" placeholder="nameexample.com" ></Form.Control>
+                  <FloatingLabel controlId="floatingInput" label="Website (optional)" className="mb-3">
+                      <Form.Control type="text" value={website} onChange={ev => setWebsite(ev.target.value)} placeholder="nameexample.com" ></Form.Control>
                     </FloatingLabel>
                   </Col>
                 </Row>
@@ -252,7 +263,6 @@ function HikeCondition(props) {
   const [show, setShow] = useState(false);
   const [dirty, setDirty] = useState(true);
   const [linkedHut, setLinkedHut] = useState([]);
-  const [hike, setHike] = useState([]);
   const [typeCondition, setTypeCondition] = useState('');
   const [description, setDescription] = useState('');
   const [hikeCondition, setHikeCondition] = useState([]);
@@ -263,11 +273,8 @@ function HikeCondition(props) {
     if (dirty) {
       API.getLinkedHuts()
         .then((points) => {
-          setLinkedHut(points);
+          setLinkedHut(points.filter((p) => p.hutID === props.hut.id));
           if (points.filter((p) => p.hutID === props.hut.id).length !== 0) {
-            API.getHike(points.filter((p) => p.hutID === props.hut.id)[0].hikeID)
-              .then((hike) => setHike(hike))
-              .catch(err => console.log(err))
             API.getHikeConditions()
               .then((hikeCondition) => setHikeCondition(hikeCondition.filter((h) => h.hutID === props.hut.id)))
               .catch(err => console.log(err))
@@ -279,23 +286,26 @@ function HikeCondition(props) {
     }
   }, [dirty, props.hut.id])
 
-  if (linkedHut.filter((p) => p.hutID === props.hut.id).length !== 0) {
+  if (linkedHut.length !== 0) {
     flagLinked = true;
   }
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    let hikeCondition = {
-      hikeID: hike.id,
-      hutID: props.hut.id,
-      typeCondition: typeCondition,
-      description: description
-    };
 
-    await API.addHikeCondition(hikeCondition)
+    for(let i=0; i<linkedHut.length; i++){
+      let hikeCondition = {
+        hikeID: linkedHut[i].hikeID,
+        hutID: props.hut.id,
+        typeCondition: typeCondition,
+        description: description
+      };
+
+      await API.addHikeCondition(hikeCondition)
       .then()
       .catch(err => console.log(err));
 
+    }
     setShow(true);
     resetValues();
     setDirty(true);
@@ -319,7 +329,7 @@ function HikeCondition(props) {
         <Row>
           {linkedHut.filter((p) => p.hutID === props.hut.id).length === 0 ?
             <h4 className="box-center margin-bottom">{`The hut "${props.hut.name}" is not yet linked`}</h4> :
-            <h4 className="box-center margin-bottom">{`The hut "${props.hut.name}" is linked to the hike "${hike.label}"`}</h4>}
+            <h4 className="box-center margin-bottom">{`The hut "${props.hut.name}" is linked!`}</h4>}
         </Row>
         <Col md={{ span: 6, offset: 3 }}>
           <Row className="mb-4">
@@ -379,7 +389,7 @@ function HikeCondition(props) {
         }
       </Form>
       <Row className="val-user-box mx-5 mb-4 p-4 mt-5">
-        {hikeCondition.map((w) => <ListHikeCondition key={w.conditionID} hikeCondition={w} hut={props.hut} hike={hike} setDirty={setDirty} />)}
+        {hikeCondition.map((w) => <ListHikeCondition key={w.conditionID} hikeCondition={w} hut={props.hut} hikeID={w.hikeID} setDirty={setDirty} />)}
       </Row>
     </>
   );
@@ -432,6 +442,18 @@ function HutMapHikeCondition(props) {
 
 function ListHikeCondition(props) {
 
+  const [dirtyList, setDirtyList] = useState(true);
+  const [hike, setHike] = useState({});
+
+  useEffect(() => {
+    if (dirtyList) {
+      API.getHike(props.hikeID)
+        .then((h) => setHike(h))
+        .catch(err => console.log(err))
+      setDirtyList(false);
+    }
+  }, [dirtyList, props.hikeID])
+
   return (
     <>
       <Col md={2} className="align margin-bottom">
@@ -450,7 +472,7 @@ function ListHikeCondition(props) {
         <OverlayTrigger placement="bottom" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip-2">Hike</Tooltip>}>
           <img src={Hike} alt="location_image" className='me-3 profile-icon' />
         </OverlayTrigger>
-        <h6 className="card-text p-card">{props.hike.label}</h6>
+        <h6 className="card-text p-card">{hike.label}</h6>
       </Col>
       <Col md={5} className="align margin-bottom desc">
         <FloatingLabel controlId="floatingTextarea2" label="Description" className=" desc-box">
