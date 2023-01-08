@@ -1160,7 +1160,8 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
         console.log(req.body)
 
         // if the email already registered if statement will run.
-        if (user_dao.checkEmail(req.body.email)) {
+        if (await user_dao.checkEmail(req.body.email)) {
+            
             return res.status(401).json({ error: 'This email already registered' });
         }
 
