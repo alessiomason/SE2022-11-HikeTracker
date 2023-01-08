@@ -2,9 +2,9 @@ const dao = require('../dao'); // module for accessing the DB
 const user_dao = require('../user-dao'); // module for accessing the DB
 
 describe("test parking lots functions", () => {
-    deleteAllParkingLotsTest();
-    createUser();
-    newParkingLotTest();
+  deleteAllParkingLotsTest();
+  createUser();
+  newParkingLotTest();
   test("Test for get given parking lot id", async () => {
     // With given id (1), gets specific parkingID and matches it
     const ParkingID = 1
@@ -18,21 +18,22 @@ describe("test parking lots functions", () => {
     const parkings = await dao.getParkingLots();
 
     let data = {
-      label : "parking test1",
+      label: "parking test1",
       state: "Italy",
       region: "Piomente",
       description: "parking description test",
       province: "province for parking test",
       municipality: "municipality for parking test",
-      lat : 41.234572836822555,
-      lon : 15.21816437203666,
-      altitude : 1240,
-      total : 40,
+      lat: 41.234572836822555,
+      lon: 15.21816437203666,
+      altitude: 1240,
+      total: 40,
       occupied: 35,
       authorID: 1
-     
-  };
-    const parking =  await dao.addParking(data.label,
+
+    };
+    
+    await dao.addParking(data.label,
       data.state,
       data.region,
       data.province,
@@ -55,10 +56,10 @@ describe("test parking lots functions", () => {
 })
 
 describe("CRUD Parking Lot functions", () => {
-    deleteAllParkingLotsTest();
-    newParkingLotTest();
-    updateParkingLotTest();
-    deleteParkingLotTest();
+  deleteAllParkingLotsTest();
+  newParkingLotTest();
+  updateParkingLotTest();
+  deleteParkingLotTest();
 });
 
 function deleteAllParkingLotsTest() {
@@ -76,19 +77,19 @@ function newParkingLotTest() {
     expect(res.length).toStrictEqual(0);
 
     let data = {
-        label : "parking test1",
-        state: "Italy",
-        region: "Piomente",
-        description: "parking description test",
-        province: "province for parking test",
-        municipality: "municipality for parking test",
-        lat : 41.234572836822555,
-        lon : 15.21816437203666,
-        altitude : 1240,
-        total : 40,
-        occupied: 35,
-        authorID: 1
-       
+      label: "parking test1",
+      state: "Italy",
+      region: "Piomente",
+      description: "parking description test",
+      province: "province for parking test",
+      municipality: "municipality for parking test",
+      lat: 41.234572836822555,
+      lon: 15.21816437203666,
+      altitude: 1240,
+      total: 40,
+      occupied: 35,
+      authorID: 1
+
     };
 
     await dao.addParking(data.label,
@@ -131,33 +132,33 @@ function updateParkingLotTest() {
 
 
     let data = {
-        label : "parking test1",
-        state: "Italy",
-        region: "Piomente",
-        description: "parking description test",
-        province: "province for parking test",
-        municipality: "municipality for parking test",
-        lat : 41.234572836822555,
-        lon : 15.21816437203666,
-        altitude : 1240,
-        total : 40,
-        occupied: 35,
-        authorID: 1
-       
+      label: "parking test1",
+      state: "Italy",
+      region: "Piomente",
+      description: "parking description test",
+      province: "province for parking test",
+      municipality: "municipality for parking test",
+      lat: 41.234572836822555,
+      lon: 15.21816437203666,
+      altitude: 1240,
+      total: 40,
+      occupied: 35,
+      authorID: 1
+
     };
 
     await dao.addParking(data.label,
-        data.state,
-        data.region,
-        data.province,
-        data.municipality,
-        data.description,
-        data.lat,
-        data.lon,
-        data.altitude,
-        data.total,
-        data.occupied,
-        data.authorID);
+      data.state,
+      data.region,
+      data.province,
+      data.municipality,
+      data.description,
+      data.lat,
+      data.lon,
+      data.altitude,
+      data.total,
+      data.occupied,
+      data.authorID);
 
     res = await dao.getParkingById(1);
     expect(res.length).toStrictEqual(1);
@@ -165,31 +166,31 @@ function updateParkingLotTest() {
     let id = 1;
 
     let newData = {
-        label : "parking test1 update",
-        state: "Italy",
-        region: "Piomente2",
-        description: "parking description test update",
-        province: "province for parking test update",
-        municipality: "municipality for parking test update",
-        lat : 41.234572836822555,
-        lon : 15.21816437203666,
-        altitude : 1300,
-        total : 50,
-        occupied: 40,
-        authorID: 1
+      label: "parking test1 update",
+      state: "Italy",
+      region: "Piomente2",
+      description: "parking description test update",
+      province: "province for parking test update",
+      municipality: "municipality for parking test update",
+      lat: 41.234572836822555,
+      lon: 15.21816437203666,
+      altitude: 1300,
+      total: 50,
+      occupied: 40,
+      authorID: 1
     };
 
     await dao.updateParking(newData.label,
-        data.state,
-        data.region,
-        newData.province,
-        newData.municipality,
-        newData.description,
-        newData.lat,
-        newData.lon,
-        newData.altitude,
-        newData.total,
-        newData.occupied,
+      data.state,
+      data.region,
+      newData.province,
+      newData.municipality,
+      newData.description,
+      newData.lat,
+      newData.lon,
+      newData.altitude,
+      newData.total,
+      newData.occupied,
       id);
 
     res = await dao.getParkingLots();
@@ -219,35 +220,35 @@ function deleteParkingLotTest() {
     expect(res.length).toStrictEqual(0);
 
 
-    
+
     let data = {
-        label : "parking test1",
-        state: "Italy",
-        region: "Piomente",
-        description: "parking description test",
-        province: "province for parking test",
-        municipality: "municipality for parking test",
-        lat : 41.234572836822555,
-        lon : 15.21816437203666,
-        altitude : 1240,
-        total : 40,
-        occupied: 35,
-        authorID: 1
-       
+      label: "parking test1",
+      state: "Italy",
+      region: "Piomente",
+      description: "parking description test",
+      province: "province for parking test",
+      municipality: "municipality for parking test",
+      lat: 41.234572836822555,
+      lon: 15.21816437203666,
+      altitude: 1240,
+      total: 40,
+      occupied: 35,
+      authorID: 1
+
     };
 
     await dao.addParking(data.label,
-        data.state,
-        data.region,
-        data.province,
-        data.municipality,
-        data.description,
-        data.lat,
-        data.lon,
-        data.altitude,
-        data.total,
-        data.occupied,
-        data.authorID);
+      data.state,
+      data.region,
+      data.province,
+      data.municipality,
+      data.description,
+      data.lat,
+      data.lon,
+      data.altitude,
+      data.total,
+      data.occupied,
+      data.authorID);
 
     res = await dao.getParkingLots();
     expect(res.length).toStrictEqual(1);
@@ -264,13 +265,13 @@ function createUser() {
   test('create new user', async () => {
 
 
-      const data = {
-        email: 'group11@p.it',
-        password: 'ciao',
-        accessRight: 'hiker'
+    const data = {
+      email: 'group11@p.it',
+      password: 'ciao',
+      accessRight: 'hiker'
     };
 
-      await user_dao.newUser(data.email, data.password, data.accessRight);
+    await user_dao.newUser(data.email, data.password, data.accessRight);
 
   });
 }
