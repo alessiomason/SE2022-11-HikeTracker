@@ -72,7 +72,7 @@ function SpecificProfile(props) {
 
   switch (props.user.access_right) {
     case 'hiker':
-      return (<ProfileHiker hikes={props.hikes} />);
+      return (<ProfileHiker hikes={props.hikes} user={props.user} />);
     case 'local-guide':
       return (<ProfileLocalGuide />);
     case 'hut-worker':

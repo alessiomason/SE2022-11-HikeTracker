@@ -8,6 +8,7 @@ const nodemailer = require('nodemailer');
 require('dotenv').config();
 const multer = require('multer');
 const fs = require("fs");
+const { log } = require('console');
 const maxSize = 10 * 1024 * 1024; // 10 MB
 
 const storage = multer.diskStorage(
@@ -1105,6 +1106,149 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
         }
 
     });
+//GET Preferences of a user
+    app.get('/api/userPreferences/', async (req, res) => {
+       
+        const userid = req.user.id;
+        try {
+            const userPreferences = await dao.getUserPreferences(userid);
+            res.status(200).json(userPreferences);
+        }
+        catch (err) {
+            res.status(500).end();
+        }
+    });
+
+//Add user preferences
+    app.post('/api/userPreferences', async (req, res) => {
+        const errors = validationResult(req);
+        const userid = req.user.id;
+        if (!errors.isEmpty())
+            return res.status(422).json({ errors: errors.array() });
+
+        try {
+
+            console.log("serverda" + userid);
+            console.log(req.body.minLength);
+
+            const minLength = req.body.minLength;
+            const maxLength = req.body.maxLength;
+            const minAscent = req.body.minAscent;
+            const maxAscent = req.body.maxAscent;
+            const minTime = req.body.minTime;
+            const maxTime = req.body.maxTime;
+            const difficulty = req.body.difficulty;
+            const state = req.body.state;  
+            const region = req.body.region; 
+            const province = req.body.province; 
+            const municipality = req.body.municipality; 
+            const radius = req.body.radius; 
+            await dao.addUserPreferences(userid, minLength, maxLength, minAscent, maxAscent, minTime, maxTime, difficulty, state, region, province, municipality, radius);
+            res.status(201).json().end();
+        } catch (err) {
+            console.log(err)
+            res.status(500).json({ error: err });
+        }
+    });
+
+   // update user preferences length
+   app.put('/api/userPreferencesLength/', async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty())
+        return res.status(422).json({ errors: errors.array() });
+    const userid = req.user.id;
+    try {
+
+        console.log("APi server");
+        console.log(req.body.minLength);
+        const minLength = req.body.minLength;
+        const maxLength = req.body.maxLength
+        await dao.updateUserPreferencesLength(userid, minLength, maxLength);
+        res.status(201).json().end();
+    } catch (err) {
+        res.status(500).json({ error: `Database error during update of the user preferences` });
+    }
+});
+
+    // update user preferences ascent
+       app.put('/api/userPreferencesAscent/', async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty())
+            return res.status(422).json({ errors: errors.array() });
+        const userid = req.user.id;
+        try {
+            const minAscent = req.body.minAscent
+            const maxAscent = req.body.maxAscent 
+            await dao.updateUserPreferencesAscent(userid, minAscent, maxAscent);
+            res.status(201).json().end();
+        } catch (err) {
+            res.status(500).json({ error: `Database error during update of the user preferences` });
+        }
+    });
+
+       // update user preferences time
+       app.put('/api/userPreferencesTime/', async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty())
+            return res.status(422).json({ errors: errors.array() });
+        const userid = req.user.id;
+        try {
+            const minTime = req.body.minTime
+            const maxTime = req.body.maxTime 
+            await dao.updateUserPreferencesTime(userid, minTime, maxTime);
+            res.status(201).json().end();
+        } catch (err) {
+            res.status(500).json({ error: `Database error during update of the user preferences` });
+        }
+    });
+
+        // update user preferences difficulty
+       app.put('/api/userPreferencesDifficulty/', async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty())
+            return res.status(422).json({ errors: errors.array() });
+        const userid = req.user.id;
+        try {
+            const difficulty = req.body.difficulty
+            await dao.updateUserPreferencesDifficulty(userid, difficulty);
+            res.status(201).json().end();
+        } catch (err) {
+            res.status(500).json({ error: `Database error during update of the user preferences` });
+        }
+    });
+ // update user preferences location
+        app.put('/api/userPreferencesLocation/', async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty())
+            return res.status(422).json({ errors: errors.array() });
+        const userid = req.user.id;
+        try {
+            const state = req.body.state  
+            const region = req.body.region 
+            const province = req.body.province 
+            const municipality = req.body.municipality 
+            await dao.updateUserPreferencesLocation(userid, state, region, province, municipality);
+            res.status(201).json().end();
+        } catch (err) {
+            res.status(500).json({ error: `Database error during update of the user preferences` });
+        }
+    });
+
+      // update user preferences radius
+      app.put('/api/userPreferencesRadius/', async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty())
+            return res.status(422).json({ errors: errors.array() });
+        const userid = req.user.id;
+        try {
+            const radius = req.body.radius
+            await dao.updateUserPreferencesRadius(userid, radius);
+            res.status(201).json().end();
+        } catch (err) {
+            res.status(500).json({ error: `Database error during update of the user preferences` });
+        }
+    });
+
 
     // POST /signup
     // signup

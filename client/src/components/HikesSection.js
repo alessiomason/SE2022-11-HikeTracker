@@ -38,6 +38,7 @@ function MyHikesSection(props) {
 	const [hikesLatitude, setHikesLatitude] = useState(-1);
 	const [hikesLongitude, setHikesLongitude] = useState(-1);
 	const [hikesRadius, setHikesRadius] = useState(-1);
+	const [preferences, setPreferences] = useState();
 
 	const [hikes, setHikes] = useState([]);
 	const [dirty, setDirty] = useState(true);
@@ -48,15 +49,28 @@ function MyHikesSection(props) {
 				.then((hikes) => setHikes(hikes))
 				.catch(err => console.log(err))
 			setDirty(false);
+			console.log(hikes);
 		}
 	}, [dirty]);
+
+
+	useEffect(() => {
+		if (dirty) {
+			API.getUserPreferences(props.user.id)
+				.then((preferences) => setPreferences(preferences))
+				.catch(err => console.log(err))
+			setDirty(false);
+			console.log(preferences);
+		}
+	}, [dirty]);
+	
 
 	return (
 		<>
 			<MyHikesFilters hikes={hikes} hikesMinLength={hikesMinLength} setHikesMinLength={setHikesMinLength} hikesMaxLength={hikesMaxLength} setHikesMaxLength={setHikesMaxLength} hikesMinTime={hikesMinTime} setHikesMinTime={setHikesMinTime} hikesMaxTime={hikesMaxTime} setHikesMaxTime={setHikesMaxTime}
 				hikesMinAscent={hikesMinAscent} setHikesMinAscent={setHikesMinAscent} hikesMaxAscent={hikesMaxAscent} setHikesMaxAscent={setHikesMaxAscent} hikesDifficulties={hikesDifficulties} setHikesDifficulties={setHikesDifficulties} hikesDifficultiesList={hikesDifficultiesList}
 				hikesState={hikesState} setHikesState={setHikesState} hikesRegion={hikesRegion} setHikesRegion={setHikesRegion} hikesProvince={hikesProvince} setHikesProvince={setHikesProvince} hikesMunicipality={hikesMunicipality} setHikesMunicipality={setHikesMunicipality}
-				hikesLatitude={hikesLatitude} setHikesLatitude={setHikesLatitude} hikesLongitude={hikesLongitude} setHikesLongitude={setHikesLongitude} hikesRadius={hikesRadius} setHikesRadius={setHikesRadius} />
+				hikesLatitude={hikesLatitude} setHikesLatitude={setHikesLatitude} hikesLongitude={hikesLongitude} setHikesLongitude={setHikesLongitude} hikesRadius={hikesRadius} setHikesRadius={setHikesRadius} preferences={preferences}  />
 			<HikesCards user={props.user} hikesMinLength={hikesMinLength} hikesMaxLength={hikesMaxLength} hikesMinTime={hikesMinTime} hikesMaxTime={hikesMaxTime} hikesMinAscent={hikesMinAscent} hikesMaxAscent={hikesMaxAscent} hikesDifficulties={hikesDifficulties}
 				hikesState={hikesState} hikesRegion={hikesRegion} hikesProvince={hikesProvince} hikesMunicipality={hikesMunicipality} hikes={hikes} hikesLatitude={hikesLatitude} hikesLongitude={hikesLongitude} hikesRadius={hikesRadius} />
 		</>

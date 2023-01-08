@@ -990,3 +990,104 @@ exports.deleteAllHikeConditions = () => {
         });
     });
 }
+
+exports.getUserPreferences = (userid) => {
+    return new Promise((resolve, reject) => {
+        const sql = 'SELECT * FROM Preferences WHERE userid = ?';
+        db.all(sql, [userid], (err, rows) => {
+            if (err) reject(err);
+            const preferences = rows.map((p) => ({ userid: p.userid, minLength: p.minLength, maxLength: p.maxLength, minAscent: p.minAscent, maxAscent: p.maxAscent, minTime: p.minTime, maxTime: p.maxTime, difficulty: p.difficulty, state: p.state, radius: p.radius, region: p.region, province: p.province, municipality: p.municipality }));
+            resolve(preferences);
+        });
+    });
+}
+
+exports.addUserPreferences = (userid, minLength, maxLength, minAscent, maxAscent, minTime, maxTime, difficulty, state, region, province, municipality, radius) => {
+    return new Promise((resolve, reject) => {
+        const sql = 'INSERT INTO Preferences(userid, minLength, maxLength) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ' ;
+        db.run(sql, [userid, minLength, maxLength,minAscent, maxAscent, minTime, maxTime, difficulty, state, region, province, municipality, radius ], function (err) {
+            if (err) reject(err);
+            resolve();
+        });
+    });
+}
+
+exports.updateUserPreferencesLength = (userid, minLength, maxLength) => {
+    return new Promise((resolve, reject) => {
+       console.log("dao");
+       console.log(userid, minLength, maxLength);
+        const sql =`UPDATE Preferences 
+                    SET minLength=?, 
+                        maxLength=?
+                    WHERE userid =? ` ;
+        db.run(sql, [ minLength, maxLength, userid], function (err) {
+            if (err) reject(err);
+            resolve();
+        });
+    });
+}
+
+exports.updateUserPreferencesAscent = (userid, minAscent, maxAscent) => {
+        return new Promise((resolve, reject) => {
+            const sql =`UPDATE Preferences 
+                        SET minAscent=?,
+                            maxAscent=? 
+                        WHERE userid =? ` ;
+            db.run(sql, [  minAscent, maxAscent, userid], function (err) {
+                if (err) reject(err);
+                resolve();
+            });
+        });
+    }
+
+exports.updateUserPreferencesTime = (userid, minTime, maxTime) => {
+    return new Promise((resolve, reject) => {
+        const sql =`UPDATE Preferences 
+                    SET minTime=?,
+                        maxTime=? 
+                    WHERE userid =? ` ;
+        db.run(sql, [ minTime, maxTime, userid], function (err) {
+            if (err) reject(err);
+            resolve();
+        });
+    });
+}
+
+exports.updateUserPreferencesDifficulty = (userid, difficulty) => {
+        return new Promise((resolve, reject) => {
+            const sql =`UPDATE Preferences 
+                        SET difficulty=? 
+                        WHERE userid =? ` ;
+            db.run(sql, [ difficulty, userid], function (err) {
+                if (err) reject(err);
+                resolve();
+            });
+        });
+    }
+
+exports.updateUserPreferencesLocation = (userid,state, region, province, municipality ) => {
+    return new Promise((resolve, reject) => {
+        const sql =`UPDATE Preferences 
+                    SET state=?, 
+                        region=?, 
+                        province=?, 
+                        municipality=? 
+                    WHERE userid =? ` ;
+        db.run(sql, [ state, region, province, municipality, userid], function (err) {
+            if (err) reject(err);
+            resolve();
+        });
+    });
+}    
+
+exports.updateUserPreferencesRadius = (userid,radius ) => {
+    return new Promise((resolve, reject) => {
+        const sql =`UPDATE Preferences 
+                    SET radius=? 
+                    WHERE userid =? ` ;
+        db.run(sql, [ radius, userid], function (err) {
+            if (err) reject(err);
+            resolve();
+        });
+    });
+} 

@@ -8,6 +8,7 @@ import { default as Close } from '../icons/close.svg';
 import { default as Hiking } from '../icons/hiking.svg';
 import { default as Delete } from '../icons/delete.svg';
 
+
 function HikesFilters(props) {
 
   const [modalShow, setModalShow] = useState(false);
@@ -29,6 +30,29 @@ function HikesFilters(props) {
     props.setHikesLatitude(-1);
     props.setHikesLongitude(-1);
     props.setHikesRadius(-1);
+  }
+
+  console.log(props.hikesDifficulties);
+
+  const applyUserPreferences = () => {
+
+    console.log(props.preferences);
+    props.setHikesMinLength(props.preferences[0].minLength)
+    props.setHikesMaxLength(props.preferences[0].maxLength)
+    props.setHikesMinTime(props.preferences[0].minTime)
+    props.setHikesMaxTime(props.preferences[0].maxTime)
+    props.setHikesMinAscent(props.preferences[0].minAscent)
+    props.setHikesMaxAscent(props.preferences[0].maxAscent)
+    props.setHikesState(props.preferences[0].state)
+    props.setHikesRegion(props.preferences[0].region)
+    props.setHikesProvince(props.preferences[0].province)
+    props.setHikesMunicipality(props.preferences[0].municipality)
+    props.setHikesRadius(props.preferences[0].radius)
+    
+    // console.log(props.hikesDifficulties);
+    // if(props.preferences[0].difficulty === "Tourist")
+    //  props.setHikesDifficulties(props.hikes)
+
   }
 
   const renderTooltip = (props) => (
@@ -57,7 +81,7 @@ function HikesFilters(props) {
             </ButtonGroup>
             <ButtonGroup size="lg" className='my-1 me-2'>
               <Button variant="success" className='btn_filter' onClick={() => { setModalShow(true); setTitle("Point from map"); setDesc("Select a specific point on the map:") }}>Point from map</Button>
-              <Button variant="success" className='btn_filter' >Set Personal Filter</Button>
+              <Button variant="success" className='btn_filter' onClick={()=>{applyUserPreferences()}}>Set Personal Filter</Button>
             </ButtonGroup>
             <ButtonGroup className="my-1" aria-label="Second group">
               <OverlayTrigger placement="right" delay={{ show: 250, hide: 400 }} overlay={renderTooltip} >
