@@ -47,7 +47,7 @@
     box-shadow: 0 0 0 3px #494681;
   }
 
-.hut-label label{
+.profile-hut-label label{
     color: #494681;
     font-weight: bold;
 }
@@ -87,7 +87,7 @@
 }
 
 .form-desc{
-    width: 90% !important;
+    width: 100% !important;
 }
 
 .main_img{
@@ -187,4 +187,18 @@
   .upload_btn:focus {
     box-shadow: 0 0.6em 0.4em -0.4em var(--hover);
     transform: translateY(-0.25em);
+  }
+
+  .single-hut-map-profile{
+    margin-bottom: 0px !important;
+    height: 400px !important;
+    width: 100% !important;
+    border: 2px solid #494681;
+    border-radius: 8px;
+  }
+
+  .margin-x2{
+    margin-left: 0px !important;
+    margin-right: 0px !important;
+    padding-right: 0px;
   }

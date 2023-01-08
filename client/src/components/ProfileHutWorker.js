@@ -26,8 +26,8 @@ function ProfileHutWorker(props) {
   return (
     <Container fluid className="">
       <Row className="box-btn mb-5">
-        <Button className={task1 ? 'user-btn-fix me-2' : 'user-btn me-2'} onClick={() => setTask1(true)}> Your Hut </Button>
-        <Button className={!task1 ? 'user-btn-fix ms-2 ' : 'user-btn ms-2'} onClick={() => setTask1(false)}> Hike Condition </Button>
+        <Button className={task1 ? 'user-btn-fix  m-2' : 'user-btn m-2 '} onClick={() => setTask1(true)}> Your Hut </Button>
+        <Button className={!task1 ? 'user-btn-fix m-2 ' : 'user-btn m-2'} onClick={() => setTask1(false)}> Hike Condition </Button>
       </Row>
       {showUpdateBanner && <Alert variant='success' onClose={() => { setShowUpdateBanner(false); setMessage('') }} dismissible>{message}</Alert>}
       {task1 ? <YourHut hut={props.hut} setDirty={props.setDirty} updateHut={props.updateHut} setShowUpdateBanner={setShowUpdateBanner}
@@ -46,7 +46,7 @@ function YourHut(props) {
   let imgs = [
     { posID: 0, image: image }
   ]
- 
+
   const [newImage, setNewImage] = useState({});
   const [dirty, setDirty] = useState(true);
   const [mainImg, setMainImg] = useState(imgs[0]);
@@ -73,8 +73,8 @@ function YourHut(props) {
         .then((hut) => {
           setHut(hut);
           API.getMyHutImages(hutId)
-          .then((h) => setImages(h))
-          .catch(err => console.log(err))
+            .then((h) => setImages(h))
+            .catch(err => console.log(err))
         })
       setDirty(false);
     }
@@ -100,8 +100,8 @@ function YourHut(props) {
         municipality: municipality,
         image: mainImg,
         email: email,
-        phone:phone,
-        website:website
+        phone: phone,
+        website: website
       }
       props.updateHut(updatedHut);
       setDirty(true);
@@ -113,15 +113,15 @@ function YourHut(props) {
 
   const uploadImage = async (event) => {
     event.preventDefault();
-    setImages(current => [...current, {id: images.length, value: `http://localhost:3001/images/myHut-${images.length}-${props.hut.id}.jpg`}]);
-    await API.uploadMyHutImage(hut.id, hut.images+1, newImage);
+    setImages(current => [...current, { id: images.length, value: `http://localhost:3001/images/myHut-${images.length}-${props.hut.id}.jpg` }]);
+    await API.uploadMyHutImage(hut.id, hut.images + 1, newImage);
     setDirty(true);
   }
 
   return (
     <Container fluid className="">
       <MyImageModal show={modalShow} image={mainImg} hut={hut} onHide={() => setModalShow(false)} />
-      <Row className="hut-man-box py-5 px-2  ">
+      <Row className="hut-man-box pt-5 px-2 pb-1 profile-hut-label">
         <Col md={5}  >
           <Container fluid>
             <Row className="box_img ">
@@ -132,7 +132,7 @@ function YourHut(props) {
                 </OverlayTrigger>
               </Button>*/}
             </Row>
-            <Row className="thumb_row">
+            <Row className="thumb_row mt-2">
               {images.map((item, index) => (
                 <Button key={index} className="hut-man-box-thumb mb-2" >
                   <img className={mainImg.posID == index ? "hut-man-clicked thumb_img" : "thumb_img"} src={item.image} onError={({ currentTarget }) => {
@@ -148,8 +148,8 @@ function YourHut(props) {
                 <Form.Group controlId="formFile" className="center-box mt-3 mb-5">
                   <Form.Label>Insert an image of your hut!</Form.Label>
                   <Form.Control type="file" accept='.jpg' required={true}
-                      onChange={(e) => { setNewImage(e.target.files[0]); }} />
-                    <Button variant="success" type='submit' className="save-btn2 mx-2 mb-2">Upload</Button>
+                    onChange={(e) => { setNewImage(e.target.files[0]); }} />
+                  <Button variant="success" type='submit' className="upload_btn  mt-2">Upload</Button>
                 </Form.Group>
               </Form>
             </Row>
@@ -166,7 +166,7 @@ function YourHut(props) {
                 </FloatingLabel>
               </Col>
               <Col>
-              <FloatingLabel controlId="floatingInput" label="Ascent" className="mb-3">
+                <FloatingLabel controlId="floatingInput" label="Ascent" className="mb-3">
                   <Form.Control required={true} type='number' step="any" min={0} value={altitude} onChange={ev => setAltitude(ev.target.value)} placeholder="2400 m" />
                 </FloatingLabel>
               </Col>
@@ -178,7 +178,7 @@ function YourHut(props) {
                 </FloatingLabel>
               </Col>
               <Col>
-              <FloatingLabel controlId="floatingInput" label="Phone number" className="mb-3">
+                <FloatingLabel controlId="floatingInput" label="Phone number" className="mb-3">
                   <Form.Control required={true} type="text" value={phone} onChange={ev => setPhone(ev.target.value)} placeholder="+39 xxx xxx xxxx"></Form.Control>
                 </FloatingLabel>
               </Col>
@@ -212,12 +212,12 @@ function YourHut(props) {
               <Col>
                 <Row>
                   <Col lg={6} md={6} sm={6} xs={12}>
-                  <FloatingLabel controlId="floatingInput" label="Email address" className="mb-3">
+                    <FloatingLabel controlId="floatingInput" label="Email address" className="mb-3">
                       <Form.Control required={true} type="email" value={email} onChange={ev => setEmail(ev.target.value)} placeholder="name@example.com"></Form.Control>
                     </FloatingLabel>
                   </Col>
                   <Col lg={6} md={6} sm={6} xs={12}>
-                  <FloatingLabel controlId="floatingInput" label="Website (optional)" className="mb-3">
+                    <FloatingLabel controlId="floatingInput" label="Website (optional)" className="mb-3">
                       <Form.Control type="text" value={website} onChange={ev => setWebsite(ev.target.value)} placeholder="nameexample.com" ></Form.Control>
                     </FloatingLabel>
                   </Col>
@@ -230,7 +230,7 @@ function YourHut(props) {
                   </Col>
                 </Row>
                 <Row className='btn_box mt-3'>
-                  <Button variant="success" type='submit' className="save-btn2 mx-2 mb-2">Save</Button>
+                  <Button variant="success" type='submit' className="save-btn mx-2 mb-2">Save</Button>
                 </Row>
               </Col>
             </Row>
@@ -293,7 +293,7 @@ function HikeCondition(props) {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    for(let i=0; i<linkedHut.length; i++){
+    for (let i = 0; i < linkedHut.length; i++) {
       let hikeCondition = {
         hikeID: linkedHut[i].hikeID,
         hutID: props.hut.id,
@@ -302,8 +302,8 @@ function HikeCondition(props) {
       };
 
       await API.addHikeCondition(hikeCondition)
-      .then()
-      .catch(err => console.log(err));
+        .then()
+        .catch(err => console.log(err));
 
     }
     setShow(true);
@@ -318,79 +318,103 @@ function HikeCondition(props) {
 
   return (
     <>
-      <Form onSubmit={handleSubmit}>
-        {/*show ? <Row className="mb-4">
+
+      {/*show ? <Row className="mb-4">
         <Col md={{ span: 6, offset: 3 }} sm={{ span: 8, offset: 2 }} xs={12}>
           <Alert className="mx-3" variant="success" onClose={() => setShow(false)} dismissible>
             <Alert.Heading>Hike Condition uploaded successfully!</Alert.Heading>
           </Alert>
         </Col>
       </Row> : false*/}
-        <Row>
-          {linkedHut.filter((p) => p.hutID === props.hut.id).length === 0 ?
-            <h4 className="box-center margin-bottom">{`The hut "${props.hut.name}" is not yet linked`}</h4> :
-            <h4 className="box-center margin-bottom">{`The hut "${props.hut.name}" is linked!`}</h4>}
-        </Row>
-        <Col md={{ span: 6, offset: 3 }}>
+
+
+      <Row className="val-user-box3 mx-5 p-4">
+        <Col md={6}>
+          <Row>
+            {linkedHut.filter((p) => p.hutID === props.hut.id).length === 0 ?
+              <h4 className="box-center mb-2">{`The hut "${props.hut.name}" is not yet linked`}</h4> :
+              <h4 className="box-center mb-2">{`The hut "${props.hut.name}" is linked!`}</h4>}
+          </Row>
           <Row className="mb-4">
             <div>
               {props.hut.id && <HutMapHikeCondition coordinates={[props.hut.lat, props.hut.lon]} hut={props.hut} flagLinked={flagLinked}></HutMapHikeCondition>}
             </div>
           </Row>
         </Col>
-        {linkedHut.filter((p) => p.hutID === props.hut.id).length === 0 ?
-          <Row className="val-user-box3 mx-5 p-4">
-            <Col md={3} className="box-center margin-bottom">
-              <img src={Alert1} alt="user_image" />
-            </Col>
-            <Col md={4} className="align margin-bottom box-center">
-              <FloatingLabel controlId="floatingSelect" label="Hike Condition" className="form-sel2">
-                <Form.Select aria-label="Floating label select example" placeholder="Select an Hike Condition" disabled readOnly>
-                  <option selected disabled value="">~ Choose a condition ~</option>
-                  <option value="Open"> Open</option>
-                  <option value="Close">Close</option>
-                  <option value="Partly blocked">Partly blocked</option>
-                  <option value="Requires special gear">Requires special gear</option>
-                </Form.Select>
-              </FloatingLabel>
-            </Col>
-            <Col md={5} className="align margin-bottom box-center ">
-              <FloatingLabel controlId="floatingTextarea2" label="Description" className="form-desc">
-                <Form.Control as="textarea" style={{ height: '80px' }} placeholder="description" disabled readOnly />
-              </FloatingLabel>
-            </Col>
-          </Row> :
-          <Row className="val-user-box3 mx-5 p-4">
-            <Col md={2} className="box-center margin-bottom">
-              <img src={Alert1} alt="user_image" />
-            </Col>
-            <Col md={3} className="align margin-bottom box-center">
-              <FloatingLabel controlId="floatingSelect" label="Hike Condition" className="form-sel2">
-                <Form.Select aria-label="Floating label select example" required={true} value={typeCondition} onChange={ev => setTypeCondition(ev.target.value)}>
-                  <option selected disabled value="">~ Choose a condition ~</option>
-                  <option value="Open"> Open</option>
-                  <option value="Close">Close</option>
-                  <option value="Partly blocked">Partly blocked</option>
-                  <option value="Requires special gear">Requires special gear</option>
-                </Form.Select>
-              </FloatingLabel>
-            </Col>
-            <Col md={5} className="align margin-bottom box-center ">
-              <FloatingLabel controlId="floatingTextarea2" label="Description" className="form-desc">
-                <Form.Control required={true} value={description} onChange={ev => setDescription(ev.target.value)} as="textarea" style={{ height: '100px' }} placeholder="description" />
-              </FloatingLabel>
-            </Col>
-            <Col md={2} className="box-center">
-              <Row className='btn_box mt-3'>
-                <Button variant="success" type='submit' className="save-btn mx-2 mb-2">Save</Button>
+        <Col md={6}>
+          {linkedHut.filter((p) => p.hutID === props.hut.id).length === 0 ?
+            <Row>
+              <Row className="my-3">
+                <Col md={12} className="box-center margin-x2 ">
+                  <img src={Alert1} alt="user_image" />
+                </Col>
               </Row>
-            </Col>
-          </Row>
-        }
-      </Form>
-      <Row className="val-user-box mx-5 mb-4 p-4 mt-5">
-        {hikeCondition.map((w) => <ListHikeCondition key={w.conditionID} hikeCondition={w} hut={props.hut} hikeID={w.hikeID} setDirty={setDirty} />)}
+              <Row className="my-3">
+                <Col md={12} className="align  box-center margin-x2">
+                  <FloatingLabel controlId="floatingSelect" label="Hike Condition" className="form-sel2">
+                    <Form.Select aria-label="Floating label select example" placeholder="Select an Hike Condition" disabled readOnly>
+                      <option selected disabled value="">~ Choose a condition ~</option>
+                      <option value="Open"> Open</option>
+                      <option value="Close">Close</option>
+                      <option value="Partly blocked">Partly blocked</option>
+                      <option value="Requires special gear">Requires special gear</option>
+                    </Form.Select>
+                  </FloatingLabel>
+                </Col>
+              </Row>
+              <Row className="my-3">
+                <Col md={12} className="align box-center margin-x2">
+                  <FloatingLabel controlId="floatingTextarea2" label="Description" className="form-desc">
+                    <Form.Control as="textarea" style={{ height: '120px' }} placeholder="description" disabled readOnly />
+                  </FloatingLabel>
+                </Col>
+              </Row>
+            </Row>
+            :
+            <Row>
+              <Form onSubmit={handleSubmit}>
+              <Row className="my-3">
+                <Col md={12} className="box-center margin-x2 ">
+                  <img src={Alert1} alt="user_image" />
+                </Col>
+              </Row>
+                <Row className="my-3">
+                <Col md={12} className="align  box-center margin-x2">
+                    <FloatingLabel controlId="floatingSelect" label="Hike Condition" className="form-sel2">
+                      <Form.Select aria-label="Floating label select example" required={true} value={typeCondition} onChange={ev => setTypeCondition(ev.target.value)}>
+                        <option selected disabled value="">~ Choose a condition ~</option>
+                        <option value="Open"> Open</option>
+                        <option value="Close">Close</option>
+                        <option value="Partly blocked">Partly blocked</option>
+                        <option value="Requires special gear">Requires special gear</option>
+                      </Form.Select>
+                    </FloatingLabel>
+                  </Col>
+                </Row>
+                <Row className="my-3">
+                <Col md={12} className="align box-center margin-x2">
+                    <FloatingLabel controlId="floatingTextarea2" label="Description" className="form-desc">
+                      <Form.Control required={true} value={description} onChange={ev => setDescription(ev.target.value)} as="textarea" style={{ height: '120px' }} placeholder="description" />
+                    </FloatingLabel>
+                  </Col>
+                </Row>
+                <Row className="my-3">
+                <Col md={12} className="align box-center margin-x2">
+                    <Row className='btn_box mt-3'>
+                      <Button variant="success" type='submit' className="save-btn mx-2 mb-2">Save</Button>
+                    </Row>
+                  </Col>
+                </Row>
+              </Form >
+            </Row>
+          }
+        </Col>
       </Row>
+      <Row>
+        <Col md={12}>
+        {hikeCondition.map((w) => <ListHikeCondition key={w.conditionID} hikeCondition={w} hut={props.hut} hikeID={w.hikeID} setDirty={setDirty} />)}
+        </Col>
+         </Row>
     </>
   );
 }
@@ -424,7 +448,7 @@ function HutMapHikeCondition(props) {
   }
 
   return (
-    <MapContainer className='single-hut-map' center={props.coordinates} zoom={14}>
+    <MapContainer className='single-hut-map-profile' center={props.coordinates} zoom={14}>
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -455,10 +479,10 @@ function ListHikeCondition(props) {
   }, [dirtyList, props.hikeID])
 
   return (
-    <>
+    <Row className="val-user-box mx-5 mb-4 p-4 mt-5">
       <Col md={2} className="align margin-bottom">
         <OverlayTrigger placement="bottom" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip-2">Type Condition</Tooltip>}>
-          <img src={Alert1} alt="location_image" className='me-3 profile-icon' />
+          <img src={Alert1} alt="location_image" className='me-3' />
         </OverlayTrigger>
         <h6 className="card-text p-card">{`Condition: ${props.hikeCondition.typeCondition}`}</h6>
       </Col>
@@ -484,7 +508,7 @@ function ListHikeCondition(props) {
           <Button className="delete-btn"><img src={Delete} alt="delete_image" className='' onClick={() => { API.deleteHikeCondition(props.hikeCondition.conditionID); props.setDirty(true) }} /></Button>
         </OverlayTrigger>
       </Col>
-    </>
+    </Row>
   )
 }
 

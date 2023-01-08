@@ -25,7 +25,10 @@ function MyHutManager(props) {
     }
   }, [dirty]);
 
-
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
+  
   return (
 
     <Container fluid className='back'>

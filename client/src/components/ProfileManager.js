@@ -26,8 +26,8 @@ function ProfileManager(props) {
   return (
     <Container fluid className="">
       <Row className="box-btn mb-5">
-        <Button className={task1 ? 'user-btn-fix me-2' : 'user-btn me-2'} onClick={() => setTask1(true)}> Validate User </Button>
-        <Button className={!task1 ? 'user-btn-fix ms-2 ' : 'user-btn ms-2'} onClick={() => setTask1(false)}> Weather Alert </Button>
+        <Button className={task1 ? 'user-btn-fix m-2' : 'user-btn m-2'} onClick={() => setTask1(true)}> Validate User </Button>
+        <Button className={!task1 ? 'user-btn-fix m-2 ' : 'user-btn m-2'} onClick={() => setTask1(false)}> Weather Alert </Button>
       </Row>
       {task1 ? <ValidateUser /> : <WeatherAlert />}
 
@@ -67,16 +67,16 @@ function ValidateUser() {
     <>
       {users.filter(u => u.verified && (u.access_right === 'local-guide' || u.access_right === 'hut-worker'))
         .map(u => <Row key={u.id} className={u.validated ? "val-user-box mx-5 mb-4 p-4" : "val-user-box2 mx-5 mb-4 p-4"}>
-          <Col md={3}>
+          <Col md={3} className="box-center">
             <h5>{u.surname}</h5>
           </Col>
-          <Col md={3}>
+          <Col md={3} className="box-center">
             <h5>{u.email}</h5>
           </Col>
           <Col md={3} className="box-center">
             <h4>{accessRightsNames[u.access_right]}</h4>
           </Col>
-          <Col md={{ offset: 1, span: 2 }}>
+          <Col md={{ offset: 1, span: 2 }} className="box-center">
             <Form>
               <Form.Check type="switch" id={"custom-switch" + u.id} checked={u.validated} label={u.validated ? "Approved" : "Not approved"} onChange={() => handleApproved(u.id, !u.validated)} />
             </Form>
@@ -162,7 +162,7 @@ function WeatherAlert() {
                     <WeatherAlertMap hikes={hikes} tempHikesLatitude={tempHikesLatitude} setTempHikesLatitude={setTempHikesLatitude} tempHikesLongitude={tempHikesLongitude} setTempHikesLongitude={setTempHikesLongitude} tempHikesRadius={tempHikesRadius} setTempHikesRadius={setTempHikesRadius}
                       setState={setState} setRegion={setRegion} setProvince={setProvince} setMunicipality={setMunicipality} weather={weather} />
                   </Col>
-                  <h5 className="text-center">Radius of {tempHikesRadius} km</h5>
+                  <h5 className="text-center mt-3">Radius of {tempHikesRadius} km</h5>
                   <Row className="mt-3 box-btn">
                     <Col xs={1} className='slider-label'>1 km</Col>
                     <Col xs={9}>
@@ -211,7 +211,7 @@ function WeatherAlert() {
                 </Row>
                 <Row>
                   <Col md={12} className='d-flex justify-content-center'>
-                    <Card>
+                    <Card className="attempt-card">
                       <Card.Body className='tracked-hikes-card-body'>
                         <Card.Title className='tracked-hikes-card-title text-center'>
                           Attempt end of the weather alert
@@ -238,8 +238,11 @@ function WeatherAlert() {
             </Row>}
         </Row>
       </Form>
-      <Row className="val-user-box mx-5 mb-4 p-4 mt-5">
-        {weatherAlerts.map((w) => <ListWeatherAlert key={w.weatherAlertID} weatherAlert={w} setDirty={setDirty} />)}
+      <Row>
+        <Col md={12} >
+          {weatherAlerts.map((w) => <ListWeatherAlert key={w.weatherAlertID} weatherAlert={w} setDirty={setDirty} />)}
+        </Col>
+        
       </Row>
     </>
   );
@@ -256,7 +259,7 @@ function WeatherAlertMap(props) {
   });
 
   return (
-    <MapContainer center={[props.tempHikesLatitude, props.tempHikesLongitude]} zoom={9} scrollWheelZoom={true} className='hikes-filter-map'>
+    <MapContainer center={[props.tempHikesLatitude, props.tempHikesLongitude]} zoom={9} scrollWheelZoom={true} className='single-hut-map-profile'>
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -411,10 +414,10 @@ function ListWeatherAlert(props) {
 
 
   return (
-    <>
+    <Row className="val-user-box mx-5 mb-4 p-4 mt-5">
       <Col md={1} className="box-center margin-bottom">
         <OverlayTrigger placement="bottom" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip-2">Weather Alert</Tooltip>}>
-          <img src={weatherIcon} alt="weather_image" />
+          <img src={weatherIcon} alt="weather_image" className="profile-icon" />
         </OverlayTrigger>
       </Col>
       <Col md={3} className="align margin-bottom">
@@ -423,7 +426,7 @@ function ListWeatherAlert(props) {
         </OverlayTrigger>
         <h6 className="card-text p-card">{`${stateList}, ${regionList}, ${provinceList}, ${municipalityList}`}</h6>
       </Col>
-      <Col md={1} className="align margin-bottom">
+      <Col md={2} className="align margin-bottom">
         <OverlayTrigger placement="bottom" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip-2">Radius</Tooltip>}>
           <img src={Radius} alt="radius_image" className='me-3' />
         </OverlayTrigger>
@@ -431,11 +434,11 @@ function ListWeatherAlert(props) {
       </Col>
       <Col md={2} className="align margin-bottom">
         <OverlayTrigger placement="bottom" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip-2">Attempt End</Tooltip>}>
-          <img src={Clock} alt="clock_image" className='me-3' />
+          <img src={Clock} alt="clock_image" className='me-3 profile-icon'  />
         </OverlayTrigger>
         <h6 className="card-text p-card">{dayjs(props.weatherAlert.time).format('DD/MM/YYYY HH:mm')}</h6>
       </Col>
-      <Col md={4} className="align margin-bottom desc">
+      <Col md={3} className="align margin-bottom desc">
         <FloatingLabel controlId="floatingTextarea2" label="Description" className=" desc-box">
           <Form.Control as="textarea" style={{ height: '90px' }} readOnly disabled value={props.weatherAlert.description} />
         </FloatingLabel>
@@ -445,7 +448,7 @@ function ListWeatherAlert(props) {
           <Button className="delete-btn"><img src={Delete} alt="delete_image" className='' onClick={() => { API.deleteWeatherAlert(props.weatherAlert.weatherAlertID); props.setDirty(true) }} /></Button>
         </OverlayTrigger>
       </Col>
-    </>
+    </Row>
   )
 }
 

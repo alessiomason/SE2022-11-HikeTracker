@@ -24,6 +24,10 @@ function MyHikeManager(props) {
     }
   }, [dirty]);
 
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
+  
   return (
 
     <Container fluid className='back'>
@@ -56,6 +60,7 @@ function SingleUpdateHikeCard(props) {
 
   const navigate = useNavigate();
 
+  
   let hikeId = props.hike.id;
   const hikeToEdit = props.hike;
   let difficulty_text;

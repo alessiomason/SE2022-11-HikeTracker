@@ -97,3 +97,7 @@
 .h6-sign-in:hover{
     text-decoration: underline;
 }
+
+.icon-signup{
+    filter: invert(61%) sepia(21%) saturate(843%) hue-rotate(100deg) brightness(96%) contrast(84%);
+}

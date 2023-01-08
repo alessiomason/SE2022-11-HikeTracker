@@ -39,9 +39,9 @@ useEffect(() => {
   return (
     <Container fluid className="">
       <Row className="box-btn mb-5">
-        <Button className={(tab === "hikes") ? 'user-btn-fix me-2 margin-bottom2' : 'user-btn me-2 margin-bottom2'} onClick={() => setTab("hikes")}>Tracked hikes</Button>
-        <Button className={(tab === "stats") ? 'user-btn-fix ms-2' : 'user-btn ms-2 '} onClick={() => setTab("stats")}>Performance stats</Button>
-        <Button className={(tab === "parameters") ? 'user-btn-fix mx-2 margin-bottom2' : 'user-btn mx-2 margin-bottom2'} onClick={() => setTab("parameters")}>Set parameters</Button>
+        <Button className={(tab === "hikes") ? 'user-btn-fix m-2' : 'user-btn  m-2'} onClick={() => setTab("hikes")}>Tracked hikes</Button>
+        <Button className={(tab === "stats") ? 'user-btn-fix m-2' : 'user-btn m-2'} onClick={() => setTab("stats")}>Performance stats</Button>
+        <Button className={(tab === "parameters") ? 'user-btn-fix m-2' : 'user-btn m-2'} onClick={() => setTab("parameters")}>Set parameters</Button>
       </Row>
       {(tab === "hikes") ? <TrackedHikes /> : (tab === "stats") ? <PerformanceStats /> : <Parameters hikes={hikes} sethikes={setHikes} preferences={preferences}/>}
 

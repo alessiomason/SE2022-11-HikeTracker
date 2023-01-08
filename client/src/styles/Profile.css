@@ -24,7 +24,6 @@
   width: 200px;
   height: 200px;
   object-fit: cover;
-  cursor: pointer;
 }
 
 .overflow-profile {
@@ -51,15 +50,6 @@
   margin-top: 10px;
 }
 
-.center-top-side {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-  top: -280px;
-  height: fit-content;
-}
 
 .profile-img-btn {
   border-radius: 0px !important;
@@ -115,7 +105,7 @@
   border-radius: 20px;
   position: relative;
   margin-top: 20px;
-  top: -180px;
+  top: -170px;
 }
 
 .component {
@@ -123,9 +113,30 @@
   top: -140px;
 }
 
-@media only screen and (max-width: 1200px) {
+.sub-title-profile {
+  position: relative;
+  top: -120px;
+}
 
-  .center-top-side,
+
+.center-top-side {
+  display: flex;
+  flex-direction: row;
+  justify-content: end;
+  align-items: center;
+  position: relative;
+  top: -340px;
+  height: fit-content;
+}
+
+
+@media only screen and (max-width: 840px) {
+
+  .center-top-side {
+    top: -100px;
+    justify-content: center;
+  }
+
   .end-top-profile {
     top: -120px;
   }
@@ -133,6 +144,14 @@
   .component {
     top: -80px;
   }
+
+}
+
+.center-box2{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
 }
 
 

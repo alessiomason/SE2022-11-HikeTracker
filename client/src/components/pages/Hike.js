@@ -51,6 +51,10 @@ function HikePage(props) {
   hikeId = parseInt(hikeId);
 
   useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
+
+  useEffect(() => {
     if (dirty) {
       API.getHike(hikeId)
         .then((hike) => {

@@ -189,7 +189,6 @@ function App2() {
     }
 
     return (
-        <OpenPageOnTop>
             <Routes>
                 <Route path="/" element={<Layout />}>
                     <Route index element={initialLoading ? <Loading /> : <Home showEmailAlert={showEmailAlert} setShowEmailAlert={setShowEmailAlert} user={user}
@@ -216,7 +215,6 @@ function App2() {
                     <Route path="profile" element={loggedIn ? <Profile user={user}  setDirty={setDirty} updateHut={updateHut}  doLogout={doLogout} hikes={hike} hut={hut}/> : <Navigate to='/' />} />
                 </Route>
             </Routes>
-        </OpenPageOnTop>
     );
 }
 

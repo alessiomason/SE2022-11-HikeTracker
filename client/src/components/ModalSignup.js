@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Button, Col, Form, Row, Container, Alert, Modal } from "react-bootstrap";
 import { default as UserLogin } from "../icons/user-login.svg";
+import { default as  Phone } from "../icons/phone.svg";
+import { default as  Email } from "../icons/email.svg";
 import { default as Password } from "../icons/password.svg";
 import { default as UserKind } from "../icons/user_kind.svg";
 import { default as Hut } from "../icons/hut.svg";
@@ -110,7 +112,7 @@ function MyModalSignup(props) {
               {props.message && <Alert variant='danger' onClose={() => props.setMessage('')} dismissible>{props.message}</Alert>}
               <Row className='mb-3 box_center'>
                 <Col md="auto" sm="auto" xs="auto" className='box_center'>
-                  <img src={UserLogin} alt="user" />
+                  <img src={Email} alt="user" className='icon-signup'/>
                 </Col>
                 <Col md="auto" sm="auto" xs="auto">
                   <Form.Group controlId="formBasicEmail" autoFocus>
@@ -143,7 +145,7 @@ function MyModalSignup(props) {
                 </Row>
                 <Row className='mb-3 box_center'>
                   <Col md="auto" sm="auto" xs="auto" className='box_center'>
-                    <img src={UserLogin} alt="user" />
+                    <img src={Phone} alt="user" className='icon-signup'/>
                   </Col>
                   <Col md="auto" sm="auto" xs="auto">
                     <Form.Group controlId="formBasicPhone" >
@@ -190,7 +192,7 @@ function MyModalSignup(props) {
               </Row>
               {(accessRight == "hut-worker") && <Row className='mb-3 box_center'>
                 <Col md="auto" sm="auto" xs="auto" className='box_center fit'>
-                  <img src={Hut} alt="hut" className='log-hut-icon' />
+                  <img src={Hut} alt="hut" className='log-hut-icon icon-signup' />
                 </Col>
                 <Col md="auto" sm="auto" xs="auto"> {/* it appear only when hut worker is selected */}
                   <Form.Select aria-label="Default select example" value={chosenHut}

@@ -1,5 +1,5 @@
 import { Alert, Form, Container, Row, Col, Button, FloatingLabel } from 'react-bootstrap';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { default as Img1 } from "../images/img1.jpg";
 import { useNavigate } from 'react-router-dom';
 import { Icon } from 'leaflet';
@@ -62,6 +62,10 @@ function HutForm(props) {
       navigate('/hutManager');
     }
   }
+
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
 
   return (
     <Container fluid className="external-box-hut">

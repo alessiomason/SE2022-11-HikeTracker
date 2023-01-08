@@ -29,6 +29,11 @@ function HutPage(props) {
   const [image, setImage] = useState(`http://localhost:3001/images/hut-${hutId}.jpg`);
   const [images, setImages] = useState([{ posID: 0, image: image }]);
 
+
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
+
   useEffect(() => {
     if (dirty) {
       API.getHut(hutId)

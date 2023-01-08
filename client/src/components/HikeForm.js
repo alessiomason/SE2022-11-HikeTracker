@@ -1,5 +1,5 @@
 import { Container, Row, Col, Button,Alert, Form  } from 'react-bootstrap';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/HikeForm.css';
 let gpxParser = require('gpxparser');
@@ -33,6 +33,11 @@ function HikeForm(props) {
 
         navigate("/");
     }
+
+    useEffect(() => {
+      window.scrollTo(0, 0)
+    }, [])
+
 
     return (
       <Container fluid className="external-box-hike">

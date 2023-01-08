@@ -176,6 +176,19 @@
     }
 }
 
+.attempt-card{
+    width: 100% !important;
+    box-shadow: none;
+    border-radius: 10px;
+    border: 2px solid #494681;
+    height: fit-content;
+    padding: 8px;
+    margin-bottom: 30px;
+}
+
+.attempt-card:hover{
+    box-shadow: none;
+}
 
 
 

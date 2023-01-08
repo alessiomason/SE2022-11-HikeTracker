@@ -1,5 +1,5 @@
 import { Container, Row, Col, Button, Alert, Form, FloatingLabel } from 'react-bootstrap';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { default as Img1 } from "../images/img1.jpg";
 import { useNavigate } from 'react-router-dom';
 import { Icon } from 'leaflet';
@@ -28,6 +28,10 @@ function ParkingForm(props) {
   const [image, setImage] = useState('');
   const [preview, setPreview] = useState('');
   const [newParkingLotID, setNewParkingLotID] = useState('');
+
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
 
   const handleSubmit = async (event) => {
     event.preventDefault();
