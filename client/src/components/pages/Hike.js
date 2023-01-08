@@ -278,10 +278,10 @@ function HikePage(props) {
               {/* hike.id ensures that the map is rendered only when the hike is loaded  */}
             </Row>
             <Row className='btn-row'>
-              {props.loggedIn && trackedHikes.filter(th => th.endTime === null || th.endTime === undefined).length === 0 && <Button className="mx-1 mt-2 start_btn slide" type="submit" onClick={() => setStartTerminateHikeModalShow('start')}>Start hike</Button>}
-              {props.loggedIn && trackedHikes.filter(th => th.endTime === null || th.endTime === undefined).length === 1 && <Button className="mx-1 mt-2 cancel_btn slide" type="submit" onClick={cancelHike}>Cancel hike</Button>}
-              {props.loggedIn && trackedHikes.filter(th => th.endTime === null || th.endTime === undefined).length === 1 && <Button className="mx-1 mt-2 stop_btn slide" type="submit" onClick={() => setStopHikeModalShow(true)}>Stop hike</Button>}
-              {props.loggedIn && trackedHikes.filter(th => th.endTime === null || th.endTime === undefined).length === 1 && <Button className="mx-1 mt-2 terminate_btn slide" type="submit" onClick={() => setStartTerminateHikeModalShow('terminate')}>Terminate hike</Button>}
+              {props.loggedIn && props.user.access_right === 'hiker' && trackedHikes.filter(th => th.endTime === null || th.endTime === undefined).length === 0 && <Button className="mx-1 mt-2 start_btn slide" type="submit" onClick={() => setStartTerminateHikeModalShow('start')}>Start hike</Button>}
+              {props.loggedIn && props.user.access_right === 'hiker' && trackedHikes.filter(th => th.endTime === null || th.endTime === undefined).length === 1 && <Button className="mx-1 mt-2 cancel_btn slide" type="submit" onClick={cancelHike}>Cancel hike</Button>}
+              {props.loggedIn && props.user.access_right === 'hiker' && trackedHikes.filter(th => th.endTime === null || th.endTime === undefined).length === 1 && <Button className="mx-1 mt-2 stop_btn slide" type="submit" onClick={() => setStopHikeModalShow(true)}>Stop hike</Button>}
+              {props.loggedIn && props.user.access_right === 'hiker' && trackedHikes.filter(th => th.endTime === null || th.endTime === undefined).length === 1 && <Button className="mx-1 mt-2 terminate_btn slide" type="submit" onClick={() => setStartTerminateHikeModalShow('terminate')}>Terminate hike</Button>}
             </Row>
             {props.loggedIn && <TrackedHikesInfoTable trackedHikes={trackedHikes} setTrackedHikesInfoModalShow={setTrackedHikesInfoModalShow} />}
             <Row className="tab-box">
