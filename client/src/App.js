@@ -169,13 +169,12 @@ function App2() {
 
 
   useEffect(() => {
-    if (user.access_right=='hut-worker') {
+    if (user.access_right==='hut-worker') {
       API.getHut(user.hut)
         .then((h) => setHut(h))
         .catch(err => console.log(err))
-      setDirty(false);
     }
-  }, [dirty]);
+  }, [user]);
 
 
     function Layout() {

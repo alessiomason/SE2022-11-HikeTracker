@@ -28,8 +28,11 @@ const storage = multer.diskStorage(
             } else if (req.body['parkingLotID'] != null) {
                 type = "parkingLot";
                 id = req.body["parkingLotID"];
+            } else if (req.body['myHutID'] != null) {
+                type = `myHut-${req.body['posID']}`
+                id = req.body["myHutID"];
             }
-            // hike-id.jpg || hut-id.jpg || parkingLot-id.jpg
+            // hike-id.jpg || hut-id.jpg || parkingLot-id.jpg || myHut-pos-id.jpg
             cb(null, type + "-" + id + ".jpg");
         }
     }
@@ -1020,6 +1023,109 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
         }
     });
 
+    // get linked huts
+    app.get('/api/linkedHut/', async (req, res) => {
+        try {
+            const linkedHuts = await dao.getLinkedHuts()
+            res.status(200).json(linkedHuts);
+        }
+        catch (err) {
+            console.log(err)
+            res.status(500).end();
+        }
+    });
+
+    //Add a hike condition
+    app.post('/api/newHikeCondition', async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty())
+            return res.status(422).json({ errors: errors.array() });
+
+        try {
+            const hikeID = req.body.hikeID;
+            const hutID = req.body.hutID;
+            const typeCondition = req.body.typeCondition;
+            const description = req.body.description;
+
+            await dao.addHikeCondition(hikeID, hutID, typeCondition, description);
+            res.status(201).json().end();
+        } catch (err) {
+            console.log(err)
+            res.status(500).json({ error: err });
+        }
+    });
+
+    // get hike conditions
+    app.get('/api/hikeCondition', async (req, res) => {
+        try {
+            const hikeCondition = await dao.getHikeConditions();
+            res.status(200).json(hikeCondition);
+        }
+        catch (err) {
+            res.status(500).end();
+        }
+    });
+
+    // delete hike condition
+    app.delete('/api/hikeCondition/:id', async (req, res) => {
+        const conditionID = req.params.id;
+        try {
+            await dao.deleteHikeCondition(conditionID);
+            res.status(200).end();
+        }
+        catch (err) {
+            res.status(500).json({ error: 'The hike condition could not be deleted' });
+        }
+    });
+
+    app.put('/api/uploadMyHutImage/:id', upload.single('file'), async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty())
+            return res.status(422).json({ errors: errors.array() });
+
+        const hutId = req.params.id;
+
+        try {
+            let result = await dao.getHut(hutId);
+            if (result.error)
+                res.status(404).json(result);
+            else {
+                await dao.increaseImages(result[0].images + 1, result[0].id);
+                res.status(201).end();
+            }
+        } catch (err) {
+            res.status(500).json({ error: `Error during upload of my hut's image` });
+        }
+    });
+
+    // get tracked hikes by userID
+    app.get('/api/hutsImages/:id', async (req, res) => {
+        const hutID = req.params.id;
+        let hutImages = [];
+        hutImages.push({
+            posID: 0,
+            image: `http://localhost:3001/images/hut-${hutID}.jpg`
+        })
+        try {
+
+            let result = await dao.getHut(hutID);
+            if (result.error)
+                res.status(404).json(result);
+            else {
+                for(let i = 0; i < result[0].images; i++){
+                    hutImages.push({
+                        posID: i+1,
+                        image: `http://localhost:3001/images/myHut-${i+1}-${hutID}.jpg`
+                    })
+                }
+                res.status(200).json(hutImages);
+            }
+        }
+        catch (err) {
+            res.status(500).end();
+        }
+    });
+
     // get tracked hikes by userID
     app.get('/api/userStats', async (req, res) => {
         const userID = req.user.id;
@@ -1033,7 +1139,7 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
         }
     });
 
-    app.put('/api/validate/:id', async(req, res) =>{
+    app.put('/api/validate/:id', async (req, res) => {
         const userID = req.params.id;
         const validated = req.body.validated;
 
@@ -1062,21 +1168,22 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
     app.post('/api/signup', async function (req, res) {
         // save user
         let user;
-      
+
         console.log(req.body)
 
         // if the email already registered if statement will run.
-        if (user_dao.checkEmail(req.body.email)){
+        if (await user_dao.checkEmail(req.body.email)) {
+            
             return res.status(401).json({ error: 'This email already registered' });
         }
-        
-        if (req.body.hut){
-            user = await user_dao.newHutWorker(req.body.email, req.body.password, req.body.accessRight,req.body.hut);
-        }else{
+
+        if (req.body.hut) {
+            user = await user_dao.newHutWorker(req.body.email, req.body.password, req.body.accessRight, req.body.hut);
+        } else {
             user = await user_dao.newUser(req.body.email, req.body.password, req.body.accessRight);
         }
-       
-        
+
+
         if (!user)
             return res.status(401).json({ error: 'Error in signing up' });
 

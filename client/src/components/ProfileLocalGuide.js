@@ -1,16 +1,10 @@
 import { useNavigate } from "react-router-dom";
-import { Button, Navbar, Nav, Container, Row, Col, Form, OverlayTrigger, Tooltip, FloatingLabel, Image } from "react-bootstrap";
+import { Button,  Container, Row ,Col} from "react-bootstrap";
 
 import '../styles/ProfileLocalGuide.css';
-import React, { useState, useEffect } from 'react';
-
-import { default as Img1 } from '../images/img1.jpg';
-import { default as Email } from "../icons/email.svg";
 import { default as Parking } from "../icons/parking.svg";
 import { default as Hut } from "../icons/hut.svg";
 import { default as Hike } from "../icons/hiking.svg";
-
-import { default as User } from '../icons/user.svg';
 
 function ProfileLocalGuide(props) {
 

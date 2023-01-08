@@ -77,8 +77,8 @@ exports.updatePoint = (pointID, SP, EP) => {
 
 exports.addHut = (hutName, hutDescription, lat, lon, altitude, beds, state, region, province, municipality, userId) => {
     return new Promise((resolve, reject) => {
-        const sql = 'INSERT INTO Huts(Name, Description, Lat, Lon, Altitude, Beds, State, Region, Province, Municipality, Author) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
-        db.run(sql, [hutName, hutDescription, lat, lon, altitude, beds, state, region, province, municipality, userId], function (err) {
+        const sql = 'INSERT INTO Huts(Name, Description, Lat, Lon, Altitude, Beds, State, Region, Province, Municipality, Author, Images) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
+        db.run(sql, [hutName, hutDescription, lat, lon, altitude, beds, state, region, province, municipality, userId, 0], function (err) {
             if (err) reject(err);
             else {
                 db.get('SELECT last_insert_rowid() AS ID', (err, row) => {
@@ -112,7 +112,8 @@ exports.getHuts = () => {
                 province: r.Province,
                 municipality: r.Municipality,
                 author: r.FullName,
-                authorId: r.Author
+                authorId: r.Author,
+                images: r.Images
             }));
             resolve(huts);
         });
@@ -164,7 +165,8 @@ exports.getHut = (hutID) => {
                         province: r.Province,
                         municipality: r.Municipality,
                         author: r.FullName,
-                        authorId: r.Author
+                        authorId: r.Author,
+                        images: r.Images
                     }));
                     resolve(hut);
                 }
@@ -183,6 +185,15 @@ exports.updateHut = (name, description, lat, lon, altitude, beds, state, region,
     });
 }
 
+exports.increaseImages = (numberOfImages, hutID) => {
+    return new Promise((resolve, reject) => {
+        const sql = 'UPDATE Huts SET Images=? WHERE HutID=?'
+        db.run(sql, [numberOfImages, hutID], function (err) {
+            if (err) reject(err);
+            resolve();
+        });
+    });
+}
 
 exports.addHike = (trackName, len, time, ascent, diff, description, state, region, province, municipality, userId) => {
     return new Promise((resolve, reject) => {
@@ -479,10 +490,10 @@ exports.deleteAllHikes = () => {
     });
 }
 
-exports.newHike = (label, length, expTime, ascent, difficulty, description, state, region, province, municipality) => {
+exports.newHike = (label, length, expTime, ascent, difficulty, description, state, region, province, municipality, author) => {
     return new Promise((resolve, reject) => {
-        const sql = 'INSERT INTO Hikes(Label, Length, ExpTime,Ascent,Difficulty,Description,State,Region,Province,Municipality) VALUES(?,?,?,?,?,?,?,?,?,?)'
-        db.run(sql, [label, length, expTime, ascent, difficulty, description, state, region, province, municipality], function (err) {
+        const sql = 'INSERT INTO Hikes(Label, Length, ExpTime,Ascent,Difficulty,Description,State,Region,Province,Municipality,Author) VALUES(?,?,?,?,?,?,?,?,?,?,?)'
+        db.run(sql, [label, length, expTime, ascent, difficulty, description, state, region, province, municipality, author], function (err) {
             if (err) reject(err);
             resolve();
         });
@@ -610,7 +621,7 @@ exports.getTrackedHikesByHikeIDAndUserID = (hikeID, userID) => {
     return new Promise((resolve, reject) => {
         const sql = `SELECT TrackedHikeID, TH.HikeID, Label, Status, Progress, StartTime, EndTime
                      FROM TrackedHikes TH, Hikes H
-                     WHERE TH.HikeID = H.HikeID AND TH.HikeID = ? AND UserID = ?`;
+                     WHERE TH.HikeID = H.HikeID AND TH.HikeID = ? AND TH.UserID = ?`;
         db.all(sql, [hikeID, userID], (err, rows) => {
             if (err) reject(err);
             const trackedHikes = rows.map((r) => ({
@@ -631,7 +642,7 @@ exports.getTrackedHikesByUserID = (userID) => {
     return new Promise((resolve, reject) => {
         const sql = `SELECT TrackedHikeID, TH.HikeID, Label, Status, Progress, StartTime, EndTime
                      FROM TrackedHikes TH, Hikes H
-                     WHERE TH.HikeID = H.HikeID AND UserID = ?`;
+                     WHERE TH.HikeID = H.HikeID AND TH.UserID = ?`;
         db.all(sql, [userID], (err, rows) => {
             if (err) reject(err);
             const trackedHikes = rows.map((r) => ({
@@ -913,6 +924,71 @@ exports.deleteWeatherAlert = (weatherAlertID) => {
 exports.deleteAllWeatherAlerts = () => {
     return new Promise((resolve, reject) => {
         const sql = 'DELETE FROM WeatherAlert';
+        db.all(sql, (err) => {
+            if (err) reject(err);
+            resolve();
+        });
+    });
+}
+
+exports.getLinkedHuts = () => {
+    return new Promise((resolve, reject) => {
+        const sql = 'SELECT * FROM Points WHERE SP == 0 AND EP == 0 AND RP == 0 AND HutID != 0';
+        db.all(sql, [], (err, rows) => {
+            if (err) reject(err);
+            const linkedHut = rows.map((p) => ({ 
+                pointID: p.PointID, 
+                hikeID: p.HikeID, 
+                lat: p.Lat,
+                lon: p.Lon,
+                altitude: p.Altitude,
+                label: p.Label,
+                hutID: p.HutID
+            }));
+            resolve(linkedHut);
+        });
+    });
+}
+
+exports.addHikeCondition = (hikeID, hutID, typeCondition, description) => {
+    return new Promise((resolve, reject) => {
+        const sql = 'INSERT INTO Condition(HikeID, HutID, TypeCondition, Description) VALUES(?, ?, ?, ?)';
+        db.run(sql, [hikeID, hutID, typeCondition, description], function (err) {
+            if (err) reject(err);
+            resolve();
+        });
+    });
+}
+
+exports.getHikeConditions = () => {
+    return new Promise((resolve, reject) => {
+        const sql = `SELECT * FROM Condition`
+        db.all(sql, [], (err, rows) => {
+            if (err) reject(err);
+            const condition = rows.map((r) => ({
+                conditionID: r.ConditionID,
+                hikeID: r.HikeID,
+                hutID: r.HutID,
+                typeCondition: r.TypeCondition,
+                description: r.Description
+            }));
+            resolve(condition);
+        });
+    });
+}
+
+exports.deleteHikeCondition = (conditionID) => {
+    return new Promise((resolve, reject) => {
+        db.run("DELETE FROM Condition WHERE ConditionID = ?", [conditionID], (err) => {
+            if (err) reject(err);
+            else resolve(null);
+        });
+    });
+};
+
+exports.deleteAllHikeConditions = () => {
+    return new Promise((resolve, reject) => {
+        const sql = 'DELETE FROM Condition';
         db.all(sql, (err) => {
             if (err) reject(err);
             resolve();

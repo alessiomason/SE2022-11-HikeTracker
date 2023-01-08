@@ -1,10 +1,9 @@
-import { useNavigate} from "react-router-dom";
 import { Button, Container, Row, Col } from "react-bootstrap";
-import API from '../../API.js';
+
 
 import '../../styles/Profile.css';
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { default as Img1 } from '../../images/img1.jpg';
 
 import ProfileManager from '../ProfileManager';
