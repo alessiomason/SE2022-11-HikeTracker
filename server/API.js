@@ -8,7 +8,6 @@ const nodemailer = require('nodemailer');
 require('dotenv').config();
 const multer = require('multer');
 const fs = require("fs");
-const { log } = require('console');
 const maxSize = 10 * 1024 * 1024; // 10 MB
 
 const storage = multer.diskStorage(
