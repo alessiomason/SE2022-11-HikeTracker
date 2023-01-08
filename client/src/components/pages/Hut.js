@@ -75,8 +75,8 @@ function HutPage(props) {
                 </Row>
                 <Row className="thumb_row">
                   {images.map((item, index) => (
-                    <Button key={index} className="hut-man-box-thumb mb-2" >
-                      <img className={mainImg.posID == index ? "hut-man-clicked thumb_img" : "thumb_img"} src={item.image} onError={({ currentTarget }) => {
+                    <Button key={index} className="hut-box-thumb mb-2" >
+                      <img className={mainImg.posID == index ? "hut-clicked thumb_img" : "thumb_img"} src={item.image} onError={({ currentTarget }) => {
                         currentTarget.onerror = null; // prevents looping
                         currentTarget.src = Img1;
                       }} alt="hut images" onClick={() => setMainImg(images[index])} />
@@ -173,12 +173,12 @@ function HutPage(props) {
 function MyImageModal(props) {
   return (
     <Modal {...props} size="lg" aria-labelledby="contained-modal-title-vcenter" centered >
-      <Modal.Header closeButton className='box-modal man-hut-page-modal-header'>
+      <Modal.Header closeButton className='box-modal hut-page-modal-header'>
         <Modal.Title id="contained-modal-title-vcenter">
           {props.hut.name}
         </Modal.Title>
       </Modal.Header>
-      <Modal.Body className='box-modal man-hut-page-modal-body'>
+      <Modal.Body className='box-modal hut-page-modal-body'>
         <img src={props.image.image} alt="hut" className="modal-imgs" />
       </Modal.Body>
 

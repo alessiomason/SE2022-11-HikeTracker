@@ -239,3 +239,14 @@ input[type=range].my-slider:active::-ms-track {
 .tooltip-main {
     visibility: hidden;
 }
+
+.filter-center{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.width-100{
+    width: 100% !important;
+}

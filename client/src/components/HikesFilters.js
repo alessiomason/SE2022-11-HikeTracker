@@ -132,9 +132,9 @@ function HikesFilters(props) {
       <Row>
         <h2 className="background double filter-title"><span><img src={Hiking} alt="hiking_image" className='me-2 hike-img' />Hikes</span></h2>
       </Row>
-      <Row className='mt-5'>
-        <Col md="auto" sm="auto" xs="auto" >
-          <ButtonToolbar aria-label="Toolbar with button groups" >
+      <Row className='mt-5 filter-center'>
+        <Col md={12} sm={12} xs={12} className='filter-center' >
+          <ButtonToolbar aria-label="Toolbar with button groups" className='width-100' >
             <ButtonGroup className='my-1' size="lg" aria-label="First group">
               <Button variant="success" className='btn_filter' onClick={() => { setModalShow(true); setTitle("Length (meters)"); setDesc("Select a specific length:") }}>Length</Button>
               <Button variant="success" className='btn_filter' onClick={() => { setModalShow(true); setTitle("Expected time"); setDesc("Select a specific expected time:") }}>Time</Button>

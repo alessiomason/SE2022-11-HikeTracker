@@ -345,13 +345,13 @@ function WeatherAlertHike(props) {
     return (
       <>
       <Row>
-        <Col md={12} className="box-center margin-bottom">
+        <Col md={12} className="box-center mt-2 mb-3">
             <OverlayTrigger placement="bottom" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip-2">Weather Alert</Tooltip>}>
-              <img src={weatherIcon} alt="weather_image" />
+              <img src={weatherIcon} alt="weather_image" className='single-hike-icon'/>
             </OverlayTrigger>
         </Col>
-        <Col md={12} className="box-center margin-bottom">
-          <h6 className="card-text p-card">{`No weather alert`}</h6>
+        <Col md={12} className="box-center mb-3">
+          <p className="p-card">{`No weather alert`}</p>
         </Col>
       </Row>
       </>
@@ -386,15 +386,15 @@ function WeatherAlertHike(props) {
         </Col>
     </Row> */}
       <Row>
-        <Col md={4} className="box-center margin-bottom">
+        <Col md={3} className="box-center my-3">
             <OverlayTrigger placement="bottom" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip-2">Weather Alert</Tooltip>}>
-              <img src={weatherIcon} alt="weather_image" />
+              <img src={weatherIcon} alt="weather_image" className='red-icon'/>
             </OverlayTrigger>
         </Col>
-        <Col md={4} className="box-center margin-bottom">
+        <Col md={5} className="box-center my-3">
         <h6 className="card-text p-card">{`${tempFilteredAlerts[0].description}`}</h6>
         </Col>
-        <Col md={4} className="box-center margin-bottom">
+        <Col md={4} className="box-center my-3">
         <h6 className="card-text p-card">{`Until to: ${dayjs(tempFilteredAlerts[0].time).format('DD/MM/YYYY HH:mm')}`}</h6>
         </Col>
       </Row>
@@ -443,15 +443,15 @@ function WeatherAlertRow(props) {
 
   return(
     <Row>
-        <Col md={4} className="box-center margin-bottom">
+        <Col md={3} className="box-center my-3">
             <OverlayTrigger placement="bottom" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip-2">Weather Alert</Tooltip>}>
-              <img src={weatherIcon} alt="weather_image" />
+              <img src={weatherIcon} alt="weather_image" className='red-icon'/>
             </OverlayTrigger>
         </Col>
-        <Col md={4} className="box-center margin-bottom">
+        <Col md={5} className="box-center my-3">
         <h6 className="card-text p-card">{`${props.weatherAlert.description}`}</h6>
         </Col>
-        <Col md={4} className="box-center margin-bottom">
+        <Col md={4} className="box-center my-3">
         <h6 className="card-text p-card">{`Until to: ${dayjs(props.weatherAlert.time).format('DD/MM/YYYY HH:mm')}`}</h6>
         </Col>
       </Row>
@@ -493,13 +493,13 @@ function ConditionHike(props) {
     return (
       <>
       <Row>
-        <Col md={12} className="box-center margin-bottom">
+        <Col md={12} className="box-center mt-2 mb-3">
             <OverlayTrigger placement="bottom" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip-2">Hike Condition</Tooltip>}>
-              <img src={Alert1} alt="weather_image" />
+              <img src={Alert1} alt="weather_image" className="single-hike-icon" />
             </OverlayTrigger>
         </Col>
-        <Col md={12} className="box-center margin-bottom">
-          <h6 className="card-text p-card">{`No hike condition`}</h6>
+        <Col md={12} className="box-center mb-3">
+          <p className="p-card">{`No hike condition`}</p>
         </Col>
       </Row>
       </>
@@ -529,21 +529,21 @@ function HikeConditionRow(props) {
 
   return(
     <Row>
-        <Col md={1} className="box-center margin-bottom">
+          <Col md={2} className="box-center my-3">
             <OverlayTrigger placement="bottom" delay={{ show: 250, hide: 400 }} overlay={<Tooltip id="button-tooltip-2">Hike Condition</Tooltip>}>
-              <img src={Alert1} alt="weather_image" />
+              <img src={Alert1} alt="weather_image" className='red-icon' />
             </OverlayTrigger>
-        </Col>
-        <Col md={4} className="box-center margin-bottom">
-          <h6 className="card-text p-card">{`${props.hikeCondition.typeCondition}`}</h6>
-        </Col>
-        <Col md={3} className="box-center margin-bottom">
-          <h6 className="card-text p-card">{props.hikeCondition.description}</h6>
-        </Col>
-        <Col md={4} className="box-center margin-bottom">
-          <h6 className="card-text p-card">{`Proposed by "${hut.name}"`}</h6>
-        </Col>
-      </Row>
+          </Col>
+          <Col md={3} className="box-center my-3">
+            <p className="p-card">{`${props.hikeCondition.typeCondition}`}</p>
+          </Col>
+          <Col md={3} className="box-center my-3">
+            <p className="p-card">{props.hikeCondition.description}</p>
+          </Col>
+          <Col md={4} className="box-center my-3">
+            <p className="p-card">{`Proposed by "${hut.name}"`}</p>
+          </Col>
+        </Row>
   );
   
 }

@@ -108,7 +108,7 @@
 .thumb_img{
     width: 80px;
     height: 80px;
-    object-fit: fill;
+    object-fit: cover;
     overflow: hidden;
 }
 /*

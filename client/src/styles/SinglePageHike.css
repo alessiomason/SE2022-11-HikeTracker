@@ -250,3 +250,7 @@
   box-shadow: 0 0.6em 0.4em -0.4em var(--hover);
   transform: translateY(-0.25em);
 }
+
+.red-icon{
+  filter: invert(14%) sepia(81%) saturate(6806%) hue-rotate(359deg) brightness(104%) contrast(118%);
+}
