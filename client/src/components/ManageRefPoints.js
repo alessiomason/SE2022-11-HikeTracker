@@ -192,6 +192,8 @@ function ManageReferencePoints(props) {
 
 function LocationMarker(props) {
   
+  let count = 0;
+
   const markerIcon = new Icon({
       iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-gold.png',
       shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
@@ -217,11 +219,12 @@ function LocationMarker(props) {
     if( props.marker[0]!==0 &&props.marker[1]!==0 && props.adding && lat.match(props.marker[0].toString().slice(0,6)) && lon.match(props.marker[1].toString().slice(0,6))){
         props.setNewRefPointId(p.pointID);
         props.setValidPoint(true);
+        count++;
 
     
     }
    })
-
+   if(count > 0)
   return (<Marker position={props.marker} icon={markerIcon} />);
 }
 

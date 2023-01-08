@@ -123,7 +123,10 @@ function addHut(hut) {
                 state: hut.state,
                 region: hut.region,
                 province: hut.province,
-                municipality: hut.municipality
+                municipality: hut.municipality,
+                email: hut.email,
+                phone: hut.phone,
+                website: hut.website
             }),
 
         }).then((response) => {
@@ -225,6 +228,9 @@ function updateHut(hut) {
     dataHut.append('province', hut.province);
     dataHut.append('municipality', hut.municipality);
     dataHut.append('file', hut.image);
+    dataHut.append('email', hut.email);
+    dataHut.append('phone', hut.phone);
+    dataHut.append('website', hut.website);
 
     // call: PUT /api/updateHut/:id
     return new Promise((resolve, reject) => {
@@ -416,6 +422,9 @@ async function getHuts() {
             municipality: h.municipality,
             author: h.author,
             authorId: h.authorId,
+            email: h.email,
+            phone: h.phone,
+            website: h.website,
             images: h.images
         }))
     else throw huts;
@@ -440,6 +449,9 @@ async function getHut(id) {
             municipality: hut.municipality,
             author: hut.author,
             authorId: hut.authorId,
+            email: hut.email,
+            phone: hut.phone,
+            website: hut.website,
             images: hut.images
         });
     else throw hut;
@@ -926,6 +938,216 @@ async function getUserStats() {
         });
     else throw userStats;
 }
+async function getUserPreferences(id) {
+    // call /api/userPreferences/:id
+    const response = await fetch(new URL('userPreferences/' + id, APIURL), { credentials: 'include' });
+    const userPreferences = await response.json();
+    if (response.ok)
+        return (userPreferences);
+    else throw getUserPreferences;
+    }
+
+function addUserPreferences(userPreferences) {
+
+    // call: POST /api/userPrefernces
+    return new Promise((resolve, reject) => {
+        fetch(new URL('userPreferences', APIURL), {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                minLength:userPreferences.minLength,
+                maxLength: userPreferences.maxLength,
+                minAscent: userPreferences.minAscent,
+                maxAscent: userPreferences.maxAscent,
+                minTime: userPreferences.minTime,
+                maxTime: userPreferences.maxTime,
+                difficulty: userPreferences.difficulty,
+                state: userPreferences.state,
+                region: userPreferences.region,
+                province: userPreferences.province,
+                municipality: userPreferences.municipality,
+                radius: userPreferences.radius,
+                latitude: userPreferences.latitude,
+                longitude: userPreferences.longitude
+
+            })
+        }).then((response) => {
+            if (response.ok)
+                resolve(response.json());
+            else {
+                // analyze the cause of error
+                response.json()
+                    .then((message) => { reject(message); }) // error message in the response body
+                    .catch(() => { reject({ error: "Cannot parse server response." }) }); // something else
+            }
+        }).catch(() => { reject({ error: "Cannot communicate with the server." }) }); // connection errors
+    });
+}
+
+
+function updateUserPreferencesRadius(userPreferences) {
+    // call: PUT /api/userPreferencesRadius/
+    return new Promise((resolve, reject) => {
+        fetch(new URL('userPreferencesRadius/' , APIURL), {
+            method: 'PUT',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                radius: userPreferences.radius,
+                latitude: userPreferences.latitude,
+                longitude: userPreferences.longitude
+            })
+        }).then((response) => {
+            if (response.ok)
+                resolve(null);
+            else {
+                // analyze the cause of error
+                response.json()
+                    .then((obj) => { reject(obj); }) // error message in the response body
+                    .catch(() => { reject({ error: "Cannot parse server response." }) }); // something else
+            }
+        }).catch(() => { reject({ error: "Cannot communicate with the server." }) }); // connection errors
+    });
+}
+
+
+function updateUserPreferencesLength(userPreferences) {
+
+        // call: PUT /api/userPreferencesLength/
+        return new Promise((resolve, reject) => {
+            fetch(new URL('userPreferencesLength/' , APIURL), {
+                method: 'PUT',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    minLength: userPreferences.minLength,
+                    maxLength: userPreferences.maxLength
+                })
+            }).then((response) => {
+                if (response.ok)
+                    resolve(null);
+                else {
+                    // analyze the cause of error
+                    response.json()
+                        .then((obj) => { reject(obj); }) // error message in the response body
+                        .catch(() => { reject({ error: "Cannot parse server response." }) }); // something else
+                }
+            }).catch(() => { reject({ error: "Cannot communicate with the server." }) }); // connection errors
+        });
+    }
+    
+    function updateUserPreferencesAscent(userPreferences) {
+            // call: PUT /api/userPreferencesAscent/
+            return new Promise((resolve, reject) => {
+                fetch(new URL('userPreferencesAscent/' , APIURL), {
+                    method: 'PUT',
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        minAscent: userPreferences.minAscent,
+                        maxAscent: userPreferences.maxAscent
+                    })
+                }).then((response) => {
+                    if (response.ok)
+                        resolve(null);
+                    else {
+                        // analyze the cause of error
+                        response.json()
+                            .then((obj) => { reject(obj); }) // error message in the response body
+                            .catch(() => { reject({ error: "Cannot parse server response." }) }); // something else
+                    }
+                }).catch(() => { reject({ error: "Cannot communicate with the server." }) }); // connection errors
+            });
+        }
+
+     function updateUserPreferencesTime(userPreferences) {
+    // call: PUT /api/userPreferencesTime/
+    return new Promise((resolve, reject) => {
+        fetch(new URL('userPreferencesTime/' , APIURL), {
+            method: 'PUT',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                minTime: userPreferences.minTime,
+                maxTime: userPreferences.maxTime
+            })
+        }).then((response) => {
+            if (response.ok)
+                resolve(null);
+            else {
+                // analyze the cause of error
+                response.json()
+                    .then((obj) => { reject(obj); }) // error message in the response body
+                    .catch(() => { reject({ error: "Cannot parse server response." }) }); // something else
+            }
+        }).catch(() => { reject({ error: "Cannot communicate with the server." }) }); // connection errors
+    });
+}
+
+function updateUserPreferencesDifficulty(userPreferences) {
+    // call: PUT /api/userPreferencesDifficulty/
+    return new Promise((resolve, reject) => {
+        fetch(new URL('userPreferencesDifficulty/' , APIURL), {
+            method: 'PUT',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                difficulty: userPreferences.difficulty
+            })
+        }).then((response) => {
+            if (response.ok)
+                resolve(null);
+            else {
+                // analyze the cause of error
+                response.json()
+                    .then((obj) => { reject(obj); }) // error message in the response body
+                    .catch(() => { reject({ error: "Cannot parse server response." }) }); // something else
+            }
+        }).catch(() => { reject({ error: "Cannot communicate with the server." }) }); // connection errors
+    });
+}
+
+function updateUserPreferencesLocation(userPreferences) {
+    // call: PUT /api/userPreferencesLocation/
+    return new Promise((resolve, reject) => {
+        fetch(new URL('userPreferencesLocation/' , APIURL), {
+            method: 'PUT',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                state: userPreferences.state,
+                region: userPreferences.region,
+                province: userPreferences.province,
+                municipality: userPreferences.municipality
+            })
+        }).then((response) => {
+            if (response.ok)
+                resolve(null);
+            else {
+                // analyze the cause of error
+                response.json()
+                    .then((obj) => { reject(obj); }) // error message in the response body
+                    .catch(() => { reject({ error: "Cannot parse server response." }) }); // something else
+            }
+        }).catch(() => { reject({ error: "Cannot communicate with the server." }) }); // connection errors
+    });
+}
+
 
 async function getUsers() {
     // call /api/users/
@@ -1056,6 +1278,7 @@ const API = {
     uploadParkingLotImage, getHuts, getHut, deletHut, getHike, addHike, updateHike, signup, verifyEmail, validateUser, login, logout, getUserInfo, getUserAccessRight, getHikesRefPoints,
     getStartPoint, getEndPoint, getReferencePoint, reverseNominatim, setNewReferencePoint, clearReferencePoint, startHike, getTrackedHikesByHikeIDAndUserID,
     getTrackedHikesByUserID, recordReferencePointReached, terminateHike, cancelHike, stopHike, getUserStats, getUsers, addWeatherAlert, getWeatherAlerts, deleteWeatherAlert, getLinkedHuts,
-    addHikeCondition, getHikeConditions, deleteHikeCondition, uploadMyHutImage, getMyHutImages
+    addHikeCondition, getHikeConditions, deleteHikeCondition, getUserPreferences, addUserPreferences,
+    updateUserPreferencesRadius,updateUserPreferencesLength,updateUserPreferencesAscent,updateUserPreferencesTime,updateUserPreferencesDifficulty,updateUserPreferencesLocation, uploadMyHutImage, getMyHutImages
 };
 export default API;

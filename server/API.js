@@ -166,8 +166,11 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
             const region = req.body.region;
             const province = req.body.province;
             const municipality = req.body.municipality;
+            const email = req.body.email;
+            const phone = req.body.phone;
+            const website = req.body.website;
 
-            const hut = await dao.addHut(name, description, lat, lon, altitude, beds, state, region, province, municipality, req.user.id);
+            const hut = await dao.addHut(name, description, lat, lon, altitude, beds, state, region, province, municipality, req.user.id, email, phone, website);
 
             res.status(201).json(hut.id).end();
         } catch (err) {
@@ -360,8 +363,11 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
                 let region = req.body["region"];
                 let province = req.body["province"];
                 let municipality = req.body["municipality"];
+                let email = req.body["email"];
+                let phone = req.body["phone"];
+                let website = req.body["website"];
 
-                const huts = await dao.updateHut(name, description, lat, lon, altitude, beds, state, region, province, municipality, hutId);
+                const huts = await dao.updateHut(name, description, lat, lon, altitude, beds, state, region, province, municipality, hutId, email, phone, website);
                 res.status(201).json(huts).end();
             }
         } catch (err) {
@@ -1162,6 +1168,148 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
             res.status(500).end();
         }
     });
+//GET Preferences of a user
+    app.get('/api/userPreferences/:id', async (req, res) => {
+       
+        const userid = req.params.id;
+        try {
+            const userPreferences = await dao.getUserPreferences(userid);
+            res.status(200).json(userPreferences);
+        }
+        catch (err) {
+            res.status(500).end();
+        }
+    });
+
+//Add user preferences
+    app.post('/api/userPreferences', async (req, res) => {
+        const errors = validationResult(req);
+        const userid = req.user.id;
+        if (!errors.isEmpty())
+            return res.status(422).json({ errors: errors.array() });
+
+        try {
+
+            const minLength = req.body.minLength;
+            const maxLength = req.body.maxLength;
+            const minAscent = req.body.minAscent;
+            const maxAscent = req.body.maxAscent;
+            const minTime = req.body.minTime;
+            const maxTime = req.body.maxTime;
+            const difficulty = req.body.difficulty;
+            const state = req.body.state;  
+            const region = req.body.region; 
+            const province = req.body.province; 
+            const municipality = req.body.municipality; 
+            const radius = req.body.radius; 
+            await dao.addUserPreferences(userid, minLength, maxLength, minAscent, maxAscent, minTime, maxTime, difficulty, state, region, province, municipality, radius);
+            res.status(201).json().end();
+        } catch (err) {
+            console.log(err)
+            res.status(500).json({ error: err });
+        }
+    });
+
+   // update user preferences length
+   app.put('/api/userPreferencesLength/', async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty())
+        return res.status(422).json({ errors: errors.array() });
+    const userid = req.user.id;
+    try {
+
+        console.log("APi server");
+        console.log(req.body.minLength);
+        const minLength = req.body.minLength;
+        const maxLength = req.body.maxLength
+        await dao.updateUserPreferencesLength(userid, minLength, maxLength);
+        res.status(201).json().end();
+    } catch (err) {
+        res.status(500).json({ error: `Database error during update of the user preferences` });
+    }
+});
+
+    // update user preferences ascent
+       app.put('/api/userPreferencesAscent/', async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty())
+            return res.status(422).json({ errors: errors.array() });
+        const userid = req.user.id;
+        try {
+            const minAscent = req.body.minAscent
+            const maxAscent = req.body.maxAscent 
+            await dao.updateUserPreferencesAscent(userid, minAscent, maxAscent);
+            res.status(201).json().end();
+        } catch (err) {
+            res.status(500).json({ error: `Database error during update of the user preferences` });
+        }
+    });
+
+       // update user preferences time
+       app.put('/api/userPreferencesTime/', async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty())
+            return res.status(422).json({ errors: errors.array() });
+        const userid = req.user.id;
+        try {
+            const minTime = req.body.minTime
+            const maxTime = req.body.maxTime 
+            await dao.updateUserPreferencesTime(userid, minTime, maxTime);
+            res.status(201).json().end();
+        } catch (err) {
+            res.status(500).json({ error: `Database error during update of the user preferences` });
+        }
+    });
+
+        // update user preferences difficulty
+       app.put('/api/userPreferencesDifficulty/', async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty())
+            return res.status(422).json({ errors: errors.array() });
+        const userid = req.user.id;
+        try {
+            const difficulty = req.body.difficulty
+            await dao.updateUserPreferencesDifficulty(userid, difficulty);
+            res.status(201).json().end();
+        } catch (err) {
+            res.status(500).json({ error: `Database error during update of the user preferences` });
+        }
+    });
+ // update user preferences location
+        app.put('/api/userPreferencesLocation/', async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty())
+            return res.status(422).json({ errors: errors.array() });
+        const userid = req.user.id;
+        try {
+            const state = req.body.state  
+            const region = req.body.region 
+            const province = req.body.province 
+            const municipality = req.body.municipality 
+            await dao.updateUserPreferencesLocation(userid, state, region, province, municipality);
+            res.status(201).json().end();
+        } catch (err) {
+            res.status(500).json({ error: `Database error during update of the user preferences` });
+        }
+    });
+
+      // update user preferences radius
+      app.put('/api/userPreferencesRadius/', async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty())
+            return res.status(422).json({ errors: errors.array() });
+        const userid = req.user.id;
+        try {
+            const radius = req.body.radius;
+            const latitude = req.body.latitude;
+            const longitude = req.body.longitude;
+            await dao.updateUserPreferencesRadius(userid, radius,latitude, longitude);
+            res.status(201).json().end();
+        } catch (err) {
+            res.status(500).json({ error: `Database error during update of the user preferences` });
+        }
+    });
+
 
     // POST /signup
     // signup
@@ -1172,15 +1320,13 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
         console.log(req.body)
 
         // if the email already registered if statement will run.
-        if (await user_dao.checkEmail(req.body.email)) {
-            
-            return res.status(401).json({ error: 'This email already registered' });
-        }
+        if (await user_dao.checkEmail(req.body.email))
+            return res.status(401).json({ error: 'This email is already registered' });
 
         if (req.body.hut) {
-            user = await user_dao.newHutWorker(req.body.email, req.body.password, req.body.accessRight, req.body.hut);
+            user = await user_dao.newHutWorker(req.body.email, req.body.password, req.body.accessRight, req.body.hut, req.body.surname, req.body.name, req.body.phone);
         } else {
-            user = await user_dao.newUser(req.body.email, req.body.password, req.body.accessRight);
+            user = await user_dao.newUser(req.body.email, req.body.password, req.body.accessRight, req.body.surname, req.body.name, req.body.phone);
         }
 
 

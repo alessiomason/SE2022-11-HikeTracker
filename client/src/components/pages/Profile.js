@@ -28,7 +28,7 @@ function Profile(props) {
           <div className="overflow-profile">
             <img src={Img1} alt="profile_photo" className="profile-img" />
           </div>
-          <h1 className="profile-role">{props.user.fullName}</h1>
+          <h1 className="profile-role">{props.user.surname}</h1>
         </Row>
         <Row >
           <Col md={4} className="center-top-side mb-4">
@@ -71,7 +71,7 @@ function SpecificProfile(props) {
 
   switch (props.user.access_right) {
     case 'hiker':
-      return (<ProfileHiker hikes={props.hikes} />);
+      return (<ProfileHiker hikes={props.hikes} user={props.user} />);
     case 'local-guide':
       return (<ProfileLocalGuide />);
     case 'hut-worker':

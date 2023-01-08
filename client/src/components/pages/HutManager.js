@@ -72,7 +72,9 @@ function SingleUpdateHutCard(props) {
   const [errorMsg, setErrorMsg] = useState('');
   const [image, setImage] = useState(`http://localhost:3001/images/hut-${hutID}.jpg`);
   const [preview, setPreview] = useState(`http://localhost:3001/images/hut-${hutID}.jpg`);
-
+  const [phone, setPhone] = useState(hutToEdit ? hutToEdit.phone : '');
+  const [email, setEmail] = useState(hutToEdit ? hutToEdit.email : '');
+  const [website, setWebsite] = useState(hutToEdit ? hutToEdit.website : '');
 
 
   const handleSubmit = (event) => {
@@ -93,7 +95,10 @@ function SingleUpdateHutCard(props) {
         region: region,
         province: province,
         municipality: municipality,
-        image: image
+        image: image,
+        email: email,
+        phone: phone,
+        website: website
       }
       props.updateHut(updatedHut);
       props.setDirty(true);
@@ -131,7 +136,7 @@ function SingleUpdateHutCard(props) {
               </Col>
               <Col lg={3} md={6} sm={6} xs={12}>
                 <FloatingLabel controlId="floatingInput" label="Ascent" className="mb-3">
-                  <Form.Control required={true} type="text" placeholder="2400 m" />
+                  <Form.Control required={true} type="text" value={altitude} onChange={ev => setAltitude(ev.target.value)} placeholder="2400 m" />
                 </FloatingLabel>
               </Col>
               <Col lg={3} md={6} sm={6} xs={12}>
@@ -141,7 +146,7 @@ function SingleUpdateHutCard(props) {
               </Col>
               <Col lg={3} md={6} sm={6} xs={12}>
                 <FloatingLabel controlId="floatingInput" label="Phone number" className="mb-3">
-                  <Form.Control required={true} type="text" placeholder="+39 xxx xxx xxxx"></Form.Control>
+                  <Form.Control required={true} type="text" value={phone} onChange={ev => setPhone(ev.target.value)} placeholder="+39 xxx xxx xxxx"></Form.Control>
                 </FloatingLabel>
               </Col>
             </Row>
@@ -177,12 +182,12 @@ function SingleUpdateHutCard(props) {
                 <Row>
                   <Col lg={6} md={6} sm={6} xs={12}>
                     <FloatingLabel controlId="floatingInput" label="Email address" className="mb-3">
-                      <Form.Control required={true} type="email" placeholder="name@example.com"></Form.Control>
+                      <Form.Control required={true} type="email" value={email} onChange={ev => setEmail(ev.target.value)} placeholder="name@example.com"></Form.Control>
                     </FloatingLabel>
                   </Col>
                   <Col lg={6} md={6} sm={6} xs={12}>
                     <FloatingLabel controlId="floatingInput" label="Website (optional)" className="mb-3">
-                      <Form.Control type="text" placeholder="nameexample.com" ></Form.Control>
+                      <Form.Control type="text" value={website} onChange={ev => setWebsite(ev.target.value)} placeholder="nameexample.com" ></Form.Control>
                     </FloatingLabel>
                   </Col>
                 </Row>

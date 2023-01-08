@@ -75,10 +75,10 @@ exports.updatePoint = (pointID, SP, EP) => {
     });
 }
 
-exports.addHut = (hutName, hutDescription, lat, lon, altitude, beds, state, region, province, municipality, userId) => {
+exports.addHut = (hutName, hutDescription, lat, lon, altitude, beds, state, region, province, municipality, userId, email, phone, website) => {
     return new Promise((resolve, reject) => {
-        const sql = 'INSERT INTO Huts(Name, Description, Lat, Lon, Altitude, Beds, State, Region, Province, Municipality, Author, Images) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
-        db.run(sql, [hutName, hutDescription, lat, lon, altitude, beds, state, region, province, municipality, userId, 0], function (err) {
+        const sql = 'INSERT INTO Huts(Name, Description, Lat, Lon, Altitude, Beds, State, Region, Province, Municipality, Author, Email, Phone, Website, Images) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
+        db.run(sql, [hutName, hutDescription, lat, lon, altitude, beds, state, region, province, municipality, userId, email, phone, website, 0], function (err) {
             if (err) reject(err);
             else {
                 db.get('SELECT last_insert_rowid() AS ID', (err, row) => {
@@ -94,7 +94,7 @@ exports.addHut = (hutName, hutDescription, lat, lon, altitude, beds, state, regi
 
 exports.getHuts = () => {
     return new Promise((resolve, reject) => {
-        const sql = `SELECT H.*, FullName
+        const sql = `SELECT H.*, Surname
                      FROM Huts H, Users U
                      WHERE H.Author = U.UserId`;
         db.all(sql, [], (err, rows) => {
@@ -111,8 +111,11 @@ exports.getHuts = () => {
                 region: r.Region,
                 province: r.Province,
                 municipality: r.Municipality,
-                author: r.FullName,
+                author: r.Surname,
                 authorId: r.Author,
+                email: r.Email,
+                phone: r.Phone,
+                website: r.Website,
                 images: r.Images
             }));
             resolve(huts);
@@ -143,7 +146,7 @@ exports.deleteAllHuts = () => {
 
 exports.getHut = (hutID) => {
     return new Promise((resolve, reject) => {
-        const sql = `SELECT H.*, FullName
+        const sql = `SELECT H.*, Surname
                      FROM Huts H, Users U
                      WHERE H.HutID = ?
                      AND H.Author = U.UserId`;
@@ -164,8 +167,11 @@ exports.getHut = (hutID) => {
                         region: r.Region,
                         province: r.Province,
                         municipality: r.Municipality,
-                        author: r.FullName,
+                        author: r.Surname,
                         authorId: r.Author,
+                        email: r.Email,
+                        phone: r.Phone,
+                        website: r.Website,
                         images: r.Images
                     }));
                     resolve(hut);
@@ -175,10 +181,10 @@ exports.getHut = (hutID) => {
     });
 }
 
-exports.updateHut = (name, description, lat, lon, altitude, beds, state, region, province, municipality, id) => {
+exports.updateHut = (name, description, lat, lon, altitude, beds, state, region, province, municipality, id, email, phone, website) => {
     return new Promise((resolve, reject) => {
-        const sql = 'UPDATE Huts SET Name=?, Description=?, Lat=?, Lon=?, Altitude= ?, Beds=?, State=?, Region=?, Province=?, Municipality=? WHERE HutID=?'
-        db.run(sql, [name, description, lat, lon, altitude, beds, state, region, province, municipality, id], function (err) {
+        const sql = 'UPDATE Huts SET Name=?, Description=?, Lat=?, Lon=?, Altitude= ?, Beds=?, State=?, Region=?, Province=?, Municipality=?, Email=?, Phone=?, Website=? WHERE HutID=?'
+        db.run(sql, [name, description, lat, lon, altitude, beds, state, region, province, municipality,email, phone, website, id], function (err) {
             if (err) reject(err);
             resolve();
         });
@@ -251,7 +257,7 @@ exports.getEndPointOfHike = (hikeID) => {
 exports.getHikes = () => {
     return new Promise((resolve, reject) => {
         const sql = `SELECT H.HikeID, H.Label, H.Length, H.ExpTime, H.Ascent, H.Difficulty, H.Description,
-                        H.State, H.Region, H. Province, H.Municipality,H.Author, P.Lat, P.Lon, P.Label AS StartPointLabel, U.FullName
+                        H.State, H.Region, H. Province, H.Municipality,H.Author, P.Lat, P.Lon, P.Label AS StartPointLabel, U.Surname
                      FROM Hikes H, Points P, Users U
                      WHERE H.HikeID = P.HikeID AND P.SP = 1
                      AND H.Author = U.UserId`;
@@ -274,7 +280,7 @@ exports.getHikes = () => {
                     longitude: r.Lon,
                     label: r.StartPointLabel
                 },
-                author: r.FullName,
+                author: r.Surname,
                 authorId: r.Author
             }));
             resolve(hikes);
@@ -284,7 +290,7 @@ exports.getHikes = () => {
 
 exports.getParkingLots = () => {
     return new Promise((resolve, reject) => {
-        const sql = `SELECT P.*, FullName
+        const sql = `SELECT P.*, Surname
                      FROM ParkingLots P, Users U
                      Where P.Author = U.UserId`;
         db.all(sql, [], (err, rows) => {
@@ -292,7 +298,7 @@ exports.getParkingLots = () => {
             const pls = rows.map((r) => ({
                 id: r.ParkingID, label: r.Label,
                 description: r.Description, state: r.State, region: r.Region, province: r.Province, municipality: r.Municipality,
-                lat: r.Lat, lon: r.Lon, altitude: r.Altitude, total: r.Total, occupied: r.Occupied, author: r.FullName, authorId: r.Author
+                lat: r.Lat, lon: r.Lon, altitude: r.Altitude, total: r.Total, occupied: r.Occupied, author: r.Surname, authorId: r.Author
             }));
             resolve(pls);
         });
@@ -303,7 +309,7 @@ exports.getParkingLots = () => {
 // get a specific parking lot
 exports.getParkingById = (id) => {
     return new Promise((resolve, reject) => {
-        const sql = `SELECT P.*, FullName
+        const sql = `SELECT P.*, Surname
                      FROM ParkingLots P, Users U
                      WHERE ParkingID = ?
                      AND P.Author = U.UserId`;
@@ -322,7 +328,7 @@ exports.getParkingById = (id) => {
                 altitude: r.Altitude,
                 total: r.Total,
                 occupied: r.Occupied,
-                author: r.FullName
+                author: r.Surname
             }));
             resolve(parking);
         });
@@ -406,7 +412,7 @@ exports.getHikesRefPoints = () => {
 
 exports.getHike = (hikeID) => {
     return new Promise((resolve, reject) => {
-        const sql = `SELECT H.*, FullName
+        const sql = `SELECT H.*, Surname
                      FROM HIKES H, Users U
                      WHERE HikeID = ?
                      AND H.Author = U.UserId`;
@@ -427,7 +433,7 @@ exports.getHike = (hikeID) => {
                         region: r.Region,
                         province: r.Province,
                         municipality: r.Municipality,
-                        author: r.FullName
+                        author: r.Surname
                     }));
                     resolve(hike);
                 }
@@ -995,3 +1001,106 @@ exports.deleteAllHikeConditions = () => {
         });
     });
 }
+
+exports.getUserPreferences = (userid) => {
+    return new Promise((resolve, reject) => {
+        const sql = 'SELECT * FROM Preferences WHERE userid = ?';
+        db.all(sql, [userid], (err, rows) => {
+            if (err) reject(err);
+            const preferences = rows.map((p) => ({ userid: p.userid, minLength: p.minLength, maxLength: p.maxLength, minAscent: p.minAscent, maxAscent: p.maxAscent, minTime: p.minTime, maxTime: p.maxTime, difficulty: p.difficulty, state: p.state, radius: p.radius, region: p.region, province: p.province, municipality: p.municipality, latitude: p.latitude, longitude:p.longitude }));
+            resolve(preferences);
+        });
+    });
+}
+
+exports.addUserPreferences = (userid, minLength, maxLength, minAscent, maxAscent, minTime, maxTime, difficulty, state, region, province, municipality, radius) => {
+    return new Promise((resolve, reject) => {
+        const sql = 'INSERT INTO Preferences(userid, minLength, maxLength) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ' ;
+        db.run(sql, [userid, minLength, maxLength,minAscent, maxAscent, minTime, maxTime, difficulty, state, region, province, municipality, radius ], function (err) {
+            if (err) reject(err);
+            resolve();
+        });
+    });
+}
+
+exports.updateUserPreferencesLength = (userid, minLength, maxLength) => {
+    return new Promise((resolve, reject) => {
+       console.log("dao");
+       console.log(userid, minLength, maxLength);
+        const sql =`UPDATE Preferences 
+                    SET minLength=?, 
+                        maxLength=?
+                    WHERE userid =? ` ;
+        db.run(sql, [ minLength, maxLength, userid], function (err) {
+            if (err) reject(err);
+            resolve();
+        });
+    });
+}
+
+exports.updateUserPreferencesAscent = (userid, minAscent, maxAscent) => {
+        return new Promise((resolve, reject) => {
+            const sql =`UPDATE Preferences 
+                        SET minAscent=?,
+                            maxAscent=? 
+                        WHERE userid =? ` ;
+            db.run(sql, [  minAscent, maxAscent, userid], function (err) {
+                if (err) reject(err);
+                resolve();
+            });
+        });
+    }
+
+exports.updateUserPreferencesTime = (userid, minTime, maxTime) => {
+    return new Promise((resolve, reject) => {
+        const sql =`UPDATE Preferences 
+                    SET minTime=?,
+                        maxTime=? 
+                    WHERE userid =? ` ;
+        db.run(sql, [ minTime, maxTime, userid], function (err) {
+            if (err) reject(err);
+            resolve();
+        });
+    });
+}
+
+exports.updateUserPreferencesDifficulty = (userid, difficulty) => {
+        return new Promise((resolve, reject) => {
+            const sql =`UPDATE Preferences 
+                        SET difficulty=? 
+                        WHERE userid =? ` ;
+            db.run(sql, [ difficulty, userid], function (err) {
+                if (err) reject(err);
+                resolve();
+            });
+        });
+    }
+
+exports.updateUserPreferencesLocation = (userid,state, region, province, municipality ) => {
+    return new Promise((resolve, reject) => {
+        const sql =`UPDATE Preferences 
+                    SET state=?, 
+                        region=?, 
+                        province=?, 
+                        municipality=? 
+                    WHERE userid =? ` ;
+        db.run(sql, [ state, region, province, municipality, userid], function (err) {
+            if (err) reject(err);
+            resolve();
+        });
+    });
+}    
+
+exports.updateUserPreferencesRadius = (userid,radius,latitude,longitude ) => {
+    return new Promise((resolve, reject) => {
+        const sql =`UPDATE Preferences 
+                    SET radius=?,
+                    latitude = ?,
+                    longitude =? 
+                    WHERE userid =? ` ;
+        db.run(sql, [ radius,latitude,longitude, userid], function (err) {
+            if (err) reject(err);
+            resolve();
+        });
+    });
+} 
