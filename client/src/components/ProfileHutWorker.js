@@ -105,6 +105,7 @@ function YourHut(props) {
       }
       props.updateHut(updatedHut);
       setDirty(true);
+      props.setDirty(true);
       props.setShowUpdateBanner(true);
       props.setMessage(`Hut #${hutId} ${name} has been updated successfully!`);
     }
@@ -166,7 +167,7 @@ function YourHut(props) {
               </Col>
               <Col>
               <FloatingLabel controlId="floatingInput" label="Ascent" className="mb-3">
-                  <Form.Control required={true} type="text" value={altitude} onChange={ev => setAltitude(ev.target.value)} placeholder="2400 m" />
+                  <Form.Control required={true} type='number' step="any" min={0} value={altitude} onChange={ev => setAltitude(ev.target.value)} placeholder="2400 m" />
                 </FloatingLabel>
               </Col>
             </Row>
