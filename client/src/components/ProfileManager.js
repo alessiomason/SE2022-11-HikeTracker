@@ -96,7 +96,7 @@ function WeatherAlert() {
   const [province, setProvince] = useState('Torino');
   const [municipality, setMunicipality] = useState('Mompantero');
   const [tempHikesRadius, setTempHikesRadius] = useState(20);
-  const [weather, setWeather] = useState('');
+  const [weather, setWeather] = useState('~ Choose the weather condition ~');
   const [time, setTime] = useState(new Date());
   const [description, setDescription] = useState('');
 
@@ -199,7 +199,7 @@ function WeatherAlert() {
                       <img src={Alert1} alt="weather_image" className='me-3' />
                     </OverlayTrigger>
                     <Form.Select required={true} value={weather} onChange={ev => setWeather(ev.target.value)}>
-                      <option selected disabled value="">~ Choose the weather condition ~</option>
+                      <option disabled>~ Choose the weather condition ~</option>
                       <option>Cloudy</option>
                       <option>Windy</option>
                       <option>Rainy</option>
