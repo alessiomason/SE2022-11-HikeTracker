@@ -483,7 +483,7 @@ function PerformanceStats() {
         </Col>
         <Col lg={3} md={6} sm={12} xs={12} className=" padding-x " >
           <FloatingLabel controlId="floatingInput" label="Longest (km) hike completed" className="mb-3" onClick={() => navigate('/hike/' + userStats.longestHikeByKmID)}>
-            <Form.Control className='clickable-box' required={true} type="text" readOnly value={(userStats.longestHikeByKmLength)?.toFixed(2) + ' km'}></Form.Control>
+            <Form.Control className='clickable-box' required={true} type="text" readOnly value={(userStats.longestHikeByKmLength)?.toFixed(2) + ' m'}></Form.Control>
           </FloatingLabel>
         </Col>
         <Col lg={3} md={6} sm={12} xs={12} className=" padding-x " >
@@ -493,7 +493,7 @@ function PerformanceStats() {
         </Col>
         <Col lg={3} md={6} sm={12} xs={12} className=" padding-x " >
           <FloatingLabel controlId="floatingInput" label="Shortest (km) hike completed" className="mb-3" onClick={() => navigate('/hike/' + userStats.shortestHikeByKmID)}>
-            <Form.Control className='clickable-box' required={true} type="text" readOnly value={(userStats.shortestHikeByKmLength)?.toFixed(2) + ' km'}></Form.Control>
+            <Form.Control className='clickable-box' required={true} type="text" readOnly value={(userStats.shortestHikeByKmLength)?.toFixed(2) + ' m'}></Form.Control>
           </FloatingLabel>
         </Col>
       </Row>
