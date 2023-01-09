@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "apiTest": "mocha test --runInBand --timeout 45000 --exit",
-    "test": "jest --runInBand --coverage",
+    "test": "mocha",
     "start": "node server.js"
   },
   "author": "",
