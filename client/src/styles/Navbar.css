@@ -20,7 +20,7 @@
 }
 
 .button.type1 {
-    color: #16a085;
+    color: #30AC42;
 }
 
 .button.type2 {
@@ -33,7 +33,7 @@
 
 .button.type1:after,
 .button.type1:before {
-    background-color: #16a085;
+    background-color: #30AC42;
 }
 .button.type2:after,
 .button.type2:before {

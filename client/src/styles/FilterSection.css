@@ -22,8 +22,8 @@ h1 {
 
 .btn_filter {
     border-radius: 0px !important;
-    background-color: #16a085;
-    border-color: #16a085;
+    background-color: #30AC42;
+    border-color: #30AC42;
 }
 
 .btn_filter:hover {
@@ -51,7 +51,7 @@ input[type=checkbox]:hover,
 
 .hike-img {
     vertical-align: baseline;
-    filter: invert(54%) sepia(42%) saturate(6891%) hue-rotate(141deg) brightness(93%) contrast(83%);
+    filter: invert(49%) sepia(68%) saturate(487%) hue-rotate(77deg) brightness(96%) contrast(93%);
 }
 
 .filter-title {
@@ -59,7 +59,7 @@ input[type=checkbox]:hover,
     font-weight: bold;
     font-size: 50px;
     font-style: italic;
-    color: #16a085;
+    color: #30AC42;
     text-align: center;
     text-transform: uppercase;
 }
@@ -79,7 +79,7 @@ input[type=checkbox]:hover,
 }
 
 .filter-title.double:after {
-    border-bottom: 2px solid #16a085;
+    border-bottom: 2px solid #30AC42;
     content: "";
     margin: 0 auto;
     /* this centers the line to the full width specified */

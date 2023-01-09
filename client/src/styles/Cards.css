@@ -4,7 +4,7 @@
 }
 
 .card:not(.tracked-hikes-card) {
-    border: 2px solid #62DDF5;
+    border: 2px solid #30AC42;
     box-shadow: 0 6px 20px rgba(56, 125, 255, 0.17) !important;
     -webkit-filter: drop-shadow(0 6px 20px rgba(56, 125, 255, 0.017)) !important;
     filter: drop-shadow(0 6px 20px rgba(56, 125, 255, 0.017)) !important;
@@ -93,7 +93,7 @@
     font-style: italic;
     font-size: 24px;
     margin-bottom: 20px;
-    color: #62DDF5;
+    color: #30AC42;
     width: fit-content;
 }
 
@@ -134,5 +134,5 @@
 }
 
 .card-icon-map {
-    filter: invert(91%) sepia(23%) saturate(4158%) hue-rotate(160deg) brightness(102%) contrast(92%);
+    filter: invert(49%) sepia(68%) saturate(487%) hue-rotate(77deg) brightness(96%) contrast(93%);
 }

@@ -19,8 +19,8 @@
 }
 
 .man-hike-btn{
-    background-color: #16a085;
-    border-color: #16a085;
+    background-color: #30AC42;
+    border-color: #30AC42;
 }
 
 .man-hut-btn{
@@ -47,10 +47,10 @@
 .man-hike-btn:focus,
 .man-hike-btn:active {
     color: #000;
-    background: #16a085;
-    background-color: #16a085 !important;
+    background: #30AC42;
+    background-color: #30AC42 !important;
     border-color: #05725c !important;
-    box-shadow: 0 0 10px #16a085, 0 0 40px #16a085, 0 0 80px #16a085;
+    box-shadow: 0 0 10px #30AC42, 0 0 40px #30AC42, 0 0 80px #30AC42;
 }
 
 .man-hut-btn:hover,

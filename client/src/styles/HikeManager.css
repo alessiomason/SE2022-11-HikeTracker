@@ -106,18 +106,18 @@
   padding: 0px;
   overflow: hidden;
   object-fit: cover;
-  border: 2px solid #16a085;
+  border: 2px solid #30AC42;
   max-width: 100%;
   height: auto;
 }
 
 .man-hike-label label{
-  color: #16a085;
+  color: #30AC42;
   font-weight: bold;
 }
 
 .man-hike-label .form-control, .man-hike-label .form-select{
-  border: 1px solid #16a085;
+  border: 1px solid #30AC42;
 }
 
 .ref-btn{

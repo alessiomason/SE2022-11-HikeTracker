@@ -194,7 +194,7 @@ function App2() {
                     <Route index element={initialLoading ? <Loading /> : <Home showEmailAlert={showEmailAlert} setShowEmailAlert={setShowEmailAlert} user={user}
                         setShowLogin={setShowLogin} showLogin={showLogin} loggedIn={loggedIn} doLogin={doLogin} message={message} setMessage={setMessage}
                         showSignup={showSignup} setShowSignup={setShowSignup} doSignUp={doSignUp} />} />
-
+       
                     <Route path="hike/:hikeId" element={<HikePage user={user} loggedIn={loggedIn} setShowLogin={setShowLogin} />} />
                     <Route path="hikeManager" element={<MyHikeManager updateHike={updateHike} deleteHike={deleteHike} user={user} />} />
                     <Route path="hutManager" element={<MyHutManager updateHut={updateHut} deleteHut={deleteHut} user={user} />} />
