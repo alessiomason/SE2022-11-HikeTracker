@@ -238,9 +238,9 @@ function EditHikeMap(props) {
   const nPoints = props.points?.length;
   let middlePoint;
   if (nPoints)
-    middlePoint = props.points?.map(p => [p.latitude, p.longitude])[nPoints / 2];
+    middlePoint = props.points?.map(p => [p.latitude, p.longitude])[Math.round(nPoints / 2)];
 
-  let center = [45.59740454134756, 9.42154884338379];     // default point
+  let center = [44.66926331584312, 7.077110435048376];     // default point
   if (startPoint && endPoint) {
     if (middlePoint)    // centering on start, end and middle point: covers both linear and circular tracks
       center = [(startPoint[0] + endPoint[0] + middlePoint[0]) / 3, (startPoint[1] + endPoint[1] + middlePoint[1]) / 3];
@@ -256,7 +256,6 @@ function EditHikeMap(props) {
 
   const reachedPositions = props.points?.filter(p => p.reachedInOngoingHike && !p.referencePoint && !p.hutID && !p.parkingID).map(p => [p.latitude, p.longitude]);
   const notReachedPositions = props.points?.filter(p => !p.reachedInOngoingHike && !p.referencePoint && !p.hutID && !p.parkingID).map(p => [p.latitude, p.longitude]);
-
   return (
     <MapContainer className='single-hike-map' center={center} zoom={zoom}>
       <TileLayer

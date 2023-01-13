@@ -61,7 +61,7 @@ function HikeMap(props) {
     const nPoints = props.points?.length;
     let middlePoint;
     if (nPoints)
-        middlePoint = props.points?.map(p => [p.latitude, p.longitude])[nPoints / 2];
+        middlePoint = props.points?.map(p => [p.latitude, p.longitude])[Math.round(nPoints / 2)];
 
     let center = [45.177786, 7.083372];     // default point
     if (startPoint && endPoint) {
