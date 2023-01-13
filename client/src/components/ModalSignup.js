@@ -46,7 +46,7 @@ function MyModalSignup(props) {
     let valid = true;
     props.setMessage('');
 
-    let credentials = { email, password, accessRight };
+    let credentials = { email, password, accessRight, name};
 
     if (email.trim() === '') {
       valid = false;
@@ -56,6 +56,10 @@ function MyModalSignup(props) {
     if (valid && password.trim() === '') {
       valid = false;
       props.setMessage('Password cannot be empty or contain whitespaces.');
+    }
+    if (valid && name.trim() === '') {
+      valid = false;
+      props.setMessage('Name cannot be empty');
     }
 
     if (valid && passwordReenter !== password) {
@@ -77,7 +81,7 @@ function MyModalSignup(props) {
     }
     if (valid && (accessRight == "hut-worker" || accessRight === "local-guide") ) {
       
-      credentials = { ...credentials,surname: surname, name:name, phone:phone  }
+      credentials = { ...credentials,surname: surname, phone:phone  }
   }
     if (valid) {
       console.log(credentials)
@@ -121,7 +125,7 @@ function MyModalSignup(props) {
                 </Col>
               </Row>
               {
-                (accessRight === "hut-worker" || accessRight === "local-guide") && 
+                (accessRight === "hut-worker" || accessRight === "local-guide") ?
               <>
               <Row className='mb-3 box_center'>
                   <Col md="auto" sm="auto" xs="auto" className='box_center'>
@@ -154,7 +158,20 @@ function MyModalSignup(props) {
                   </Col>
                 </Row>
                 </>
-              } 
+                : 
+                <>
+                <Row className='mb-3 box_center'>
+                    <Col md="auto" sm="auto" xs="auto" className='box_center'>
+                      <img src={UserLogin} alt="user" />
+                    </Col>
+                    <Col md="auto" sm="auto" xs="auto">
+                      <Form.Group controlId="formBasicName" >
+                        <Form.Control type="text" placeholder="Enter name" value={name} onChange={ev => setName(ev.target.value)} />
+                      </Form.Group>
+                    </Col>
+                  </Row>
+                  </>        
+                } 
               <Row className='my-4 box_center'>
                 <Col md="auto" sm="auto" xs="auto" className='box_center'>
                   <img src={Password} alt="password" />
@@ -190,6 +207,7 @@ function MyModalSignup(props) {
                   </Form.Select>
                 </Col>
               </Row>
+
               {(accessRight == "hut-worker") && <Row className='mb-3 box_center'>
                 <Col md="auto" sm="auto" xs="auto" className='box_center fit'>
                   <img src={Hut} alt="hut" className='log-hut-icon icon-signup' />
@@ -205,7 +223,8 @@ function MyModalSignup(props) {
 
 
                 </Col>
-              </Row>}
+              </Row>
+              }
 
               <Row className="my-4 box_center">
                 <Button variant="primary signup_btn" type="submit" > Sign Up </Button>

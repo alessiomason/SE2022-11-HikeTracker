@@ -1363,7 +1363,7 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
                 console.log("Email sent successfully");
         });
 
-        const userForRes = { id: user.id, email: user.email, access_right: user.access_right, verified: false };
+        const userForRes = { id: user.id, email: user.email, access_right: user.access_right, name:user.name, verified: false };
         return res.json(userForRes);
     });
 
