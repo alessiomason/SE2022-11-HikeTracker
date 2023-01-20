@@ -1,7 +1,7 @@
 
 import { Icon } from 'leaflet';
 import { MapContainer, TileLayer, Marker, Popup, Polyline, useMapEvents } from 'react-leaflet';
-import { Container, Row, Col, Button } from 'react-bootstrap';
+import { Container, Row, Col, Button, FormGroup,Form } from 'react-bootstrap';
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import '..//styles/SinglePageHike.css';
@@ -27,6 +27,7 @@ function ReferencePoints() {
   const [newRefPointID, setNewRefPointId] = useState (0);  
   const [validPoint, setValidPoint] = useState(false);
   const [marker, setMarker] = useState([0, 0]);
+  const [label,setLabel] = useState('');
 
 
 
@@ -45,10 +46,13 @@ function ReferencePoints() {
     }
   }, [dirty, hikeId]);
 
+
+    console.log(label);
+
   const confirmationButton = async (pointID) => {
 
     if (adding && pointID !== 0 && validPoint ) {
-    await API.setNewReferencePoint(newRefPointID)
+    await API.setNewReferencePoint(newRefPointID, label)
     .then( )
     .catch( err => console.log("error " + err));
     navigate('/hikeManager');
@@ -90,6 +94,16 @@ function ReferencePoints() {
               <Button className="cancel-btn mx-2 mb-2" type="submit" onClick={() => { navigate('/hikeManager') }} > Cancel </Button>
               <Button className="save-btn mx-2 mb-2" onClick={() => { if (adding && validPoint) { confirmationButton(); } }} > Save </Button>
             </Row>
+            {(adding)?
+            <Row>
+              <Form className='text-center' >
+                <Form.Group className ="mb-3">
+                  <Form.Label className='m-auto'>Enter the label of a new reference point</Form.Label>
+                  <Form.Control className='label-field' type='text'  placeholder='Enter label' value={label} onChange={(ev)=> {setLabel(ev.target.value)}}/>
+                </Form.Group>
+              </Form>
+            </Row>:false
+            }
           </Col>
         </Row>
       </Container>

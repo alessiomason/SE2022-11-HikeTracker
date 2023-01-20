@@ -571,10 +571,10 @@ exports.getReferencePointID = (pointID) => {
     });
 }
 
-exports.setNewReferencePoint = (pointID) => {
+exports.setNewReferencePoint = (pointID,label) => {
     return new Promise((resolve, reject) => {
-        const sql = 'UPDATE POINTS SET RP=1 WHERE PointID=?';
-        db.run(sql, [pointID], (err, row) => {
+        const sql = 'UPDATE POINTS SET RP=1, Label=? WHERE PointID=?';
+        db.run(sql, [label,pointID], (err, row) => {
             if (err) reject(err);
             resolve();
         });
@@ -583,7 +583,7 @@ exports.setNewReferencePoint = (pointID) => {
 
 exports.clearReferencePoint = (pointID) => {
     return new Promise((resolve, reject) => {
-        const sql = 'UPDATE POINTS SET RP=0 WHERE PointID=?';
+        const sql = 'UPDATE POINTS SET RP=0, Label = "" WHERE PointID=?';
         db.run(sql, [pointID], (err, row) => {
             if (err) reject(err);
             resolve();

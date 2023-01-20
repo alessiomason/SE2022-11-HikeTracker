@@ -1,3 +1,5 @@
+import { json } from "react-router-dom";
+
 const APIURL = new URL('http://localhost:3001/api/');
 
 function addGPXTrack(gpxJSON) {
@@ -317,15 +319,17 @@ async function getMyHutImages(hutID) {
 
 //Set new Reference point
 
-function setNewReferencePoint(pointID) {
-
+function setNewReferencePoint(pointID,label) {
 
     // call: PUT /api/newReferencePoint/:id
     return new Promise((resolve, reject) => {
         fetch(new URL('newReferencePoint/' + pointID, APIURL), {
             method: 'PUT',
             credentials: 'include',
-            body: null
+            headers:{
+                'Content-Type' : 'application/json',
+            },
+            body: JSON.stringify({label}),
         }).then((response) => {
             if (response.ok)
                 resolve(null);

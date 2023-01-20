@@ -761,10 +761,10 @@ module.exports.useAPIs = function useAPIs(app, isLoggedIn) {
             return res.status(422).json({ errors: errors.array() });
 
         const pointID = req.params.id;
+        const label = req.body.label;
 
         try {
-
-            await dao.setNewReferencePoint(pointID);
+            await dao.setNewReferencePoint(pointID,label);
             res.status(201).json().end();
 
         } catch (err) {
