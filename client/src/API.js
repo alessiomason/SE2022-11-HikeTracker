@@ -1,5 +1,3 @@
-import { json } from "react-router-dom";
-
 const APIURL = new URL('http://localhost:3001/api/');
 
 function addGPXTrack(gpxJSON) {

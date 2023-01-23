@@ -66,7 +66,7 @@ function TrackedHikesInfoTable(props) {
 			</Row>}
 			{completedHikes.length > 0 &&
 				<Row className='tracked-hikes-row'>
-					<h3 className='sub-title'>{props.inProfilePage ? 'Tracked hikes' : 'Completed hikes'}</h3>
+					<h3 className='sub-title'>Tracked hikes</h3>
 					<Table striped responsive>
 						<thead>
 							<tr>

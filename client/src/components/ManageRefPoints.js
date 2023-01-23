@@ -1,7 +1,6 @@
-
 import { Icon } from 'leaflet';
 import { MapContainer, TileLayer, Marker, Popup, Polyline, useMapEvents } from 'react-leaflet';
-import { Container, Row, Col, Button, FormGroup,Form } from 'react-bootstrap';
+import { Container, Row, Col, Button, Form } from 'react-bootstrap';
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import '..//styles/SinglePageHike.css';
@@ -13,7 +12,6 @@ import { default as Hiking } from '..//icons/hiking.svg';
 
 function ReferencePoints() {
 
-
   const navigate = useNavigate();
 
   const [hike, setHike] = useState({});
@@ -22,14 +20,12 @@ function ReferencePoints() {
   const [latitude, setLatitude] = useState();
   const [longitude, setLongitude] = useState();
   const [pointID, setPointID] = useState(0);
-  const [adding,setAdding ] = useState(Boolean);
-  const [deleting, setDeleting] = useState (Boolean);  
-  const [newRefPointID, setNewRefPointId] = useState (0);  
+  const [adding, setAdding] = useState(Boolean);
+  const [deleting, setDeleting] = useState(Boolean);
+  const [newRefPointID, setNewRefPointId] = useState(0);
   const [validPoint, setValidPoint] = useState(false);
   const [marker, setMarker] = useState([0, 0]);
-  const [label,setLabel] = useState('');
-
-
+  const [label, setLabel] = useState('');
 
   let { hikeId } = useParams();
   hikeId = parseInt(hikeId);
@@ -39,34 +35,31 @@ function ReferencePoints() {
       API.getHike(hikeId)
         .then((h) => setHike(h))
         .catch(err => console.log(err))
-     API.getReferencePoint()
+      API.getReferencePoint()
         .then((rp) => setReferencePoint(rp))
         .catch(err => console.log(err))
       setDirty(false);
     }
   }, [dirty, hikeId]);
 
-
-    console.log(label);
-
   const confirmationButton = async (pointID) => {
 
-    if (adding && pointID !== 0 && validPoint ) {
-    await API.setNewReferencePoint(newRefPointID, label)
-    .then( )
-    .catch( err => console.log("error " + err));
-    navigate('/hikeManager');
+    if (adding && pointID !== 0 && validPoint) {
+      await API.setNewReferencePoint(newRefPointID, label)
+        .then()
+        .catch(err => console.log("error " + err));
+      navigate('/hikeManager');
     };
     console.log("deleting: " + deleting + "  point: " + pointID);
-    if (pointID !== 0 ){
+    if (pointID !== 0) {
       await API.clearReferencePoint(pointID)
-      .then( )
-      .catch( err => console.log(err));
+        .then()
+        .catch(err => console.log(err));
       navigate('/hikeManager');
-    } 
+    }
     // else {
     //   setErrorMsg('This point cannot be selected as a reference point');
-    
+
     // }
   }
 
@@ -76,17 +69,17 @@ function ReferencePoints() {
         <Row className="center-box mb-4">
           <h2 className="background double single-hike-title"><span><img src={Hiking} alt="hiking_image" className='me-2 hike-img single-hike-icon' />{hike.label}</span></h2>
           {adding ? <h6 className='fit2'>Select a point on a hike to add a new reference point </h6>
-          :<h6 className='fit2'>To delete a reference point, click on it on the hike map</h6>
+            : <h6 className='fit2'>To delete a reference point, click on it on the hike map</h6>
           }
         </Row>
         <Row className="mx-4">
           <Col >
             <Row className='mt-3'>
               {hike.id && <ManageReferencePoints length={hike.length} points={hike.points} pointID={pointID} setPointID={setPointID} marker={marker} setMarker={setMarker}
-               referencePoint={referencePoint} setReferencePoint={setReferencePoint} newRefPointID={newRefPointID} setNewRefPointId={setNewRefPointId}
-                latitude={latitude} setLatitude={setLatitude}  longitude={longitude} setLongitude={setLongitude} adding={adding} deleting={deleting} setDeleting={setDeleting} 
+                referencePoint={referencePoint} setReferencePoint={setReferencePoint} newRefPointID={newRefPointID} setNewRefPointId={setNewRefPointId}
+                latitude={latitude} setLatitude={setLatitude} longitude={longitude} setLongitude={setLongitude} adding={adding} deleting={deleting} setDeleting={setDeleting}
                 confirmationButton={confirmationButton} validPoint={validPoint} setValidPoint={setValidPoint}
-                />}
+              />}
               {/* hike.id ensures that the map is rendered only when the hike is loaded  */}
             </Row>
             <Row className='btn_box mt-3 mb-3'>
@@ -94,15 +87,15 @@ function ReferencePoints() {
               <Button className="cancel-btn mx-2 mb-2" type="submit" onClick={() => { navigate('/hikeManager') }} > Cancel </Button>
               <Button className="save-btn mx-2 mb-2" onClick={() => { if (adding && validPoint) { confirmationButton(); } }} > Save </Button>
             </Row>
-            {(adding)?
-            <Row>
-              <Form className='text-center' >
-                <Form.Group className ="mb-3">
-                  <Form.Label className='m-auto'>Enter the label of a new reference point</Form.Label>
-                  <Form.Control className='label-field' type='text'  placeholder='Enter label' value={label} onChange={(ev)=> {setLabel(ev.target.value)}}/>
-                </Form.Group>
-              </Form>
-            </Row>:false
+            {(adding) ?
+              <Row>
+                <Form className='text-center' >
+                  <Form.Group className="mb-3">
+                    <Form.Label className='m-auto'>Enter the label of a new reference point</Form.Label>
+                    <Form.Control className='label-field' type='text' placeholder='Enter label' value={label} onChange={(ev) => { setLabel(ev.target.value) }} />
+                  </Form.Group>
+                </Form>
+              </Row> : false
             }
           </Col>
         </Row>
@@ -172,11 +165,11 @@ function ManageReferencePoints(props) {
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      
-       {(props.adding)? <LocationMarker setLatitude={props.setLatitude} setLongitude={props.setLongitude} points={props.points} marker={props.marker} setMarker={props.setMarker}
-       pointID={props.pointID} setPointID={props.setPointID} referencePoint={props.referencePoint} setReferencePoint={props.setReferencePoint} 
-       newRefPointID={props.newRefPointID} setNewRefPointId={props.setNewRefPointId} adding={props.adding} validPoint={props.validPoint} setValidPoint={props.setValidPoint}
-       />
+
+      {(props.adding) ? <LocationMarker setLatitude={props.setLatitude} setLongitude={props.setLongitude} points={props.points} marker={props.marker} setMarker={props.setMarker}
+        pointID={props.pointID} setPointID={props.setPointID} referencePoint={props.referencePoint} setReferencePoint={props.setReferencePoint}
+        newRefPointID={props.newRefPointID} setNewRefPointId={props.setNewRefPointId} adding={props.adding} validPoint={props.validPoint} setValidPoint={props.setValidPoint}
+      />
         :
         false}
 
@@ -190,13 +183,13 @@ function ManageReferencePoints(props) {
 
       {props.points?.filter(p => p.referencePoint).map(p => {
         return (
-          <Marker position={[p.latitude, p.longitude]} icon={iconReferencePoint} key={p.pointID} onClick={()=>{if (props.deleting) {  props.setPointID(p.pointID) }}}>
+          <Marker position={[p.latitude, p.longitude]} icon={iconReferencePoint} key={p.pointID} onClick={() => { if (props.deleting) { props.setPointID(p.pointID) } }}>
             {p.pointID && <Popup>
-             <p>Are you sure you want to delete this point?</p> 
-             <div className ="text-center" >
-             <p><Button variant='danger' onClick={() =>{props.setDeleting(true); props.confirmationButton(p.pointID)}} >Delete</Button></p>
-             </div>
-              </Popup>}
+              <p>Are you sure you want to delete this point?</p>
+              <div className="text-center" >
+                <p><Button variant='danger' onClick={() => { props.setDeleting(true); props.confirmationButton(p.pointID) }} >Delete</Button></p>
+              </div>
+            </Popup>}
           </Marker>
         );
       })}
@@ -205,41 +198,41 @@ function ManageReferencePoints(props) {
 }
 
 function LocationMarker(props) {
-  
+
   let count = 0;
 
   const markerIcon = new Icon({
-      iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-gold.png',
-      shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-      iconSize: [25, 41],
-      iconAnchor: [12, 41],
-      popupAnchor: [1, -34],
-      shadowSize: [41, 41]
+    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-gold.png',
+    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41]
   });
-  
+
 
   useMapEvents({
-      click(e) {
-          props.setLatitude(e.latlng.lat);
-          props.setLongitude(e.latlng.lng);
-          props.setMarker([e.latlng.lat, e.latlng.lng]);
-        }
+    click(e) {
+      props.setLatitude(e.latlng.lat);
+      props.setLongitude(e.latlng.lng);
+      props.setMarker([e.latlng.lat, e.latlng.lng]);
+    }
   });
 
-  props.points.map(p =>{ 
+  props.points.map(p => {
     let lat = p.latitude.toString();
     let lon = p.longitude.toString();
 
-    if( props.marker[0]!==0 &&props.marker[1]!==0 && props.adding && lat.match(props.marker[0].toString().slice(0,6)) && lon.match(props.marker[1].toString().slice(0,6))){
-        props.setNewRefPointId(p.pointID);
-        props.setValidPoint(true);
-        count++;
+    if (props.marker[0] !== 0 && props.marker[1] !== 0 && props.adding && lat.match(props.marker[0].toString().slice(0, 6)) && lon.match(props.marker[1].toString().slice(0, 6))) {
+      props.setNewRefPointId(p.pointID);
+      props.setValidPoint(true);
+      count++;
 
-    
+
     }
-   })
-   if(count > 0)
-  return (<Marker position={props.marker} icon={markerIcon} />);
+  })
+  if (count > 0)
+    return (<Marker position={props.marker} icon={markerIcon} />);
 }
 
 export default ReferencePoints;
